@@ -9,6 +9,7 @@
 #include "identity-based/SecurityLevel.h"
 #include "util/Status.h"
 
+
 Status signid_setup(SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret);
 
 Status signid_extract(AffinePoint* result, char* identity, size_t identityLength, PublicParameters publicParameters, mpz_t masterSecret);

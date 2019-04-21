@@ -9,6 +9,7 @@
 #include "identity-based/SecurityLevel.h"
 #include "util/Status.h"
 
+
 Status cryptid_setup(SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret);
 
 Status cryptid_extract(AffinePoint* result, char* identity, size_t identityLength, PublicParameters publicParameters, mpz_t masterSecret);
