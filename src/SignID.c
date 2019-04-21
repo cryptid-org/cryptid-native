@@ -2,11 +2,12 @@
 #include <stdlib.h>
 
 #include "SignID.h"
-#include "Random.h"
-#include "TatePairing.h"
-#include "Validation.h"
-#include "Utils.h"
-#include "RandBytes.h"
+#include "elliptic/TatePairing.h"
+#include "util/Random.h"
+#include "util/RandBytes.h"
+#include "util/Utils.h"
+#include "util/Validation.h"
+
 
 static const unsigned int SOLINAS_GENERATION_ATTEMPT_LIMIT = 100;
 static const unsigned int POINT_GENERATION_ATTEMPT_LIMIT = 100;

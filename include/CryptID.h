@@ -3,11 +3,11 @@
 
 #include "gmp.h"
 
-#include "AffinePoint.h"
-#include "CipherTextTuple.h"
-#include "PublicParameters.h"
-#include "SecurityLevel.h"
-#include "Status.h"
+#include "elliptic/AffinePoint.h"
+#include "identity-based/CipherTextTuple.h"
+#include "identity-based/PublicParameters.h"
+#include "identity-based/SecurityLevel.h"
+#include "util/Status.h"
 
 Status cryptid_setup(SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret);
 

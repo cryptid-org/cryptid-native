@@ -3,11 +3,11 @@
 
 #include "gmp.h"
 
-#include "AffinePoint.h"
-#include "Signature.h"
-#include "PublicParameters.h"
-#include "SecurityLevel.h"
-#include "Status.h"
+#include "elliptic/AffinePoint.h"
+#include "identity-based/PublicParameters.h"
+#include "identity-based/Signature.h"
+#include "identity-based/SecurityLevel.h"
+#include "util/Status.h"
 
 Status signid_setup(SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret);
 
