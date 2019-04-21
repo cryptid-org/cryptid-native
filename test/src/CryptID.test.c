@@ -4,10 +4,11 @@
 
 #include "greatest.h"
 
-#include "AffinePoint.h"
-#include "Complex.h"
-#include "EllipticCurve.h"
 #include "CryptID.h"
+#include "complex/Complex.h"
+#include "elliptic/AffinePoint.h"
+#include "elliptic/EllipticCurve.h"
+
 
 TEST fresh_ibe_setup_matching_identities(SecurityLevel securityLevel, char* message, char* identity)
 {

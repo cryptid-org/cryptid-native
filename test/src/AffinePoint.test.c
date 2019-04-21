@@ -4,8 +4,9 @@
 
 #include "greatest.h"
 
-#include "AffinePoint.h"
-#include "EllipticCurve.h"
+#include "elliptic/AffinePoint.h"
+#include "elliptic/EllipticCurve.h"
+
 
 TEST multiplication_should_just_work(AffinePoint p, long s, AffinePoint expected)
 {

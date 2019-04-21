@@ -4,10 +4,11 @@
 
 #include "greatest.h"
 
-#include "AffinePoint.h"
-#include "Complex.h"
-#include "EllipticCurve.h"
-#include "TatePairing.h"
+#include "complex/Complex.h"
+#include "elliptic/AffinePoint.h"
+#include "elliptic/EllipticCurve.h"
+#include "elliptic/TatePairing.h"
+
 
 TEST GF_131_modified_tate_pairing_should_just_work(long n, Complex expected)
 {

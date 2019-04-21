@@ -4,9 +4,10 @@
 
 #include "greatest.h"
 
-#include "ComplexAffinePoint.h"
-#include "Complex.h"
-#include "EllipticCurve.h"
+#include "complex/Complex.h"
+#include "elliptic/ComplexAffinePoint.h"
+#include "elliptic/EllipticCurve.h"
+
 
 TEST multiplication_should_just_work(ComplexAffinePoint p, long s, ComplexAffinePoint expected)
 {

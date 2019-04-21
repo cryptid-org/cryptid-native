@@ -4,10 +4,11 @@
 
 #include "greatest.h"
 
-#include "AffinePoint.h"
-#include "Complex.h"
-#include "EllipticCurve.h"
 #include "SignID.h"
+#include "complex/Complex.h"
+#include "elliptic/AffinePoint.h"
+#include "elliptic/EllipticCurve.h"
+
 
 int main(int argc, char **argv)
 {

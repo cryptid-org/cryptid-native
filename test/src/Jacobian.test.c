@@ -4,9 +4,10 @@
 
 #include "greatest.h"
 
-#include "Jacobian.h"
-#include "AffinePoint.h"
-#include "EllipticCurve.h"
+#include "elliptic/AffinePoint.h"
+#include "elliptic/EllipticCurve.h"
+#include "elliptic/Jacobian.h"
+
 
 TEST multiplication_should_just_work(Jacobian p, long s, AffinePoint expected)
 {

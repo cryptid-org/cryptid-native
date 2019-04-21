@@ -4,10 +4,11 @@
 
 #include "greatest.h"
 
-#include "Complex.h"
-#include "ComplexJacobian.h"
-#include "ComplexAffinePoint.h"
-#include "EllipticCurve.h"
+#include "complex/Complex.h"
+#include "elliptic/ComplexJacobian.h"
+#include "elliptic/ComplexAffinePoint.h"
+#include "elliptic/EllipticCurve.h"
+
 
 TEST multiplication_should_just_work(ComplexJacobian p, long s, ComplexAffinePoint expected)
 {

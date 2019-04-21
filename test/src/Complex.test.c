@@ -4,7 +4,8 @@
 
 #include "greatest.h"
 
-#include "Complex.h"
+#include "complex/Complex.h"
+
 
 TEST complex_init_should_be_zero(void)
 {
