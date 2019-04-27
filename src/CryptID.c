@@ -357,6 +357,7 @@ Status cryptid_decrypt(char **result, AffinePoint privateKey, CipherTextTuple ci
     if(status)
     {
         mpz_clear(l);
+        free(m);
         return status;
     }
 
@@ -370,5 +371,6 @@ Status cryptid_decrypt(char **result, AffinePoint privateKey, CipherTextTuple ci
 
     affine_destroy(testPoint);
     mpz_clear(l);
+    free(m);
     return DECRYPTION_FAILED_ERROR;
 }
