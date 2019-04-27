@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "greatest.h"
 
@@ -8,6 +9,11 @@
 #include "complex/Complex.h"
 #include "elliptic/AffinePoint.h"
 #include "elliptic/EllipticCurve.h"
+
+const char *LOWEST_QUICK_CHECK_ARGUMENT = "--lowest-quick-check";
+
+int isLowestQuickCheck = 0;
+int isVerbose = 0;
 
 
 TEST fresh_ibe_setup_matching_identities(SecurityLevel securityLevel, char* message, char* identity)
@@ -126,10 +132,14 @@ SUITE(cryptid_ibe_suite)
             for (int testSuite = 0; testSuite < 12; testSuite++)
             {
                 int offset = testSuite * 4;
-                unsigned int caseCount = testParameters[offset];
+                unsigned int caseCount = isLowestQuickCheck ? 1 : testParameters[offset];
                 SecurityLevel securityLevel = testParameters[offset + 1];
                 unsigned int messageLength = testParameters[offset + 2];
                 unsigned int identityLength = testParameters[offset + 3];
+
+                if (isLowestQuickCheck && securityLevel != LOWEST) {
+                    continue;
+                }
 
                 for (unsigned int testCase = 0; testCase < caseCount; testCase++)
                 {
@@ -138,6 +148,13 @@ SUITE(cryptid_ibe_suite)
 
                     generateRandomString(&message, messageLength + 1, defaultAlphabet, strlen(defaultAlphabet));
                     generateRandomString(&identity, identityLength + 1, defaultAlphabet, strlen(defaultAlphabet));
+
+                    if (isVerbose)
+                    {
+                        printf("Level: %d\n", securityLevel);
+                        printf("Message\n%s\n", message);
+                        printf("Identity\n%s\n", identity);
+                    }
 
                     RUN_TESTp(fresh_ibe_setup_matching_identities, securityLevel, message, identity);
 
@@ -151,10 +168,14 @@ SUITE(cryptid_ibe_suite)
             for (int testSuite = 0; testSuite < 12; testSuite++)
             {
                 int offset = testSuite * 4;
-                unsigned int caseCount = testParameters[offset];
+                unsigned int caseCount = isLowestQuickCheck ? 1 : testParameters[offset];
                 SecurityLevel securityLevel = testParameters[offset + 1];
                 unsigned int messageLength = testParameters[offset + 2];
                 unsigned int identityLength = testParameters[offset + 3];
+
+                if (isLowestQuickCheck && securityLevel != LOWEST) {
+                    continue;
+                }
 
                 for (unsigned int testCase = 0; testCase < caseCount; testCase++)
                 {
@@ -169,6 +190,14 @@ SUITE(cryptid_ibe_suite)
                         generateRandomString(&decryptIdentity, identityLength + 1, defaultAlphabet, strlen(defaultAlphabet));
                     } while (strcmp(encryptIdentity, decryptIdentity) == 0);
 
+                    if (isVerbose)
+                    {
+                        printf("Level: %d\n", securityLevel);
+                        printf("Message\n%s\n", message);
+                        printf("Encrypt Identity\n%s\n", encryptIdentity);
+                        printf("Decrypt Identity\n%s\n", decryptIdentity);
+                    }
+
                     RUN_TESTp(fresh_ibe_setup_different_identities, securityLevel, message, encryptIdentity, decryptIdentity);
 
                     free(message);
@@ -182,9 +211,29 @@ SUITE(cryptid_ibe_suite)
 
 GREATEST_MAIN_DEFS();
 
+void parse_custom_options(int argc, char **argv)
+{
+    for (int i = 1; i < argc; ++i)
+    {
+        if (0 == strncmp(LOWEST_QUICK_CHECK_ARGUMENT, argv[i], strlen(LOWEST_QUICK_CHECK_ARGUMENT))) 
+        {
+            printf("--lowest-quick-check detected: only the LOWEST level will be checked and with limited iterations.\n");
+
+            isLowestQuickCheck = 1;
+        }
+
+        if (0 == strncmp("-v", argv[i], 2))
+        {
+            isVerbose = 1;
+        }
+    }
+}
+
 int main(int argc, char **argv)
 {
     GREATEST_MAIN_BEGIN();
+    
+    parse_custom_options(argc, argv);
 
     srand(time(NULL));
 
