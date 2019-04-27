@@ -3,7 +3,7 @@
 #include "elliptic/EllipticCurve.h"
 
 
-EllipticCurve ellipticCurve_init(mpz_t a, mpz_t b, mpz_t fieldOrder)
+EllipticCurve ellipticCurve_init(const mpz_t a, const mpz_t b, const mpz_t fieldOrder)
 {
     EllipticCurve ellipticCurve;
 
@@ -16,7 +16,7 @@ EllipticCurve ellipticCurve_init(mpz_t a, mpz_t b, mpz_t fieldOrder)
     return ellipticCurve;
 }
 
-EllipticCurve ellipticCurve_initLong(long a, long b, long fieldOrder)
+EllipticCurve ellipticCurve_initLong(const long a, const long b, const long fieldOrder)
 {
     EllipticCurve ellipticCurve;
 
