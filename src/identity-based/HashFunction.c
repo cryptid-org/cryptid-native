@@ -5,12 +5,7 @@
 
 static const int SHA_TYPE_MAPPING[] = { 1, 224, 256, 384, 512 };
 
-HashFunction hashFunction_initForSecurityLevel(SecurityLevel securityLevel)
-{
-    return hashFunction_init(SHA_TYPE_MAPPING[(int) securityLevel]);
-}
-
-HashFunction hashFunction_init(int shaType)
+static HashFunction hashFunction_init(const int shaType)
 {
     HashFunction hashFunction;
     switch(shaType)
@@ -56,4 +51,8 @@ HashFunction hashFunction_init(int shaType)
     return hashFunction;
 }
 
+HashFunction hashFunction_initForSecurityLevel(const SecurityLevel securityLevel)
+{
+    return hashFunction_init(SHA_TYPE_MAPPING[(int) securityLevel]);
+}
 
