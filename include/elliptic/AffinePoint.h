@@ -13,34 +13,35 @@
 typedef struct AffinePoint
 {
     /**
-     * The x coordinate.
+     * The \f$x\f$ coordinate.
      */
     mpz_t x;
 
     /**
-     * The y coordinate.
+     * The \f$y\f$ coordinate.
      */
     mpz_t y;
 } AffinePoint;
 
 /**
- * Returns a new AffinePoint initialized with the specified coordinates.
- * @param x the x coordinate
- * @param y the y coordinate
+ * Returns a new AffinePoint initialized with the specified arbitrary precision coordinates.
+ * @param x the \f$x\f$ coordinate
+ * @param y the \f$y\f$ coordinate
  * @return a new AffinePoint
  */
-AffinePoint affine_init(mpz_t x, mpz_t y);
+AffinePoint affine_init(const mpz_t x, const mpz_t y);
 
 /**
  * Returns a new AffinePoint initialized with the specified long values.
- * @param xr the real part of the x coordinate
- * @param yr the real part of the y coordinate
+ * @param x the \f$x\f$ coordinate
+ * @param y the \f$y\f$ coordinate
  * @return a new AffinePoint
  */
-AffinePoint affine_initLong(long x, long y);
+AffinePoint affine_initLong(const long x, const long y);
 
 /**
- * Frees an AffinePoint. After calling this function on an AffinePoint instance, that instance should not be used anymore.
+ * Frees an AffinePoint. After calling this function on an AffinePoint instance,
+ * that instance should not be used anymore.
  * @param affinePoint the AffinePoint to be destroyed
  */
 void affine_destroy(AffinePoint affinePoint);
@@ -57,16 +58,16 @@ AffinePoint affine_infinity();
  * @param affinePoint2 an AffinePoint
  * @return 1 if the two instances hold equal values, 0 otherwise
  */
-int affine_isEquals(AffinePoint affinePoint1, AffinePoint affinePoint2);
+int affine_isEquals(const AffinePoint affinePoint1, const AffinePoint affinePoint2);
 
 /**
- * Checks if the specified affinePoint is the infinity point.
+ * Checks if the specified AffinePoint is the infinity point.
  * @param affinePoint the point to check
  * @return 1 if the specified point is the infinity point, 0 otherwise
  */
-int affine_isInfinity(AffinePoint affinePoint);
+int affine_isInfinity(const AffinePoint affinePoint);
 
-Status affine_double(AffinePoint *result, AffinePoint affinePoint, EllipticCurve ellipticCurve);
+Status affine_double(AffinePoint *result, const AffinePoint affinePoint, const EllipticCurve ellipticCurve);
 
 /**
  * Adds two AffinePoints.
@@ -78,7 +79,7 @@ Status affine_double(AffinePoint *result, AffinePoint affinePoint, EllipticCurve
  * @param ec the curve to operate over
  * @return 0 if everything went right, error otherwise
  */
-Status affine_add(AffinePoint *result, AffinePoint affinePoint1, AffinePoint affinePoint2, EllipticCurve ellipticCurve);
+Status affine_add(AffinePoint *result, const AffinePoint affinePoint1, const AffinePoint affinePoint2, const EllipticCurve ellipticCurve);
 
 /**
  * Multiplies an AffinePoint with a scalar.
@@ -88,10 +89,16 @@ Status affine_add(AffinePoint *result, AffinePoint affinePoint1, AffinePoint aff
  * @param ec the elliptic curve to operate over
  * @return 0 if everything went right, error otherwise
  */
-Status affine_multiply(AffinePoint *result, mpz_t s, AffinePoint affinePoint, EllipticCurve ellipticCurve);
+Status affine_multiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve);
 
-Status affine_wNAFMultiply(AffinePoint *result, mpz_t s, AffinePoint affinePoint, EllipticCurve ellipticCurve);
+Status affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve);
 
-int affine_isOnCurve(AffinePoint point, EllipticCurve ellipticCurve);
+/**
+ * Checks if the specified point is on the passed curve (satisfies the curve equation).
+ * @param point the point to check
+ * @param ellipticCurve the elliptic curve
+ * @return 1 if the point satisfies the curve equation, 0 otherwise
+ */
+int affine_isOnCurve(const AffinePoint point, const EllipticCurve ellipticCurve);
 
 #endif

@@ -3,8 +3,12 @@
 
 #include "elliptic/AffinePoint.h"
 
+// References:
+//   * [Guide-to-ECC] Darrel Hankerson, Alfred J. Menezes, and Scott Vanstone. 2010. Guide to Elliptic Curve Cryptography (1st ed.). Springer Publishing Company, Incorporated.
+//   * [Intro-to-IBE] Luther Martin. 2008. Introduction to Identity-Based Encryption (Information Security and Privacy Series) (1 ed.). Artech House, Inc., Norwood, MA, USA. 
 
-AffinePoint affine_init(mpz_t x, mpz_t y)
+
+AffinePoint affine_init(const mpz_t x, const mpz_t y)
 {
     AffinePoint affinePoint;
 
@@ -15,7 +19,7 @@ AffinePoint affine_init(mpz_t x, mpz_t y)
     return affinePoint;
 }
 
-AffinePoint affine_initLong(long x, long y)
+AffinePoint affine_initLong(const long x, const long y)
 {
     AffinePoint affinePoint;
     
@@ -36,7 +40,7 @@ AffinePoint affine_infinity()
     return affine_initLong(-1, -1);
 }
 
-int affine_isEquals(AffinePoint affinePoint1, AffinePoint affinePoint2)
+int affine_isEquals(const AffinePoint affinePoint1, const AffinePoint affinePoint2)
 {
     if(!mpz_cmp(affinePoint1.x, affinePoint2.x) && !mpz_cmp(affinePoint1.y, affinePoint2.y))
     {
@@ -46,7 +50,7 @@ int affine_isEquals(AffinePoint affinePoint1, AffinePoint affinePoint2)
     return 0;
 }
 
-int affine_isInfinity(AffinePoint affinePoint)
+int affine_isInfinity(const AffinePoint affinePoint)
 {
     AffinePoint infty = affine_infinity();
 
@@ -56,8 +60,11 @@ int affine_isInfinity(AffinePoint affinePoint)
     return result;
 }
 
-Status affine_double(AffinePoint *result, AffinePoint affinePoint, EllipticCurve ellipticCurve)
+Status affine_double(AffinePoint *result, const AffinePoint affinePoint, const EllipticCurve ellipticCurve)
 {
+    // Double-only implementation of Algorithm 3.1 in [Intro-to-IBE].
+
+    // Doubling infinity yields infinity.
     if(affine_isInfinity(affinePoint))
     {
         *result = affine_infinity();
@@ -66,6 +73,7 @@ Status affine_double(AffinePoint *result, AffinePoint affinePoint, EllipticCurve
 
     mpz_t x1PowTwo, threex1PowTwo, num, y1MulTwo, denom, numMulDenom, m, mPowTwo, mPowTwoSubx1, x3, x1Subx3, mMulx1Subx3, y3;
 
+    // If the \f$y\f$ coordinate is equal to zero, then the result is infinity.
     if(!mpz_cmp_ui(affinePoint.y, 0))
     {
         *result = affine_infinity();
@@ -74,6 +82,8 @@ Status affine_double(AffinePoint *result, AffinePoint affinePoint, EllipticCurve
 
     mpz_inits(x1PowTwo, threex1PowTwo, num, y1MulTwo, denom, numMulDenom, m, mPowTwo, mPowTwoSubx1, x3, x1Subx3, mMulx1Subx3, y3, NULL);
 
+    // See Equation 3.4 in [Intro-to-IBE].
+    // \f$\frac{3x^{2} + a}{2y}
     mpz_powm_ui(x1PowTwo, affinePoint.x, 2, ellipticCurve.fieldOrder);
     mpz_mul_ui(threex1PowTwo, x1PowTwo, 3);
     mpz_add(num, threex1PowTwo, ellipticCurve.a);
@@ -84,12 +94,15 @@ Status affine_double(AffinePoint *result, AffinePoint affinePoint, EllipticCurve
     mpz_mul(numMulDenom, num, denom);
     mpz_mod(m, numMulDenom, ellipticCurve.fieldOrder);
 
+    // Same as in {@code affine_add}.
+    // \f$x_3 = m^{2}-2x_1\f$
     mpz_powm_ui(mPowTwo, m, 2, ellipticCurve.fieldOrder);
     mpz_sub(mPowTwoSubx1, mPowTwo, affinePoint.x);
     mpz_mod(mPowTwoSubx1, mPowTwoSubx1, ellipticCurve.fieldOrder);
     mpz_sub(x3, mPowTwoSubx1, affinePoint.x);
     mpz_mod(x3, x3, ellipticCurve.fieldOrder);
 
+    // \f$y_3 = m(x - x_3) - y\f$
     mpz_sub(x1Subx3, affinePoint.x, x3);
     mpz_mod(x1Subx3, x1Subx3, ellipticCurve.fieldOrder);
     mpz_mul(mMulx1Subx3, m, x1Subx3);
@@ -103,10 +116,13 @@ Status affine_double(AffinePoint *result, AffinePoint affinePoint, EllipticCurve
     return SUCCESS;
 }
 
-Status affine_add(AffinePoint *result, AffinePoint affinePoint1, AffinePoint affinePoint2, EllipticCurve ellipticCurve)
+Status affine_add(AffinePoint *result, const AffinePoint affinePoint1, const AffinePoint affinePoint2, const EllipticCurve ellipticCurve)
 {
+    // Implementation of Algorithm 3.1 in [Intro-to-IBE].
+    
     mpz_t m, num, denom, numMulDenom, y2Suby1, x2Subx1, x2Subx1Mod, x3, y3, mPowTwo, mPowTwoSubx1, x1Subx3, mMulx1Subx3;
 
+    // Adding infinity to a point does not change the point. 
     if(affine_isInfinity(affinePoint1))
     {
         *result = affine_init(affinePoint2.x, affinePoint2.y);
@@ -121,37 +137,43 @@ Status affine_add(AffinePoint *result, AffinePoint affinePoint1, AffinePoint aff
 
     mpz_inits(m, num, denom, numMulDenom, y2Suby1, x2Subx1, x2Subx1Mod, x3, y3, mPowTwo, mPowTwoSubx1, x1Subx3, mMulx1Subx3, NULL);
 
+    // If the points are equal to each other, we can speed things up
+    // by performing a point doubling instead of an addition.
     if(affine_isEquals(affinePoint1, affinePoint2))
     {
         mpz_clears(m, num, denom, numMulDenom, y2Suby1, x2Subx1, x2Subx1Mod, x3, y3, mPowTwo, mPowTwoSubx1, x1Subx3, mMulx1Subx3, NULL);
         Status status = affine_double(result, affinePoint1, ellipticCurve);
         return status;
     }
-    else
+
+    // Having equal \f$x\f$ coordinates (and different points) a divide-by-zero error would
+    // happen, thus we return infinity.
+    // Note, that in the algorithm, this check is the first step, however, that's wrong.
+    if(!mpz_cmp(affinePoint1.x, affinePoint2.x))
     {
-        if(!mpz_cmp(affinePoint1.x, affinePoint2.x))
-        {
-            mpz_clears(m, num, denom, numMulDenom, y2Suby1, x2Subx1, x2Subx1Mod, x3, y3, mPowTwo, mPowTwoSubx1, x1Subx3, mMulx1Subx3, NULL);
-            *result = affine_infinity();
-            return SUCCESS;
-        }
-
-        mpz_sub(y2Suby1, affinePoint2.y, affinePoint1.y);
-        mpz_mod(num, y2Suby1, ellipticCurve.fieldOrder);
-
-        mpz_sub(x2Subx1, affinePoint2.x, affinePoint1.x);
-        mpz_mod(x2Subx1Mod, x2Subx1, ellipticCurve.fieldOrder);
-        mpz_invert(denom, x2Subx1Mod, ellipticCurve.fieldOrder);
-
-        mpz_mul(numMulDenom, num, denom);
-        mpz_mod(m, numMulDenom, ellipticCurve.fieldOrder);
+        mpz_clears(m, num, denom, numMulDenom, y2Suby1, x2Subx1, x2Subx1Mod, x3, y3, mPowTwo, mPowTwoSubx1, x1Subx3, mMulx1Subx3, NULL);
+        *result = affine_infinity();
+        return SUCCESS;
     }
 
+    // \f$\frac{y_2 - y_1}{x_2 - x_1}\f$
+    mpz_sub(y2Suby1, affinePoint2.y, affinePoint1.y);
+    mpz_mod(num, y2Suby1, ellipticCurve.fieldOrder);
+
+    mpz_sub(x2Subx1, affinePoint2.x, affinePoint1.x);
+    mpz_mod(x2Subx1Mod, x2Subx1, ellipticCurve.fieldOrder);
+    mpz_invert(denom, x2Subx1Mod, ellipticCurve.fieldOrder);
+
+    mpz_mul(numMulDenom, num, denom);
+    mpz_mod(m, numMulDenom, ellipticCurve.fieldOrder);
+
+    // \f$x_3 = m^{2}-x_1-x_2\f$
     mpz_powm_ui(mPowTwo, m, 2, ellipticCurve.fieldOrder);
     mpz_sub(mPowTwoSubx1, mPowTwo, affinePoint1.x);
     mpz_sub(x3, mPowTwoSubx1, affinePoint2.x);
     mpz_mod(x3, x3, ellipticCurve.fieldOrder);
 
+    // \f$y_3 = m(x_1 - x_3) - y_1\f$
     mpz_sub(x1Subx3, affinePoint1.x, x3);
     mpz_mul(mMulx1Subx3, m, x1Subx3);
     mpz_sub(y3, mMulx1Subx3, affinePoint1.y);
@@ -164,14 +186,18 @@ Status affine_add(AffinePoint *result, AffinePoint affinePoint1, AffinePoint aff
     return SUCCESS;
 }
 
-Status affine_multiply(AffinePoint *result, mpz_t s, AffinePoint affinePoint, EllipticCurve ellipticCurve)
+Status affine_multiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve)
 {
+    // Implementation of Algorithm 3.26 in [Guide-to-ECC].
+
+    // Multiplication by zero yields infinity.
     if(!mpz_cmp_ui(s, 0))
     {
         *result = affine_infinity();
         return SUCCESS;
     }
 
+    // Multiplying infinity yields infinity.
     if(affine_isInfinity(affinePoint))
     {
         *result = affine_infinity();
@@ -179,14 +205,18 @@ Status affine_multiply(AffinePoint *result, mpz_t s, AffinePoint affinePoint, El
     }
 
     AffinePoint pointN = affine_init(affinePoint.x, affinePoint.y);
+    // \f$Q = \infty\f$
     AffinePoint pointQ = affine_infinity();
 
+    // Binary expansion of the multiplier.
     char *d = mpz_get_str(NULL, 2, s);
 
+    // Right-to-left iteration
     for(int i = strlen(d) - 1; i >= 0; i--)
     {
         Status status;
 
+        // If \f$k_i = 1\f$ then \f$Q = Q + P\f$.
         if(d[i] == '1')
         {
             AffinePoint tmp;
@@ -202,6 +232,7 @@ Status affine_multiply(AffinePoint *result, mpz_t s, AffinePoint affinePoint, El
             pointQ = tmp;
         }
 
+        // \f$P = 2P\f$
         AffinePoint tmp;
         status = affine_double(&tmp, pointN, ellipticCurve);
         if(status)
@@ -223,8 +254,8 @@ Status affine_multiply(AffinePoint *result, mpz_t s, AffinePoint affinePoint, El
     return SUCCESS;
 }
 
-// Status-t javitani, memory leakeket csekkolni
-Status affine_wNAFMultiply(AffinePoint *result, mpz_t s, AffinePoint affinePoint, EllipticCurve ellipticCurve) {
+// TODO: Fix status and memory leaks, write documentation.
+Status affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve) {
     mpz_t d;
     mpz_init_set(d, s);
 
@@ -362,8 +393,12 @@ Status affine_wNAFMultiply(AffinePoint *result, mpz_t s, AffinePoint affinePoint
     return SUCCESS;
 }
 
-int affine_isOnCurve(AffinePoint point, EllipticCurve ellipticCurve)
+int affine_isOnCurve(const AffinePoint point, const EllipticCurve ellipticCurve)
 {
+    // Check if
+    // \f$y^2\f$
+    // is equal to
+    // \f$x^3 + ax + b\f$.
     mpz_t ySquared, xCubed, ax, xCubedPlusAx, rhs;
     mpz_inits(ySquared, xCubed, ax, xCubedPlusAx, rhs, NULL);
 
