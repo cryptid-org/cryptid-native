@@ -37,4 +37,5 @@ int main(int argc, char **argv)
 
     printf("verify: %d\n", status);
 
+    return 0;
 }
