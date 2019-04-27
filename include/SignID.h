@@ -1,5 +1,5 @@
-#ifndef SIGNID_H
-#define SIGNID_H
+#ifndef __CRYPTID_SIGNID_H
+#define __CRYPTID_SIGNID_H
 
 #include "gmp.h"
 

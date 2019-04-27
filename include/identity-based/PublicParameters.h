@@ -1,4 +1,4 @@
-#ifndef PUBLICPARAMETERS_H
+#ifndef __CRYPTID_PUBLICPARAMETERS_H
 #define __CRYPTID_PUBLICPARAMETERS_H
 
 #include "gmp.h"
