@@ -4,6 +4,16 @@
 #include "util/Status.h"
 
 
-Status randomBytes(unsigned char *buf, int num);
+/**
+ * Fills the passed buffer from a cryptographically secure source.
+ * 
+ * If {@code (__CRYPTID_EXTERN_RANDOM} is defined, then this function will
+ * call the {@code int __cryptid_cryptoRandom(void *buf, const int num)} function
+ * internally.
+ * @param buf the buffer to fill
+ * @param num the size of the buffer
+ * @return SUCCESS if everything went right
+ */
+Status randomBytes(unsigned char *buf, const int num);
 
 #endif

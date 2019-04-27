@@ -5,12 +5,12 @@
 
 static const unsigned int MIGHT_BE_PRIME = 1;
 
-ValidationResult validation_isProbablePrime(mpz_t p)
+ValidationResult validation_isProbablePrime(const mpz_t p)
 {
     return mpz_probab_prime_p(p, 50) >= MIGHT_BE_PRIME ? VALIDATION_SUCCESS : VALIDATION_FAILURE;
 }
 
-ValidationResult validation_isHashFunctionValid(HashFunction hashFunction)
+ValidationResult validation_isHashFunctionValid(const HashFunction hashFunction)
 {
     switch(hashFunction.hashLength)
     {
@@ -66,7 +66,7 @@ ValidationResult validation_isHashFunctionValid(HashFunction hashFunction)
     }
 }
 
-ValidationResult validation_isAffinePointValid(AffinePoint affinePoint, mpz_t order)
+ValidationResult validation_isAffinePointValid(const AffinePoint affinePoint, const mpz_t order)
 {
     if(mpz_cmp_si(affinePoint.x, -1) > 0 && mpz_cmp(affinePoint.x, order) < 0
         && mpz_cmp_si(affinePoint.y, -1) > 0 && mpz_cmp(affinePoint.y, order) < 0)
@@ -77,7 +77,7 @@ ValidationResult validation_isAffinePointValid(AffinePoint affinePoint, mpz_t or
     return VALIDATION_FAILURE;
 }
 
-ValidationResult validation_isTypeOneEllipticCurve(EllipticCurve ellipticCurve)
+ValidationResult validation_isTypeOneEllipticCurve(const EllipticCurve ellipticCurve)
 {
     if(!mpz_cmp_ui(ellipticCurve.a, 0)
         && !mpz_cmp_ui(ellipticCurve.b, 1)
@@ -89,7 +89,7 @@ ValidationResult validation_isTypeOneEllipticCurve(EllipticCurve ellipticCurve)
     return VALIDATION_FAILURE;
 }
 
-ValidationResult validation_isPublicParametersValid(PublicParameters publicParameters)
+ValidationResult validation_isPublicParametersValid(const PublicParameters publicParameters)
 {
     if(validation_isTypeOneEllipticCurve(publicParameters.ellipticCurve) 
         && validation_isProbablePrime(publicParameters.q)
@@ -103,7 +103,7 @@ ValidationResult validation_isPublicParametersValid(PublicParameters publicParam
     return VALIDATION_FAILURE;
 }
 
-ValidationResult validation_isCipherTextTupleValid(CipherTextTuple cipherTextTuple, mpz_t order)
+ValidationResult validation_isCipherTextTupleValid(const CipherTextTuple cipherTextTuple, const mpz_t order)
 {
     if(validation_isAffinePointValid(cipherTextTuple.cipherU, order)
         && cipherTextTuple.cipherV

@@ -12,11 +12,11 @@ Status randomBytes(unsigned char *buf, int num)
 
 #elif defined(__CRYPTID_EXTERN_RANDOM)
 
-extern int cryptoRandom(void *buf, int num);
+extern int __cryptid_cryptoRandom(void *buf, const int num);
 
-Status randomBytes(unsigned char *buf, int num)
+Status randomBytes(unsigned char *buf, const int num)
 {
-    if (!cryptoRandom(buf, num))
+    if (!__cryptid_cryptoRandom(buf, num))
     {
         return SUCCESS;
     }
@@ -28,7 +28,7 @@ Status randomBytes(unsigned char *buf, int num)
 
 #include <stdio.h>
 
-Status randomBytes(unsigned char *buf, int num)
+Status randomBytes(unsigned char *buf, const int num)
 {
     FILE *randomSource = fopen("/dev/urandom", "rb");
 

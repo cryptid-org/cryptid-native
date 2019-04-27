@@ -10,6 +10,9 @@
 #include "identity-based/PublicParameters.h"
 
 
+/**
+ * Enumeration of the possible results of a validation process.
+ */
 typedef enum
 {
     /*
@@ -19,22 +22,49 @@ typedef enum
     VALIDATION_FAILURE = 0
 } ValidationResult;
 
-ValidationResult validation_isProbablePrime(mpz_t p);
 
-ValidationResult validation_isHashFunctionValid(HashFunction hashFunction);
+/**
+ * Check whether \f$p\f$ is a probable prime.
+ * @param p the number to check
+ * @result VALIDATION_SUCCESS if \f$p\f$ is a probable prime
+ */
+ValidationResult validation_isProbablePrime(const mpz_t p);
+
+/**
+ * Validates that the passed HashFunction struct is correct.
+ * @param hashFunction the struct to check
+ * @result VALIDATION_SUCCESS if the struct is valid
+ */
+ValidationResult validation_isHashFunctionValid(const HashFunction hashFunction);
 
 /**
  * Validates that the affine point is between 0 and order-1
  * @param affinePoint an AffinePoint
- * @param order the field order of the elliptic curve, we operate over
+ * @param order the field order of the elliptic curve field, we are operating over
  * @return VALIDATION_SUCCESS if the point is valid, VALIDATION_FAILURE otherwise
  */
-ValidationResult validation_isAffinePointValid(AffinePoint affinePoint, mpz_t order);
+ValidationResult validation_isAffinePointValid(const AffinePoint affinePoint, const mpz_t order);
 
-ValidationResult validation_isTypeOneEllipticCurve(EllipticCurve ellipticCurve);
+/**
+ * Validates that the specified EllipticCurve instance is a Type-1 elliptic curve.
+ * @param ellipticCurve the struct to check
+ * @return VALIDATION_SUCCESS if the struct is valid
+ */
+ValidationResult validation_isTypeOneEllipticCurve(const EllipticCurve ellipticCurve);
 
-ValidationResult validation_isPublicParametersValid(PublicParameters publicParameters);
+/**
+ * Validates that the specified public parameters are correct.
+ * @param publicParameters the parameters to check
+ * @return VALIDATION_SUCCESS if the parameters are valid
+ */
+ValidationResult validation_isPublicParametersValid(const PublicParameters publicParameters);
 
-ValidationResult validation_isCipherTextTupleValid(CipherTextTuple cipherTextTuple, mpz_t order);
+/**
+ * Validates that the specified ciphertext is correct.
+ * @param cipherTextTuple the ciphertext to check
+ * @param order the field order of the elliptic curve field, we operating over
+ * @return VALIDATION_SUCCESS if the ciphertext is valid
+ */
+ValidationResult validation_isCipherTextTupleValid(const CipherTextTuple cipherTextTuple, const mpz_t order);
 
 #endif

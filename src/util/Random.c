@@ -7,7 +7,7 @@ static const unsigned int MOST_SIGNIFICANT_WORD_FIRST = 1;
 static const unsigned int NATIVE_ENDIANNESS  = 0;
 static const unsigned int NO_SKIP = 0;
 
-unsigned int random_unsignedIntInRange(unsigned int range)
+unsigned int random_unsignedIntInRange(const unsigned int range)
 {
     unsigned int x, r;
 
@@ -22,7 +22,7 @@ unsigned int random_unsignedIntInRange(unsigned int range)
     return r;
 }
 
-void random_mpzOfLength(mpz_t result, unsigned int numberOfBits)
+void random_mpzOfLength(mpz_t result, const unsigned int numberOfBits)
 {
     unsigned int numberOfBytes = (numberOfBits + 7) / 8;
 
@@ -36,7 +36,7 @@ void random_mpzOfLength(mpz_t result, unsigned int numberOfBits)
     mpz_import(result, sizeof (buffer), MOST_SIGNIFICANT_WORD_FIRST, sizeof (buffer[0]), NATIVE_ENDIANNESS, NO_SKIP, buffer);
 }
 
-void random_mpzInRange(mpz_t result, mpz_t range)
+void random_mpzInRange(mpz_t result, const mpz_t range)
 {
     mpz_t x, r, xMinusR, negativeRange;
     mpz_inits(x, r, xMinusR, negativeRange, NULL);
@@ -59,7 +59,7 @@ void random_mpzInRange(mpz_t result, mpz_t range)
     mpz_clears(x, r, xMinusR, negativeRange, NULL);
 }
 
-Status random_solinasPrime(mpz_t result, unsigned int numberOfBits, unsigned int attemptLimit)
+Status random_solinasPrime(mpz_t result, const unsigned int numberOfBits, const unsigned int attemptLimit)
 {
     unsigned int random = 1, lastrandom;
     unsigned int isPrimeGenerated = 0;
@@ -97,7 +97,7 @@ Status random_solinasPrime(mpz_t result, unsigned int numberOfBits, unsigned int
     return isPrimeGenerated ? SUCCESS : ATTEMPT_LIMIT_REACHED_ERROR;
 }
 
-static AffinePoint mod3PointGenerationStrategy(EllipticCurve ellipticCurve)
+static AffinePoint mod3PointGenerationStrategy(const EllipticCurve ellipticCurve)
 {
     size_t numberOfBits = mpz_sizeinbase(ellipticCurve.fieldOrder, 2);
 
@@ -127,7 +127,7 @@ static AffinePoint mod3PointGenerationStrategy(EllipticCurve ellipticCurve)
     return result;
 }
 
-Status random_affinePoint(AffinePoint* result, EllipticCurve ellipticCurve, unsigned int attemptLimit)
+Status random_affinePoint(AffinePoint* result, const EllipticCurve ellipticCurve, const unsigned int attemptLimit)
 {
     unsigned int attempts = 0;
     int isPointGenerated = 0;
