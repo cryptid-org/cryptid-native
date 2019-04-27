@@ -50,7 +50,7 @@ void affine_destroy(AffinePoint affinePoint);
  * Returns the infinity point.
  * @return the infinity point
  */
-AffinePoint affine_infinity();
+AffinePoint affine_infinity(void);
 
 /**
  * Checks two AffinePoint instances for equality.

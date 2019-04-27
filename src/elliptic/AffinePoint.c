@@ -35,7 +35,7 @@ void affine_destroy(AffinePoint affinePoint)
     mpz_clears(affinePoint.x, affinePoint.y, NULL);
 }
 
-AffinePoint affine_infinity()
+AffinePoint affine_infinity(void)
 {
     return affine_initLong(-1, -1);
 }
