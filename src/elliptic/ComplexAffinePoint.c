@@ -3,9 +3,11 @@
 
 #include "elliptic/ComplexAffinePoint.h"
 
+
 // References:
 //   * [Guide-to-ECC] Darrel Hankerson, Alfred J. Menezes, and Scott Vanstone. 2010. Guide to Elliptic Curve Cryptography (1st ed.). Springer Publishing Company, Incorporated.
 //   * [Intro-to-IBE] Luther Martin. 2008. Introduction to Identity-Based Encryption (Information Security and Privacy Series) (1 ed.). Artech House, Inc., Norwood, MA, USA. 
+
 
 ComplexAffinePoint complexAffine_init(const Complex x, const Complex y)
 {
