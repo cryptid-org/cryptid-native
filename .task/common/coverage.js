@@ -1,4 +1,4 @@
-const { testComponents } = require('./test');
+const { compileAllSources, compileExecutableForComponent } = require('./compile');
 const { removeFiles, run } = require('./util');
 
 
@@ -26,7 +26,12 @@ function generateHtmlCoverage(dependencies, components) {
 
 function generateGcovCoverage(dependencies, components) {
     try {
-        testComponents(dependencies, components, coverageCompilationArguments);
+        const errors = testComponentsWithCoverage(dependencies, components);
+
+        if (errors.length > 0) {
+            console.log(errors);
+            throw new Error('There were errors during the coverage calculation. Please see the log lines above.');
+        }
 
         removeFiles(dependencies, excludedFromCoverage);
     } catch (e) {
@@ -37,6 +42,32 @@ function generateGcovCoverage(dependencies, components) {
     } finally {
         removeFiles(dependencies, ['*.o', '*.out']);
     }
+}
+
+function testComponentsWithCoverage(dependencies, components) {
+    const errors = [];
+
+    compileAllSources(dependencies, coverageCompilationArguments);
+
+    for (const component of components) {
+        console.log(`Collecting test coverage for ${component}`);
+
+        const executable = compileExecutableForComponent(component, dependencies, coverageCompilationArguments);
+        try {
+            run(dependencies, executable);
+        } catch (e) {
+            errors.push({
+                component,
+                error: e
+            });
+        } finally {
+            removeFiles(dependencies, [executable]);
+        }
+
+        console.log('\n');
+    }
+
+    return errors;
 }
 
 function generateLcovCoverage(dependencies) {
