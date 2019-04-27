@@ -12,7 +12,7 @@ Complex complex_init(void)
     return complex;
 } 
 
-Complex complex_initMpz(mpz_t real, mpz_t imaginary)
+Complex complex_initMpz(const mpz_t real, const mpz_t imaginary)
 {
     Complex complex;
 
@@ -24,7 +24,7 @@ Complex complex_initMpz(mpz_t real, mpz_t imaginary)
     return complex;
 }
 
-Complex complex_initLong(long real, long imaginary)
+Complex complex_initLong(const long real, const long imaginary)
 {
     Complex complex;
 
@@ -36,7 +36,7 @@ Complex complex_initLong(long real, long imaginary)
     return complex;
 }
 
-Complex complex_initMpzLong(mpz_t real, long imaginary)
+Complex complex_initMpzLong(const mpz_t real, const long imaginary)
 {
     Complex complex;
 
@@ -48,7 +48,7 @@ Complex complex_initMpzLong(mpz_t real, long imaginary)
     return complex;
 }
 
-Complex complex_initLongMpz(long real, mpz_t imaginary)
+Complex complex_initLongMpz(const long real, const mpz_t imaginary)
 {
     Complex complex;
 
@@ -60,7 +60,7 @@ Complex complex_initLongMpz(long real, mpz_t imaginary)
     return complex;
 }
 
-int complex_isEquals(Complex complex1, Complex complex2)
+int complex_isEquals(const Complex complex1, const Complex complex2)
 {
     if(!mpz_cmp(complex1.real, complex2.real) && !mpz_cmp(complex1.imaginary, complex2.imaginary))
     {
@@ -75,7 +75,7 @@ void complex_destroy(Complex complex)
     mpz_clears(complex.real, complex.imaginary, NULL);
 }
 
-void complex_destroyMany(size_t argumentCount, ...)
+void complex_destroyMany(const size_t argumentCount, ...)
 {
     va_list args;
     va_start(args, argumentCount);
@@ -89,8 +89,10 @@ void complex_destroyMany(size_t argumentCount, ...)
     va_end(args);
 }
 
-Complex complex_modAdd(Complex complex1, Complex complex2, mpz_t p)
+Complex complex_modAdd(const Complex complex1, const Complex complex2, const mpz_t p)
 {
+    // Calculated as
+    // \f$(r_1 + r_2 \mod p, c_1 + c_2 \mod p)\f$.
     Complex result;
     mpz_t newReal, newImaginary;
     mpz_inits(newReal, newImaginary, NULL);
@@ -106,8 +108,10 @@ Complex complex_modAdd(Complex complex1, Complex complex2, mpz_t p)
     return result;
 }
 
-Complex complex_additiveInverse(Complex complex, mpz_t p)
+Complex complex_additiveInverse(const Complex complex, const mpz_t p)
 {
+    // Calculated as
+    // \f$(-r \mod p, -i \mod p)\f$.
     Complex result;
     mpz_t newReal, newImaginary;
     mpz_inits(newReal, newImaginary, NULL);
@@ -123,8 +127,10 @@ Complex complex_additiveInverse(Complex complex, mpz_t p)
     return result;
 }
 
-Complex complex_modAddScalar(Complex complex, mpz_t s, mpz_t p)
+Complex complex_modAddScalar(const Complex complex, const mpz_t s, const mpz_t p)
 {
+    // Calculated as
+    // \f$(r + s \mod p, i)\f$.
     Complex result;
     mpz_t newReal;
     mpz_init(newReal);
@@ -137,8 +143,10 @@ Complex complex_modAddScalar(Complex complex, mpz_t s, mpz_t p)
     return result;
 }
 
-Complex complex_modMul(Complex complex1, Complex complex2, mpz_t p)
+Complex complex_modMul(const Complex complex1, const Complex complex2, const mpz_t p)
 {
+    // Calculated as
+    // \f$((r_1 \cdot r_2 - i_1 \cdot i_2) \mod p, (i_1 \cdot r_2 + r_1 \cdot i_2) \mod p)\f$.
     Complex result;
     mpz_t r, i, leftPart, rightPart;
     mpz_inits(r, i, leftPart, rightPart, NULL);
@@ -158,16 +166,15 @@ Complex complex_modMul(Complex complex1, Complex complex2, mpz_t p)
     return result;
 }
 
-Complex complex_modPow(Complex complex, mpz_t exp, mpz_t p)
+Complex complex_modPow(const Complex complex, const mpz_t exp, const mpz_t p)
 {
-    mpz_t baseRealCopy, baseImaginaryCopy, expCopy, expMod;
-    mpz_inits(baseRealCopy, baseImaginaryCopy, expCopy, expMod, NULL);
-
     if(!mpz_cmp_ui(p, 1))
     {
-        mpz_clears(baseRealCopy, baseImaginaryCopy, expCopy, expMod, NULL);
         return complex_initLong(0, 0);
     }
+
+    mpz_t baseRealCopy, baseImaginaryCopy, expCopy, expMod;
+    mpz_inits(baseRealCopy, baseImaginaryCopy, expCopy, expMod, NULL);
 
     Complex result = complex_initLong(1, 0);
 
@@ -204,8 +211,10 @@ Complex complex_modPow(Complex complex, mpz_t exp, mpz_t p)
     return result;
 }
 
-Complex complex_modMulScalar(Complex complex, mpz_t s, mpz_t p)
+Complex complex_modMulScalar(const Complex complex, const mpz_t s, const mpz_t p)
 {
+    // Calculated as
+    // \f$(r \cdot s \mod p, i \cdot s \mod p)\f$.
     Complex result;
     mpz_t r, imag;
     mpz_inits(r, imag, NULL);
@@ -221,17 +230,20 @@ Complex complex_modMulScalar(Complex complex, mpz_t s, mpz_t p)
     return result;
 }
 
-Status complex_multiplicativeInverse(Complex *result, Complex complex, mpz_t p)
+Status complex_multiplicativeInverse(Complex *result, const Complex complex, const mpz_t p)
 {
     mpz_t real, imaginary, realInv, q, r, rInv, t;
     mpz_inits(real, imaginary, realInv, q, r, rInv, t, NULL);
 
+    // (0, 0) has no multiplicative inverse.
     if(!mpz_cmp_ui(complex.real, 0) && !mpz_cmp_ui(complex.imaginary, 0))
     {
         mpz_clears(real, imaginary, realInv, q, r, rInv, t, NULL);
         return HAS_NO_MUL_INV_ERROR;
     }
 
+    // If the Complex instance only holds a real value, we can fallback to
+    // simple inverse: \f$(r^{-1}, 0)\f$.
     if(!mpz_cmp_ui(complex.imaginary, 0))
     {
         mpz_invert(real, complex.real, p);
@@ -241,6 +253,8 @@ Status complex_multiplicativeInverse(Complex *result, Complex complex, mpz_t p)
         return SUCCESS;
     }
 
+    // Likewise, if the Complex instance only holds an imaginary value, we
+    // can simplify things: \f$(0, -i^{-1})\f$.
     if(!mpz_cmp_ui(complex.real, 0))
     {
         mpz_invert(imaginary, complex.imaginary, p);
@@ -252,6 +266,14 @@ Status complex_multiplicativeInverse(Complex *result, Complex complex, mpz_t p)
         return SUCCESS;
     }
 
+    // Otherwise, we have a long way to go...
+    // Note, that both the real and the imaginary parts are guaranteed to be non-zero.
+
+    // First we try to calculate the imaginary part (denoted as {@code y}).
+    // \f$y =  -(i \cdot r^{-1}) \cdot (r + r^{-1} \cdot i^{2})^{-1}\f$
+    //                                  |
+    // This sum can be zero. If that's the case, then the number has no inverse.
+    // The terms of the product are denoted as {@code q} and {@code rInv}.
     mpz_invert(realInv, complex.real, p);
 
     mpz_neg(q, complex.imaginary);
@@ -268,6 +290,9 @@ Status complex_multiplicativeInverse(Complex *result, Complex complex, mpz_t p)
         return HAS_NO_MUL_INV_ERROR;
     }
 
+    // {@code x} (the real part) can be calculated using {@code y}.
+    // \f$x = r^{-1} + y \cdot r^{-1} \cdot i\f$
+    // The second term of the sum is denoted as {@code t}.
     mpz_invert(rInv, r, p);
 
     mpz_mul(imaginary, q, rInv);
