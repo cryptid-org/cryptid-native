@@ -12,6 +12,9 @@ function compileAllSources({ klawSync, paths, spawnSync }, extraArguments = []) 
         `-I${paths.thirdParty.includeDir}`,
         '-g',
         '-std=c99',
+        '-Wall',
+        '-Wextra',
+        '-Werror',
         '-c'
     ];
 
