@@ -255,8 +255,10 @@ Status affine_multiply(AffinePoint *result, const mpz_t s, const AffinePoint aff
     return SUCCESS;
 }
 
-// TODO: Fix status and memory leaks, write documentation.
-Status affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve) {
+Status affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve)
+{
+    // Implementation of Algorithm 3.36 in [Guide-to-ECC].
+
     mpz_t d;
     mpz_init_set(d, s);
 
@@ -307,6 +309,9 @@ Status affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const AffinePoint
     }
 
     mpz_t dModTwo, mod, dSub, dDivideTwo;
+
+    // Implementation of Algorithm 3.35 in [Guide-to-ECC].
+    // Computing the width-\f$w\f$ NAF of a positive integer.
 
     int i = 0;
     while(mpz_cmp_ui(d, 0) > 0)

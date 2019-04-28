@@ -90,6 +90,8 @@ Status affine_add(AffinePoint *result, const AffinePoint affinePoint1, const Aff
 
 /**
  * Multiplies an AffinePoint with a scalar.
+ * 
+ * Implementation note: Uses the double-and-add algorithm.
  * @param result The result of the multiplication. On SUCCESS, this should be destroyed by the caller.
  * @param s the scalar to multiply with
  * @param affinePoint the point to multiply
@@ -98,6 +100,16 @@ Status affine_add(AffinePoint *result, const AffinePoint affinePoint1, const Aff
  */
 Status affine_multiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve);
 
+/**
+ * Multiplies an AffinePoint with a scalar.
+ * 
+ * Implementation note: Uses the windowed-NAF algorithm.
+ * @param result The result of the multiplication. On SUCCESS, this should be destroyed by the caller.
+ * @param s the scalar to multiply with
+ * @param affinePoint the point to multiply
+ * @param ellipticCurve the elliptic curve to operate over
+ * @return SUCCESS if everything went right, error otherwise
+ */
 Status affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve);
 
 /**
