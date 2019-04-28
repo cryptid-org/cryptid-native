@@ -128,7 +128,7 @@ unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v
 
     // Let \f$l = \mathrm{Ceiling}(\frac{\log(p)}{8})\f$, the number of octets needed to represent integers in \f$Z_p\f$.
     char* bytes = mpz_get_str(NULL, 16, p);
-    int outputSize = strlen(bytes);
+    size_t outputSize = strlen(bytes);
 
     // Let \f$v = a + b \cdot i\f$, where \f$i^2 = -1\f$.
     // Let \f$a_{256^l}\f$ be the big-endian zero-padded fixed-length octet string representation of \f$a\f$ in \f$Z_p\f$.
@@ -144,7 +144,7 @@ unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v
     // which is the concatenation of \f$a_{256^l}\f$ followed by \f$b_{256^l}\f$.
     if(order == 0)
     {
-        for(int i = 0; i < outputSize; i++)
+        for(size_t i = 0; i < outputSize; i++)
         {
             if(strlen(realPartHexString) + i < outputSize)
             {
@@ -157,7 +157,7 @@ unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v
             }
         }
         index = 0;
-        for(int i = 0; i < outputSize; i++)
+        for(size_t i = 0; i < outputSize; i++)
         {
             if(strlen(imagPartHexString) + i < outputSize)
             {
@@ -174,7 +174,7 @@ unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v
     // which is the concatenation of \f$a_{256^l}\f$ followed by \f$b_{256^l}\f$.
     else
     {
-        for(int i = 0; i < outputSize; i++)
+        for(size_t i = 0; i < outputSize; i++)
         {
             if(strlen(imagPartHexString) + i < outputSize)
             {
@@ -187,7 +187,7 @@ unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v
             }
         }
         index = 0;
-        for(int i = 0; i < outputSize; i++)
+        for(size_t i = 0; i < outputSize; i++)
         {
             if(strlen(realPartHexString) + i < outputSize)
             {

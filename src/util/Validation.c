@@ -3,7 +3,7 @@
 #include "util/Validation.h"
 
 
-static const unsigned int MIGHT_BE_PRIME = 1;
+static const int MIGHT_BE_PRIME = 1;
 
 ValidationResult validation_isProbablePrime(const mpz_t p)
 {

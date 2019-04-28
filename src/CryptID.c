@@ -301,7 +301,7 @@ Status cryptid_encrypt(CipherTextTuple *result, const char *const message, const
     // produced by {@code HashBytes} with seed {@code rho}.
     unsigned char* cipherW = (unsigned char*)calloc(messageLength + 1, sizeof(unsigned char));
     unsigned char* hashedBytes = hashBytes(messageLength, rho, hashLen, publicParameters.hashFunction);
-    for(int i = 0; i < messageLength; i++) 
+    for(size_t i = 0; i < messageLength; i++) 
     {
         cipherW[i] = hashedBytes[i] ^ message[i];
     }
@@ -382,7 +382,7 @@ Status cryptid_decrypt(char **result, const AffinePoint privateKey, const Cipher
     // produced by HashBytes with seed {@code rho}.
     char* m = (char*)calloc(ciphertext.cipherWLength + 1, sizeof(char));
     unsigned char* hashedBytes = hashBytes(ciphertext.cipherWLength, rho, hashLen, publicParameters.hashFunction);
-    for(int i = 0; i < ciphertext.cipherWLength; i++) 
+    for(size_t i = 0; i < ciphertext.cipherWLength; i++) 
     {
         m[i] = hashedBytes[i] ^ ciphertext.cipherW[i];
     }

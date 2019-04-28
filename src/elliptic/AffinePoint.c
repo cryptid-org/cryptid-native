@@ -262,7 +262,6 @@ Status affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const AffinePoint
     mpz_t d;
     mpz_init_set(d, s);
 
-    int w = 5;
     int twoPowW = 32;
     int twoPowWSubOne = 16;
     AffinePoint preCalculatedPoints[16];
