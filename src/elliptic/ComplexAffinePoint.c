@@ -63,20 +63,16 @@ Status complexAffine_double(ComplexAffinePoint *result, const ComplexAffinePoint
     }
 
     Complex complexZero = complex_initLong(0, 0);
-    Complex x1AddInv = complex_additiveInverse(complexAffinePoint.x, ellipticCurve.fieldOrder);
-    Complex y1AddInv = complex_additiveInverse(complexAffinePoint.y, ellipticCurve.fieldOrder);
 
     // If the \f$y\f$ coordinate is equal to complex zero, then the result is infinity.
     if(complex_isEquals(complexAffinePoint.y, complexZero))
     {
-        complex_destroyMany(3, complexZero, x1AddInv, y1AddInv);
+        complex_destroy(complexZero);
         *result = complexAffine_infinity();
         return SUCCESS;
     }
 
     complex_destroy(complexZero);
-
-    Complex m;
 
     mpz_t tmp;
     mpz_init_set_ui(tmp, 2);
@@ -90,7 +86,7 @@ Status complexAffine_double(ComplexAffinePoint *result, const ComplexAffinePoint
     Status status = complex_multiplicativeInverse(&denom, twoTimesAp1y, ellipticCurve.fieldOrder);
     if(status)
     {
-        complex_destroyMany(3, x1AddInv, y1AddInv, twoTimesAp1y);
+        complex_destroy(twoTimesAp1y);
         mpz_clear(tmp);
         return status;
     }
@@ -103,7 +99,7 @@ Status complexAffine_double(ComplexAffinePoint *result, const ComplexAffinePoint
     Complex threeTimesAp1xSquared = complex_modMulScalar(ap1xSquared, tmp, ellipticCurve.fieldOrder);
     Complex num = complex_modAddScalar(threeTimesAp1xSquared, ellipticCurve.a, ellipticCurve.fieldOrder);
 
-    m = complex_modMul(num, denom, ellipticCurve.fieldOrder);
+    Complex m = complex_modMul(num, denom, ellipticCurve.fieldOrder);
 
     complex_destroyMany(4, num, threeTimesAp1xSquared, ap1xSquared, denom);
     mpz_clear(tmp);
@@ -112,6 +108,8 @@ Status complexAffine_double(ComplexAffinePoint *result, const ComplexAffinePoint
     // \f$x_n = m^{2}-2x\f$
     Complex x2AddInv = complex_additiveInverse(complexAffinePoint.x, ellipticCurve.fieldOrder);
     Complex mSquared = complex_modMul(m, m, ellipticCurve.fieldOrder);
+
+    Complex x1AddInv = complex_additiveInverse(complexAffinePoint.x, ellipticCurve.fieldOrder);
 
     Complex x1AddInvPlusx2AddInv = complex_modAdd(x1AddInv, x2AddInv, ellipticCurve.fieldOrder);
 
@@ -122,6 +120,7 @@ Status complexAffine_double(ComplexAffinePoint *result, const ComplexAffinePoint
     Complex q = complex_modAdd(complexAffinePoint.x, xAddInv, ellipticCurve.fieldOrder);
     Complex r = complex_modMul(m, q, ellipticCurve.fieldOrder);
 
+    Complex y1AddInv = complex_additiveInverse(complexAffinePoint.y, ellipticCurve.fieldOrder);
     Complex yn = complex_modAdd(r, y1AddInv, ellipticCurve.fieldOrder);
 
     *result = complexAffine_init(xn, yn);
@@ -150,11 +149,6 @@ Status complexAffine_add(ComplexAffinePoint *result, const ComplexAffinePoint co
         return SUCCESS;
     }
 
-    Complex m;
-
-    Complex x1AddInv = complex_additiveInverse(complexAffinePoint1.x, ellipticCurve.fieldOrder);
-    Complex y1AddInv = complex_additiveInverse(complexAffinePoint1.y, ellipticCurve.fieldOrder);
-
     // If the points are equal to each other, we can speed things up
     // by performing a point doubling instead of an addition.
     if(complexAffine_isEquals(complexAffinePoint1, complexAffinePoint2))
@@ -168,28 +162,30 @@ Status complexAffine_add(ComplexAffinePoint *result, const ComplexAffinePoint co
     // Note, that in the algorithm, this check is the first step, however, that's wrong.
     if(complex_isEquals(complexAffinePoint1.x, complexAffinePoint2.x))
     {
-        complex_destroyMany(2, x1AddInv, y1AddInv);
         *result = complexAffine_infinity();
         return SUCCESS;
     }
 
-    Complex denom;
+
+    Complex x1AddInv = complex_additiveInverse(complexAffinePoint1.x, ellipticCurve.fieldOrder);
 
     // \f$\frac{y_2 - y_1}{x_2 - x_1}\f$
     Complex ap2xPlusx1AddInv = complex_modAdd(complexAffinePoint2.x, x1AddInv, ellipticCurve.fieldOrder);
 
+    Complex denom;
     Status status = complex_multiplicativeInverse(&denom, ap2xPlusx1AddInv, ellipticCurve.fieldOrder);
     if(status)
     {
-        complex_destroyMany(3, x1AddInv, y1AddInv, ap2xPlusx1AddInv);
+        complex_destroyMany(2, x1AddInv, ap2xPlusx1AddInv);
         return status;
     }
 
     complex_destroy(ap2xPlusx1AddInv);
 
+    Complex y1AddInv = complex_additiveInverse(complexAffinePoint1.y, ellipticCurve.fieldOrder);
     Complex num =  complex_modAdd(complexAffinePoint2.y, y1AddInv, ellipticCurve.fieldOrder);
 
-    m = complex_modMul(num, denom, ellipticCurve.fieldOrder);
+    Complex m = complex_modMul(num, denom, ellipticCurve.fieldOrder);
 
     complex_destroyMany(2, denom, num);
 
