@@ -4,7 +4,7 @@ const { removeFiles, run } = require('./util');
 
 function runMemoryCheck(dependencies, components) {
     try {
-        compileAllSources(dependencies, []);
+        compileAllSources(dependencies, ['-g']);
 
         const errors = testWithMemoryCheck(dependencies, components);
 

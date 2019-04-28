@@ -10,7 +10,6 @@ function compileAllSources({ klawSync, paths, spawnSync }, extraArguments = []) 
         ...thirdPartySourceFiles,
         `-I${paths.cryptid.includeDir}`,
         `-I${paths.thirdParty.includeDir}`,
-        '-g',
         '-std=c99',
         '-Wall',
         '-Wextra',

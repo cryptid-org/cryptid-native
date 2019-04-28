@@ -17,7 +17,7 @@ function runTests(dependencies, components) {
 function testComponents(dependencies, components) {
     const errors = [];
 
-    compileAllSources(dependencies, []);
+    compileAllSources(dependencies, ['-g']);
 
     for (const component of components) {
         console.log(`Testing ${component}`);

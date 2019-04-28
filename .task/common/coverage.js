@@ -47,7 +47,7 @@ function generateGcovCoverage(dependencies, components) {
 function testComponentsWithCoverage(dependencies, components) {
     const errors = [];
 
-    compileAllSources(dependencies, coverageCompilationArguments);
+    compileAllSources(dependencies, ['-g', ...coverageCompilationArguments]);
 
     for (const component of components) {
         console.log(`Collecting test coverage for ${component}`);
