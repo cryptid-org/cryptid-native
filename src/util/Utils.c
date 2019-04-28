@@ -109,7 +109,7 @@ Status hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve, const
     mpz_cdiv_q(pAddOneQq, pAddOne, q);
 
     // Let \f$Q = [(p + 1) / q ]Q^{\prime}\f$, a point of order \f$q\f$ in \f$E(F_p)\f$.
-    Status status = affine_wNAFMultiply(result, pAddOneQq, qPrime, ellipticCurve);
+    Status status = AFFINE_MULTIPLY_IMPL(result, pAddOneQq, qPrime, ellipticCurve);
     if(status)
     {
         mpz_clears(y, x, pxTwo, pxTwoSub, pxTwoSubQ3, yPowTwo, yPowTwoSub, pAddOne, pAddOneQq, NULL);

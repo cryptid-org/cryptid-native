@@ -6,6 +6,12 @@
 #include "elliptic/EllipticCurve.h"
 #include "util/Status.h"
 
+/**
+ * We have multiple implemetations of the affine-scalar multiplication. This macro
+ * defines which one to use.
+ */
+#define AFFINE_MULTIPLY_IMPL affine_wNAFMultiply
+
 
 /**
  * Represents an affine point with coordinates.

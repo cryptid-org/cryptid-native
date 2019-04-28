@@ -83,7 +83,7 @@ Status cryptid_setup(const SecurityLevel securityLevel, PublicParameters* public
         mpz_init_set(rMul, r);
         mpz_mul_ui(rMul, rMul, 12);
 
-        status = affine_wNAFMultiply(&pointP, rMul, pointPprime, ec);
+        status = AFFINE_MULTIPLY_IMPL(&pointP, rMul, pointPprime, ec);
 
         if (status)
         {
@@ -111,7 +111,7 @@ Status cryptid_setup(const SecurityLevel securityLevel, PublicParameters* public
     // Determine the public parameters.
     AffinePoint pointPpublic;
 
-    status = affine_wNAFMultiply(&pointPpublic, s, pointP, ec);
+    status = AFFINE_MULTIPLY_IMPL(&pointPpublic, s, pointP, ec);
 
     if (status)
     {
@@ -167,7 +167,7 @@ Status cryptid_extract(AffinePoint* result, const char *const identity, const si
     }
 
     // Let \f$S_{id} = [s]Q_{id}\f$.
-    status = affine_wNAFMultiply(result, masterSecret, qId, publicParameters.ellipticCurve);
+    status = AFFINE_MULTIPLY_IMPL(result, masterSecret, qId, publicParameters.ellipticCurve);
 
     affine_destroy(qId);
 
@@ -249,7 +249,7 @@ Status cryptid_encrypt(CipherTextTuple *result, const char *const message, const
 
     // Let \f$U = [l]P\f$, which is a point of order \f$q\f$ in \f$E(F_p)\f$.
     AffinePoint cipherPointU;
-    status = affine_wNAFMultiply(&cipherPointU, l, publicParameters.pointP, publicParameters.ellipticCurve);
+    status = AFFINE_MULTIPLY_IMPL(&cipherPointU, l, publicParameters.pointP, publicParameters.ellipticCurve);
     if(status)
     {
         mpz_clear(l);
@@ -415,7 +415,7 @@ Status cryptid_decrypt(char **result, const AffinePoint privateKey, const Cipher
     
     // Verify that \f$U = [l]P\f$.
     AffinePoint testPoint;
-    status = affine_wNAFMultiply(&testPoint, l, publicParameters.pointP, publicParameters.ellipticCurve);
+    status = AFFINE_MULTIPLY_IMPL(&testPoint, l, publicParameters.pointP, publicParameters.ellipticCurve);
     if(status)
     {
         mpz_clear(l);
