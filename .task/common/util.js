@@ -33,8 +33,13 @@ function run({ spawnSync }, executable, args = [], opts = {}) {
     }
 };
 
+function version({ fs, paths }) {
+    return fs.readFileSync(paths.version, { encoding: 'utf8'}).trim();
+};
+
 module.exports = {
     discoverAllComponents,
     removeFiles,
-    run
+    run,
+    version
 };
