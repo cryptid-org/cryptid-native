@@ -5,54 +5,77 @@
 </p>
 
 <p align="center">
-Identity-based Encryption solution you can trust.
+Cross-platform Identity-based Encryption solution.
 </p>
 
 ---
 
-# CryptID
+# CryptID.native
 
-High-performance, cross-platform C and WebAssembly implementation of the aforementioned RFC, aimed for usage in both browsers and Node.
+Cross-platform C implementation of the Boneh-Franklin Identity-based Encryption system as described in [RFC 5091](https://tools.ietf.org/html/rfc5091).
 
-## Building CryptID
+CryptID.native provides the foundation of CryptID.js which is a WebAssembly library mainly targeting browsers.
 
-Although it's possible to build a C library from CryptID, it's aimed for WebAssembly compilation through emscripten. The following build process assumes that you're using the [CryptID Dev Machine](dev-machine).
+## Building CryptID.native
 
-First `vagrant ssh` into the dev virtual machine. Then switch to the root account using `sudo su`. Now setup the emscripten dev environment:
+### Dependencies
 
-~~~~bash
-cd /home/vagrant/emsdk
-./emsdk activate sdk-tag-1.38.8-32bit
-source ./emsdk_env.sh
-~~~~
+CryptID requires the following components to be present:
 
-Now you can build the library using `task.js` from the repository root:
+  * gcc 5+,
+  * [Node.js](https://nodejs.org/en/) v10+,
+  * [GMP](https://gmplib.org/) 6+.
 
-~~~~bash
-./task.js cryptid wasm build
-~~~~
+### Static Library
 
-The resulting JS and WASM files are placed in the `out` directory. By default, the script creates a release binary. Debug symbols and settings can be enabled by running `./task.js cryptid wasm build --debug`.
-
-## Testing CryptID
-
-Assuming, that you are using the `CryptID Dev Machine`, testing can be done as follows. First setup the environment, so that emscripten is on the PATH:
+A static library can be created using the following command:
 
 ~~~~bash
-sudo su
-cd /home/vagrant/emsdk
-./emsdk activate sdk-tag-1.38.8-32bit
-source ./emsdk_env.sh
+./task.sh build-static
 ~~~~
 
-Now use `task.js` from the repository root:
+The resulting library will be placed in the `build` directory.
 
-  * run all tests in WASM format: `./task.js cryptid wasm test-all`
-  * run individual tests in WASM format: `./task.js cryptid wasm test <component>`, for example `./task.js cryptid wasm test Complex`
-  * run all tests in native format: `./task.js cryptid native test-all`
-  * run individual tests in native format: `./task.js cryptid native test <component>`
-  
-## Developing Tests
+## Testing CryptID.native
 
-  * Tests must be written in C using the [greatest](https://github.com/silentbicycle/greatest) unit testing library.
-  * A separate test file should be created for each component of CryptID. The test file should be named `component.test.c`.
+### Running Tests
+
+Tests can be executed using the task command:
+
+~~~~bash
+./task.sh test
+~~~~
+
+If no additional arguments are present, then all components will be tested. Running only specific tests can be enforced by providing a list of component names:
+
+~~~~bash
+./task.sh test Complex TatePairing
+~~~~
+
+### Testing with Coverage
+
+Coverage data is generated using the following tools:
+
+  * gcov,
+  * lcov,
+  * genhtml.
+
+Line and branch coverage data can be generated using the following command:
+
+~~~~bash
+./task.sh html-coverage
+~~~~
+
+This command will place the HTML-formatted coverage data in the `coverage` directory. Gathering coverage for specific components can be done by appending a list of components names after the command.
+
+### Leak Checking
+
+Memory leak checking requires the presence `valgrind`.
+
+The leak checking process can be initiated by executing the following command:
+
+~~~~bash
+./task.sh memory-check
+~~~~
+
+Again, specific components can be memchecked by appending their names after the command.
