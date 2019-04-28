@@ -69,7 +69,7 @@ int affine_isInfinity(const AffinePoint affinePoint);
 
 /**
  * Doubles (adds to itself) the specified AffinePoint.
- * @param result the result of the operation
+ * @param result The result of the operation. On SUCCESS, this should be destroyed by the caller.
  * @param affinePoint the point to double
  * @param ellipticCurve the elliptic curve to operate over
  * @result SUCCESS if everything went right, error otherwise
@@ -80,7 +80,7 @@ Status affine_double(AffinePoint *result, const AffinePoint affinePoint, const E
  * Adds two AffinePoints.
  *
  * Implementation of Algorithm 3.1 in [Intro-to-IBE].
- * @param result the result of the addition
+ * @param result The result of the addition. On SUCCESS, this should be destroyed by the caller.
  * @param affinePoint1 an AffinePoint
  * @param affinePoint2 an AffinePoint
  * @param ellipticCurve the curve to operate over
@@ -90,7 +90,7 @@ Status affine_add(AffinePoint *result, const AffinePoint affinePoint1, const Aff
 
 /**
  * Multiplies an AffinePoint with a scalar.
- * @param result the result of the multiplication
+ * @param result The result of the multiplication. On SUCCESS, this should be destroyed by the caller.
  * @param s the scalar to multiply with
  * @param affinePoint the point to multiply
  * @param ellipticCurve the elliptic curve to operate over

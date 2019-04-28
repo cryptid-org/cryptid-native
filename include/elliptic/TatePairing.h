@@ -11,7 +11,7 @@
 
 /**
  * Computes the Tate pairing over Type-1 elliptic curves.
- * @param result pointer to the resulting Complex value
+ * @param result Out parameter to the resulting Complex value. On SUCCESS, this should be destroyed by the caller.
  * @param embeddingDegree the embedding degree of the curve
  * @param ellipticCurve the elliptic curve to operate on
  * @param subgroupOrder the order of the subgroup

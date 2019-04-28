@@ -72,7 +72,7 @@ int complexAffine_isInfinity(const ComplexAffinePoint complexAffinePoint);
 
 /**
  * Doubles (adds to itself) the specified ComplexAffinePoint.
- * @param result the result of the operation
+ * @param result The result of the operation. On SUCCESS, this should be destroyed by the caller.
  * @param complexAffinePoint the point to double
  * @param ellipticCurve the elliptic curve to operate over
  * @result SUCCESS if everything went right, error otherwise
@@ -82,7 +82,7 @@ Status complexAffine_double(ComplexAffinePoint *result, const ComplexAffinePoint
 
 /**
  * Adds two ComplexAffinePoints.
- * @param result the result of the addition
+ * @param result The result of the addition. On SUCCESS, this should be destroyed by the caller.
  * @param complexAffinePoint1 a ComplexAffinePoint
  * @param complexAffinePoint2 a ComplexAffinePoint
  * @param ec the curve to operate over
@@ -93,7 +93,7 @@ Status complexAffine_add(ComplexAffinePoint *result, const ComplexAffinePoint co
 
 /**
  * Multiplies a ComplexAffinePoint with a scalar.
- * @param result the result of the multiplication
+ * @param result The result of the multiplication. On SUCCESS, this should be destroyed by the caller.
  * @param s the scalar to multiply with
  * @param complexAffinePoint the point to multiply
  * @param ec the elliptic curve to operate over
