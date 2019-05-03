@@ -6,7 +6,7 @@
 //   * [Intro-to-IBE] Luther Martin. 2008. Introduction to Identity-Based Encryption (Information Security and Privacy Series) (1 ed.). Artech House, Inc., Norwood, MA, USA. 
 
 
-Status tate_performPairing(Complex *result, const int embeddingDegree, const EllipticCurve ellipticCurve,
+CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, const EllipticCurve ellipticCurve,
                            const mpz_t subgroupOrder, const AffinePoint p, const AffinePoint b)
 {
     // Implementation of Miller's algorithm as it's written on this page:
@@ -66,7 +66,7 @@ Status tate_performPairing(Complex *result, const int embeddingDegree, const Ell
     {
         complexAffine_destroy(q);
         *result = complex_initLong(1, 0);
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     // Now p and q are linearly indenependent.
@@ -86,7 +86,7 @@ Status tate_performPairing(Complex *result, const int embeddingDegree, const Ell
     {
         // Double step
         // \f$f = f^{2} \frac{g_{v, v}(q)}{g_{2v, -2v}(q)}\f$
-        Status status = affine_add(&doubleV, v, v, ellipticCurve);
+        CryptidStatus status = affine_add(&doubleV, v, v, ellipticCurve);
         if(status)
         {
             complexAffine_destroy(q);
@@ -190,5 +190,5 @@ Status tate_performPairing(Complex *result, const int embeddingDegree, const Ell
     mpz_clears(exponent, pPow, exponentPart, NULL);
     complex_destroy(f);
 
-    return SUCCESS;
+    return CRYPTID_SUCCESS;
 }

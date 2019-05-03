@@ -19,7 +19,7 @@ static const unsigned int POINT_GENERATION_ATTEMPT_LIMIT = 100;
 static const unsigned int Q_LENGTH_MAPPING[] = { 160, 224, 256, 384, 512 };
 static const unsigned int P_LENGTH_MAPPING[] = { 512, 1024, 1536, 3840, 7680 };
 
-Status cryptid_setup(const SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret)
+CryptidStatus cryptid_setup(const SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret)
 {
     // Implementation of Algorithm 5.1.2 (BFsetup1) in [RFC-5091].
     // Note, that instead of taking the bitlengts of p and q as arguments, this function takes
@@ -28,7 +28,7 @@ Status cryptid_setup(const SecurityLevel securityLevel, PublicParameters* public
 
     if (!publicParameters)
     {
-        return PUBLIC_PARAMETERS_NULL_ERROR;
+        return CRYPTID_PUBLIC_PARAMETERS_NULL_ERROR;
     }
 
     // Construct the elliptic curve and its subgroup of interest
@@ -36,7 +36,7 @@ Status cryptid_setup(const SecurityLevel securityLevel, PublicParameters* public
     mpz_t q;
     mpz_init(q);
 
-    Status status = random_solinasPrime(q, Q_LENGTH_MAPPING[(int) securityLevel], SOLINAS_GENERATION_ATTEMPT_LIMIT);
+    CryptidStatus status = random_solinasPrime(q, Q_LENGTH_MAPPING[(int) securityLevel], SOLINAS_GENERATION_ATTEMPT_LIMIT);
 
     if (status)
     {
@@ -132,33 +132,33 @@ Status cryptid_setup(const SecurityLevel securityLevel, PublicParameters* public
 
     mpz_clears(p, q, s, r, NULL);
 
-    return SUCCESS;
+    return CRYPTID_SUCCESS;
 }
 
-Status cryptid_extract(AffinePoint* result, const char *const identity, const size_t identityLength, 
+CryptidStatus cryptid_extract(AffinePoint* result, const char *const identity, const size_t identityLength, 
                        const PublicParameters publicParameters, const mpz_t masterSecret)
 {
     // Implementation of Algorithm 5.3.1 (BFextractPriv) in [RFC-5091].
 
     if (!result)
     {
-        return RESULT_POINTER_NULL_ERROR;
+        return CRYPTID_RESULT_POINTER_NULL_ERROR;
     }
 
     if (identityLength == 0)
     {
-        return IDENTITY_LENGTH_ERROR;
+        return CRYPTID_IDENTITY_LENGTH_ERROR;
     }
 
     if(!validation_isPublicParametersValid(publicParameters))
     {
-        return ILLEGAL_PUBLIC_PARAMETERS_ERROR;
+        return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
 
     AffinePoint qId;
 
     // Let \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$.
-    Status status =
+    CryptidStatus status =
         hashToPoint(&qId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
 
     if (status) 
@@ -174,34 +174,34 @@ Status cryptid_extract(AffinePoint* result, const char *const identity, const si
     return status;
 }
 
-Status cryptid_encrypt(CipherTextTuple *result, const char *const message, const size_t messageLength,
+CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message, const size_t messageLength,
                        const char *const identity, const size_t identityLength, const PublicParameters publicParameters)
 {
     // Implementation of Algorithm 5.4.1 (BFencrypt) in [RFC-5091].
 
     if(!message)
     {
-        return MESSAGE_NULL_ERROR;
+        return CRYPTID_MESSAGE_NULL_ERROR;
     }
 
     if(messageLength == 0)
     {
-        return MESSAGE_LENGTH_ERROR;
+        return CRYPTID_MESSAGE_LENGTH_ERROR;
     }
 
     if(!identity)
     {
-        return IDENTITY_NULL_ERROR;
+        return CRYPTID_IDENTITY_NULL_ERROR;
     }
 
     if(identityLength == 0)
     {
-        return IDENTITY_LENGTH_ERROR;
+        return CRYPTID_IDENTITY_LENGTH_ERROR;
     }
 
     if(!validation_isPublicParametersValid(publicParameters))
     {
-        return ILLEGAL_PUBLIC_PARAMETERS_ERROR;
+        return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
 
     mpz_t l;
@@ -214,7 +214,7 @@ Status cryptid_encrypt(CipherTextTuple *result, const char *const message, const
     // \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$
     // which results in a point of order \f$q\f$ in \f$E(F_p)\f$.
     AffinePoint pointQId;
-    Status status = hashToPoint(&pointQId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
+    CryptidStatus status = hashToPoint(&pointQId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
     if(status)
     {
         mpz_clear(l);
@@ -321,27 +321,27 @@ Status cryptid_encrypt(CipherTextTuple *result, const char *const message, const
     free(cipherW);
     free(hashedBytes);
 
-    return SUCCESS;
+    return CRYPTID_SUCCESS;
 }
 
-Status cryptid_decrypt(char **result, const AffinePoint privateKey, const CipherTextTuple ciphertext, 
+CryptidStatus cryptid_decrypt(char **result, const AffinePoint privateKey, const CipherTextTuple ciphertext, 
                        const PublicParameters publicParameters)
 {
     // Implementation of Algorithm 5.5.1 (BFdecrypt) in [RFC-5091].
 
     if(!validation_isPublicParametersValid(publicParameters))
     {
-        return ILLEGAL_PUBLIC_PARAMETERS_ERROR;
+        return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
 
     if(!validation_isAffinePointValid(privateKey, publicParameters.ellipticCurve.fieldOrder))
     {
-        return ILLEGAL_PRIVATE_KEY_ERROR;
+        return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR;
     }
 
     if(!validation_isCipherTextTupleValid(ciphertext, publicParameters.ellipticCurve.fieldOrder))
     {
-        return ILLEGAL_CIPHERTEXT_TUPLE_ERROR;
+        return CRYPTID_ILLEGAL_CIPHERTEXT_TUPLE_ERROR;
     }
 
     mpz_t l;
@@ -354,7 +354,7 @@ Status cryptid_decrypt(char **result, const AffinePoint privateKey, const Cipher
     // Let \f$theta = \mathrm{Pairing}(E, p ,q, U, S_{id})\f$ by applying the modified
     // Tate pairing.
     Complex theta;
-    Status status = tate_performPairing(&theta, 2, publicParameters.ellipticCurve, publicParameters.q, ciphertext.cipherU, privateKey);
+    CryptidStatus status = tate_performPairing(&theta, 2, publicParameters.ellipticCurve, publicParameters.q, ciphertext.cipherU, privateKey);
     if(status)
     {
         mpz_clear(l);
@@ -429,12 +429,12 @@ Status cryptid_decrypt(char **result, const AffinePoint privateKey, const Cipher
         affine_destroy(testPoint);
         mpz_clear(l);
         *result = m;
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     // Otherwise, the ciphertext is rejected and no plaintext is returned.
     affine_destroy(testPoint);
     mpz_clear(l);
     free(m);
-    return DECRYPTION_FAILED_ERROR;
+    return CRYPTID_DECRYPTION_FAILED_ERROR;
 }

@@ -36,17 +36,17 @@ void random_mpzInRange(mpz_t result, const mpz_t range);
  * @param result out parameter for the generated value
  * @param numberOfBits the bitlength of the result
  * @param attemptLimit the maximum number of attempts before giving up the generation
- * @return SUCCESS if everything went right
+ * @return CRYPTID_SUCCESS if everything went right
  */
-Status random_solinasPrime(mpz_t result, const unsigned int numberOfBits, const unsigned int attemptLimit);
+CryptidStatus random_solinasPrime(mpz_t result, const unsigned int numberOfBits, const unsigned int attemptLimit);
 
 /**
  * Generates a cryptographically secure random AffinePoint on the specified EllipticCurve.
  * @param result out parameter for the generated value
  * @param ellipticCurve the elliptic curve to operate on
  * @param attemptLimit the maximum number of attempts before giving up the generation
- * @return SUCCESS if everything went right
+ * @return CRYPTID_SUCCESS if everything went right
  */
-Status random_affinePoint(AffinePoint* result, const EllipticCurve ellipticCurve, const unsigned int attemptLimit);
+CryptidStatus random_affinePoint(AffinePoint* result, const EllipticCurve ellipticCurve, const unsigned int attemptLimit);
 
 #endif

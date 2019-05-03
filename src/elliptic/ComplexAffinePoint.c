@@ -51,7 +51,7 @@ int complexAffine_isInfinity(const ComplexAffinePoint complexAffinePoint)
     return result;
 }
 
-Status complexAffine_double(ComplexAffinePoint *result, const ComplexAffinePoint complexAffinePoint, const EllipticCurve ellipticCurve)
+CryptidStatus complexAffine_double(ComplexAffinePoint *result, const ComplexAffinePoint complexAffinePoint, const EllipticCurve ellipticCurve)
 {
     // Double-only implementation of Algorithm 3.1 in [Intro-to-IBE].
 
@@ -59,7 +59,7 @@ Status complexAffine_double(ComplexAffinePoint *result, const ComplexAffinePoint
     if(complexAffine_isInfinity(complexAffinePoint))
     {
         *result = complexAffine_infinity();
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     Complex complexZero = complex_initLong(0, 0);
@@ -69,7 +69,7 @@ Status complexAffine_double(ComplexAffinePoint *result, const ComplexAffinePoint
     {
         complex_destroy(complexZero);
         *result = complexAffine_infinity();
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     complex_destroy(complexZero);
@@ -83,7 +83,7 @@ Status complexAffine_double(ComplexAffinePoint *result, const ComplexAffinePoint
     Complex twoTimesAp1y = complex_modMulScalar(complexAffinePoint.y, tmp, ellipticCurve.fieldOrder);
 
     // If \f$2y\f$ has no multiplicative inverse, the above expression cannot be calculated.
-    Status status = complex_multiplicativeInverse(&denom, twoTimesAp1y, ellipticCurve.fieldOrder);
+    CryptidStatus status = complex_multiplicativeInverse(&denom, twoTimesAp1y, ellipticCurve.fieldOrder);
     if(status)
     {
         complex_destroy(twoTimesAp1y);
@@ -128,10 +128,10 @@ Status complexAffine_double(ComplexAffinePoint *result, const ComplexAffinePoint
 
     complex_destroyMany(11, yn, r, q, xAddInv, xn, x1AddInvPlusx2AddInv, mSquared, x2AddInv, m, x1AddInv, y1AddInv);
 
-    return SUCCESS;
+    return CRYPTID_SUCCESS;
 }
 
-Status complexAffine_add(ComplexAffinePoint *result, const ComplexAffinePoint complexAffinePoint1,
+CryptidStatus complexAffine_add(ComplexAffinePoint *result, const ComplexAffinePoint complexAffinePoint1,
                          const ComplexAffinePoint complexAffinePoint2, EllipticCurve ellipticCurve)
 {
     // Implementation of Algorithm 3.1 in [Intro-to-IBE].
@@ -140,13 +140,13 @@ Status complexAffine_add(ComplexAffinePoint *result, const ComplexAffinePoint co
     if(complexAffine_isInfinity(complexAffinePoint1))
     {
         *result = complexAffine_init(complexAffinePoint2.x, complexAffinePoint2.y);
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     if(complexAffine_isInfinity(complexAffinePoint2))
     {
         *result = complexAffine_init(complexAffinePoint1.x, complexAffinePoint1.y);
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     // If the points are equal to each other, we can speed things up
@@ -154,7 +154,7 @@ Status complexAffine_add(ComplexAffinePoint *result, const ComplexAffinePoint co
     if(complexAffine_isEquals(complexAffinePoint1, complexAffinePoint2))
     {
         complexAffine_double(result, complexAffinePoint1, ellipticCurve);
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     // Having equal \f$x\f$ coordinates (and different points) a divide-by-zero error would
@@ -163,7 +163,7 @@ Status complexAffine_add(ComplexAffinePoint *result, const ComplexAffinePoint co
     if(complex_isEquals(complexAffinePoint1.x, complexAffinePoint2.x))
     {
         *result = complexAffine_infinity();
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
 
@@ -173,7 +173,7 @@ Status complexAffine_add(ComplexAffinePoint *result, const ComplexAffinePoint co
     Complex ap2xPlusx1AddInv = complex_modAdd(complexAffinePoint2.x, x1AddInv, ellipticCurve.fieldOrder);
 
     Complex denom;
-    Status status = complex_multiplicativeInverse(&denom, ap2xPlusx1AddInv, ellipticCurve.fieldOrder);
+    CryptidStatus status = complex_multiplicativeInverse(&denom, ap2xPlusx1AddInv, ellipticCurve.fieldOrder);
     if(status)
     {
         complex_destroyMany(2, x1AddInv, ap2xPlusx1AddInv);
@@ -209,10 +209,10 @@ Status complexAffine_add(ComplexAffinePoint *result, const ComplexAffinePoint co
 
     complex_destroyMany(11, yn, r, q, xAddInv, xn, x1AddInvPlusx2AddInv, mSquared, x2AddInv, m, x1AddInv, y1AddInv);
 
-    return SUCCESS;
+    return CRYPTID_SUCCESS;
 }
 
-Status complexAffine_multiply(ComplexAffinePoint *result, const mpz_t s, const ComplexAffinePoint complexAffinePoint,
+CryptidStatus complexAffine_multiply(ComplexAffinePoint *result, const mpz_t s, const ComplexAffinePoint complexAffinePoint,
                               const EllipticCurve ellipticCurve)
 {
     // Implementation of Algorithm 3.26 in [Guide-to-ECC].
@@ -225,7 +225,7 @@ Status complexAffine_multiply(ComplexAffinePoint *result, const mpz_t s, const C
     {
         mpz_clear(zero);
         *result = complexAffine_infinity();
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     // Multiplying infinity yields infinity.
@@ -233,7 +233,7 @@ Status complexAffine_multiply(ComplexAffinePoint *result, const mpz_t s, const C
     {
         mpz_clear(zero);
         *result = complexAffine_infinity();
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     ComplexAffinePoint pointN = complexAffine_init(complexAffinePoint.x, complexAffinePoint.y);
@@ -246,7 +246,7 @@ Status complexAffine_multiply(ComplexAffinePoint *result, const mpz_t s, const C
     // Right-to-left iteration
     for(int i = strlen(d) - 1; i >= 0; i--)
     {
-        Status status;
+        CryptidStatus status;
 
         // If \f$k_i = 1\f$ then \f$Q = Q + P\f$.
         if(d[i] == '1')
@@ -286,7 +286,7 @@ Status complexAffine_multiply(ComplexAffinePoint *result, const mpz_t s, const C
 
     mpz_clear(zero);
     *result = pointQ;
-    return SUCCESS;
+    return CRYPTID_SUCCESS;
 }
 
 int complexAffine_isOnCurve(ComplexAffinePoint point, EllipticCurve ellipticCurve)

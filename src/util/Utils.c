@@ -81,7 +81,7 @@ void hashToRange(mpz_t result, const unsigned char *const s, const int sLength, 
     mpz_clears(v, a, twoFiveSix, twoFiveSixPow, vxTwoFiveSixPow, NULL);
 }
 
-Status hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve, const mpz_t p, const mpz_t q, 
+CryptidStatus hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve, const mpz_t p, const mpz_t q, 
                    const char *const id, const int idLength, const HashFunction hashFunction)
 {
     // Implementation of Algorithm 4.4.2 (HashToPoint1) in [RFC-5091].
@@ -109,7 +109,7 @@ Status hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve, const
     mpz_cdiv_q(pAddOneQq, pAddOne, q);
 
     // Let \f$Q = [(p + 1) / q ]Q^{\prime}\f$, a point of order \f$q\f$ in \f$E(F_p)\f$.
-    Status status = AFFINE_MULTIPLY_IMPL(result, pAddOneQq, qPrime, ellipticCurve);
+    CryptidStatus status = AFFINE_MULTIPLY_IMPL(result, pAddOneQq, qPrime, ellipticCurve);
     if(status)
     {
         mpz_clears(y, x, pxTwo, pxTwoSub, pxTwoSubQ3, yPowTwo, yPowTwoSub, pAddOne, pAddOneQq, NULL);
@@ -119,7 +119,7 @@ Status hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve, const
 
     mpz_clears(y, x, pxTwo, pxTwoSub, pxTwoSubQ3, yPowTwo, yPowTwoSub, pAddOne, pAddOneQq, NULL);
     affine_destroy(qPrime);
-    return SUCCESS;
+    return CRYPTID_SUCCESS;
 }
 
 unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v, const int order)

@@ -23,24 +23,24 @@ TEST fresh_ibe_setup_matching_identities(SecurityLevel securityLevel, char* mess
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    Status status = cryptid_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = cryptid_setup(securityLevel, publicParameters, masterSecret);
 
-    ASSERT_EQ(status, SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     AffinePoint privateKey;
     status = cryptid_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret);
 
-    ASSERT_EQ(status, SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     CipherTextTuple* ciphertext = malloc(sizeof (CipherTextTuple));
     status = cryptid_encrypt(ciphertext, message, strlen(message), identity, strlen(identity), *publicParameters);
 
-    ASSERT_EQ(status, SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     char *plaintext;
     status = cryptid_decrypt(&plaintext, privateKey, *ciphertext, *publicParameters);
 
-    ASSERT_EQ(status, SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
     ASSERT_EQ(strcmp(message, plaintext), 0);
 
     free(plaintext);
@@ -63,24 +63,24 @@ TEST fresh_ibe_setup_different_identities(SecurityLevel securityLevel, char* mes
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    Status status = cryptid_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = cryptid_setup(securityLevel, publicParameters, masterSecret);
 
-    ASSERT_EQ(status, SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     AffinePoint privateKey;
     status = cryptid_extract(&privateKey, decryptIdentity, strlen(decryptIdentity), *publicParameters, masterSecret);
 
-    ASSERT_EQ(status, SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     CipherTextTuple* ciphertext = malloc(sizeof (CipherTextTuple));
     status = cryptid_encrypt(ciphertext, message, strlen(message), encryptIdentity, strlen(encryptIdentity), *publicParameters);
 
-    ASSERT_EQ(status, SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     char *plaintext;
     status = cryptid_decrypt(&plaintext, privateKey, *ciphertext, *publicParameters);
 
-    ASSERT_EQ(status, DECRYPTION_FAILED_ERROR);
+    ASSERT_EQ(status, CRYPTID_DECRYPTION_FAILED_ERROR);
 
     cipherTextTuple_destroy(*ciphertext);
     free(ciphertext);

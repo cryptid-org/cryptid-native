@@ -61,7 +61,7 @@ int affine_isInfinity(const AffinePoint affinePoint)
     return result;
 }
 
-Status affine_double(AffinePoint *result, const AffinePoint affinePoint, const EllipticCurve ellipticCurve)
+CryptidStatus affine_double(AffinePoint *result, const AffinePoint affinePoint, const EllipticCurve ellipticCurve)
 {
     // Double-only implementation of Algorithm 3.1 in [Intro-to-IBE].
 
@@ -69,7 +69,7 @@ Status affine_double(AffinePoint *result, const AffinePoint affinePoint, const E
     if(affine_isInfinity(affinePoint))
     {
         *result = affine_infinity();
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     mpz_t x1PowTwo, threex1PowTwo, num, y1MulTwo, denom, numMulDenom, m, mPowTwo, mPowTwoSubx1, x3, x1Subx3, mMulx1Subx3, y3;
@@ -78,7 +78,7 @@ Status affine_double(AffinePoint *result, const AffinePoint affinePoint, const E
     if(!mpz_cmp_ui(affinePoint.y, 0))
     {
         *result = affine_infinity();
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     mpz_inits(x1PowTwo, threex1PowTwo, num, y1MulTwo, denom, numMulDenom, m, mPowTwo, mPowTwoSubx1, x3, x1Subx3, mMulx1Subx3, y3, NULL);
@@ -114,10 +114,10 @@ Status affine_double(AffinePoint *result, const AffinePoint affinePoint, const E
 
     mpz_clears(x1PowTwo, threex1PowTwo, num, y1MulTwo, denom, numMulDenom, m, mPowTwo, mPowTwoSubx1, x3, x1Subx3, mMulx1Subx3, y3, NULL);
 
-    return SUCCESS;
+    return CRYPTID_SUCCESS;
 }
 
-Status affine_add(AffinePoint *result, const AffinePoint affinePoint1, const AffinePoint affinePoint2, const EllipticCurve ellipticCurve)
+CryptidStatus affine_add(AffinePoint *result, const AffinePoint affinePoint1, const AffinePoint affinePoint2, const EllipticCurve ellipticCurve)
 {
     // Implementation of Algorithm 3.1 in [Intro-to-IBE].
     
@@ -127,13 +127,13 @@ Status affine_add(AffinePoint *result, const AffinePoint affinePoint1, const Aff
     if(affine_isInfinity(affinePoint1))
     {
         *result = affine_init(affinePoint2.x, affinePoint2.y);
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     if(affine_isInfinity(affinePoint2))
     {
         *result = affine_init(affinePoint1.x, affinePoint1.y);
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     mpz_inits(m, num, denom, numMulDenom, y2Suby1, x2Subx1, x2Subx1Mod, x3, y3, mPowTwo, mPowTwoSubx1, x1Subx3, mMulx1Subx3, NULL);
@@ -143,7 +143,7 @@ Status affine_add(AffinePoint *result, const AffinePoint affinePoint1, const Aff
     if(affine_isEquals(affinePoint1, affinePoint2))
     {
         mpz_clears(m, num, denom, numMulDenom, y2Suby1, x2Subx1, x2Subx1Mod, x3, y3, mPowTwo, mPowTwoSubx1, x1Subx3, mMulx1Subx3, NULL);
-        Status status = affine_double(result, affinePoint1, ellipticCurve);
+        CryptidStatus status = affine_double(result, affinePoint1, ellipticCurve);
         return status;
     }
 
@@ -154,7 +154,7 @@ Status affine_add(AffinePoint *result, const AffinePoint affinePoint1, const Aff
     {
         mpz_clears(m, num, denom, numMulDenom, y2Suby1, x2Subx1, x2Subx1Mod, x3, y3, mPowTwo, mPowTwoSubx1, x1Subx3, mMulx1Subx3, NULL);
         *result = affine_infinity();
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     // \f$\frac{y_2 - y_1}{x_2 - x_1}\f$
@@ -184,10 +184,10 @@ Status affine_add(AffinePoint *result, const AffinePoint affinePoint1, const Aff
 
     mpz_clears(m, num, denom, numMulDenom, y2Suby1, x2Subx1, x2Subx1Mod, x3, y3, mPowTwo, mPowTwoSubx1, x1Subx3, mMulx1Subx3, NULL);
 
-    return SUCCESS;
+    return CRYPTID_SUCCESS;
 }
 
-Status affine_multiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve)
+CryptidStatus affine_multiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve)
 {
     // Implementation of Algorithm 3.26 in [Guide-to-ECC].
 
@@ -195,14 +195,14 @@ Status affine_multiply(AffinePoint *result, const mpz_t s, const AffinePoint aff
     if(!mpz_cmp_ui(s, 0))
     {
         *result = affine_infinity();
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     // Multiplying infinity yields infinity.
     if(affine_isInfinity(affinePoint))
     {
         *result = affine_infinity();
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     AffinePoint pointN = affine_init(affinePoint.x, affinePoint.y);
@@ -215,7 +215,7 @@ Status affine_multiply(AffinePoint *result, const mpz_t s, const AffinePoint aff
     // Right-to-left iteration
     for(int i = strlen(d) - 1; i >= 0; i--)
     {
-        Status status;
+        CryptidStatus status;
 
         // If \f$k_i = 1\f$ then \f$Q = Q + P\f$.
         if(d[i] == '1')
@@ -252,10 +252,10 @@ Status affine_multiply(AffinePoint *result, const mpz_t s, const AffinePoint aff
     affine_destroy(pointN);
 
     *result = pointQ;
-    return SUCCESS;
+    return CRYPTID_SUCCESS;
 }
 
-Status affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve)
+CryptidStatus affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve)
 {
     // Implementation of Algorithm 3.36 in [Guide-to-ECC].
 
@@ -278,7 +278,7 @@ Status affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const AffinePoint
 
     int actualIndex = 2;
 
-    Status status;
+    CryptidStatus status;
 
     for(int i = 3; i < twoPowWSubOne; i += 2)
     {
@@ -395,7 +395,7 @@ Status affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const AffinePoint
     }
     free(nafForm);
     *result = pointQ;
-    return SUCCESS;
+    return CRYPTID_SUCCESS;
 }
 
 int affine_isOnCurve(const AffinePoint point, const EllipticCurve ellipticCurve)

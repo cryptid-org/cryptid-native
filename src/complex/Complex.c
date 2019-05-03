@@ -230,7 +230,7 @@ Complex complex_modMulScalar(const Complex complex, const mpz_t s, const mpz_t p
     return result;
 }
 
-Status complex_multiplicativeInverse(Complex *result, const Complex complex, const mpz_t p)
+CryptidStatus complex_multiplicativeInverse(Complex *result, const Complex complex, const mpz_t p)
 {
     mpz_t real, imaginary, realInv, q, r, rInv, t;
     mpz_inits(real, imaginary, realInv, q, r, rInv, t, NULL);
@@ -239,7 +239,7 @@ Status complex_multiplicativeInverse(Complex *result, const Complex complex, con
     if(!mpz_cmp_ui(complex.real, 0) && !mpz_cmp_ui(complex.imaginary, 0))
     {
         mpz_clears(real, imaginary, realInv, q, r, rInv, t, NULL);
-        return HAS_NO_MUL_INV_ERROR;
+        return CRYPTID_HAS_NO_MUL_INV_ERROR;
     }
 
     // If the Complex instance only holds a real value, we can fallback to
@@ -250,7 +250,7 @@ Status complex_multiplicativeInverse(Complex *result, const Complex complex, con
         *result = complex_initMpzLong(real, 0);
         
         mpz_clears(real, imaginary, realInv, q, r, rInv, t, NULL);
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     // Likewise, if the Complex instance only holds an imaginary value, we
@@ -263,7 +263,7 @@ Status complex_multiplicativeInverse(Complex *result, const Complex complex, con
         *result = complex_initLongMpz(0, imaginary);
 
         mpz_clears(real, imaginary, realInv, q, r, rInv, t, NULL);
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     // Otherwise, we have a long way to go...
@@ -287,7 +287,7 @@ Status complex_multiplicativeInverse(Complex *result, const Complex complex, con
     if(!mpz_cmp_ui(r, 0))
     {
         mpz_clears(real, imaginary, realInv, q, r, rInv, t, NULL);
-        return HAS_NO_MUL_INV_ERROR;
+        return CRYPTID_HAS_NO_MUL_INV_ERROR;
     }
 
     // {@code x} (the real part) can be calculated using {@code y}.
@@ -307,5 +307,5 @@ Status complex_multiplicativeInverse(Complex *result, const Complex complex, con
 
     *result = complex_initMpz(real, imaginary);
     mpz_clears(real, imaginary, realInv, q, r, rInv, t, NULL);
-    return SUCCESS;
+    return CRYPTID_SUCCESS;
 }

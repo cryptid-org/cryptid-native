@@ -24,10 +24,10 @@ TEST GF_131_modified_tate_pairing_should_just_work(long n, Complex expected)
 
     // When
     Complex result;
-    Status status = tate_performPairing(&result, embeddingDegree, ec, subgroupOrder, a, b);
+    CryptidStatus status = tate_performPairing(&result, embeddingDegree, ec, subgroupOrder, a, b);
 
     // Then
-    ASSERT_EQ(status, SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
     ASSERT(complex_isEquals(result, expected));
 
     affine_destroy(a);
@@ -70,10 +70,10 @@ TEST RFC_5091_tate_pairing_should_work()
 
     // When
     Complex result;
-    Status status = tate_performPairing(&result, embeddingDegree, ec, subgroupOrder, a, b);
+    CryptidStatus status = tate_performPairing(&result, embeddingDegree, ec, subgroupOrder, a, b);
 
     // Then
-    ASSERT_EQ(status, SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
     ASSERT(complex_isEquals(result, expected));
 
     affine_destroy(a);
