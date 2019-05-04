@@ -13,7 +13,7 @@ unsigned int random_unsignedIntInRange(const unsigned int range)
 
     do
     {
-        randomBytes((unsigned char*) &x, sizeof (x));
+        cryptid_randomBytes((unsigned char*) &x, sizeof (x));
 
         r = x % range;
     }
@@ -28,7 +28,7 @@ void random_mpzOfLength(mpz_t result, const unsigned int numberOfBits)
 
     unsigned char buffer[numberOfBytes];
 
-    randomBytes((unsigned char*) &buffer, numberOfBytes);
+    cryptid_randomBytes((unsigned char*) &buffer, numberOfBytes);
 
     unsigned int unneededBits = 8 * numberOfBytes - numberOfBits;
     buffer[0] &= (1 << (8 - unneededBits)) - 1;

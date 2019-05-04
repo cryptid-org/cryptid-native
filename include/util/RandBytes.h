@@ -14,6 +14,6 @@
  * @param num the size of the buffer
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus randomBytes(unsigned char *buf, const int num);
+CryptidStatus cryptid_randomBytes(unsigned char *buf, const int num);
 
 #endif

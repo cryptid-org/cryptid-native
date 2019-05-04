@@ -224,7 +224,7 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
     // Select a random {@code hashlen}-bit vector {@code rho}, represented as (\f$\frac{\mathrm{hashlen}}{8}\f$)-octet
     // string in big-endian convention.
     unsigned char* rho = (unsigned char*)calloc(hashLen + 1, sizeof(unsigned char));
-    randomBytes(rho, hashLen);
+    cryptid_randomBytes(rho, hashLen);
     rho[hashLen] = '\0';
 
     // Let \f$t = \mathrm{hashfcn}(m)\f$, a {@code hashlen}-octet string resulting from applying
