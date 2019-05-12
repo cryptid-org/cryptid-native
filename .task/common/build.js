@@ -9,12 +9,11 @@ function buildStaticLibrary(dependencies, args = []) {
             dependencies.fs.mkdirSync(dependencies.paths.build.outputDirectory);
         }
 
-        const currentVersion = version(dependencies);
         const objectFiles = dependencies.fg.sync(['*.o'], { cwd: dependencies.paths.root });
 
         const arArgs = [
             'rcs',
-            dependencies.paths.build.libraryFile(currentVersion),
+            dependencies.paths.build.libraryFile(),
             ...objectFiles
         ];
 

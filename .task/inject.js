@@ -47,8 +47,8 @@ const paths = (function setupPaths() {
     const build = {
         outputDirectory: path.join(root, 'build')
     };
-    build.libraryFile = function libraryFile(version) {
-        return path.join(build.outputDirectory, `cryptid-${version}.a`);
+    build.libraryFile = function libraryFile() {
+        return path.join(build.outputDirectory, `libcryptid.a`);
     };
 
     return {
