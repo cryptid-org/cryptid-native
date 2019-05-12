@@ -79,3 +79,11 @@ The leak checking process can be initiated by executing the following command:
 ~~~~
 
 Again, specific components can be memchecked by appending their names after the command.
+
+## Acknowledgements
+
+This work is supported by the construction EFOP-3.6.3-VEKOP-16-2017-00002. The project is supported by the European Union, co-financed by the European Social Fund.
+
+<p align="right">
+  <img alt="CryptID" src="docs/img/szechenyi-logo.jpg" width="350">
+</p>
