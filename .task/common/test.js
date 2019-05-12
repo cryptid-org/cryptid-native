@@ -49,7 +49,7 @@ function testComponents(dependencies, components) {
             });
 
             console.log('DEBUG - ERR');
-            console.log(e.stdout);
+            console.log(e.stdout.toString());
         } finally {
             removeFiles(dependencies, [executable]);
         }
