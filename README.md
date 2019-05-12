@@ -25,62 +25,86 @@ If you're new to CryptID and Identity-based Encryption, then make sure to check 
 CryptID requires the following components to be present:
 
   * gcc 5+,
-  * [Node.js](https://nodejs.org/en/) v10+,
+  * [Node.js](https://nodejs.org/en/) v8+,
   * [GMP](https://gmplib.org/) 6+.
 
-### Static Library
+### Creating a Static Library
 
 A static library can be created using the following command:
 
 ~~~~bash
-./task.sh build-static
+./task.sh build
 ~~~~
 
-The resulting library will be placed in the `build` directory.
+The resulting library (`libcryptid.a`) will be placed in the `build` directory.
 
-## Testing CryptID.native
+## Example
 
-### Running Tests
+The following short example demonstrates the usage of CryptID.native:
 
-Tests can be executed using the task command:
+~~~~C
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-~~~~bash
-./task.sh test
+#include "gmp.h"
+
+#include "CryptID.h"
+
+
+int main()
+{
+    const char *message = "Ironic.";
+    const char *identity = "darth.plagueis@sith.com";
+
+    PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
+    mpz_t masterSecret;
+    mpz_init(masterSecret);
+    mpz_init(publicParameters->q);
+    if (CRYPTID_SUCCESS != cryptid_setup(LOWEST, publicParameters, masterSecret))
+    {
+        printf("Setup failed\n");
+        return -1;
+    }
+
+    CipherTextTuple* ciphertext = malloc(sizeof (CipherTextTuple));
+    if (CRYPTID_SUCCESS != cryptid_encrypt(ciphertext, message, strlen(message), identity, strlen(identity), *publicParameters))
+    {
+        printf("Encrypt failed\n");
+        return -1;
+    }
+
+    AffinePoint privateKey;
+    if (CRYPTID_SUCCESS != cryptid_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret))
+    {
+        printf("Extract failed\n");
+        return -1;
+    }
+
+    char *plaintext;
+    if (CRYPTID_SUCCESS != cryptid_decrypt(&plaintext, privateKey, *ciphertext, *publicParameters))
+    {
+        printf("Decrypt failed\n");
+        return -1;
+    }
+
+    printf("Plaintext:\n%s\n", plaintext);
+
+    free(plaintext);
+    cipherTextTuple_destroy(*ciphertext);
+    free(ciphertext);
+    affine_destroy(privateKey);
+    mpz_clears(publicParameters->q, masterSecret, NULL);
+    affine_destroy(publicParameters->pointP);
+    affine_destroy(publicParameters->pointPpublic);
+    ellipticCurve_destroy(publicParameters->ellipticCurve);
+    free(publicParameters);
+
+    return 0;
+}
 ~~~~
 
-If no additional arguments are present, then all components will be tested. Running only specific tests can be enforced by providing a list of component names:
-
-~~~~bash
-./task.sh test Complex TatePairing
-~~~~
-
-### Testing with Coverage
-
-Coverage data is generated using the following tools:
-
-  * gcov,
-  * lcov,
-  * genhtml.
-
-Line and branch coverage data can be generated using the following command:
-
-~~~~bash
-./task.sh html-coverage
-~~~~
-
-This command will place the HTML-formatted coverage data in the `coverage` directory. Gathering coverage for specific components can be done by appending a list of components names after the command.
-
-### Leak Checking
-
-Memory leak checking requires the presence `valgrind`.
-
-The leak checking process can be initiated by executing the following command:
-
-~~~~bash
-./task.sh memory-check
-~~~~
-
-Again, specific components can be memchecked by appending their names after the command.
+Of course, this example assumes that you have previously built the static library and have GMP installed.
 
 ## License
 
