@@ -40,7 +40,7 @@ function generateGcovCoverage(dependencies, components) {
     } finally {
         removeFiles(dependencies, ['*.o', '*.out']);
     }
-}
+};
 
 function testComponentsWithCoverage(dependencies, components) {
     const errors = [];
@@ -66,7 +66,7 @@ function testComponentsWithCoverage(dependencies, components) {
     }
 
     return errors;
-}
+};
 
 function generateLcovCoverage(dependencies) {
     try {
@@ -82,8 +82,17 @@ function generateLcovCoverage(dependencies) {
     } finally {
         removeFiles(dependencies, gcovOutputGlobs);
     }
-}
+};
+
+function reportCoverage({ fs, paths, reportToCoveralls }) {
+    const lcov = fs.readFileSync(paths.coverage.lcovOutputFile).toString();
+
+    const result = reportToCoveralls(lcov);
+
+    console.log(result);
+};
 
 module.exports = {
-    generateCoverage: generateHtmlCoverage
+    generateCoverage: generateHtmlCoverage,
+    reportCoverage
 };
