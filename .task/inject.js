@@ -8,9 +8,20 @@ const paths = (function setupPaths() {
         sourceExtension: '.c',
         includeDir: path.join(root, 'include')
     };
-    const thirdParty = {
-        sourceDir: path.join(root, 'third-party', 'src'),
-        includeDir: path.join(root, 'third-party', 'include')
+    const dependenciesRoot = path.join(root, 'dependencies');
+    const dependencies = {
+        root,
+        gmp: {
+            includeDir: path.join(dependenciesRoot, 'gmp', 'include')
+        },
+        greatest: {
+            includeDir: path.join(dependenciesRoot, 'greatest', 'include'),
+            miscDir: path.join(dependenciesRoot, 'greatest', 'misc')
+        },
+        sha: {
+            includeDir: path.join(dependenciesRoot, 'sha', 'include'),
+            sourceDir: path.join(dependenciesRoot, 'sha', 'src')
+        }
     };
     const test = {
         sourceDir: path.join(root, 'test', 'src'),
@@ -38,7 +49,7 @@ const paths = (function setupPaths() {
         root,
         version,
         cryptid,
-        thirdParty,
+        dependencies,
         test,
         coverage,
         build
