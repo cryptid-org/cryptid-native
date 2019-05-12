@@ -80,6 +80,10 @@ The leak checking process can be initiated by executing the following command:
 
 Again, specific components can be memchecked by appending their names after the command.
 
+## License
+
+CryptID.native is licensed under the [Apache License 2.0](LICENSE).
+
 ## Acknowledgements
 
 This work is supported by the construction EFOP-3.6.3-VEKOP-16-2017-00002. The project is supported by the European Union, co-financed by the European Social Fund.
