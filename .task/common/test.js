@@ -4,6 +4,8 @@ const { compileAllSources, compileExecutableForComponent } = require('./compile'
 const { removeFiles, run } = require('./util');
 
 
+const TEN_MEGABYTES = 10 * 1024 * 1024;
+
 function runTests(dependencies, components) {
     try {
         const { output, errors } = testComponents(dependencies, components);
@@ -33,7 +35,7 @@ function testComponents(dependencies, components) {
         try {
             const { stdout } = run(dependencies, executable, ['-v'], {
                 stdio: ['inherit', 'pipe', 'inherit'],
-                timeout: 0
+                maxBuffer: TEN_MEGABYTES
             });
 
             const stdoutString = stdout.toString();
@@ -49,7 +51,7 @@ function testComponents(dependencies, components) {
                 error: e
             });
 
-            console.log('DEBUG - ERR');
+            console.log('ERROR testing component:');
             console.log(e.error);
             console.log(e.error.message);
             console.log(e.stdout.toString());
