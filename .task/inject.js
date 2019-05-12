@@ -23,12 +23,15 @@ const paths = (function setupPaths() {
             sourceDir: path.join(dependenciesRoot, 'sha', 'src')
         }
     };
+    const testResultsDirectory = path.join(root, 'test-results');
     const test = {
         sourceDir: path.join(root, 'test', 'src'),
         sourceExtension: '.test.c',
         output(component) {
             return `${component}.out`;
         },
+        resultsDirectory: testResultsDirectory,
+        tapify: path.join(dependencies.greatest.miscDir, 'entapment.awk')
     };
     const coverageRoot = path.join(root, 'coverage');
     const coverage = {
