@@ -47,6 +47,9 @@ function testComponents(dependencies, components) {
                 component,
                 error: e
             });
+
+            console.log('DEBUG - ERR');
+            console.log(e.stdout);
         } finally {
             removeFiles(dependencies, [executable]);
         }
