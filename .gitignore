@@ -56,3 +56,6 @@ coverage/
 *.gcda
 *.gcno
 *.info
+
+# Build output directory
+build/
