@@ -8,17 +8,23 @@ steps:
 - task: UseNode@1
   inputs:
     version: '12.x'
+
 - bash: |
     sudo apt install -y \
       lcov \
       valgrind
   displayName: 'Setup necessary packages'
+
+- bash: './task.sh test'
+  displayName: 'Run tests'
+
 - bash: './task.sh coverage'
-  displayName: 'Run tests with coverage'
+  displayName: 'Collect coverage'
+
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: 'test-results/*.xml'
-- bash: './task.sh memcheck'
-  displayName: 'Memory leak checking'
 
+- bash: './task.sh memcheck'
+  displayName: 'Check for memory leaks'
