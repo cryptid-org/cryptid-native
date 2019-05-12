@@ -16,6 +16,8 @@ Cross-platform C implementation of the Boneh-Franklin Identity-based Encryption 
 
 CryptID.native provides the foundation of CryptID.js which is a WebAssembly library mainly targeting browsers.
 
+If you're new to CryptID and Identity-based Encryption, then make sure to check out the [CryptID Getting Started](https://github.com/cryptid-org/getting-started) guide.
+
 ## Building CryptID.native
 
 ### Dependencies
@@ -83,6 +85,13 @@ Again, specific components can be memchecked by appending their names after the 
 ## License
 
 CryptID.native is licensed under the [Apache License 2.0](LICENSE).
+
+Licenses of dependencies:
+
+  * [GMP](https://gmplib.org/): [GNU LGPL v3](https://www.gnu.org/licenses/lgpl.html)
+  * [greatest](https://github.com/silentbicycle/greatest): [ISC](https://github.com/silentbicycle/greatest/blob/master/LICENSE)
+  * [greatest/entapment](https://github.com/silentbicycle/greatest/blob/master/contrib/entapment): [ISC](https://github.com/silentbicycle/greatest/blob/master/contrib/entapment)
+  * [SHA](https://tools.ietf.org/html/rfc6234): [2-clause BSD License](https://tools.ietf.org/html/rfc6234#section-8.1.1)
 
 ## Acknowledgements
 
