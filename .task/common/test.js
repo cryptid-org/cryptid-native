@@ -15,7 +15,16 @@ function runTests(dependencies, components) {
             throw new Error('There were errors running the tests. Please see the log lines above.');
         }
 
-        emitTestResults(dependencies, output);
+        console.log(errors);
+
+        console.log('emitting');
+
+        try {
+            emitTestResults(dependencies, output);
+        } catch (e) {
+            console.log('ERR');
+            console.log(e);
+        }
     } finally {
         removeFiles(dependencies, ['*.o', '*.out']);
     }
