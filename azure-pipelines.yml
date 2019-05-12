@@ -5,5 +5,37 @@ pool:
   vmImage: 'ubuntu-16.04'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: UseNode@1
+  inputs:
+    version: '12.x'
+
+- bash: |
+    sudo apt install -y \
+      lcov \
+      valgrind \
+      libgmp-dev
+  displayName: 'Setup necessary packages'
+
+- bash: './task.sh test'
+  displayName: 'Run tests'
+
+- bash: './task.sh coverage'
+  displayName: 'Collect coverage'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: 'test-results/*.xml'
+
+- bash: './task.sh memcheck'
+  displayName: 'Check for memory leaks'
+
+- bash: './task.sh report-coverage'
+  displayName: 'Upload coverage to Coveralls'
+  env:
+    CI: true
+    CI_NAME: azure-pipelines
+    CI_BUILD_NUMBER: $(Build.BuildNumber)
+    CI_BUILD_URL: $(Build.BuildUri)
+    CI_BRANCH: $(Build.SourceBranch)
+    COVERALLS_REPO_TOKEN: $(CoverallsRepoToken)
