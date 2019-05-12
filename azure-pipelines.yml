@@ -17,7 +17,7 @@ steps:
       mawk
   displayName: 'Setup necessary packages'
 
-- bash: './task.sh test'
+- bash: 'sudo ./task.sh test'
   displayName: 'Run tests'
 
 - bash: './task.sh coverage'
