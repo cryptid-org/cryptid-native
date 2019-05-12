@@ -32,7 +32,8 @@ function testComponents(dependencies, components) {
 
         try {
             const { stdout } = run(dependencies, executable, ['-v'], {
-                stdio: ['inherit', 'pipe', 'inherit']
+                stdio: ['inherit', 'pipe', 'inherit'],
+                timeout: 0
             });
 
             const stdoutString = stdout.toString();
@@ -49,6 +50,8 @@ function testComponents(dependencies, components) {
             });
 
             console.log('DEBUG - ERR');
+            console.log(e.error);
+            console.log(e.error.message);
             console.log(e.stdout.toString());
         } finally {
             removeFiles(dependencies, [executable]);
