@@ -87,13 +87,16 @@ function writeOutputToXml(dependencies, { component, stdout }) {
 };
 
 function tapifyGreatest({ paths, spawnSync }, input) {
-    const { stdout } = run({ spawnSync }, paths.test.tapify, [], {
+    const result = run({ spawnSync }, paths.test.tapify, [], {
         input,
         stdio: [],
         cwd: paths.test.resultsDirectory 
     });
 
-    return stdout;
+    console.log(result.error);
+    console.log(result.stderr.toString());
+
+    return result.stdout.toString();
 };
 
 function xmlifyTap({ tapToJUnit }, component, input) {
