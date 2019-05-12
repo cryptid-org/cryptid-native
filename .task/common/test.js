@@ -79,7 +79,11 @@ function emitTestResults(dependencies, output) {
 function writeOutputToXml(dependencies, { component, stdout }) {
     const tapOutput = tapifyGreatest(dependencies, stdout);
 
+    console.log(tapOutput);
+
     const xmlOutput = xmlifyTap(dependencies, component, tapOutput);
+
+    console.log(xmlOutput);
 
     const { fs, paths } = dependencies;
 
