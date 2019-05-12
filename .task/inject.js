@@ -30,10 +30,13 @@ const paths = (function setupPaths() {
             return `${component}.out`;
         },
     };
+    const coverageRoot = path.join(root, 'coverage');
     const coverage = {
-        lcovOutput: path.join(root, 'cryptid.info'),
-        genhtmlOutput: path.join(root, 'coverage')
-    }
+        root: coverageRoot,
+        lcovOutputDir: path.join(coverageRoot, 'lcov'),
+        lcovOutputFile: path.join(coverageRoot, 'lcov', 'cryptid.info'),
+        genhtmlOutputDir: path.join(coverageRoot, 'html')
+    };
     test.componentSourceFile = function componentSourceFile(componentName) {
         return path.join(test.sourceDir, `${componentName}.test.c`);
     };
