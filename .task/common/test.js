@@ -103,11 +103,9 @@ function tapifyGreatest({ paths, spawnSync }, input) {
     const result = run({ spawnSync }, 'gawk', ['-f', paths.test.tapify], {
         input,
         stdio: [],
+        maxBuffer: TEN_MEGABYTES,
         cwd: paths.test.resultsDirectory 
     });
-
-    console.log(result.error);
-    console.log(result.stderr.toString());
 
     return result.stdout.toString();
 };
