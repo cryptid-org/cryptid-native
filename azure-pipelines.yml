@@ -14,10 +14,10 @@ steps:
       lcov \
       valgrind \
       libgmp-dev \
-      mawk
+      gawk
   displayName: 'Setup necessary packages'
 
-- bash: 'sudo ./task.sh test'
+- bash: './task.sh test'
   displayName: 'Run tests'
 
 - bash: './task.sh coverage'
