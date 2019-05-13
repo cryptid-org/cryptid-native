@@ -99,11 +99,8 @@ function writeOutputToXml(dependencies, { component, stdout }) {
     fs.writeFileSync(path.join(paths.test.resultsDirectory, `${component}.xml`), xmlOutput);   
 };
 
-function tapifyGreatest({ fs, paths, spawnSync }, input) {
-    console.log(fs.existsSync(paths.test.tapify));
-    console.log(fs.existsSync(path.join('usr', 'bin', 'awk')));
-
-    const result = run({ spawnSync }, paths.test.tapify, [], {
+function tapifyGreatest({ paths, spawnSync }, input) {
+    const result = run({ spawnSync }, 'gawk', ['-f', paths.test.tapify], {
         input,
         stdio: [],
         cwd: paths.test.resultsDirectory 

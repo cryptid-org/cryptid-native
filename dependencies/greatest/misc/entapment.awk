@@ -1,4 +1,3 @@
-#!/usr/bin/gawk -f
 ######################################################################
 # Copyright (c) 2017 Scott Vokes <vokes.s@gmail.com>
 #
