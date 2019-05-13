@@ -149,13 +149,6 @@ SUITE(cryptid_ibe_suite)
                     generateRandomString(&message, messageLength + 1, defaultAlphabet, strlen(defaultAlphabet));
                     generateRandomString(&identity, identityLength + 1, defaultAlphabet, strlen(defaultAlphabet));
 
-                    if (isVerbose)
-                    {
-                        printf("Level: %d\n", securityLevel);
-                        printf("Message\n%s\n", message);
-                        printf("Identity\n%s\n", identity);
-                    }
-
                     RUN_TESTp(fresh_ibe_setup_matching_identities, securityLevel, message, identity);
 
                     free(message);
@@ -189,14 +182,6 @@ SUITE(cryptid_ibe_suite)
                         generateRandomString(&encryptIdentity, identityLength + 1, defaultAlphabet, strlen(defaultAlphabet));
                         generateRandomString(&decryptIdentity, identityLength + 1, defaultAlphabet, strlen(defaultAlphabet));
                     } while (strcmp(encryptIdentity, decryptIdentity) == 0);
-
-                    if (isVerbose)
-                    {
-                        printf("Level: %d\n", securityLevel);
-                        printf("Message\n%s\n", message);
-                        printf("Encrypt Identity\n%s\n", encryptIdentity);
-                        printf("Decrypt Identity\n%s\n", decryptIdentity);
-                    }
 
                     RUN_TESTp(fresh_ibe_setup_different_identities, securityLevel, message, encryptIdentity, decryptIdentity);
 
