@@ -1,12 +1,20 @@
-<p align="center">
+<div align="center">
   <a href="https://github.com/cryptid-org">
     <img alt="CryptID" src="docs/img/cryptid-logo.png" width="200">
   </a>
-</p>
+</div>
 
-<p align="center">
+<div align="center">
+
+[![Build Status](https://dev.azure.com/cryptid-org/cryptid-native/_apis/build/status/cryptid-org.cryptid-native?branchName=master)](https://dev.azure.com/cryptid-org/cryptid-native/_build/latest?definitionId=3&branchName=master)
+[![Coverage Status](https://coveralls.io/repos/github/cryptid-org/cryptid-native/badge.svg?branch=master)](https://coveralls.io/github/cryptid-org/cryptid-native?branch=master)
+[![License](https://img.shields.io/github/license/cryptid-org/cryptid-native.svg)](LICENSE)
+
+</div>
+
+<div align="center">
 Cross-platform Identity-based Encryption solution.
-</p>
+</div>
 
 ---
 
