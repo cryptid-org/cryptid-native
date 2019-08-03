@@ -229,7 +229,8 @@ unsigned char* hashBytes(const int b, const unsigned char *const p, const int pL
     int hashLen = hashFunction.hashLength;
 
     // Let \f$k = \mathrm{hashfcn}(p)\f$.
-    unsigned char* k = (*(hashFunction.sha_hash))(p, pLength, NULL);
+    unsigned char* k = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
+    (*(hashFunction.sha_hash))(p, pLength, k);
 
     // Let \f$h_0 = 00...00\f$, a string of null octets with a length of {@code hashlen}.
     unsigned char* h = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
