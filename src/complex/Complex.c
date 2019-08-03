@@ -230,17 +230,18 @@ Complex complex_modMulScalar(const Complex complex, const mpz_t s, const mpz_t p
     return result;
 }
 
+// The inverse of z is z^{-1} = \frac{1}{z} = \frac{r}{r^2+i^2}-\frac{i}{r^2+i^2}
 CryptidStatus complex_multiplicativeInverse(Complex *result, const Complex complex, const mpz_t p)
 {
-    mpz_t real, imaginary, realInv, q, r, rInv, t;
-    mpz_inits(real, imaginary, realInv, q, r, rInv, t, NULL);
+    mpz_t real, imaginary, denom, realSquare, imagSquare, denomInv, negImag;;
 
     // (0, 0) has no multiplicative inverse.
     if(!mpz_cmp_ui(complex.real, 0) && !mpz_cmp_ui(complex.imaginary, 0))
     {
-        mpz_clears(real, imaginary, realInv, q, r, rInv, t, NULL);
         return CRYPTID_HAS_NO_MUL_INV_ERROR;
     }
+
+    mpz_inits(real, imaginary, denom, realSquare, imagSquare, denomInv, negImag, NULL);
 
     // If the Complex instance only holds a real value, we can fallback to
     // simple inverse: \f$(r^{-1}, 0)\f$.
@@ -249,7 +250,7 @@ CryptidStatus complex_multiplicativeInverse(Complex *result, const Complex compl
         mpz_invert(real, complex.real, p);
         *result = complex_initMpzLong(real, 0);
         
-        mpz_clears(real, imaginary, realInv, q, r, rInv, t, NULL);
+        mpz_clears(real, imaginary, denom, realSquare, imagSquare, denomInv, negImag, NULL);
         return CRYPTID_SUCCESS;
     }
 
@@ -262,50 +263,27 @@ CryptidStatus complex_multiplicativeInverse(Complex *result, const Complex compl
         mpz_mod(imaginary, imaginary, p);
         *result = complex_initLongMpz(0, imaginary);
 
-        mpz_clears(real, imaginary, realInv, q, r, rInv, t, NULL);
+        mpz_clears(real, imaginary, denom, realSquare, imagSquare, denomInv, negImag, NULL);
         return CRYPTID_SUCCESS;
     }
 
-    // Otherwise, we have a long way to go...
-    // Note, that both the real and the imaginary parts are guaranteed to be non-zero.
+    mpz_pow_ui(realSquare, complex.real, 2);
+    mpz_pow_ui(imagSquare, complex.imaginary, 2);
+    mpz_add(denom, realSquare, imagSquare);
+    mpz_mod(denom, denom, p);
 
-    // First we try to calculate the imaginary part (denoted as {@code y}).
-    // \f$y =  -(i \cdot r^{-1}) \cdot (r + r^{-1} \cdot i^{2})^{-1}\f$
-    //                                  |
-    // This sum can be zero. If that's the case, then the number has no inverse.
-    // The terms of the product are denoted as {@code q} and {@code rInv}.
-    mpz_invert(realInv, complex.real, p);
+    mpz_invert(denomInv, denom, p);
 
-    mpz_neg(q, complex.imaginary);
-    mpz_mod(q, q, p);
-    mpz_mul(q, realInv, q);
-
-    mpz_pow_ui(r, complex.imaginary, 2);
-    mpz_mul(r, realInv, r);
-    mpz_add(r, complex.real, r);
-
-    if(!mpz_cmp_ui(r, 0))
-    {
-        mpz_clears(real, imaginary, realInv, q, r, rInv, t, NULL);
-        return CRYPTID_HAS_NO_MUL_INV_ERROR;
-    }
-
-    // {@code x} (the real part) can be calculated using {@code y}.
-    // \f$x = r^{-1} + y \cdot r^{-1} \cdot i\f$
-    // The second term of the sum is denoted as {@code t}.
-    mpz_invert(rInv, r, p);
-
-    mpz_mul(imaginary, q, rInv);
-    mpz_mod(imaginary, imaginary, p);
-
-    mpz_mul(t, imaginary, realInv);
-    mpz_mul(t, t, complex.imaginary);
-    mpz_mod(t, t, p);
-
-    mpz_add(real, realInv, t);
+    mpz_mul(real, complex.real, denomInv);
     mpz_mod(real, real, p);
 
+    mpz_neg(negImag, complex.imaginary);
+    mpz_mod(negImag, negImag, p);
+
+    mpz_mul(imaginary, negImag, denomInv);
+    mpz_mod(imaginary, imaginary, p);
+
     *result = complex_initMpz(real, imaginary);
-    mpz_clears(real, imaginary, realInv, q, r, rInv, t, NULL);
+    mpz_clears(real, imaginary, denom, realSquare, imagSquare, denomInv, negImag, NULL);
     return CRYPTID_SUCCESS;
 }
