@@ -81,4 +81,9 @@ typedef enum
     CRYPTID_RANDOM_GENERATION_ERROR
 } CryptidStatus;
 
+typedef enum
+{
+    SIGNID_SUCCESS
+} SignidStatus;
+
 #endif
