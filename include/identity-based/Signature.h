@@ -8,11 +8,11 @@
 
 typedef struct Signature
 {
-    AffinePoint cipherU;
-    mpz_t cipherV;
+    AffinePoint u;
+    mpz_t v;
 } Signature;
 
-Signature signature_init(AffinePoint cipherU, mpz_t cipherV);
+Signature signature_init(AffinePoint u, mpz_t v);
 
 void signature_destroy(Signature signature);
 
