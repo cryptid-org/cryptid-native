@@ -22,23 +22,23 @@ TEST fresh_ibs_setup_matching_identities(SecurityLevel securityLevel, char* mess
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    SignidStatus status = signid_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = signid_setup(securityLevel, publicParameters, masterSecret);
 
-    ASSERT_EQ(status, SIGNID_SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     AffinePoint privateKey;
     status = signid_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret);
 
-    ASSERT_EQ(status, SIGNID_SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     Signature* signature = malloc(sizeof (Signature));
     status = signid_sign(signature, privateKey, message, strlen(message), identity, strlen(identity), *publicParameters);
 
-    ASSERT_EQ(status, SIGNID_SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     status = signid_verify(message, strlen(message), *signature, identity, strlen(identity), *publicParameters);
 
-    ASSERT_EQ(status, SIGNID_SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     signature_destroy(*signature);
     free(signature);
@@ -59,23 +59,23 @@ TEST fresh_ibs_setup_different_identities(SecurityLevel securityLevel, char* mes
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    SignidStatus status = signid_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = signid_setup(securityLevel, publicParameters, masterSecret);
 
-    ASSERT_EQ(status, SIGNID_SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     AffinePoint privateKey;
     status = signid_extract(&privateKey, signIdentity, strlen(signIdentity), *publicParameters, masterSecret);
 
-    ASSERT_EQ(status, SIGNID_SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     Signature* signature = malloc(sizeof (Signature));
     status = signid_sign(signature, privateKey, message, strlen(message), signIdentity, strlen(signIdentity), *publicParameters);
 
-    ASSERT_EQ(status, SIGNID_SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     status = signid_verify(message, strlen(message), *signature, verifyIdentity, strlen(verifyIdentity), *publicParameters);
 
-    ASSERT_EQ(status, SIGNID_VERIFICATION_FAILED_ERROR);
+    ASSERT_EQ(status, CRYPTID_VERIFICATION_FAILED_ERROR);
 
     signature_destroy(*signature);
     free(signature);
@@ -96,23 +96,23 @@ TEST fresh_ibs_setup_wrong_signature(SecurityLevel securityLevel, char* message1
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    SignidStatus status = signid_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = signid_setup(securityLevel, publicParameters, masterSecret);
 
-    ASSERT_EQ(status, SIGNID_SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     AffinePoint privateKey;
     status = signid_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret);
 
-    ASSERT_EQ(status, SIGNID_SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     Signature* signature = malloc(sizeof (Signature));
     status = signid_sign(signature, privateKey, message1, strlen(message1), identity, strlen(identity), *publicParameters);
 
-    ASSERT_EQ(status, SIGNID_SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     status = signid_verify(message2, strlen(message2), *signature, identity, strlen(identity), *publicParameters);
 
-    ASSERT_EQ(status, SIGNID_VERIFICATION_FAILED_ERROR);
+    ASSERT_EQ(status, CRYPTID_VERIFICATION_FAILED_ERROR);
 
     signature_destroy(*signature);
     free(signature);
