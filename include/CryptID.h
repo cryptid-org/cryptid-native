@@ -57,7 +57,7 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
  * @param privateKey the private key to decrypt with
  * @param ciphertext the ciphertext to decrypt
  * @param publicParameters the IBE public parameters
- * @return CRYPTID_SUCCESS of everything went right
+ * @return CRYPTID_SUCCESS if everything went right
  */
 CryptidStatus cryptid_decrypt(char **result, const AffinePoint privateKey, const CipherTextTuple ciphertext, 
                        const PublicParameters publicParameters);
