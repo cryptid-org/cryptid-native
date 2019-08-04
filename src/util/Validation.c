@@ -116,3 +116,14 @@ CryptidValidationResult validation_isCipherTextTupleValid(const CipherTextTuple 
 
     return CRYPTID_VALIDATION_FAILURE;
 }
+
+CryptidValidationResult validation_isSignatureValid(const Signature signature, const mpz_t order)
+{
+    if(validation_isAffinePointValid(signature.u, order)
+        && signature.v != NULL)
+    {
+        return CRYPTID_VALIDATION_SUCCESS;
+    }
+    
+    return CRYPTID_VALIDATION_FAILURE;
+}
