@@ -13,30 +13,30 @@
  * Establishes a master secret and public parameters for a given security level. The master secret (as its name suggests)
  * should be kept secret, while the public parameters can be distributed among the clients.
  * @param securityLevel the desired security level
- * @param publicParameters Pointer in which the public parameters will be stored. If the return value is SIGNID_SUCCESS
+ * @param publicParameters Pointer in which the public parameters will be stored. If the return value is CRYPTID_SUCCESS
  *                         then it will point to correctly filled PublicParameters instance. Note, that the
  *                         q field must be mpz_init'd and thus mpz_clear'd be the caller.
  * @param masterSecret Out parameter which will hold the master secret. Must be mpz_init'd and mpz_clear'd by the caller.
- * @return SIGNID_SUCCESS if everything went right
+ * @return CRYPTID_SUCCESS if everything went right
  */
-SignidStatus signid_setup(const SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret);
+CryptidStatus signid_setup(const SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret);
 
 /**
  * Extracts the private key corresponding to a given identity string.
- * @param result Out parameter holding the private key (which is an AffinePoint). On SIGNID_SUCCESS, it must be destroyed by 
+ * @param result Out parameter holding the private key (which is an AffinePoint). On CRYPTID_SUCCESS, it must be destroyed by 
  *               the caller. Initialization is done by this function.
  * @param identity the identity string we're extracting the private key for
  * @param identityLength the length of the identity string
  * @param publicParameters the IBS public parameters
  * @param masterSecret the master secret corresponding to the public parameters
- * @return SIGNID_SUCCESS if everything went right
+ * @return CRYPTID_SUCCESS if everything went right
  */
-SignidStatus signid_extract(AffinePoint* result, const char *const identity, const size_t identityLength,
+CryptidStatus signid_extract(AffinePoint* result, const char *const identity, const size_t identityLength,
                     const PublicParameters publicParameters, const mpz_t masterSecret);
 
 /**
  * Signs a message with the given identity string.
- * @param result Out parameter storing the signature. If the return value is SIGNID_SUCCESS
+ * @param result Out parameter storing the signature. If the return value is CRYPTID_SUCCESS
  *               then it will point to a Signature instance, that must be destroyed by the caller.
  *               Initialization is done by this function.
  * @param privateKey the private key to sign with
@@ -45,9 +45,9 @@ SignidStatus signid_extract(AffinePoint* result, const char *const identity, con
  * @param identity the identity string to sign with
  * @param identityLength the length of the identity
  * @param publicParameters the IBS public parameters
- * @return SIGNID_SUCCESS if everything went right
+ * @return CRYPTID_SUCCESS if everything went right
  */
-SignidStatus signid_sign(Signature *result, const AffinePoint privateKey, const char *const message, const size_t messageLength,
+CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const char *const message, const size_t messageLength,
                     const char *const identity, const size_t identityLength, const PublicParameters publicParameters);
 
 /**
@@ -58,9 +58,9 @@ SignidStatus signid_sign(Signature *result, const AffinePoint privateKey, const 
  * @param identity the identity string the message was signed with
  * @param identityLength the length of the identity
  * @param publicParameters the IBS public parameters
- * @return SIGNID_SUCCESS if the signature was valid
+ * @return CRYPTID_SUCCESS if the signature was valid
  */
-SignidStatus signid_verify(const char *const message, const size_t messageLength, const Signature signature,
+CryptidStatus signid_verify(const char *const message, const size_t messageLength, const Signature signature,
                     const char *const identity, const size_t identityLength, const PublicParameters publicParameters);
 
 #endif

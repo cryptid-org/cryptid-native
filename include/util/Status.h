@@ -78,28 +78,12 @@ typedef enum
     /*
      * Could not generate random stuff.
      */
-    CRYPTID_RANDOM_GENERATION_ERROR
+    CRYPTID_RANDOM_GENERATION_ERROR,
+
+    /*
+     * The digital signature might be incorrect.
+     */ 
+    CRYPTID_VERIFICATION_FAILED_ERROR
 } CryptidStatus;
-
-typedef enum
-{
-    SIGNID_SUCCESS,
-
-    SIGNID_PUBLIC_PARAMETERS_NULL_ERROR,
-
-    SIGNID_RESULT_POINTER_NULL_ERROR,
-
-    SIGNID_IDENTITY_LENGTH_ERROR,
-
-    SIGNID_ILLEGAL_PUBLIC_PARAMETERS_ERROR,
-
-    SIGNID_MESSAGE_NULL_ERROR,
-
-    SIGNID_MESSAGE_LENGTH_ERROR,
-
-    SIGNID_IDENTITY_NULL_ERROR,
-
-    SIGNID_VERIFICATION_FAILED_ERROR
-} SignidStatus;
 
 #endif
