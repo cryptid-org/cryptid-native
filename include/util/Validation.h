@@ -8,6 +8,7 @@
 #include "identity-based/CipherTextTuple.h"
 #include "identity-based/HashFunction.h"
 #include "identity-based/PublicParameters.h"
+#include "identity-based/Signature.h"
 
 
 /**
@@ -66,5 +67,13 @@ CryptidValidationResult validation_isPublicParametersValid(const PublicParameter
  * @return CRYPTID_VALIDATION_SUCCESS if the ciphertext is valid
  */
 CryptidValidationResult validation_isCipherTextTupleValid(const CipherTextTuple cipherTextTuple, const mpz_t order);
+
+/**
+ * Validates that the specified signature is correct.
+ * @param signature the signature to check
+ * @param order the field order of the elliptic curve field, we operating over
+ * @return CRYPTID_VALIDATION_SUCCESS if the signature is valid
+ */ 
+CryptidValidationResult validation_isSignatureValid(const Signature signature, const mpz_t order);
 
 #endif

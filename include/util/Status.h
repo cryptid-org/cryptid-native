@@ -83,7 +83,12 @@ typedef enum
     /*
      * The digital signature might be incorrect.
      */ 
-    CRYPTID_VERIFICATION_FAILED_ERROR
+    CRYPTID_VERIFICATION_FAILED_ERROR,
+
+    /*
+     * The given signature is incorrect.
+     */
+    CRYPTID_ILLEGAL_SIGNATURE_ERROR
 } CryptidStatus;
 
 #endif
