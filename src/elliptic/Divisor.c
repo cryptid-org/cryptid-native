@@ -33,27 +33,27 @@ Complex divisor_evaluateVertical(const EllipticCurve ec, const AffinePoint a, co
     return result;
 }
 
-Status divisor_evaluateTangent(Complex* result, const EllipticCurve ec, const AffinePoint a, const ComplexAffinePoint b)
+CryptidStatus divisor_evaluateTangent(Complex* result, const EllipticCurve ec, const AffinePoint a, const ComplexAffinePoint b)
 {
     // Implementation of Algorithm 3.4.2 in [RFC-5091].
 
     // Argument check
     if(complexAffine_isInfinity(b))
     {
-        return DIVISOR_OF_TANGENT_INFINITY_ERROR;
+        return CRYPTID_DIVISOR_OF_TANGENT_INFINITY_ERROR;
     }
 
     // Special cases
     if(affine_isInfinity(a))
     {
         *result = complex_initLong(1, 0);
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     if(!mpz_cmp_ui(a.y, 0))
     {
         *result = divisor_evaluateVertical(ec, a, b);
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     Complex axB, byB, resultPart;
@@ -94,10 +94,10 @@ Status divisor_evaluateTangent(Complex* result, const EllipticCurve ec, const Af
 
     complex_destroyMany(3, axB, byB, resultPart);
     mpz_clears(threeAddInv, minusThree, xasquared, aprime, bprime, bAddInv, bAddInvyA, axA, axAaddInv, c, NULL);
-    return SUCCESS;
+    return CRYPTID_SUCCESS;
 }
 
-Status divisor_evaluateLine(Complex* result, const EllipticCurve ec, const AffinePoint a, const AffinePoint aprime, 
+CryptidStatus divisor_evaluateLine(Complex* result, const EllipticCurve ec, const AffinePoint a, const AffinePoint aprime, 
                             const ComplexAffinePoint b)
 {
     // Implementation of Algorithm 3.4.3 in [RFC-5091].
@@ -105,18 +105,18 @@ Status divisor_evaluateLine(Complex* result, const EllipticCurve ec, const Affin
     // Argument check
     if(complexAffine_isInfinity(b))
     {
-        return DIVISOR_OF_LINE_INFINITY_ERROR;
+        return CRYPTID_DIVISOR_OF_LINE_INFINITY_ERROR;
     }
 
     // Special cases
     if(affine_isInfinity(a))
     {
         *result = divisor_evaluateVertical(ec, aprime, b);
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
 
     AffinePoint aPlusAPrime;
-    Status status = affine_add(&aPlusAPrime, a, aprime, ec);
+    CryptidStatus status = affine_add(&aPlusAPrime, a, aprime, ec);
     if(status)
     {
         return status;
@@ -126,7 +126,7 @@ Status divisor_evaluateLine(Complex* result, const EllipticCurve ec, const Affin
     {
         *result = divisor_evaluateVertical(ec, a, b);
         affine_destroy(aPlusAPrime);
-        return SUCCESS;
+        return CRYPTID_SUCCESS;
     }
     affine_destroy(aPlusAPrime);
 
@@ -171,5 +171,5 @@ Status divisor_evaluateLine(Complex* result, const EllipticCurve ec, const Affin
     mpz_clears(linea, lineb, linebaddinv, q, t, taddinv, linec, NULL);
     complex_destroyMany(3, axb, byb, resultPart);
 
-    return SUCCESS;
+    return CRYPTID_SUCCESS;
 }

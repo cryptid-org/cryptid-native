@@ -12,8 +12,8 @@
  * internally.
  * @param buf the buffer to fill
  * @param num the size of the buffer
- * @return SUCCESS if everything went right
+ * @return CRYPTID_SUCCESS if everything went right
  */
-Status randomBytes(unsigned char *buf, const int num);
+CryptidStatus cryptid_randomBytes(unsigned char *buf, const int num);
 
 #endif

@@ -23,7 +23,7 @@ void hashToRange(mpz_t result, const unsigned char *const s, const int sLength, 
 
 /**
  * Cryptographically hashes a string to a point on the specified elliptic curve.
- * @param result Out parameter storing a point of order \f$q\f$ in \f$E(F_p)\f$. On SUCCESS, it must be
+ * @param result Out parameter storing a point of order \f$q\f$ in \f$E(F_p)\f$. On CRYPTID_SUCCESS, it must be
  *               destroyed by the caller.
  * @param ellipticCurve the curve to operate on
  * @param p a prime
@@ -31,9 +31,9 @@ void hashToRange(mpz_t result, const unsigned char *const s, const int sLength, 
  * @param id a string
  * @param idLength the length of the id string
  * @param hashFunction the hash function to use
- * @return SUCCESS if everything went right
+ * @return CRYPTID_SUCCESS if everything went right
  */
-Status hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve, const mpz_t p, const mpz_t q, 
+CryptidStatus hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve, const mpz_t p, const mpz_t q, 
                    const char *const id, const int idLength, const HashFunction hashFunction);
 
 /**

@@ -1,12 +1,20 @@
-<p align="center">
+<div align="center">
   <a href="https://github.com/cryptid-org">
     <img alt="CryptID" src="docs/img/cryptid-logo.png" width="200">
   </a>
-</p>
+</div>
 
-<p align="center">
+<div align="center">
+
+[![Build Status](https://dev.azure.com/cryptid-org/cryptid-native/_apis/build/status/cryptid-org.cryptid-native?branchName=master)](https://dev.azure.com/cryptid-org/cryptid-native/_build/latest?definitionId=3&branchName=master)
+[![Coverage Status](https://coveralls.io/repos/github/cryptid-org/cryptid-native/badge.svg?branch=master)](https://coveralls.io/github/cryptid-org/cryptid-native?branch=master)
+[![License](https://img.shields.io/github/license/cryptid-org/cryptid-native.svg)](LICENSE)
+
+</div>
+
+<div align="center">
 Cross-platform Identity-based Encryption solution.
-</p>
+</div>
 
 ---
 
@@ -16,6 +24,8 @@ Cross-platform C implementation of the Boneh-Franklin Identity-based Encryption 
 
 CryptID.native provides the foundation of CryptID.js which is a WebAssembly library mainly targeting browsers.
 
+If you're new to CryptID and Identity-based Encryption, then make sure to check out the [CryptID Getting Started](https://github.com/cryptid-org/getting-started) guide.
+
 ## Building CryptID.native
 
 ### Dependencies
@@ -23,59 +33,102 @@ CryptID.native provides the foundation of CryptID.js which is a WebAssembly libr
 CryptID requires the following components to be present:
 
   * gcc 5+,
-  * [Node.js](https://nodejs.org/en/) v10+,
+  * [Node.js](https://nodejs.org/en/) v8+,
   * [GMP](https://gmplib.org/) 6+.
 
-### Static Library
+### Creating a Static Library
 
 A static library can be created using the following command:
 
 ~~~~bash
-./task.sh build-static
+./task.sh build
 ~~~~
 
-The resulting library will be placed in the `build` directory.
+The resulting library (`libcryptid.a`) will be placed in the `build` directory.
 
-## Testing CryptID.native
+## Example
 
-### Running Tests
+The following short example demonstrates the usage of CryptID.native:
 
-Tests can be executed using the task command:
+~~~~C
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-~~~~bash
-./task.sh test
+#include "gmp.h"
+
+#include "CryptID.h"
+
+
+int main()
+{
+    const char *message = "Ironic.";
+    const char *identity = "darth.plagueis@sith.com";
+
+    PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
+    mpz_t masterSecret;
+    mpz_init(masterSecret);
+    mpz_init(publicParameters->q);
+    if (CRYPTID_SUCCESS != cryptid_setup(LOWEST, publicParameters, masterSecret))
+    {
+        printf("Setup failed\n");
+        return -1;
+    }
+
+    CipherTextTuple* ciphertext = malloc(sizeof (CipherTextTuple));
+    if (CRYPTID_SUCCESS != cryptid_encrypt(ciphertext, message, strlen(message), identity, strlen(identity), *publicParameters))
+    {
+        printf("Encrypt failed\n");
+        return -1;
+    }
+
+    AffinePoint privateKey;
+    if (CRYPTID_SUCCESS != cryptid_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret))
+    {
+        printf("Extract failed\n");
+        return -1;
+    }
+
+    char *plaintext;
+    if (CRYPTID_SUCCESS != cryptid_decrypt(&plaintext, privateKey, *ciphertext, *publicParameters))
+    {
+        printf("Decrypt failed\n");
+        return -1;
+    }
+
+    printf("Plaintext:\n%s\n", plaintext);
+
+    free(plaintext);
+    cipherTextTuple_destroy(*ciphertext);
+    free(ciphertext);
+    affine_destroy(privateKey);
+    mpz_clears(publicParameters->q, masterSecret, NULL);
+    affine_destroy(publicParameters->pointP);
+    affine_destroy(publicParameters->pointPpublic);
+    ellipticCurve_destroy(publicParameters->ellipticCurve);
+    free(publicParameters);
+
+    return 0;
+}
 ~~~~
 
-If no additional arguments are present, then all components will be tested. Running only specific tests can be enforced by providing a list of component names:
+Of course, this example assumes that you have previously built the static library and have GMP installed.
 
-~~~~bash
-./task.sh test Complex TatePairing
-~~~~
+## License
 
-### Testing with Coverage
+CryptID.native is licensed under the [Apache License 2.0](LICENSE).
 
-Coverage data is generated using the following tools:
+Licenses of dependencies:
 
-  * gcov,
-  * lcov,
-  * genhtml.
+  * [GMP](https://gmplib.org/): [GNU LGPL v3](https://www.gnu.org/licenses/lgpl.html)
+  * [greatest](https://github.com/silentbicycle/greatest): [ISC](https://github.com/silentbicycle/greatest/blob/master/LICENSE)
+  * [greatest/entapment](https://github.com/silentbicycle/greatest/blob/master/contrib/entapment): [ISC](https://github.com/silentbicycle/greatest/blob/master/contrib/entapment)
+  * [SHA](https://tools.ietf.org/html/rfc6234): [2-clause BSD License](https://tools.ietf.org/html/rfc6234#section-8.1.1)
 
-Line and branch coverage data can be generated using the following command:
+## Acknowledgements
 
-~~~~bash
-./task.sh html-coverage
-~~~~
+This work is supported by the construction EFOP-3.6.3-VEKOP-16-2017-00002. The project is supported by the European Union, co-financed by the European Social Fund.
 
-This command will place the HTML-formatted coverage data in the `coverage` directory. Gathering coverage for specific components can be done by appending a list of components names after the command.
-
-### Leak Checking
-
-Memory leak checking requires the presence `valgrind`.
-
-The leak checking process can be initiated by executing the following command:
-
-~~~~bash
-./task.sh memory-check
-~~~~
-
-Again, specific components can be memchecked by appending their names after the command.
+<p align="right">
+  <img alt="CryptID" src="docs/img/szechenyi-logo.jpg" width="350">
+</p>

@@ -1,11 +1,10 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "greatest.h"
 
-#include "CryptID.h"
+#include "SignID.h"
 #include "complex/Complex.h"
 #include "elliptic/AffinePoint.h"
 #include "elliptic/EllipticCurve.h"
@@ -16,36 +15,33 @@ int isLowestQuickCheck = 0;
 int isVerbose = 0;
 
 
-TEST fresh_ibe_setup_matching_identities(SecurityLevel securityLevel, char* message, char* identity)
+TEST fresh_ibs_setup_matching_identities(SecurityLevel securityLevel, char* message, char* identity)
 {
     PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
     mpz_t masterSecret;
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    CryptidStatus status = cryptid_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = signid_setup(securityLevel, publicParameters, masterSecret);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     AffinePoint privateKey;
-    status = cryptid_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret);
+    status = signid_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    CipherTextTuple* ciphertext = malloc(sizeof (CipherTextTuple));
-    status = cryptid_encrypt(ciphertext, message, strlen(message), identity, strlen(identity), *publicParameters);
+    Signature* signature = malloc(sizeof (Signature));
+    status = signid_sign(signature, privateKey, message, strlen(message), identity, strlen(identity), *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    char *plaintext;
-    status = cryptid_decrypt(&plaintext, privateKey, *ciphertext, *publicParameters);
+    status = signid_verify(message, strlen(message), *signature, identity, strlen(identity), *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
-    ASSERT_EQ(strcmp(message, plaintext), 0);
 
-    free(plaintext);
-    cipherTextTuple_destroy(*ciphertext);
-    free(ciphertext);
+    signature_destroy(*signature);
+    free(signature);
     affine_destroy(privateKey);
     mpz_clears(publicParameters->q, masterSecret, NULL);
     affine_destroy(publicParameters->pointP);
@@ -56,34 +52,70 @@ TEST fresh_ibe_setup_matching_identities(SecurityLevel securityLevel, char* mess
     PASS();
 }
 
-TEST fresh_ibe_setup_different_identities(SecurityLevel securityLevel, char* message, char* encryptIdentity, char* decryptIdentity)
+TEST fresh_ibs_setup_different_identities(SecurityLevel securityLevel, char* message, char* signIdentity, char* verifyIdentity)
 {
     PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
     mpz_t masterSecret;
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    CryptidStatus status = cryptid_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = signid_setup(securityLevel, publicParameters, masterSecret);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     AffinePoint privateKey;
-    status = cryptid_extract(&privateKey, decryptIdentity, strlen(decryptIdentity), *publicParameters, masterSecret);
+    status = signid_extract(&privateKey, signIdentity, strlen(signIdentity), *publicParameters, masterSecret);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    CipherTextTuple* ciphertext = malloc(sizeof (CipherTextTuple));
-    status = cryptid_encrypt(ciphertext, message, strlen(message), encryptIdentity, strlen(encryptIdentity), *publicParameters);
+    Signature* signature = malloc(sizeof (Signature));
+    status = signid_sign(signature, privateKey, message, strlen(message), signIdentity, strlen(signIdentity), *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    char *plaintext;
-    status = cryptid_decrypt(&plaintext, privateKey, *ciphertext, *publicParameters);
+    status = signid_verify(message, strlen(message), *signature, verifyIdentity, strlen(verifyIdentity), *publicParameters);
 
-    ASSERT_EQ(status, CRYPTID_DECRYPTION_FAILED_ERROR);
+    ASSERT_EQ(status, CRYPTID_VERIFICATION_FAILED_ERROR);
 
-    cipherTextTuple_destroy(*ciphertext);
-    free(ciphertext);
+    signature_destroy(*signature);
+    free(signature);
+    affine_destroy(privateKey);
+    mpz_clears(publicParameters->q, masterSecret, NULL);
+    affine_destroy(publicParameters->pointP);
+    affine_destroy(publicParameters->pointPpublic);
+    ellipticCurve_destroy(publicParameters->ellipticCurve);
+    free(publicParameters);
+
+    PASS();
+}
+
+TEST fresh_ibs_setup_wrong_signature(SecurityLevel securityLevel, char* message1, char* message2, char* identity)
+{
+    PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
+    mpz_t masterSecret;
+    mpz_init(masterSecret);
+    mpz_init(publicParameters->q);
+
+    CryptidStatus status = signid_setup(securityLevel, publicParameters, masterSecret);
+
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
+
+    AffinePoint privateKey;
+    status = signid_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret);
+
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
+
+    Signature* signature = malloc(sizeof (Signature));
+    status = signid_sign(signature, privateKey, message1, strlen(message1), identity, strlen(identity), *publicParameters);
+
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
+
+    status = signid_verify(message2, strlen(message2), *signature, identity, strlen(identity), *publicParameters);
+
+    ASSERT_EQ(status, CRYPTID_VERIFICATION_FAILED_ERROR);
+
+    signature_destroy(*signature);
+    free(signature);
     affine_destroy(privateKey);
     mpz_clears(publicParameters->q, masterSecret, NULL);
     affine_destroy(publicParameters->pointP);
@@ -108,7 +140,7 @@ static void generateRandomString(char** output, size_t outputLength, char* alpha
     (*output)[outputLength - 1] = '\0';
 }
 
-SUITE(cryptid_ibe_suite)
+SUITE(cryptid_ibs_suite)
 {
     {
         char* defaultAlphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -149,7 +181,7 @@ SUITE(cryptid_ibe_suite)
                     generateRandomString(&message, messageLength + 1, defaultAlphabet, strlen(defaultAlphabet));
                     generateRandomString(&identity, identityLength + 1, defaultAlphabet, strlen(defaultAlphabet));
 
-                    RUN_TESTp(fresh_ibe_setup_matching_identities, securityLevel, message, identity);
+                    RUN_TESTp(fresh_ibs_setup_matching_identities, securityLevel, message, identity);
 
                     free(message);
                     free(identity);
@@ -173,21 +205,56 @@ SUITE(cryptid_ibe_suite)
                 for (unsigned int testCase = 0; testCase < caseCount; testCase++)
                 {
                     char* message = malloc(messageLength + 1);
-                    char* encryptIdentity = malloc(identityLength + 1);
-                    char* decryptIdentity = malloc(identityLength + 1);
+                    char* signIdentity = malloc(identityLength + 1);
+                    char* verifyIdentity = malloc(identityLength + 1);
 
                     generateRandomString(&message, messageLength + 1, defaultAlphabet, strlen(defaultAlphabet));
 
                     do {
-                        generateRandomString(&encryptIdentity, identityLength + 1, defaultAlphabet, strlen(defaultAlphabet));
-                        generateRandomString(&decryptIdentity, identityLength + 1, defaultAlphabet, strlen(defaultAlphabet));
-                    } while (strcmp(encryptIdentity, decryptIdentity) == 0);
+                        generateRandomString(&signIdentity, identityLength + 1, defaultAlphabet, strlen(defaultAlphabet));
+                        generateRandomString(&verifyIdentity, identityLength + 1, defaultAlphabet, strlen(defaultAlphabet));
+                    } while (strcmp(signIdentity, verifyIdentity) == 0);
 
-                    RUN_TESTp(fresh_ibe_setup_different_identities, securityLevel, message, encryptIdentity, decryptIdentity);
+                    RUN_TESTp(fresh_ibs_setup_different_identities, securityLevel, message, signIdentity, verifyIdentity);
 
                     free(message);
-                    free(encryptIdentity);
-                    free(decryptIdentity);
+                    free(signIdentity);
+                    free(verifyIdentity);
+                }
+            }
+        }
+
+        {
+            for (int testSuite = 0; testSuite < 12; testSuite++)
+            {
+                int offset = testSuite * 4;
+                unsigned int caseCount = isLowestQuickCheck ? 1 : testParameters[offset];
+                SecurityLevel securityLevel = testParameters[offset + 1];
+                unsigned int messageLength = testParameters[offset + 2];
+                unsigned int identityLength = testParameters[offset + 3];
+
+                if (isLowestQuickCheck && securityLevel != LOWEST) {
+                    continue;
+                }
+
+                for (unsigned int testCase = 0; testCase < caseCount; testCase++)
+                {
+                    char* message1 = malloc(messageLength + 1);
+                    char* message2 = malloc(messageLength + 1);
+                    char* identity = malloc(identityLength + 1);
+
+                    do {
+                        generateRandomString(&message1, messageLength + 1, defaultAlphabet, strlen(defaultAlphabet));
+                        generateRandomString(&message2, messageLength + 1, defaultAlphabet, strlen(defaultAlphabet));
+                    } while (strcmp(message1, message2) == 0);
+
+                    generateRandomString(&identity, identityLength + 1, defaultAlphabet, strlen(defaultAlphabet));
+
+                    RUN_TESTp(fresh_ibs_setup_wrong_signature, securityLevel, message1, message2, identity);
+
+                    free(message1);
+                    free(message2);
+                    free(identity);
                 }
             }
         }
@@ -222,7 +289,7 @@ int main(int argc, char **argv)
 
     srand(time(NULL));
 
-    RUN_SUITE(cryptid_ibe_suite);
+    RUN_SUITE(cryptid_ibs_suite);
 
     GREATEST_MAIN_END();
 }

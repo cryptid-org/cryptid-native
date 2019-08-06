@@ -13,7 +13,7 @@ unsigned int random_unsignedIntInRange(const unsigned int range)
 
     do
     {
-        randomBytes((unsigned char*) &x, sizeof (x));
+        cryptid_randomBytes((unsigned char*) &x, sizeof (x));
 
         r = x % range;
     }
@@ -28,7 +28,7 @@ void random_mpzOfLength(mpz_t result, const unsigned int numberOfBits)
 
     unsigned char buffer[numberOfBytes];
 
-    randomBytes((unsigned char*) &buffer, numberOfBytes);
+    cryptid_randomBytes((unsigned char*) &buffer, numberOfBytes);
 
     unsigned int unneededBits = 8 * numberOfBytes - numberOfBits;
     buffer[0] &= (1 << (8 - unneededBits)) - 1;
@@ -59,7 +59,7 @@ void random_mpzInRange(mpz_t result, const mpz_t range)
     mpz_clears(x, r, xMinusR, negativeRange, NULL);
 }
 
-Status random_solinasPrime(mpz_t result, const unsigned int numberOfBits, const unsigned int attemptLimit)
+CryptidStatus random_solinasPrime(mpz_t result, const unsigned int numberOfBits, const unsigned int attemptLimit)
 {
     unsigned int random = 1, lastrandom;
     unsigned int isPrimeGenerated = 0;
@@ -94,7 +94,7 @@ Status random_solinasPrime(mpz_t result, const unsigned int numberOfBits, const 
         attempts++;
     }
 
-    return isPrimeGenerated ? SUCCESS : ATTEMPT_LIMIT_REACHED_ERROR;
+    return isPrimeGenerated ? CRYPTID_SUCCESS : CRYPTID_ATTEMPT_LIMIT_REACHED_ERROR;
 }
 
 static AffinePoint mod3PointGenerationStrategy(const EllipticCurve ellipticCurve)
@@ -127,7 +127,7 @@ static AffinePoint mod3PointGenerationStrategy(const EllipticCurve ellipticCurve
     return result;
 }
 
-Status random_affinePoint(AffinePoint* result, const EllipticCurve ellipticCurve, const unsigned int attemptLimit)
+CryptidStatus random_affinePoint(AffinePoint* result, const EllipticCurve ellipticCurve, const unsigned int attemptLimit)
 {
     unsigned int attempts = 0;
     int isPointGenerated = 0;
@@ -148,5 +148,5 @@ Status random_affinePoint(AffinePoint* result, const EllipticCurve ellipticCurve
     }
     while (attempts < attemptLimit);
 
-    return isPointGenerated ? SUCCESS : ATTEMPT_LIMIT_REACHED_ERROR;
+    return isPointGenerated ? CRYPTID_SUCCESS : CRYPTID_ATTEMPT_LIMIT_REACHED_ERROR;
 }

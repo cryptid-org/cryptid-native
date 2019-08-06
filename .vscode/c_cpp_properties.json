@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "IncludeOnly",
+            "includePath": [
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/third-party/include"
+            ]
+        }
+    ],
+    "version": 4
+}

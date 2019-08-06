@@ -7,22 +7,20 @@ const excludedFromCoverage = ['*.test.gcda', '*.test.gcno', 'sha.gcno', 'sha.gcd
 const gcovOutputGlobs = ['*.gcda', '*.gcno'];
 
 function generateHtmlCoverage(dependencies, components) {
+    dependencies.fs.removeSync(dependencies.paths.coverage.root);
+
     generateGcovCoverage(dependencies, components);
 
-    try {
-        generateLcovCoverage(dependencies);
+    generateLcovCoverage(dependencies);
 
-        const args = [
-            '-o',
-            dependencies.paths.coverage.genhtmlOutput,
-            dependencies.paths.coverage.lcovOutput
-        ];
+    const args = [
+        '-o',
+        dependencies.paths.coverage.genhtmlOutputDir,
+        dependencies.paths.coverage.lcovOutputFile
+    ];
 
-        run(dependencies, 'genhtml', args, { cwd: dependencies.paths.root });
-    } finally {
-        removeFiles(dependencies, [dependencies.paths.coverage.lcovOutput]);
-    }
-}
+    run(dependencies, 'genhtml', args, { cwd: dependencies.paths.root });
+};
 
 function generateGcovCoverage(dependencies, components) {
     try {
@@ -42,7 +40,7 @@ function generateGcovCoverage(dependencies, components) {
     } finally {
         removeFiles(dependencies, ['*.o', '*.out']);
     }
-}
+};
 
 function testComponentsWithCoverage(dependencies, components) {
     const errors = [];
@@ -68,21 +66,33 @@ function testComponentsWithCoverage(dependencies, components) {
     }
 
     return errors;
-}
+};
 
 function generateLcovCoverage(dependencies) {
-    const args = [
-        '--directory', '.',
-        '--capture',
-        '--output-file', dependencies.paths.coverage.lcovOutput
-    ];
+    try {
+        dependencies.fs.ensureDirSync(dependencies.paths.coverage.lcovOutputDir)
 
-    run(dependencies, 'lcov', args, { cwd: dependencies.paths.root });
+        const args = [
+            '--directory', '.',
+            '--capture',
+            '--output-file', dependencies.paths.coverage.lcovOutputFile
+        ];
 
-    removeFiles(dependencies, gcovOutputGlobs);
-}
+        run(dependencies, 'lcov', args, { cwd: dependencies.paths.root });
+    } finally {
+        removeFiles(dependencies, gcovOutputGlobs);
+    }
+};
+
+function reportCoverage({ fs, paths, reportToCoveralls }) {
+    const lcov = fs.readFileSync(paths.coverage.lcovOutputFile).toString();
+
+    const result = reportToCoveralls(lcov);
+
+    console.log(result);
+};
 
 module.exports = {
-    generateGcovCoverage,
-    generateHtmlCoverage
+    generateCoverage: generateHtmlCoverage,
+    reportCoverage
 };

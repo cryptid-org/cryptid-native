@@ -3,13 +3,14 @@ const { run } = require('./util');
 
 function compileAllSources({ klawSync, paths, spawnSync }, extraArguments = []) {
     const cryptidSourceFiles = walkDirectory(klawSync, paths.cryptid.sourceDir, paths.cryptid.sourceExtension);
-    const thirdPartySourceFiles = walkDirectory(klawSync, paths.thirdParty.sourceDir, paths.cryptid.sourceExtension);
+    const shaSourceFiles = walkDirectory(klawSync, paths.dependencies.sha.sourceDir, paths.cryptid.sourceExtension);
 
     const opts = [
         ...cryptidSourceFiles,
-        ...thirdPartySourceFiles,
+        ...shaSourceFiles,
         `-I${paths.cryptid.includeDir}`,
-        `-I${paths.thirdParty.includeDir}`,
+        `-I${paths.dependencies.gmp.includeDir}`,
+        `-I${paths.dependencies.sha.includeDir}`,
         '-std=c99',
         '-Wall',
         '-Wextra',
@@ -37,7 +38,9 @@ function compileExecutableForComponent(componentName, { klawSync, fs, paths, spa
         ...objectFiles,
         componentSourceFile,
         `-I${paths.cryptid.includeDir}`,
-        `-I${paths.thirdParty.includeDir}`,
+        `-I${paths.dependencies.gmp.includeDir}`,
+        `-I${paths.dependencies.greatest.includeDir}`,
+        `-I${paths.dependencies.sha.includeDir}`,
         '-g',
         '-std=c99',
         '-o', testExecutable,

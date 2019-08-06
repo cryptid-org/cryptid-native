@@ -75,48 +75,48 @@ int affine_isInfinity(const AffinePoint affinePoint);
 
 /**
  * Doubles (adds to itself) the specified AffinePoint.
- * @param result The result of the operation. On SUCCESS, this should be destroyed by the caller.
+ * @param result The result of the operation. On CRYPTID_SUCCESS, this should be destroyed by the caller.
  * @param affinePoint the point to double
  * @param ellipticCurve the elliptic curve to operate over
- * @result SUCCESS if everything went right, error otherwise
+ * @result CRYPTID_SUCCESS if everything went right, error otherwise
  */
-Status affine_double(AffinePoint *result, const AffinePoint affinePoint, const EllipticCurve ellipticCurve);
+CryptidStatus affine_double(AffinePoint *result, const AffinePoint affinePoint, const EllipticCurve ellipticCurve);
 
 /**
  * Adds two AffinePoints.
  *
  * Implementation of Algorithm 3.1 in [Intro-to-IBE].
- * @param result The result of the addition. On SUCCESS, this should be destroyed by the caller.
+ * @param result The result of the addition. On CRYPTID_SUCCESS, this should be destroyed by the caller.
  * @param affinePoint1 an AffinePoint
  * @param affinePoint2 an AffinePoint
  * @param ellipticCurve the curve to operate over
- * @return SUCCESS if everything went right, error otherwise
+ * @return CRYPTID_SUCCESS if everything went right, error otherwise
  */
-Status affine_add(AffinePoint *result, const AffinePoint affinePoint1, const AffinePoint affinePoint2, const EllipticCurve ellipticCurve);
+CryptidStatus affine_add(AffinePoint *result, const AffinePoint affinePoint1, const AffinePoint affinePoint2, const EllipticCurve ellipticCurve);
 
 /**
  * Multiplies an AffinePoint with a scalar.
  * 
  * Implementation note: Uses the double-and-add algorithm.
- * @param result The result of the multiplication. On SUCCESS, this should be destroyed by the caller.
+ * @param result The result of the multiplication. On CRYPTID_SUCCESS, this should be destroyed by the caller.
  * @param s the scalar to multiply with
  * @param affinePoint the point to multiply
  * @param ellipticCurve the elliptic curve to operate over
- * @return SUCCESS if everything went right, error otherwise
+ * @return CRYPTID_SUCCESS if everything went right, error otherwise
  */
-Status affine_multiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve);
+CryptidStatus affine_multiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve);
 
 /**
  * Multiplies an AffinePoint with a scalar.
  * 
  * Implementation note: Uses the windowed-NAF algorithm.
- * @param result The result of the multiplication. On SUCCESS, this should be destroyed by the caller.
+ * @param result The result of the multiplication. On CRYPTID_SUCCESS, this should be destroyed by the caller.
  * @param s the scalar to multiply with
  * @param affinePoint the point to multiply
  * @param ellipticCurve the elliptic curve to operate over
- * @return SUCCESS if everything went right, error otherwise
+ * @return CRYPTID_SUCCESS if everything went right, error otherwise
  */
-Status affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve);
+CryptidStatus affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve);
 
 /**
  * Checks if the specified point is on the passed curve (satisfies the curve equation).

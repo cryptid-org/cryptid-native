@@ -277,10 +277,10 @@ TEST the_multiplicative_inverse_of_1_0_should_be_1_0_for_any_p(void)
     Complex result;
 
     // When
-    Status status = complex_multiplicativeInverse(&result, id, p);
+    CryptidStatus status = complex_multiplicativeInverse(&result, id, p);
 
     // Then
-    ASSERT_EQ(status, SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
     ASSERT(complex_isEquals(result, id));
 
     complex_destroyMany(2, result, id);
@@ -299,10 +299,10 @@ TEST zero_zero_does_not_have_a_multiplicative_inverse(void)
     Complex result;
 
     // When
-    Status status = complex_multiplicativeInverse(&result, zero, p);
+    CryptidStatus status = complex_multiplicativeInverse(&result, zero, p);
 
     // Then
-    ASSERT_EQ(status, HAS_NO_MUL_INV_ERROR);
+    ASSERT_EQ(status, CRYPTID_HAS_NO_MUL_INV_ERROR);
 
     complex_destroy(zero);
     mpz_clear(p);
@@ -321,9 +321,9 @@ TEST GF_7_multiplying_an_element_with_its_multiplicative_inverse_should_yield_th
 
     // When
     Complex inverse;
-    Status status = complex_multiplicativeInverse(&inverse, c, p);
+    CryptidStatus status = complex_multiplicativeInverse(&inverse, c, p);
 
-    ASSERT_EQ(status, SUCCESS);
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     Complex result = complex_modMul(c, inverse, p);
 

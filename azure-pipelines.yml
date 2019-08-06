@@ -1,0 +1,49 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-16.04'
+
+steps:
+- task: UseNode@1
+  inputs:
+    version: '12.x'
+
+- bash: |
+    sudo apt install -y \
+      lcov \
+      valgrind \
+      libgmp-dev \
+      gawk
+  displayName: 'Setup necessary packages'
+
+- bash: './task.sh test'
+  displayName: 'Run tests'
+
+- bash: './task.sh coverage'
+  displayName: 'Collect coverage'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: 'test-results/*.xml'
+
+- bash: './task.sh memcheck'
+  displayName: 'Check for memory leaks'
+
+- bash: './task.sh report-coverage'
+  displayName: 'Upload coverage to Coveralls'
+  env:
+    # Clearly a hack, I should submit a PR to node-coveralls, but
+    # I want this up and running now :)
+    CI: true
+    CI_NAME: codeship
+    COVERALLS_SERVICE_NAME: azure-pipelines
+    CI_BUILD_NUMBER: $(Build.BuildNumber)
+    CI_COMMIT_ID: $(Build.SourceVersion)
+    CI_BRANCH: $(Build.SourceBranchName)
+    CI_COMMITTER_EMAIL: $(Build.RequestedForEmail)
+    CI_COMMITTER_NAME: $(Build.RequestedFor)
+    CI_COMMIT_MESSAGE: $(Build.SourceVersionMessage)
+    CI_BUILD_URL: $(Build.BuildUri)
+    COVERALLS_REPO_TOKEN: $(CoverallsRepoToken)

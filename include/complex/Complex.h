@@ -139,11 +139,11 @@ Complex complex_modMulScalar(const Complex complex, const mpz_t s, const mpz_t p
 
 /**
  * Calculates the multiplicate inverse of a Complex with respect to p.
- * @param result Out parameter to the multiplicative inverse. On SUCCESS, this should be destroyed by the caller.
+ * @param result Out parameter to the multiplicative inverse. On CRYPTID_SUCCESS, this should be destroyed by the caller.
  * @param complex a Complex.
  * @param p the modulus.
  * @return 0 if complex has a multiplicative inverse, HAS_NO_MUL_INV error otherwise
  */
-Status complex_multiplicativeInverse(Complex *result, const Complex complex, const mpz_t p);
+CryptidStatus complex_multiplicativeInverse(Complex *result, const Complex complex, const mpz_t p);
 
 #endif
