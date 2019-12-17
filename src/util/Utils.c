@@ -285,6 +285,7 @@ unsigned char* hashBytes(const int b, const unsigned char *const p, const int pL
 
     result[b] = '\0';
 
+    free(k);
     free(h);
     free(concat);
     free(resultPart);

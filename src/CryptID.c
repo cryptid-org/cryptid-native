@@ -319,6 +319,8 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
     free(rho);
     free(concat);
     free(z);
+    free(t);
+    free(w);
     free(cipherV);
     free(cipherW);
     free(hashedBytes);
@@ -413,6 +415,8 @@ CryptidStatus cryptid_decrypt(char **result, const AffinePoint privateKey, const
 
     complex_destroy(theta);
     free(z);
+    free(t);
+    free(w);
     free(rho);
     free(hashedBytes);
     free(concat);
