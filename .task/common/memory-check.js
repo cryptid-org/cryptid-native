@@ -32,7 +32,7 @@ function testWithMemoryCheck(dependencies, components) {
             executable
         ]
 
-        if (component == 'CryptID') {
+        if (component == 'CryptID' || component == 'SignID') {
             valgrindOptions.push('--', '--lowest-quick-check');
         }
 
