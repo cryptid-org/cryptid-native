@@ -11,5 +11,4 @@ typedef struct PublicKey_ABE
 	mpz_t h;
 	mpz_t f;
 	mpz_t eggalpha;
-	Complex theta;
 } PublicKey_ABE;
