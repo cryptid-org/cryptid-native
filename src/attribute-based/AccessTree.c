@@ -18,6 +18,7 @@ AccessTree* createTree(int value, AccessTree* children) {
     tree->value = value;
     memcpy(tree->children, children, sizeof(tree->children));
     tree->parent = NULL;
+    return tree;
 }
 
 int isLeaf(AccessTree* accessTree) {
