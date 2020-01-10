@@ -35,6 +35,7 @@ CryptID requires the following components to be present:
   * gcc 5+,
   * [Node.js](https://nodejs.org/en/) v8+,
   * [GMP](https://gmplib.org/) 6+.
+    * Please note, that [GMP-LAWL](https://github.com/cryptid-org/gmp-lawl/) is not capable of integrating with CryptID.native in a stable manner yet. Thus, the use of the vanilla GMP library is advised.
 
 ### Creating a Static Library
 
