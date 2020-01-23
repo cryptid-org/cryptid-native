@@ -1,0 +1,19 @@
+{
+    "parser": {
+        "includePath": "./include",
+        "includingPatterns": [
+            "^.*\\.h$"
+        ],
+        "excludingPatterns": [],
+        "outputFile": "./output.json",
+        "options": {
+            "documentationCommentStyles": [
+                "BLOCK_SLASH_DOUBLE_STAR"
+            ]
+        }
+    },
+    "renderer": {
+        "path": "",
+        "parsedCodebaseFile": ""
+    }
+}
