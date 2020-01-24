@@ -22,10 +22,6 @@
  * showing-off: How YAML attributes work.
  * ---
  *
- * ## Excerpt
- *
- * Establishes a master secret and public parameters for a given security level.
- *
  * ## Description
  *
  * Establishes a master secret and public parameters for a given security level. The master secret (as its name suggests)
@@ -49,10 +45,6 @@
 CryptidStatus cryptid_setup(const SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret);
 
 /**
- * ## Excerpt
- *
- * Extracts the private key corresponding to a given identity string.
- *
  * ## Description
  *
  * Extracts the private key corresponding to a given identity string.
@@ -79,10 +71,6 @@ CryptidStatus cryptid_extract(AffinePoint* result, const char *const identity, c
                        const PublicParameters publicParameters, const mpz_t masterSecret);
 
 /**
- * ## Excerpt
- *
- * Encrypts a message with the given identity string.
- *
  * ## Description
  *
  * Encrypts a message with the given identity string.
@@ -112,10 +100,6 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
                        const char *const identity, const size_t identityLength, const PublicParameters publicParameters);
 
 /**
- * ## Excerpt
- *
- * Decrypts a previously encrypted message using the specified private key.
- *
  * ## Description
  *
  * Decrypts a previously encrypted message using the specified private key.
