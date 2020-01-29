@@ -20,6 +20,20 @@ static const unsigned int POINT_GENERATION_ATTEMPT_LIMIT = 100;
 static const unsigned int Q_LENGTH_MAPPING[] = { 160, 224, 256, 384, 512 };
 static const unsigned int P_LENGTH_MAPPING[] = { 512, 1024, 1536, 3840, 7680 };
 
+CryptidStatus randomGroupElement(mpz_t element, mpz_t p, mpz_t g)
+{
+    mpz_t randn;
+    mpz_init(randn);
+    mpz_init_set_ui(randn, 0);
+    while(mpz_cmp_ui(randn, 1) < 0) {
+        random_mpzInRange(randn, p);
+    }
+    
+    mpz_powm(element, g, randn, p);
+
+    return CRYPTID_SUCCESS;
+}
+
 CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE* publickey, MasterKey_ABE* masterkey)
 {
     // Construct the elliptic curve and its subgroup of interest
@@ -88,80 +102,73 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
     }
     while (affine_isInfinity(pointP));
 
-    // Select a point \f$P\f$ of order \f$q\f$ in \f$E(F_p)\f$. 2.
-    AffinePoint pointP2;
-    do
-    {
-        AffinePoint pointPprime;
-        status = random_affinePoint(&pointPprime, ec, POINT_GENERATION_ATTEMPT_LIMIT);
-
-        if (status)
-        {
-            mpz_clears(p, q, r, NULL);
-            ellipticCurve_destroy(ec);
-            return status;
-        }
-
-        mpz_t rMul;
-        mpz_init_set(rMul, r);
-        mpz_mul_ui(rMul, rMul, 12);
-
-        status = AFFINE_MULTIPLY_IMPL(&pointP2, rMul, pointPprime, ec);
-
-        if (status)
-        {
-            mpz_clears(p, q, r, rMul, NULL);
-            ellipticCurve_destroy(ec);
-            affine_destroy(pointPprime);
-            return status;
-        }
-
-        mpz_clear(rMul);
-        affine_destroy(pointPprime);
-    }
-    while (affine_isInfinity(pointP2));
-
-    /*Complex theta;
-    status = tate_performPairing(&theta, 2, ec, q, pointP, pointP2);
-    if(status)
-    {
-        return status;
-    }*/
-
     mpz_t alpha;
     mpz_init(alpha);
-    random_mpzOfLength(alpha, p-1);
+    randomGroupElement(alpha, p, q);
 
     mpz_t beta;
     mpz_init(beta);
-    random_mpzOfLength(beta, p-1);
-
+    randomGroupElement(beta, p, q);
 
     mpz_t beta_inverse;
     mpz_init(beta_inverse);
     mpz_invert(beta_inverse, beta, one);
 
-    publickey->g = q;
+    mpz_init(publickey->g);
+    mpz_set(publickey->g, q);
     mpz_init(publickey->h);
-    mpz_pow_ui(publickey->h, g, beta);
+    mpz_pow_ui(publickey->h, publickey->g, mpz_get_ui(beta));
     mpz_init(publickey->f);
-    mpz_pow_ui(publickey->f, g, beta_inverse);
+    mpz_pow_ui(publickey->f, publickey->g, mpz_get_ui(beta_inverse));
 
     masterkey->pubkey = publickey;
-    masterkey->beta = beta;
+    mpz_init(masterkey->beta);
+    mpz_set(masterkey->beta, beta);
     mpz_init(masterkey->galpha);
-    mpz_pow_ui(masterkey->galpha, g, alpha);
+    mpz_pow_ui(masterkey->galpha, publickey->g, mpz_get_ui(alpha));
 
     mpz_clears(zero, one, NULL);
     mpz_clears(p, q, r, alpha, beta, beta_inverse, NULL);
 
-    /*Complex theta;
-    status = tate_performPairing(&theta, 2, ec, q, pointP, pointP2);
+    AffinePoint pointPpublic;
+    status = AFFINE_MULTIPLY_IMPL(&pointPpublic, publickey->g, pointP, ec);
+    if(status) {
+        // TO DO clears
+        return status;
+    }
+
+    Complex theta;
+    status = tate_performPairing(&theta, 2, ec, q, pointPpublic, pointPpublic);
     if(status)
     {
         return status;
-    }*/
-    // TO DO: publickey->eggalpha = pairing
+    }
+
+    return CRYPTID_SUCCESS;
+}
+
+CryptidStatus cryptid_encrypt_ABE(const char *const message, const size_t messageLength,
+                                    PublicKey_ABE* publickey, AccessTree* accessTree)
+{
+    if(!message)
+    {
+        return CRYPTID_MESSAGE_NULL_ERROR;
+    }
+
+    if(messageLength == 0)
+    {
+        return CRYPTID_MESSAGE_LENGTH_ERROR;
+    }
+
+    if(!publickey) {
+        return CRYPTID_MESSAGE_NULL_ERROR;
+    }
+
+    if(!accessTree) {
+        return CRYPTID_MESSAGE_NULL_ERROR;
+    }
+
+    //compute_tree(accessTree, s, publickey);
 
     return CRYPTID_SUCCESS;
 }
