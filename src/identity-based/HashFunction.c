@@ -15,16 +15,32 @@ size_t hashFunction_getHashSize(const HashFunction hashFunction)
     }
 }
 
-unsigned char* hashFunction_hash(const HashFunction hashFunction, const unsigned char* message, const size_t messageLength)
+CryptidStatus hashFunction_hash(const HashFunction hashFunction, const unsigned char* message, const size_t messageLength, unsigned char* hashResult)
 {
+    if(hashResult == NULL)
+    {
+        return HASH_NULLPOINTER_OUTPUT_PARAM_ERROR;
+    }
+
     switch(hashFunction)
     {
-        case hashFunction_SHA1: return SHA1_OneCall(message, messageLength);
-        case hashFunction_SHA224: return SHA224_OneCall(message, messageLength);
-        case hashFunction_SHA256: return SHA256_OneCall(message, messageLength);
-        case hashFunction_SHA384: return SHA384_OneCall(message, messageLength);
-        case hashFunction_SHA512: return SHA512_OneCall(message, messageLength);
-        default: return NULL;
+        case hashFunction_SHA1:
+            SHA1_OneCall(message, messageLength, hashResult);
+            return CRYPTID_SUCCESS;
+        case hashFunction_SHA224:
+            SHA224_OneCall(message, messageLength, hashResult);
+            return CRYPTID_SUCCESS;
+        case hashFunction_SHA256:
+            SHA256_OneCall(message, messageLength, hashResult);
+            return CRYPTID_SUCCESS;
+        case hashFunction_SHA384:
+            SHA384_OneCall(message, messageLength, hashResult);
+            return CRYPTID_SUCCESS;
+        case hashFunction_SHA512:
+            SHA512_OneCall(message, messageLength,hashResult);
+            return CRYPTID_SUCCESS;
+        default:
+            return HASH_UNKNOWN_TYPE_ERROR;
     }
 }
 

@@ -2286,63 +2286,78 @@ const char *USHAHashName(enum SHAversion whichSha)
   }
 }
 
-unsigned char *SHA1_OneCall(const unsigned char* message, size_t messageLength)
+SHAResult SHA1_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult)
 {
-    unsigned char* c = (unsigned char*)calloc(USHAHashSize(SHA1), sizeof(unsigned char));
+    if(hashResult == NULL)
+    {
+      return shaNull;
+    }
 
     SHA1Context context;
     SHA1Reset(&context);
     SHA1Input(&context, message, messageLength);
-    SHA1Result(&context, c);
+    SHA1Result(&context, hashResult);
 
-    return c;
+    return shaSuccess;
 }
 
-unsigned char *SHA224_OneCall(const unsigned char* message, size_t messageLength)
+SHAResult SHA224_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult)
 {
-    unsigned char* c = (unsigned char*)calloc(USHAHashSize(SHA224), sizeof(unsigned char));
+    if(hashResult == NULL)
+    {
+      return shaNull;
+    }
 
     SHA224Context context;
     SHA224Reset(&context);
     SHA224Input(&context, message, messageLength);
-    SHA224Result(&context, c);
+    SHA224Result(&context, hashResult);
 
-  return c;
+  return shaSuccess;
 }
 #include <stdio.h>
 
-unsigned char *SHA256_OneCall(const unsigned char* message, size_t messageLength)
+SHAResult SHA256_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult)
 {
-    unsigned char* c = (unsigned char*)calloc(USHAHashSize(SHA256), sizeof(unsigned char));
+    if(hashResult == NULL)
+    {
+      return shaNull;
+    }
 
     SHA256Context context;
     SHA256Reset(&context);
     SHA256Input(&context, message, messageLength);
-    SHA256Result(&context, c);
+    SHA256Result(&context, hashResult);
 
-  return c;
+  return shaSuccess;
 }
 
-unsigned char *SHA384_OneCall(const unsigned char* message, size_t messageLength)
+SHAResult SHA384_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult)
 {
-    unsigned char* c = (unsigned char*)calloc(USHAHashSize(SHA384), sizeof(unsigned char));
+    if(hashResult == NULL)
+    {
+      return shaNull;
+    }
 
     SHA384Context context;
     SHA384Reset(&context);
     SHA384Input(&context, message, messageLength);
-    SHA384Result(&context, c);
+    SHA384Result(&context, hashResult);
 
-  return c;
+  return shaSuccess;
 }
 
-unsigned char *SHA512_OneCall(const unsigned char* message, size_t messageLength)
+SHAResult SHA512_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult)
 {
-    unsigned char* c = (unsigned char*)calloc(USHAHashSize(SHA512), sizeof(unsigned char));
+    if(hashResult == NULL)
+    {
+      return shaNull;
+    }
 
     SHA512Context context;
     SHA512Reset(&context);
     SHA512Input(&context, message, messageLength);
-    SHA512Result(&context, c);
+    SHA512Result(&context, hashResult);
 
-  return c;
+  return shaSuccess;
 }

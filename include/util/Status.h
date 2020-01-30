@@ -88,7 +88,17 @@ typedef enum
     /*
      * The given signature is incorrect.
      */
-    CRYPTID_ILLEGAL_SIGNATURE_ERROR
+    CRYPTID_ILLEGAL_SIGNATURE_ERROR,
+
+    /*
+     * The given output parameter is NULL.
+     */
+    HASH_NULLPOINTER_OUTPUT_PARAM_ERROR,
+
+    /*
+     * The given hash type is invalid.
+     */
+    HASH_UNKNOWN_TYPE_ERROR
 } CryptidStatus;
 
 #endif

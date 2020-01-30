@@ -47,7 +47,7 @@ void hashToRange(mpz_t result, const unsigned char *const s, const int sLength, 
 
         // Let \f$h_{i} = \mathrm{hashfcn}(t_i)\f$, which is a {@code hashlen}-octet string
         // resulting from the hash algorithm {@code hashfcn} on the input \f$t_i\f$.
-        h = hashFunction_hash(hashFunction, t, hashLen + sLength);
+        hashFunction_hash(hashFunction, t, hashLen + sLength, h);
 
         // Let \f$a_i = \mathrm{Value}(h_i)\f$ be the integer in the range \f$0\f$ to
         // \f$256^{\mathrm{hashlen}} - 1\f$ denoted by the raw octet string \f$h_i\f$
@@ -229,7 +229,8 @@ unsigned char* hashBytes(const int b, const unsigned char *const p, const int pL
     int hashLen = hashFunction_getHashSize(hashFunction);
 
     // Let \f$k = \mathrm{hashfcn}(p)\f$.
-    unsigned char* k = hashFunction_hash(hashFunction, p, pLength);
+    unsigned char* k = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
+    hashFunction_hash(hashFunction, p, pLength, k);
 
     // Let \f$h_0 = 00...00\f$, a string of null octets with a length of {@code hashlen}.
     unsigned char* h = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
@@ -249,7 +250,7 @@ unsigned char* hashBytes(const int b, const unsigned char *const p, const int pL
     for(int i = 1; i <= l && !didGenerateEnough; i++)
     {
         // Let \f$h_i = \mathrm{hashfcn}(h_{i - 1}).
-        h = hashFunction_hash(hashFunction, h, hashLen);
+        hashFunction_hash(hashFunction, h, hashLen, h);
 
         // Let \f$r_i = \mathrm{hashfcn}(h_i || k)\f$, where \f$h_i || k\f$ is the 
         // \f$(2 \cdot \mathrm{hashlen})\f$-octet concatenation of \f$h_i\f$ and \f$k\f$.
@@ -262,7 +263,7 @@ unsigned char* hashBytes(const int b, const unsigned char *const p, const int pL
             concat[hashLen + j] = k[j];
         }
 
-        resultPart = hashFunction_hash(hashFunction, concat, 2 * hashLen);
+        hashFunction_hash(hashFunction, concat, 2 * hashLen, resultPart);
         
         // Let \f$r = \mathrm{LeftmostOctets}(b, r_1 || ... || r_l)\f$, i.e., \f$r\f$ is formed as
         // the concatenation of the \f$r_i\f$, truncated to the desired number of

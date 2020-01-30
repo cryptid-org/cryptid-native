@@ -244,10 +244,12 @@ CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const
 
     // Let \f$w = \mathrm{hashfcn}(z)\f$ using the {@code hashfcn} hashing algorithm, the
     // result of which is a {@code hashlen}-octet string.
-    unsigned char* w = hashFunction_hash(publicParameters.hashFunction, z, zLength);
+    unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
+    hashFunction_hash(publicParameters.hashFunction, z, zLength, w);
 
     // Let \f$t = \mathrm{hashfcn}(message)\f$ using the \f$hashfcn\f$ algorithm.
-    unsigned char* t = hashFunction_hash(publicParameters.hashFunction, (unsigned char*) message, messageLength);
+    unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
+    hashFunction_hash(publicParameters.hashFunction, (unsigned char*) message, messageLength, t);
 
     // Let \f$v = \mathrm{HashToRange}(w || t, q, \mathrm{hashfcn}) using HashToRange
     // on the \f$(2 \cdot \mathrm{hashlen})\f$-octet concatenation of {@code w} and
@@ -418,9 +420,11 @@ CryptidStatus signid_verify(const char *const message, const size_t messageLengt
     int zLength;
     unsigned char* z = canonical(&zLength, publicParameters.ellipticCurve.fieldOrder, r, 1);
 
-    unsigned char* w = hashFunction_hash(publicParameters.hashFunction, z, zLength);
+    unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
+    hashFunction_hash(publicParameters.hashFunction, z, zLength, w);
 
-    unsigned char* t = hashFunction_hash(publicParameters.hashFunction, (unsigned char*) message, messageLength);
+    unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
+    hashFunction_hash(publicParameters.hashFunction, (unsigned char*) message, messageLength, t);
 
     unsigned char* concat = (unsigned char*)calloc(2*hashLen + 1, sizeof(unsigned char));
     for(int i = 0; i < hashLen; i++)

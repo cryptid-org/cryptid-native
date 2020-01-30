@@ -43,13 +43,13 @@
 /*
  *  All SHA functions return one of these values.
  */
-enum {
+typedef enum SHAResult{
     shaSuccess = 0,
     shaNull,            /* Null pointer parameter */
     shaInputTooLong,    /* input data too long */
     shaStateError,      /* called Input after FinalBits or Result */
     shaBadParam         /* passed a bad parameter */
-};
+} SHAResult;
 
 /*
  *  These constants hold size information for each of the SHA
@@ -201,15 +201,15 @@ int SHA512FinalBits(SHA512Context *, uint8_t bits,
 int SHA512Result(SHA512Context *,
                         uint8_t Message_Digest[SHA512HashSize]);
 
-unsigned char *SHA1_OneCall(const unsigned char* message, size_t messageLength);
+SHAResult SHA1_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult);
 
-unsigned char *SHA224_OneCall(const unsigned char* message, size_t messageLength);
+SHAResult SHA224_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult);
 
-unsigned char *SHA256_OneCall(const unsigned char* message, size_t messageLength);
+SHAResult SHA256_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult);
 
-unsigned char *SHA384_OneCall(const unsigned char* message, size_t messageLength);
+SHAResult SHA384_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult);
 
-unsigned char *SHA512_OneCall(const unsigned char* message, size_t messageLength);
+SHAResult SHA512_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult);
 
 /************************ sha-private.h ************************/
 /***************** See RFC 6234 for details. *******************/
