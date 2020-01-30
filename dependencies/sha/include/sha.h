@@ -201,15 +201,15 @@ int SHA512FinalBits(SHA512Context *, uint8_t bits,
 int SHA512Result(SHA512Context *,
                         uint8_t Message_Digest[SHA512HashSize]);
 
-unsigned char *SHA1_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c);
+unsigned char *SHA1_OneCall(const unsigned char* message, size_t messageLength);
 
-unsigned char *SHA224_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c);
+unsigned char *SHA224_OneCall(const unsigned char* message, size_t messageLength);
 
-unsigned char *SHA256_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c);
+unsigned char *SHA256_OneCall(const unsigned char* message, size_t messageLength);
 
-unsigned char *SHA384_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c);
+unsigned char *SHA384_OneCall(const unsigned char* message, size_t messageLength);
 
-unsigned char *SHA512_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c);
+unsigned char *SHA512_OneCall(const unsigned char* message, size_t messageLength);
 
 /************************ sha-private.h ************************/
 /***************** See RFC 6234 for details. *******************/

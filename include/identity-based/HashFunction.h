@@ -9,33 +9,19 @@
 // References
 //  * [RFC-5091] Xavier Boyen, Luther Martin. 2007. RFC 5091. Identity-Based Cryptography Standard (IBCS) #1: Supersingular Curve Implementations of the BF and BB1 Cryptosystems
 
-
-/**
- * Struct holding hash function data.
- */
-typedef struct HashFunction
+typedef enum HashFunction
 {
-    /**
-     * Pointer to the actual hash function. The function should take three parameters:
-     *   * pointer to the message,
-     *   * the length of the message,
-     *   * pointer to the result buffer.
-     * The return value should be the pointer to the result buffer.
-     */
-    unsigned char* (*sha_hash)(const unsigned char*, size_t, unsigned char*);
-
-    /**
-     * Size of the hash function's output.
-     */
-    size_t hashLength;
+    hashFunction_SHA1 = 0,
+    hashFunction_SHA224 = 1,
+    hashFunction_SHA256 = 2,
+    hashFunction_SHA384 = 3,
+    hashFunction_SHA512 = 4
 } HashFunction;
 
-/**
- * Returns the HashFunction struct corresponding to the specified security level.
- * Please refer to Section 5.1.2. in [RFC-5091] for hash function and security level pairs.
- * @param securityLevel the used security level
- * @return the corresponding HashFunction struct
- */
-HashFunction hashFunction_initForSecurityLevel(const SecurityLevel securityLevel);
+size_t hashFunction_getHashSize(const HashFunction hashFunction);
+
+unsigned char* hashFunction_hash(const HashFunction hashFunction, const unsigned char* message, const size_t messageLength);
+
+HashFunction hashFunction_initForSecurityLevel(SecurityLevel securityLevel);
 
 #endif

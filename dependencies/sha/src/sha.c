@@ -40,6 +40,7 @@
  *  Define the SHA1 circular left shift macro
  */
 #include "sha.h"
+#include <stdlib.h>
 
 #define SHA1_ROTL(bits,word) \
                 (((word) << (bits)) | ((word) >> (32-(bits))))
@@ -2285,11 +2286,9 @@ const char *USHAHashName(enum SHAversion whichSha)
   }
 }
 
-unsigned char *SHA1_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c)
+unsigned char *SHA1_OneCall(const unsigned char* message, size_t messageLength)
 {
-    static unsigned char m[SHA1HashSize];
-    if (c == NULL)
-        c = m;
+    unsigned char* c = (unsigned char*)calloc(USHAHashSize(SHA1), sizeof(unsigned char));
 
     SHA1Context context;
     SHA1Reset(&context);
@@ -2299,11 +2298,9 @@ unsigned char *SHA1_OneCall(const unsigned char* message, size_t messageLength, 
     return c;
 }
 
-unsigned char *SHA224_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c)
+unsigned char *SHA224_OneCall(const unsigned char* message, size_t messageLength)
 {
-    static unsigned char m[SHA224HashSize];
-    if (c == NULL)
-        c = m;
+    unsigned char* c = (unsigned char*)calloc(USHAHashSize(SHA224), sizeof(unsigned char));
 
     SHA224Context context;
     SHA224Reset(&context);
@@ -2314,11 +2311,9 @@ unsigned char *SHA224_OneCall(const unsigned char* message, size_t messageLength
 }
 #include <stdio.h>
 
-unsigned char *SHA256_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c)
+unsigned char *SHA256_OneCall(const unsigned char* message, size_t messageLength)
 {
-    static unsigned char m[SHA256HashSize];
-    if (c == NULL)
-        c = m;
+    unsigned char* c = (unsigned char*)calloc(USHAHashSize(SHA256), sizeof(unsigned char));
 
     SHA256Context context;
     SHA256Reset(&context);
@@ -2328,11 +2323,9 @@ unsigned char *SHA256_OneCall(const unsigned char* message, size_t messageLength
   return c;
 }
 
-unsigned char *SHA384_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c)
+unsigned char *SHA384_OneCall(const unsigned char* message, size_t messageLength)
 {
-    static unsigned char m[SHA384HashSize];
-    if (c == NULL)
-        c = m;
+    unsigned char* c = (unsigned char*)calloc(USHAHashSize(SHA384), sizeof(unsigned char));
 
     SHA384Context context;
     SHA384Reset(&context);
@@ -2342,11 +2335,9 @@ unsigned char *SHA384_OneCall(const unsigned char* message, size_t messageLength
   return c;
 }
 
-unsigned char *SHA512_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c)
+unsigned char *SHA512_OneCall(const unsigned char* message, size_t messageLength)
 {
-    static unsigned char m[SHA512HashSize];
-    if (c == NULL)
-        c = m;
+    unsigned char* c = (unsigned char*)calloc(USHAHashSize(SHA512), sizeof(unsigned char));
 
     SHA512Context context;
     SHA512Reset(&context);

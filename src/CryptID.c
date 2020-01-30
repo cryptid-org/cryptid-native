@@ -209,7 +209,7 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
 
     // Let {@code hashlen} be the length of the output of the cryptographic hash
     // function hashfcn from the public parameters.
-    int hashLen = publicParameters.hashFunction.hashLength;
+    int hashLen = hashFunction_getHashSize(publicParameters.hashFunction);
 
     // \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$
     // which results in a point of order \f$q\f$ in \f$E(F_p)\f$.
@@ -229,8 +229,7 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
 
     // Let \f$t = \mathrm{hashfcn}(m)\f$, a {@code hashlen}-octet string resulting from applying
     // the {@code hashfcn} algorithm to the input \f$m\f$.
-    unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    (*(publicParameters.hashFunction.sha_hash))((unsigned char*) message, messageLength, t);
+    unsigned char* t = hashFunction_hash(publicParameters.hashFunction, (unsigned char*) message, messageLength);
 
     // Let \f$l = \mathrm{HashToRange}(rho || t, q, \mathrm{hashfcn})\f$, an integer in the range
     // \f$0\f$ to \f$q - 1\f$ resulting from applying {@code HashToRange}
@@ -286,8 +285,7 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
 
     // Let \f$w = \mathrm{hashfcn}(z)\f$ using the {@code hashfcn} hashing algorithm, the
     // result of which is a {@code hashlen}-octet string.
-    unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    (*(publicParameters.hashFunction.sha_hash))(z, zLength, w);
+    unsigned char* w = hashFunction_hash(publicParameters.hashFunction, z, zLength);
 
     // Let \f$V = w \oplus rho\f$, which is the {@code hashlen}-octet long bit-wise XOR
     // of \f$w\f$ and {@code rho}.
@@ -353,7 +351,7 @@ CryptidStatus cryptid_decrypt(char **result, const AffinePoint privateKey, const
 
     // Let {@code hashlen} be the length of the output of the hash function
     // {@code hashfcn} measured in octets.
-    int hashLen = publicParameters.hashFunction.hashLength;
+    int hashLen = hashFunction_getHashSize(publicParameters.hashFunction);
 
     // Let \f$theta = \mathrm{Pairing}(E, p ,q, U, S_{id})\f$ by applying the modified
     // Tate pairing.
@@ -371,8 +369,7 @@ CryptidStatus cryptid_decrypt(char **result, const AffinePoint privateKey, const
 
     // Let \f$w = \mathrm{hashfcn}(z)$ using the {@code hashfcn} hashing algorithm, the result
     // of which is a {@code hashlen}-octet string.
-    unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    (*(publicParameters.hashFunction.sha_hash))(z, zLength, w);
+    unsigned char* w = hashFunction_hash(publicParameters.hashFunction, z, zLength);
 
     // Let \f$rho = w \oplus V\f$, the bit-wise XOR of \f$w\f$ and \f$V\f$.
     unsigned char* rho = (unsigned char*)calloc(hashLen + 1, sizeof(unsigned char));
@@ -394,8 +391,7 @@ CryptidStatus cryptid_decrypt(char **result, const AffinePoint privateKey, const
     m[ciphertext.cipherWLength] = '\0';
 
     // Let \f$t = \mathrm{hashfcn}(m)\f$ using the \f$hashfcn\f$ algorithm.
-    unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    (*(publicParameters.hashFunction.sha_hash))((unsigned char*) m, ciphertext.cipherWLength, t);
+    unsigned char* t = hashFunction_hash(publicParameters.hashFunction, (unsigned char*) m, ciphertext.cipherWLength);
 
     // Let \f$l = \mathrm{HashToRange}(rho || t, q, \mathrm{hashfcn}) using HashToRange
     // on the \f$(2 * \mathrm{hashlen})\f$-octet concatenation of {@code rho} and

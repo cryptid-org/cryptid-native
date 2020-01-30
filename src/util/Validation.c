@@ -10,62 +10,6 @@ CryptidValidationResult validation_isProbablePrime(const mpz_t p)
     return mpz_probab_prime_p(p, 50) >= MIGHT_BE_PRIME ? CRYPTID_VALIDATION_SUCCESS : CRYPTID_VALIDATION_FAILURE;
 }
 
-CryptidValidationResult validation_isHashFunctionValid(const HashFunction hashFunction)
-{
-    switch(hashFunction.hashLength)
-    {
-        case 20:
-        {
-            if(hashFunction.sha_hash && *hashFunction.sha_hash == SHA1_OneCall)
-            {
-                return CRYPTID_VALIDATION_SUCCESS;
-            }
-
-            return CRYPTID_VALIDATION_FAILURE;
-        }
-        case 28:
-        {
-            if(hashFunction.sha_hash && *hashFunction.sha_hash == SHA224_OneCall)
-            {
-                return CRYPTID_VALIDATION_SUCCESS;
-            }
-
-            return CRYPTID_VALIDATION_FAILURE;
-        }
-        case 32:
-        {
-            if(hashFunction.sha_hash && *hashFunction.sha_hash == SHA256_OneCall)
-            {
-                return CRYPTID_VALIDATION_SUCCESS;
-            }
-
-            return CRYPTID_VALIDATION_FAILURE;
-        }
-        case 48:
-        {
-            if(hashFunction.sha_hash && *hashFunction.sha_hash == SHA384_OneCall)
-            {
-                return CRYPTID_VALIDATION_SUCCESS;
-            }
-
-            return CRYPTID_VALIDATION_FAILURE;
-        }
-        case 64:
-        {
-            if(hashFunction.sha_hash && *hashFunction.sha_hash == SHA512_OneCall)
-            {
-                return CRYPTID_VALIDATION_SUCCESS;
-            }
-
-            return CRYPTID_VALIDATION_FAILURE;
-        }
-        default:
-        {
-            return CRYPTID_VALIDATION_FAILURE;
-        }
-    }
-}
-
 CryptidValidationResult validation_isAffinePointValid(const AffinePoint affinePoint, const mpz_t order)
 {
     if(mpz_cmp_si(affinePoint.x, -1) > 0 && mpz_cmp(affinePoint.x, order) < 0
@@ -94,8 +38,7 @@ CryptidValidationResult validation_isPublicParametersValid(const PublicParameter
     if(validation_isTypeOneEllipticCurve(publicParameters.ellipticCurve) 
         && validation_isProbablePrime(publicParameters.q)
         && validation_isAffinePointValid(publicParameters.pointP, publicParameters.ellipticCurve.fieldOrder)  
-        && validation_isAffinePointValid(publicParameters.pointPpublic, publicParameters.ellipticCurve.fieldOrder)
-        && validation_isHashFunctionValid(publicParameters.hashFunction))
+        && validation_isAffinePointValid(publicParameters.pointPpublic, publicParameters.ellipticCurve.fieldOrder))
     {
         return CRYPTID_VALIDATION_SUCCESS;
     }
