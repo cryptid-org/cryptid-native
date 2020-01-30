@@ -28,7 +28,7 @@ unsigned char* hashFunction_hash(const HashFunction hashFunction, const unsigned
     }
 }
 
-HashFunction hashFunction_initForSecurityLevel(SecurityLevel securityLevel)
+HashFunction hashFunction_initForSecurityLevel(const SecurityLevel securityLevel)
 {
     switch(securityLevel)
     {

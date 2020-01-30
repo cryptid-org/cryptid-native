@@ -22,6 +22,6 @@ size_t hashFunction_getHashSize(const HashFunction hashFunction);
 
 unsigned char* hashFunction_hash(const HashFunction hashFunction, const unsigned char* message, const size_t messageLength);
 
-HashFunction hashFunction_initForSecurityLevel(SecurityLevel securityLevel);
+HashFunction hashFunction_initForSecurityLevel(const SecurityLevel securityLevel);
 
 #endif
