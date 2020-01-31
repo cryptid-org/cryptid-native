@@ -62,3 +62,6 @@ build/
 
 # Test results directory
 test-results/
+
+# Memcheck output directory
+memcheck/
