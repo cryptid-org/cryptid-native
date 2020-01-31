@@ -28,8 +28,14 @@ steps:
     testResultsFormat: 'JUnit'
     testResultsFiles: 'test-results/*.xml'
 
-- bash: './task.sh memcheck'
+- bash: './task.sh memcheck --xmlOutput'
   displayName: 'Check for memory leaks'
+
+- task: PublishBuildArtifacts@1
+  condition: succeededOrFailed()
+  inputs:
+    pathToPublish: 'memcheck'
+    artifactName: 'memcheck'
 
 - bash: './task.sh report-coverage'
   displayName: 'Upload coverage to Coveralls'
