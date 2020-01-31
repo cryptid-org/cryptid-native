@@ -6,6 +6,15 @@ function runMemoryCheck(dependencies, components, xmlOutput) {
     try {
         compileAllSources(dependencies, ['-g']);
 
+        if (xmlOutput) {
+            try {
+                dependencies.fs.removeSync(dependencies.paths.memcheck.root);
+                dependencies.fs.mkdirSync(dependencies.paths.memcheck.root);
+            } catch (e) {
+                // Calculated
+            }
+        }
+        
         const errors = testWithMemoryCheck(dependencies, components, xmlOutput);
 
         if (errors.length > 1) {
@@ -32,13 +41,6 @@ function testWithMemoryCheck(dependencies, components, xmlOutput) {
         ]
 
         if (xmlOutput) {
-            try {
-                dependencies.fs.removeSync(dependencies.paths.memcheck.root);
-                dependencies.fs.mkdirSync(dependencies.paths.memcheck.root);
-            } catch (e) {
-                // Calculated
-            }
-
             valgrindOptions.push(...[
                 '--xml=yes',
                 `--xml-file=${dependencies.paths.memcheck.componentMemcheckFile(component)}`,
