@@ -42,7 +42,7 @@ function testWithMemoryCheck(dependencies, components, xmlOutput) {
             valgrindOptions.push(...[
                 '--xml=yes',
                 `--xml-file=${dependencies.paths.memcheck.componentMemcheckFile(component)}`,
-                '--child-silent-after-fork'
+                '--child-silent-after-fork=yes'
             ]);
         }
 
