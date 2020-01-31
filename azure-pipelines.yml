@@ -28,7 +28,7 @@ steps:
     testResultsFormat: 'JUnit'
     testResultsFiles: 'test-results/*.xml'
 
-- bash: './task.sh memcheck'
+- bash: './task.sh memcheck --xmlOutput'
   displayName: 'Check for memory leaks'
 
 - task: PublishArtifacts@1
