@@ -31,7 +31,7 @@ steps:
 - bash: './task.sh memcheck --xmlOutput'
   displayName: 'Check for memory leaks'
 
-- task: PublishArtifacts@1
+- task: PublishBuildArtifacts@1
   condition: succeededOrFailed()
   inputs:
     pathToPublish: 'memcheck'
