@@ -2,11 +2,11 @@ const { compileAllSources, compileExecutableForComponent } = require('./compile'
 const { removeFiles, run } = require('./util');
 
 
-function runMemoryCheck(dependencies, components) {
+function runMemoryCheck(dependencies, components, xmlOutput) {
     try {
         compileAllSources(dependencies, ['-g']);
 
-        const errors = testWithMemoryCheck(dependencies, components);
+        const errors = testWithMemoryCheck(dependencies, components, xmlOutput);
 
         if (errors.length > 1) {
             console.log(errors);
@@ -17,7 +17,7 @@ function runMemoryCheck(dependencies, components) {
     }
 };
 
-function testWithMemoryCheck(dependencies, components) {
+function testWithMemoryCheck(dependencies, components, xmlOutput) {
     const errors = [];
 
     for (const component of components) {
@@ -28,9 +28,25 @@ function testWithMemoryCheck(dependencies, components) {
         const valgrindOptions = [
             '--leak-check=full',
             '--show-reachable=yes',
-            '--error-exitcode=1',
-            executable
+            '--error-exitcode=1'
         ]
+
+        if (xmlOutput) {
+            try {
+                dependencies.fs.removeSync(dependencies.paths.memcheck.root);
+                dependencies.fs.mkdirSync(dependencies.paths.memcheck.root);
+            } catch (e) {
+                // Calculated
+            }
+
+            valgrindOptions.push(...[
+                '--xml=yes',
+                `--xml-file=${dependencies.paths.memcheck.componentMemcheckFile(component)}`,
+                '--child-silent-after-fork'
+            ]);
+        }
+
+        valgrindOptions.push(executable);
 
         if (component == 'CryptID' || component == 'SignID') {
             valgrindOptions.push('--', '--lowest-quick-check');

@@ -13,8 +13,8 @@ module.exports = {
         }
     },
     handlerFactory(dependencies) {
-        return function handler({ components = discoverAllComponents(dependencies) }) {
-            runMemoryCheck(dependencies, components);
+        return function handler({ components = discoverAllComponents(dependencies), xmlOutput }) {
+            runMemoryCheck(dependencies, components, xmlOutput);
         };
     }
 };
