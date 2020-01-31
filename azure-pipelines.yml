@@ -31,6 +31,12 @@ steps:
 - bash: './task.sh memcheck'
   displayName: 'Check for memory leaks'
 
+- task: PublishArtifacts@1
+  condition: succeededOrFailed()
+  inputs:
+    pathToPublish: 'memcheck'
+    artifactName: 'memcheck'
+
 - bash: './task.sh report-coverage'
   displayName: 'Upload coverage to Coveralls'
   env:
