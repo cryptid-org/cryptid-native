@@ -89,6 +89,6 @@ function reportCoverage({ fs, paths, reportToCoveralls }) {
 };
 
 module.exports = {
-    generateCoverage: generateHtmlCoverage,
+    runTestsWithCoverage: generateHtmlCoverage,
     reportCoverage
 };
