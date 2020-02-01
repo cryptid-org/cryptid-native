@@ -1,4 +1,5 @@
 const { compileAllSources, compileExecutableForComponent } = require('./compile');
+const { runTests } = require('./test');
 const { removeFiles, run } = require('./util');
 
 
@@ -24,12 +25,7 @@ function generateHtmlCoverage(dependencies, components) {
 
 function generateGcovCoverage(dependencies, components) {
     try {
-        const errors = testComponentsWithCoverage(dependencies, components);
-
-        if (errors.length > 0) {
-            console.log(errors);
-            throw new Error('There were errors during the coverage calculation. Please see the log lines above.');
-        }
+        runTests(dependencies, components, coverageCompilationArguments);
 
         removeFiles(dependencies, excludedFromCoverage);
     } catch (e) {
@@ -93,6 +89,6 @@ function reportCoverage({ fs, paths, reportToCoveralls }) {
 };
 
 module.exports = {
-    generateCoverage: generateHtmlCoverage,
+    runTestsWithCoverage: generateHtmlCoverage,
     reportCoverage
 };
