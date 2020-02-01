@@ -6,9 +6,9 @@ const { removeFiles, run } = require('./util');
 
 const TEN_MEGABYTES = 10 * 1024 * 1024;
 
-function runTests(dependencies, components) {
+function runTests(dependencies, components, additionalCompilationArguments) {
     try {
-        const { output, errors } = testComponents(dependencies, components);
+        const { output, errors } = testComponents(dependencies, components, additionalCompilationArguments);
 
         if (errors.length > 0) {
             console.log(errors);
@@ -30,16 +30,16 @@ function runTests(dependencies, components) {
     }
 };
 
-function testComponents(dependencies, components) {
+function testComponents(dependencies, components, additionalCompilationArguments) {
     const errors = [];
     const output = [];
 
-    compileAllSources(dependencies, ['-g']);
+    compileAllSources(dependencies, ['-g'].concat(additionalCompilationArguments));
 
     for (const component of components) {
         console.log(`Testing ${component}`);
 
-        const executable = compileExecutableForComponent(component, dependencies, []);
+        const executable = compileExecutableForComponent(component, dependencies, additionalCompilationArguments);
 
         try {
             const { stdout } = run(dependencies, executable, ['-v'], {
