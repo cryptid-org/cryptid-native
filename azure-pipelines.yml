@@ -6,6 +6,7 @@ pool:
 
 steps:
 - task: UseNode@1
+  displayName: 'Ensure Node.js'
   inputs:
     version: '12.x'
 
@@ -21,6 +22,7 @@ steps:
   displayName: 'Run tests'
 
 - task: PublishTestResults@2
+  displayName: 'Publish test results'
   condition: succeededOrFailed()
   inputs:
     testResultsFormat: 'JUnit'
@@ -30,6 +32,7 @@ steps:
   displayName: 'Check for memory leaks'
 
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish memcheck XML output'
   condition: succeededOrFailed()
   inputs:
     pathToPublish: 'memcheck'
