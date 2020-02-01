@@ -17,13 +17,11 @@ steps:
       gawk
   displayName: 'Setup necessary packages'
 
-- bash: './task.sh test'
+- bash: './task.sh test --coverage'
   displayName: 'Run tests'
 
-- bash: './task.sh coverage'
-  displayName: 'Collect coverage'
-
 - task: PublishTestResults@2
+  condition: succeededOrFailed()
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: 'test-results/*.xml'
