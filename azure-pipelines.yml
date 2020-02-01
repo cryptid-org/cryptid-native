@@ -6,6 +6,7 @@ pool:
 
 steps:
 - task: UseNode@1
+  displayName: 'Ensure Node.js'
   inputs:
     version: '12.x'
 
@@ -17,19 +18,25 @@ steps:
       gawk
   displayName: 'Setup necessary packages'
 
-- bash: './task.sh test'
+- bash: './task.sh test --coverage'
   displayName: 'Run tests'
 
-- bash: './task.sh coverage'
-  displayName: 'Collect coverage'
-
 - task: PublishTestResults@2
+  displayName: 'Publish test results'
+  condition: succeededOrFailed()
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: 'test-results/*.xml'
 
-- bash: './task.sh memcheck'
+- bash: './task.sh memcheck --xmlOutput'
   displayName: 'Check for memory leaks'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish memcheck XML output'
+  condition: succeededOrFailed()
+  inputs:
+    pathToPublish: 'memcheck'
+    artifactName: 'memcheck'
 
 - bash: './task.sh report-coverage'
   displayName: 'Upload coverage to Coveralls'

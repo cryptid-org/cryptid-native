@@ -211,7 +211,7 @@ CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const
 
     // Let {@code hashlen} be the length of the output of the cryptographic hash
     // function hashfcn from the public parameters.
-    int hashLen = publicParameters.hashFunction.hashLength;
+    int hashLen = hashFunction_getHashSize(publicParameters.hashFunction);
 
     // \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$
     // which results in a point of order \f$q\f$ in \f$E(F_p)\f$.
@@ -245,11 +245,11 @@ CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const
     // Let \f$w = \mathrm{hashfcn}(z)\f$ using the {@code hashfcn} hashing algorithm, the
     // result of which is a {@code hashlen}-octet string.
     unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    (*(publicParameters.hashFunction.sha_hash))(z, zLength, w);
+    hashFunction_hash(publicParameters.hashFunction, z, zLength, w);
 
     // Let \f$t = \mathrm{hashfcn}(message)\f$ using the \f$hashfcn\f$ algorithm.
     unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    (*(publicParameters.hashFunction.sha_hash))((unsigned char*) message, messageLength, t);
+    hashFunction_hash(publicParameters.hashFunction, (unsigned char*) message, messageLength, t);
 
     // Let \f$v = \mathrm{HashToRange}(w || t, q, \mathrm{hashfcn}) using HashToRange
     // on the \f$(2 \cdot \mathrm{hashlen})\f$-octet concatenation of {@code w} and
@@ -366,7 +366,7 @@ CryptidStatus signid_verify(const char *const message, const size_t messageLengt
 
     // Let {@code hashlen} be the length of the output of the hash function
     // {@code hashfcn} measured in octets.
-    int hashLen = publicParameters.hashFunction.hashLength;
+    int hashLen = hashFunction_getHashSize(publicParameters.hashFunction);
 
     // Let \f$theta1 = \mathrm{Pairing}(E, p ,q, u, P_{pub})\f$ by applying the modified
     // Tate pairing.
@@ -421,10 +421,10 @@ CryptidStatus signid_verify(const char *const message, const size_t messageLengt
     unsigned char* z = canonical(&zLength, publicParameters.ellipticCurve.fieldOrder, r, 1);
 
     unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    (*(publicParameters.hashFunction.sha_hash))(z, zLength, w);
+    hashFunction_hash(publicParameters.hashFunction, z, zLength, w);
 
     unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    (*(publicParameters.hashFunction.sha_hash))((unsigned char*) message, messageLength, t);
+    hashFunction_hash(publicParameters.hashFunction, (unsigned char*) message, messageLength, t);
 
     unsigned char* concat = (unsigned char*)calloc(2*hashLen + 1, sizeof(unsigned char));
     for(int i = 0; i < hashLen; i++)
