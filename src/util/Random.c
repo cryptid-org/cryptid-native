@@ -11,13 +11,9 @@ unsigned int random_unsignedIntInRange(const unsigned int range)
 {
     unsigned int x, r;
 
-    do
-    {
-        cryptid_randomBytes((unsigned char*) &x, sizeof (x));
+    cryptid_randomBytes((unsigned char*) &x, sizeof (x));
 
-        r = x % range;
-    }
-    while (x - r > (-range));
+    r = x % range;
 
     return r;
 }
@@ -38,25 +34,14 @@ void random_mpzOfLength(mpz_t result, const unsigned int numberOfBits)
 
 void random_mpzInRange(mpz_t result, const mpz_t range)
 {
-    mpz_t x, r, xMinusR, negativeRange;
-    mpz_inits(x, r, xMinusR, negativeRange, NULL);
+    mpz_t x;
+    mpz_init(x);
 
-    mpz_ui_pow_ui(negativeRange, 2, mpz_sizeinbase(range, 2));
-    mpz_sub(negativeRange, negativeRange, range);
+    random_mpzOfLength(x, mpz_sizeinbase(range, 2));
 
-    do
-    {
-        random_mpzOfLength(x, mpz_sizeinbase(range, 2));
+    mpz_mod(result, x, range);
 
-        mpz_mod(r, x, range);
-
-        mpz_sub(xMinusR, x, r);
-    }
-    while (mpz_cmp(xMinusR, negativeRange) > 0);
-
-    mpz_set(result, r);
-
-    mpz_clears(x, r, xMinusR, negativeRange, NULL);
+    mpz_clear(x);
 }
 
 CryptidStatus random_solinasPrime(mpz_t result, const unsigned int numberOfBits, const unsigned int attemptLimit)
