@@ -16,7 +16,6 @@ steps:
       valgrind \
       libgmp-dev \
       gawk \
-      default-jdk \
       wget
   displayName: 'Setup necessary packages'
 
@@ -41,7 +40,9 @@ steps:
     artifactName: 'memcheck-xml'
 
 - bash: |
-    wget https://pkg.githubusercontent.com/237624794/974f4180-4616-11ea-844a-0d4166620c62?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20200202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20200202T234946Z&X-Amz-Expires=300&X-Amz-Signature=ab6806dd2379743bb53fb83fb9bfc476f0626753cf7c6e01182c1205d6e74953&X-Amz-SignedHeaders=host&actor_id=0&response-content-disposition=filename%3Dparsegrind-1.0.2.jar&response-content-type=application%2Foctet-stream
+    curl -sL https://github.com/shyiko/jabba/raw/master/install.sh | bash && . ~/.jabba/jabba.sh
+    jabba install openjdk@1.11.0
+    jabba use openjdk@1.11.0
     java -jar parsegrind-1.0.1.jar \
       --source-glob=**/*.c \
       --valgrind-glob=memcheck/*.memcheck.xml \
