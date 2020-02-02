@@ -50,11 +50,11 @@ steps:
   condition: succeededOrFailed()
 
 - task: PublishBuildArtifacts@1
-    displayName: 'Publish parsegrind HTML output'
-    condition: succeededOrFailed()
-    inputs:
-      pathToPublish: 'memcheck.html'
-      artifactName: 'memcheck-html'
+  displayName: 'Publish parsegrind HTML output'
+  condition: succeededOrFailed()
+  inputs:
+    pathToPublish: 'memcheck.html'
+    artifactName: 'memcheck-html'
 
 - bash: './task.sh report-coverage'
   displayName: 'Upload coverage to Coveralls'
