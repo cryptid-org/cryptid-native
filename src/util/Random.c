@@ -58,9 +58,11 @@ void random_mpzOfLength(mpz_t result, const unsigned int numberOfBits)
 
 void random_mpzInRange(mpz_t result, const mpz_t range)
 {
+    unsigned int rangeBitLength = mpz_sizeinbase(range, 2);
+    
     do
     {
-        random_mpzOfLength(result, mpz_sizeinbase(range, 2));
+        random_mpzOfLength(result, rangeBitLength);
     }while(mpz_cmp(result, range) > 0);
 }
 
