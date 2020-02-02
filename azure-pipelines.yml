@@ -2,7 +2,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-16.04'
+  vmImage: 'ubuntu-18.04'
 
 steps:
 - task: UseNode@1
@@ -15,7 +15,9 @@ steps:
       lcov \
       valgrind \
       libgmp-dev \
-      gawk
+      gawk \
+      default-jdk \
+      wget
   displayName: 'Setup necessary packages'
 
 - bash: './task.sh test --coverage'
@@ -35,8 +37,24 @@ steps:
   displayName: 'Publish memcheck XML output'
   condition: succeededOrFailed()
   inputs:
-    pathToPublish: 'memcheck'
-    artifactName: 'memcheck'
+    pathToPublish: 'memcheck-xml'
+    artifactName: 'memcheck-xml'
+
+- bash: |
+    wget https://pkg.githubusercontent.com/237624794/974f4180-4616-11ea-844a-0d4166620c62?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20200202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20200202T234946Z&X-Amz-Expires=300&X-Amz-Signature=ab6806dd2379743bb53fb83fb9bfc476f0626753cf7c6e01182c1205d6e74953&X-Amz-SignedHeaders=host&actor_id=0&response-content-disposition=filename%3Dparsegrind-1.0.2.jar&response-content-type=application%2Foctet-stream
+    java -jar parsegrind-1.0.1.jar \
+      --source-glob=**/*.c \
+      --valgrind-glob=memcheck/*.memcheck.xml \
+      --output=memcheck/memcheck.html \
+  displayName: 'Run parsegrind'
+  condition: succeededOrFailed()
+
+- task: PublishBuildArtifacts@1
+    displayName: 'Publish parsegrind HTML output'
+    condition: succeededOrFailed()
+    inputs:
+      pathToPublish: 'memcheck.html'
+      artifactName: 'memcheck-html'
 
 - bash: './task.sh report-coverage'
   displayName: 'Upload coverage to Coveralls'
