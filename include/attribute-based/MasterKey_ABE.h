@@ -6,10 +6,11 @@
 #include "elliptic/TatePairing.h"
 
 #include "attribute-based/PublicKey_ABE.h"
+#include "attribute-based/SecretKey_ABE.h"
 
 typedef struct MasterKey_ABE
 {
 	mpz_t beta;
-	mpz_t galpha;
+	AffinePoint g_alpha;
 	PublicKey_ABE* pubkey;
 } MasterKey_ABE;

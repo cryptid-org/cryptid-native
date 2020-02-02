@@ -13,6 +13,11 @@ typedef struct AccessTree {
     char* attribute;
 } AccessTree;
 
+int isRoot(AccessTree* accessTree)
+{
+	return (accessTree->parent == NULL) ? 1 : 0;
+}
+
 AccessTree* createTree(int value, AccessTree* children) {
 	AccessTree* tree = malloc(sizeof(AccessTree));
     tree->value = value;

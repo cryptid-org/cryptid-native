@@ -7,8 +7,9 @@
 
 typedef struct PublicKey_ABE
 {
-	mpz_t g;
-	mpz_t h;
-	mpz_t f;
-	mpz_t eggalpha;
+	EllipticCurve ellipticCurve; // G0
+	AffinePoint g; // generator of cyclic group
+	AffinePoint h; // g^(beta)
+	AffinePoint f; // g^(1/beta)
+	Complex pairValue; // e(g, g)^alpha
 } PublicKey_ABE;
