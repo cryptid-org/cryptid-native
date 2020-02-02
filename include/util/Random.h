@@ -7,9 +7,15 @@
 #include "elliptic/EllipticCurve.h"
 #include "util/Status.h"
 
+/**
+ * Generates a cryptographically secure random unsigned integer of the specified bitlength.
+ * @param numberOfBits the bitlength of the result
+ * @return a random unsigned integer
+ */
+unsigned int random_unsignedIntOfLength(const unsigned int numberOfBits);
 
 /**
- * Generates a cryptographically secure random unsigned integer between zero and {@code range}.
+ * Generates a cryptographically secure random unsigned integer between zero and {@code range} inclusive.
  * @param range the upper limit of the generation
  * @return a random unsigned integer
  */
@@ -23,7 +29,7 @@ unsigned int random_unsignedIntInRange(const unsigned int range);
 void random_mpzOfLength(mpz_t result, const unsigned int numberOfBits);
 
 /**
- * Generates a cryptographically secure random arbitrary precision integer between zero and {@code range}.
+ * Generates a cryptographically secure random arbitrary precision integer between zero and {@code range} inclusive.
  * @param result out parameter for the generated value
  * @param range the upper limit of the generation
  */
