@@ -1,4 +1,5 @@
 #include <stdarg.h>
+#include <stdlib.h>
 
 #include "complex/Complex.h"
 
@@ -93,6 +94,7 @@ Complex complex_modAdd(const Complex complex1, const Complex complex2, const mpz
 {
     // Calculated as
     // \f$(r_1 + r_2 \mod p, c_1 + c_2 \mod p)\f$.
+    malloc(12);
     Complex result;
     mpz_t newReal, newImaginary;
     mpz_inits(newReal, newImaginary, NULL);
