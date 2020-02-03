@@ -43,9 +43,14 @@ steps:
     curl -sL https://github.com/shyiko/jabba/raw/master/install.sh | bash && . ~/.jabba/jabba.sh
     jabba install openjdk@1.11.0
     jabba use openjdk@1.11.0
-    wget "https://pkg.githubusercontent.com/237624794/974f4180-4616-11ea-844a-0d4166620c62?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20200203%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20200203T000913Z&X-Amz-Expires=300&X-Amz-Signature=dcac3c616d46d2dc0e27ac73eeb88bcdf10c66462b206eca3b9994d0b8c9f306&X-Amz-SignedHeaders=host&actor_id=0&response-content-disposition=filename%3Dparsegrind-1.0.2.jar&response-content-type=application%2Foctet-stream" \
-      -O parsegrind.jar
-    java -jar parsegrind.jar \
+    wget https://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz \
+      -O maven.tar.gz
+    tar xvzf maven.tar.gz
+    ./apache-maven-3.6.3/bin/mvn org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy \
+      -Dmaven.repo.remote="https://pkg.maven.github.com/cryptid-org/parsegrind" \
+      -Dartifact="cryptid:parsegrind:1.0.2:jar" \
+      -DoutputDirectory="."
+    java -jar parsegrind-1.0.2.jar \
       --source-glob=**/*.c \
       --valgrind-glob=memcheck/*.memcheck.xml \
       --output=memcheck.html \
