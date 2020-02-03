@@ -16,7 +16,8 @@ steps:
       valgrind \
       libgmp-dev \
       gawk \
-      wget
+      wget \
+      git
   displayName: 'Setup necessary packages'
 
 - bash: './task.sh test --coverage'
@@ -43,17 +44,14 @@ steps:
     curl -sL https://github.com/shyiko/jabba/raw/master/install.sh | bash && . ~/.jabba/jabba.sh
     jabba install openjdk@1.11.0
     jabba use openjdk@1.11.0
-    wget https://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz \
-      -O maven.tar.gz
-    tar xvzf maven.tar.gz
-    ./apache-maven-3.6.3/bin/mvn org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy \
-      -Dmaven.repo.remote="https://pkg.maven.github.com/cryptid-org/parsegrind" \
-      -Dartifact="cryptid:parsegrind:1.0.2:jar" \
-      -DoutputDirectory="."
-    java -jar parsegrind-1.0.2.jar \
+    git clone https://github.com/cryptid-org/parsegrind
+    cd parsegrind
+    ./mvnw exec:java -Dexec.mainClass=cryptid.parsegrind.Application -Dexec.args=" \
+      --base-directory=../
       --source-glob=**/*.c \
-      --valgrind-glob=memcheck/*.memcheck.xml \
-      --output=memcheck.html \
+      --valgrind-glob=**/*.memcheck.xml \
+      --output=../memcheck.html"
+    cd ..
   displayName: 'Run parsegrind'
   condition: succeededOrFailed()
 
