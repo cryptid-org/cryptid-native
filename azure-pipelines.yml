@@ -46,6 +46,7 @@ steps:
     jabba use openjdk@1.11.0
     git clone https://github.com/cryptid-org/parsegrind
     cd parsegrind
+    chmod +x mvnw
     ./mvnw exec:java -Dexec.mainClass=cryptid.parsegrind.Application -Dexec.args=" \
       --base-directory=../
       --source-glob=**/*.c \
