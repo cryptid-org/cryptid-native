@@ -67,7 +67,7 @@ steps:
       --base-directory=../ \
       --source-glob=**/*.c \
       --valgrind-glob=**/*.memcheck.xml \
-      --output=../memcheck.html"
+      --output=../memcheck.html
     cd ..
   displayName: 'Run parsegrind'
   condition: succeededOrFailed()
