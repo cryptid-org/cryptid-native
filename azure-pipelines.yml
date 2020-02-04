@@ -28,18 +28,9 @@ steps:
     testResultsFormat: 'JUnit'
     testResultsFiles: 'test-results/*.xml'
 
-- bash: './task.sh memcheck --xmlOutput'
-  displayName: 'Check for memory leaks'
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish memcheck XML output'
-  condition: succeededOrFailed()
-  inputs:
-    pathToPublish: 'memcheck'
-    artifactName: 'memcheck'
-
 - bash: './task.sh report-coverage'
   displayName: 'Upload coverage to Coveralls'
+  condition: succeededOrFailed()
   env:
     # Clearly a hack, I should submit a PR to node-coveralls, but
     # I want this up and running now :)
@@ -54,3 +45,34 @@ steps:
     CI_COMMIT_MESSAGE: $(Build.SourceVersionMessage)
     CI_BUILD_URL: $(Build.BuildUri)
     COVERALLS_REPO_TOKEN: $(CoverallsRepoToken)
+
+- bash: './task.sh memcheck --xmlOutput'
+  displayName: 'Check for memory leaks'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish memcheck XML output'
+  condition: succeededOrFailed()
+  inputs:
+    pathToPublish: 'memcheck'
+    artifactName: 'memcheck'
+
+- bash: |
+    curl -sL https://github.com/shyiko/jabba/raw/master/install.sh | bash && . ~/.jabba/jabba.sh
+    jabba install openjdk@1.11.0
+    jabba use openjdk@1.11.0
+    cd .task
+    java -jar parsegrind.jar \
+      --base-directory=../ \
+      --source-glob=**/*.c \
+      --valgrind-glob=**/*.memcheck.xml \
+      --output=../memcheck.html
+    cd ..
+  displayName: 'Run parsegrind'
+  condition: succeededOrFailed()
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish parsegrind HTML output'
+  condition: succeededOrFailed()
+  inputs:
+    pathToPublish: 'memcheck.html'
+    artifactName: 'memcheck-html'
