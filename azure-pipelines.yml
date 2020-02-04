@@ -31,7 +31,7 @@ steps:
     cd parsegrind
     chmod +x mvnw
     ./mvnw clean package exec:java -Dexec.mainClass=cryptid.parsegrind.Application -Dexec.args=" \
-      --base-directory=..
+      --base-directory=../ \
       --source-glob=**/*.c \
       --valgrind-glob=**/*.memcheck.xml \
       --output=../memcheck.html"
