@@ -17,7 +17,7 @@ function runMemoryCheck(dependencies, components, xmlOutput) {
         
         const errors = testWithMemoryCheck(dependencies, components, xmlOutput);
 
-        if (errors.length > 1) {
+        if (errors.length > 0) {
             console.log(errors);
             throw new Error('There were errors during the memory check. Please see the log lines above.');
         }
