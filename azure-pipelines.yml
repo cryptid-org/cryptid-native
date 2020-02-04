@@ -15,9 +15,7 @@ steps:
       lcov \
       valgrind \
       libgmp-dev \
-      gawk \
-      wget \
-      git
+      gawk
   displayName: 'Setup necessary packages'
 
 - bash: './task.sh test --coverage'
