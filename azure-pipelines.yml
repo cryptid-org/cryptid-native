@@ -62,10 +62,8 @@ steps:
     curl -sL https://github.com/shyiko/jabba/raw/master/install.sh | bash && . ~/.jabba/jabba.sh
     jabba install openjdk@1.11.0
     jabba use openjdk@1.11.0
-    git clone https://github.com/cryptid-org/parsegrind
-    cd parsegrind
-    chmod +x mvnw
-    ./mvnw clean package exec:java -Dexec.mainClass=cryptid.parsegrind.Application -Dexec.args=" \
+    cd .task
+    java -jar parsegrind.jar \
       --base-directory=../ \
       --source-glob=**/*.c \
       --valgrind-glob=**/*.memcheck.xml \
