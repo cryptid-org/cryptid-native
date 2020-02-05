@@ -1,7 +1,7 @@
 #include "util/PrimalityTest.h"
 #include "util/Random.h"
 
-int millerrabin_mpz(mpz_srcptr p, int repetitions)
+int millerrabin_mpz(const mpz_srcptr p, const int repetitions)
 {
     if(mpz_cmp_ui(p, 3L) <= 0)
     {
@@ -41,7 +41,7 @@ int millerrabin_mpz(mpz_srcptr p, int repetitions)
     return isPrime;
 }
 
-int millerrabin(mpz_srcptr p, mpz_srcptr pMinus1, mpz_ptr base, mpz_ptr basePow, mpz_srcptr d, unsigned long int s)
+int millerrabin(const mpz_srcptr p, const mpz_srcptr pMinus1, const mpz_ptr base, const mpz_ptr basePow, const mpz_srcptr d, const unsigned long int s)
 {
     mpz_powm(basePow, base, d, p);
 

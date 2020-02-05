@@ -9,7 +9,7 @@
 #include "elliptic/EllipticCurve.h"
 
 
-TEST multiplication_should_just_work(ComplexAffinePoint p, long s, ComplexAffinePoint expected)
+TEST multiplication_should_just_work(const ComplexAffinePoint p, const long s, const ComplexAffinePoint expected)
 {
     // Given
     mpz_t scalar;
@@ -173,7 +173,7 @@ TEST infinity_should_act_as_the_identity_element_for_addition(void)
     PASS();
 }
 
-TEST addition_on_non_special_cases_should_work_correctly(ComplexAffinePoint a, ComplexAffinePoint b, ComplexAffinePoint expected)
+TEST addition_on_non_special_cases_should_work_correctly(const ComplexAffinePoint a, const ComplexAffinePoint b, const ComplexAffinePoint expected)
 {
     // Given
     EllipticCurve ec = ellipticCurve_initLong(0, 1, 5);

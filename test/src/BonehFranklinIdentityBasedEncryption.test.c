@@ -16,8 +16,7 @@ const char *LOWEST_QUICK_CHECK_ARGUMENT = "--lowest-quick-check";
 int isLowestQuickCheck = 0;
 int isVerbose = 0;
 
-
-TEST fresh_boneh_franklin_ibe_setup_matching_identities(SecurityLevel securityLevel, char* message, char* identity)
+TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel securityLevel, const char *const message, const char *const identity)
 {
     PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
     mpz_t masterSecret;
@@ -57,7 +56,7 @@ TEST fresh_boneh_franklin_ibe_setup_matching_identities(SecurityLevel securityLe
     PASS();
 }
 
-TEST fresh_boneh_franklin_ibe_setup_different_identities(SecurityLevel securityLevel, char* message, char* encryptIdentity, char* decryptIdentity)
+TEST fresh_boneh_franklin_ibe_setup_different_identities(const SecurityLevel securityLevel, const char *const message, const char *const encryptIdentity, const char *const decryptIdentity)
 {
     PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
     mpz_t masterSecret;
@@ -95,7 +94,7 @@ TEST fresh_boneh_franklin_ibe_setup_different_identities(SecurityLevel securityL
     PASS();
 }
 
-static void generateRandomString(char** output, size_t outputLength, char* alphabet, size_t alphabetSize)
+static void generateRandomString(char** output, const size_t outputLength, const char *const alphabet, const size_t alphabetSize)
 {
     memset(*output, '\0', outputLength);
     

@@ -1,7 +1,7 @@
 #include "identity-based/Signature.h"
 
 
-Signature signature_init(AffinePoint u, mpz_t v)
+Signature signature_init(const AffinePoint u, const mpz_t v)
 {    
     Signature signature;
     signature.u = affine_init(u.x, u.y);

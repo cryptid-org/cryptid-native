@@ -1,5 +1,5 @@
 #include "gmp.h"
 
-int millerrabin_mpz(mpz_srcptr n, int reps);
+int millerrabin_mpz(const mpz_srcptr n, const int reps);
 
-int millerrabin(mpz_srcptr n, mpz_srcptr nm1, mpz_ptr x, mpz_ptr y, mpz_srcptr q, unsigned long int k);
+int millerrabin(const mpz_srcptr n, const mpz_srcptr nm1, const mpz_ptr x, const mpz_ptr y,const  mpz_srcptr q, const unsigned long int k);
