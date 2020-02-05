@@ -5,7 +5,8 @@
 
 #include "greatest.h"
 
-#include "CryptID.h"
+#define __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryption.h"
 #include "complex/Complex.h"
 #include "elliptic/AffinePoint.h"
 #include "elliptic/EllipticCurve.h"
@@ -15,30 +16,29 @@ const char *LOWEST_QUICK_CHECK_ARGUMENT = "--lowest-quick-check";
 int isLowestQuickCheck = 0;
 int isVerbose = 0;
 
-
-TEST fresh_ibe_setup_matching_identities(const SecurityLevel securityLevel, const char *const message, const char *const identity)
+TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel securityLevel, const char *const message, const char *const identity)
 {
     PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
     mpz_t masterSecret;
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    CryptidStatus status = cryptid_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = cryptid_ibe_bonehFranklin_setup(securityLevel, publicParameters, masterSecret);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     AffinePoint privateKey;
-    status = cryptid_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret);
+    status = cryptid_ibe_bonehFranklin_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     CipherTextTuple* ciphertext = malloc(sizeof (CipherTextTuple));
-    status = cryptid_encrypt(ciphertext, message, strlen(message), identity, strlen(identity), *publicParameters);
+    status = cryptid_ibe_bonehFranklin_encrypt(ciphertext, message, strlen(message), identity, strlen(identity), *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     char *plaintext;
-    status = cryptid_decrypt(&plaintext, privateKey, *ciphertext, *publicParameters);
+    status = cryptid_ibe_bonehFranklin_decrypt(&plaintext, privateKey, *ciphertext, *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
     ASSERT_EQ(strcmp(message, plaintext), 0);
@@ -56,29 +56,29 @@ TEST fresh_ibe_setup_matching_identities(const SecurityLevel securityLevel, cons
     PASS();
 }
 
-TEST fresh_ibe_setup_different_identities(const SecurityLevel securityLevel, const char *const message, const char *const encryptIdentity, const char *const decryptIdentity)
+TEST fresh_boneh_franklin_ibe_setup_different_identities(const SecurityLevel securityLevel, const char *const message, const char *const encryptIdentity, const char *const decryptIdentity)
 {
     PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
     mpz_t masterSecret;
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    CryptidStatus status = cryptid_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = cryptid_ibe_bonehFranklin_setup(securityLevel, publicParameters, masterSecret);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     AffinePoint privateKey;
-    status = cryptid_extract(&privateKey, decryptIdentity, strlen(decryptIdentity), *publicParameters, masterSecret);
+    status = cryptid_ibe_bonehFranklin_extract(&privateKey, decryptIdentity, strlen(decryptIdentity), *publicParameters, masterSecret);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     CipherTextTuple* ciphertext = malloc(sizeof (CipherTextTuple));
-    status = cryptid_encrypt(ciphertext, message, strlen(message), encryptIdentity, strlen(encryptIdentity), *publicParameters);
+    status = cryptid_ibe_bonehFranklin_encrypt(ciphertext, message, strlen(message), encryptIdentity, strlen(encryptIdentity), *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     char *plaintext;
-    status = cryptid_decrypt(&plaintext, privateKey, *ciphertext, *publicParameters);
+    status = cryptid_ibe_bonehFranklin_decrypt(&plaintext, privateKey, *ciphertext, *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_DECRYPTION_FAILED_ERROR);
 
@@ -108,7 +108,7 @@ static void generateRandomString(char** output, const size_t outputLength, const
     (*output)[outputLength - 1] = '\0';
 }
 
-SUITE(cryptid_ibe_suite)
+SUITE(cryptid_boneh_franklin_ibe_suite)
 {
     {
         char* defaultAlphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -149,7 +149,7 @@ SUITE(cryptid_ibe_suite)
                     generateRandomString(&message, messageLength + 1, defaultAlphabet, strlen(defaultAlphabet));
                     generateRandomString(&identity, identityLength + 1, defaultAlphabet, strlen(defaultAlphabet));
 
-                    RUN_TESTp(fresh_ibe_setup_matching_identities, securityLevel, message, identity);
+                    RUN_TESTp(fresh_boneh_franklin_ibe_setup_matching_identities, securityLevel, message, identity);
 
                     free(message);
                     free(identity);
@@ -183,7 +183,7 @@ SUITE(cryptid_ibe_suite)
                         generateRandomString(&decryptIdentity, identityLength + 1, defaultAlphabet, strlen(defaultAlphabet));
                     } while (strcmp(encryptIdentity, decryptIdentity) == 0);
 
-                    RUN_TESTp(fresh_ibe_setup_different_identities, securityLevel, message, encryptIdentity, decryptIdentity);
+                    RUN_TESTp(fresh_boneh_franklin_ibe_setup_different_identities, securityLevel, message, encryptIdentity, decryptIdentity);
 
                     free(message);
                     free(encryptIdentity);
@@ -222,7 +222,7 @@ int main(int argc, char **argv)
 
     srand(time(NULL));
 
-    RUN_SUITE(cryptid_ibe_suite);
+    RUN_SUITE(cryptid_boneh_franklin_ibe_suite);
 
     GREATEST_MAIN_END();
 }

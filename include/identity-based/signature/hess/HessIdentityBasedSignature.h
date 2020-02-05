@@ -1,5 +1,7 @@
-#ifndef __SIGNID_H
-#define __SIGNID_H
+#ifndef __CRYPTID_HESS_IDENTITY_BASED_SIGNATURE_H
+#define __CRYPTID_HESS_IDENTITY_BASED_SIGNATURE_H
+
+#ifdef __CRYPTID_HESS_IDENTITY_BASED_SIGNATURE
 
 #include "gmp.h"
 
@@ -19,7 +21,7 @@
  * @param masterSecret Out parameter which will hold the master secret. Must be mpz_init'd and mpz_clear'd by the caller.
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus signid_setup(const SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret);
+CryptidStatus cryptid_ibs_hess_setup(const SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret);
 
 /**
  * Extracts the private key corresponding to a given identity string.
@@ -31,7 +33,7 @@ CryptidStatus signid_setup(const SecurityLevel securityLevel, PublicParameters* 
  * @param masterSecret the master secret corresponding to the public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus signid_extract(AffinePoint* result, const char *const identity, const size_t identityLength,
+CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const identity, const size_t identityLength,
                     const PublicParameters publicParameters, const mpz_t masterSecret);
 
 /**
@@ -47,7 +49,7 @@ CryptidStatus signid_extract(AffinePoint* result, const char *const identity, co
  * @param publicParameters the IBS public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const char *const message, const size_t messageLength,
+CryptidStatus cryptid_ibs_hess_sign(Signature *result, const AffinePoint privateKey, const char *const message, const size_t messageLength,
                     const char *const identity, const size_t identityLength, const PublicParameters publicParameters);
 
 /**
@@ -60,7 +62,9 @@ CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const
  * @param publicParameters the IBS public parameters
  * @return CRYPTID_SUCCESS if the signature was valid
  */
-CryptidStatus signid_verify(const char *const message, const size_t messageLength, const Signature signature,
+CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t messageLength, const Signature signature,
                     const char *const identity, const size_t identityLength, const PublicParameters publicParameters);
+
+#endif
 
 #endif
