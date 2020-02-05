@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "CryptID.h"
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryption.h"
 #include "elliptic/TatePairing.h"
 #include "util/Random.h"
 #include "util/RandBytes.h"

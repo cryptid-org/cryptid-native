@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "SignID.h"
+#include "identity-based/signature/hess/HessIdentityBasedSignature.h"
 #include "elliptic/TatePairing.h"
 #include "util/Random.h"
 #include "util/RandBytes.h"
