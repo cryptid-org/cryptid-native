@@ -1,5 +1,5 @@
-#ifndef __CRYPTID_BFIBE_H
-#define __CRYPTID_BFIBE_H
+#ifndef __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION_H
+#define __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION_H
 
 #include "gmp.h"
 
@@ -20,7 +20,7 @@
  * @param masterSecret Out parameter which will hold the master secret. Must be mpz_init'd and mpz_clear'd by the caller.
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_setup(const SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret);
+CryptidStatus cryptid_ibe_bonehFranklin_setup(const SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret);
 
 /**
  * Extracts the private key corresponding to a given identity string.
@@ -32,7 +32,7 @@ CryptidStatus cryptid_setup(const SecurityLevel securityLevel, PublicParameters*
  * @param masterSecret the master secret corresponding to the public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_extract(AffinePoint* result, const char *const identity, const size_t identityLength, 
+CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePoint* result, const char *const identity, const size_t identityLength, 
                        const PublicParameters publicParameters, const mpz_t masterSecret);
 
 /**
@@ -47,7 +47,7 @@ CryptidStatus cryptid_extract(AffinePoint* result, const char *const identity, c
  * @param publicParameters the IBE public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message, const size_t messageLength,
+CryptidStatus cryptid_ibe_bonehFranklin_encrypt(CipherTextTuple *result, const char *const message, const size_t messageLength,
                        const char *const identity, const size_t identityLength, const PublicParameters publicParameters);
 
 /**
@@ -59,7 +59,7 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
  * @param publicParameters the IBE public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_decrypt(char **result, const AffinePoint privateKey, const CipherTextTuple ciphertext, 
+CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint privateKey, const CipherTextTuple ciphertext, 
                        const PublicParameters publicParameters);
 
 #endif
