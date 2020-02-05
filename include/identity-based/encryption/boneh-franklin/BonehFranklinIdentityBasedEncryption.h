@@ -1,5 +1,5 @@
-#ifndef __CRYPTID_CRYPTID_H
-#define __CRYPTID_CRYPTID_H
+#ifndef __CRYPTID_BFIBE_H
+#define __CRYPTID_BFIBE_H
 
 #include "gmp.h"
 
