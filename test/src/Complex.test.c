@@ -117,7 +117,7 @@ SUITE(add_suite)
     RUN_TEST(modAdd_should_be_commutative);
 }
 
-TEST additiveInverse_should_return_the_additive_inverse(Complex complex, Complex expected, mpz_t p)
+TEST additiveInverse_should_return_the_additive_inverse(const Complex complex, const Complex expected, const mpz_t p)
 {
     // When
     Complex result = complex_additiveInverse(complex, p);
@@ -177,7 +177,7 @@ TEST the_power_of_1_0_is_1_0_for_any_p(void)
     PASS();
 }
 
-TEST the_modulo_power_of_complex_numbers_should_work_well(Complex base, mpz_t exp, mpz_t p, Complex expected)
+TEST the_modulo_power_of_complex_numbers_should_work_well(const Complex base, const mpz_t exp, const mpz_t p, const Complex expected)
 {
     // When
     Complex result = complex_modPow(base, exp, p);
@@ -236,7 +236,7 @@ SUITE(modulo_power_suite)
     mpz_clear(p);
 }
 
-TEST GF_5_modMul_should_just_work(long scalar, long expectedReal, long expectedImaginary)
+TEST GF_5_modMul_should_just_work(const long scalar, const long expectedReal, const long expectedImaginary)
 {
     // Given
     mpz_t p, s;
@@ -310,7 +310,7 @@ TEST zero_zero_does_not_have_a_multiplicative_inverse(void)
     PASS();
 }
 
-TEST GF_7_multiplying_an_element_with_its_multiplicative_inverse_should_yield_the_identity_element(long real, long imaginary)
+TEST GF_7_multiplying_an_element_with_its_multiplicative_inverse_should_yield_the_identity_element(const long real, const long imaginary)
 {
     // Given
     Complex id = complex_initLong(1, 0);

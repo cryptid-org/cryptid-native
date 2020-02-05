@@ -10,7 +10,7 @@
 #include "elliptic/TatePairing.h"
 
 
-TEST GF_131_modified_tate_pairing_should_just_work(long n, Complex expected)
+TEST GF_131_modified_tate_pairing_should_just_work(const long n, const Complex expected)
 {
     // Given
     int embeddingDegree = 2;
@@ -39,7 +39,7 @@ TEST GF_131_modified_tate_pairing_should_just_work(long n, Complex expected)
     PASS();
 }
 
-TEST RFC_5091_tate_pairing_should_work()
+TEST RFC_5091_tate_pairing_should_work(void)
 {
     // Given
     int embeddingDegree = 2;
