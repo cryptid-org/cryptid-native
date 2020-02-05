@@ -1,3 +1,5 @@
+#ifdef __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION
+
 #ifndef __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION_H
 #define __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION_H
 
@@ -61,5 +63,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(CipherTextTuple *result, const c
  */
 CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint privateKey, const CipherTextTuple ciphertext, 
                        const PublicParameters publicParameters);
+
+#endif
 
 #endif

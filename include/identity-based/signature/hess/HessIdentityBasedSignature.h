@@ -1,3 +1,5 @@
+#ifdef __CRYPTID_HESS_IDENTITY_BASED_SIGNATURE
+
 #ifndef __CRYPTID_HESS_IDENTITY_BASED_SIGNATURE_H
 #define __CRYPTID_HESS_IDENTITY_BASED_SIGNATURE_H
 
@@ -62,5 +64,7 @@ CryptidStatus cryptid_ibs_hess_sign(Signature *result, const AffinePoint private
  */
 CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t messageLength, const Signature signature,
                     const char *const identity, const size_t identityLength, const PublicParameters publicParameters);
+
+#endif
 
 #endif
