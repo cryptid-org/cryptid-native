@@ -11,5 +11,7 @@ typedef struct PublicKey_ABE
 	AffinePoint g; // generator of cyclic group
 	AffinePoint h; // g^(beta)
 	AffinePoint f; // g^(1/beta)
-	Complex pairValue; // e(g, g)^alpha
+	Complex eggalpha; // e(g, g)^alpha
+	HashFunction hashFunction;
+	mpz_t q;
 } PublicKey_ABE;

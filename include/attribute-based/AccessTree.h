@@ -2,15 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_CHILDREN 128
-#define MAX_ATTRIBUTES 128
-#define ATTRIBUTE_LENGTH 32
-
 typedef struct AccessTree {
     int value;
     struct AccessTree* parent;
     struct AccessTree* children[MAX_CHILDREN];
     char* attribute;
+    int attributeLength;
+    AffinePoint Cy;
+    AffinePoint CyA;
+    //Polynom* polynom;
 } AccessTree;
 
 int isRoot(AccessTree* accessTree)
@@ -18,11 +18,15 @@ int isRoot(AccessTree* accessTree)
 	return (accessTree->parent == NULL) ? 1 : 0;
 }
 
-AccessTree* createTree(int value, AccessTree* children) {
+AccessTree* createTree(int value, AccessTree* children, char* attribute, int attributeLength) {
 	AccessTree* tree = malloc(sizeof(AccessTree));
     tree->value = value;
     memcpy(tree->children, children, sizeof(tree->children));
     tree->parent = NULL;
+
+    tree->attribute = attribute;
+    tree->attributeLength = attributeLength;
+
     return tree;
 }
 
@@ -48,11 +52,14 @@ char** attributeArray() {
 }
 
 int hasAttribute(char** attributes, char* val) {
-    for(int i = 0; i < MAX_ATTRIBUTES; i++)
-    {
-        if(attributes[i] != '\0' && strcmp(attributes[i], val) == 0)
-            return 1;
-    }
+	if(val != NULL)
+	{
+	    for(int i = 0; i < MAX_ATTRIBUTES; i++)
+	    {
+	        if(attributes[i] != '\0' && strcmp(attributes[i], val) == 0)
+	            return 1;
+	    }
+	}
     return 0;
 }
 

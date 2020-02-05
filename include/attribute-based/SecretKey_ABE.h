@@ -2,6 +2,7 @@
 
 typedef struct SecretKey_ABE
 {
-	mpz_t D;
-	mpz_t* Dattr[MAX_ATTRIBUTES];
+	AffinePoint D;
+	AffinePoint* Dj[MAX_ATTRIBUTES];
+	AffinePoint* DjA[MAX_ATTRIBUTES];
 } SecretKey_ABE;
