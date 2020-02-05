@@ -8,7 +8,7 @@
 #include "elliptic/EllipticCurve.h"
 
 
-TEST multiplication_should_just_work(AffinePoint p, long s, AffinePoint expected)
+TEST multiplication_should_just_work(const AffinePoint p, const long s, const AffinePoint expected)
 {
     // Given
     mpz_t scalar;
@@ -37,7 +37,7 @@ TEST multiplication_should_just_work(AffinePoint p, long s, AffinePoint expected
     PASS();
 }
 
-TEST wnafmultiplication_should_just_work(AffinePoint p, long s, AffinePoint expected)
+TEST wnafmultiplication_should_just_work(const AffinePoint p, const long s, const AffinePoint expected)
 {
     // Given
     mpz_t scalar;
@@ -234,7 +234,7 @@ TEST infinity_should_act_as_the_identity_element_for_addition(void)
     PASS();
 }
 
-TEST addition_on_non_special_cases_should_work_correctly(AffinePoint a, AffinePoint b, AffinePoint expected)
+TEST addition_on_non_special_cases_should_work_correctly(const AffinePoint a, const AffinePoint b, const AffinePoint expected)
 {
     // Given
     EllipticCurve ec = ellipticCurve_initLong(0, 1, 5);

@@ -15,7 +15,7 @@ int isLowestQuickCheck = 0;
 int isVerbose = 0;
 
 
-TEST fresh_ibs_setup_matching_identities(SecurityLevel securityLevel, char* message, char* identity)
+TEST fresh_ibs_setup_matching_identities(const SecurityLevel securityLevel, const char *const message, const char *const identity)
 {
     PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
     mpz_t masterSecret;
@@ -52,7 +52,7 @@ TEST fresh_ibs_setup_matching_identities(SecurityLevel securityLevel, char* mess
     PASS();
 }
 
-TEST fresh_ibs_setup_different_identities(SecurityLevel securityLevel, char* message, char* signIdentity, char* verifyIdentity)
+TEST fresh_ibs_setup_different_identities(const SecurityLevel securityLevel, const char *const message, const char *const signIdentity, const char *const verifyIdentity)
 {
     PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
     mpz_t masterSecret;
@@ -89,7 +89,7 @@ TEST fresh_ibs_setup_different_identities(SecurityLevel securityLevel, char* mes
     PASS();
 }
 
-TEST fresh_ibs_setup_wrong_signature(SecurityLevel securityLevel, char* message1, char* message2, char* identity)
+TEST fresh_ibs_setup_wrong_signature(const SecurityLevel securityLevel, const char *const message1, const char *const message2, const char *const identity)
 {
     PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
     mpz_t masterSecret;
@@ -126,7 +126,7 @@ TEST fresh_ibs_setup_wrong_signature(SecurityLevel securityLevel, char* message1
     PASS();
 }
 
-static void generateRandomString(char** output, size_t outputLength, char* alphabet, size_t alphabetSize)
+static void generateRandomString(char** output, const size_t outputLength, const char *const alphabet, const size_t alphabetSize)
 {
     memset(*output, '\0', outputLength);
     
