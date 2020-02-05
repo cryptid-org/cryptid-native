@@ -6,7 +6,7 @@ const { removeFiles, run } = require('./util');
 
 const TEN_MEGABYTES = 10 * 1024 * 1024;
 
-function runTests(dependencies, components, additionalCompilationArguments) {
+function runTests(dependencies, components, additionalCompilationArguments = []) {
     try {
         const { output, errors } = testComponents(dependencies, components, additionalCompilationArguments);
 

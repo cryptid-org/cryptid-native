@@ -1,25 +1,45 @@
 #include "util/Random.h"
 #include "util/RandBytes.h"
 #include "util/Validation.h"
+#include <math.h>
+#include <stdio.h>
 
 
 static const unsigned int MOST_SIGNIFICANT_WORD_FIRST = 1;
 static const unsigned int NATIVE_ENDIANNESS  = 0;
 static const unsigned int NO_SKIP = 0;
 
+unsigned int random_unsignedIntOfLength(const unsigned int numberOfBits)
+{
+    unsigned int result;
+
+    unsigned int numberOfBytes = (numberOfBits + 7) / 8;
+
+    unsigned char buffer[sizeof(result)] = {0};
+
+    cryptid_randomBytes((unsigned char*) &buffer, numberOfBytes);
+
+    unsigned int unneededBits = 8 * numberOfBytes - numberOfBits;
+    buffer[numberOfBytes - 1] &= (1 << (8 - unneededBits)) - 1;
+
+    result = *((unsigned int*)&buffer);
+
+    return result;
+}
+
+//Using the method suggested by Johannes A. Buchmann in Introduction to Cryptography Second Edition Section 4.6
 unsigned int random_unsignedIntInRange(const unsigned int range)
 {
-    unsigned int x, r;
+    unsigned int result;
+
+    unsigned int rangeBitLength = (int)log2(range)+1;
 
     do
     {
-        cryptid_randomBytes((unsigned char*) &x, sizeof (x));
+        result = random_unsignedIntOfLength(rangeBitLength);
+    }while(result > range);
 
-        r = x % range;
-    }
-    while (x - r > (-range));
-
-    return r;
+    return result;
 }
 
 void random_mpzOfLength(mpz_t result, const unsigned int numberOfBits)
@@ -38,30 +58,17 @@ void random_mpzOfLength(mpz_t result, const unsigned int numberOfBits)
 
 void random_mpzInRange(mpz_t result, const mpz_t range)
 {
-    mpz_t x, r, xMinusR, negativeRange;
-    mpz_inits(x, r, xMinusR, negativeRange, NULL);
-
-    mpz_ui_pow_ui(negativeRange, 2, mpz_sizeinbase(range, 2));
-    mpz_sub(negativeRange, negativeRange, range);
-
+    unsigned int rangeBitLength = mpz_sizeinbase(range, 2);
+    
     do
     {
-        random_mpzOfLength(x, mpz_sizeinbase(range, 2));
-
-        mpz_mod(r, x, range);
-
-        mpz_sub(xMinusR, x, r);
-    }
-    while (mpz_cmp(xMinusR, negativeRange) > 0);
-
-    mpz_set(result, r);
-
-    mpz_clears(x, r, xMinusR, negativeRange, NULL);
+        random_mpzOfLength(result, rangeBitLength);
+    }while(mpz_cmp(result, range) > 0);
 }
 
 CryptidStatus random_solinasPrime(mpz_t result, const unsigned int numberOfBits, const unsigned int attemptLimit)
 {
-    unsigned int random = 1, lastrandom;
+    unsigned int random = 0, lastrandom;
     unsigned int isPrimeGenerated = 0;
     unsigned int attempts = 0;
 
@@ -69,9 +76,8 @@ CryptidStatus random_solinasPrime(mpz_t result, const unsigned int numberOfBits,
     {
         lastrandom = random;
 
-        random = random_unsignedIntInRange(numberOfBits - lastrandom) + lastrandom;
-
-        for (unsigned int i = random; i >= lastrandom; i--)
+        random = random_unsignedIntInRange(numberOfBits - (lastrandom + 1)) + lastrandom;
+        for (unsigned int i = random; i > lastrandom; i--)
         {
             mpz_ui_pow_ui(result, 2, numberOfBits);
             mpz_t twoOnI;
