@@ -8,7 +8,7 @@ static const int MIGHT_BE_PRIME = 1;
 
 CryptidValidationResult validation_isProbablePrime(const mpz_t p)
 {
-    return millerrabin_mpz(p, 50) >= MIGHT_BE_PRIME ? CRYPTID_VALIDATION_SUCCESS : CRYPTID_VALIDATION_FAILURE;
+    return primaltyTest_millerrabin_mpz(p, 50) >= MIGHT_BE_PRIME ? CRYPTID_VALIDATION_SUCCESS : CRYPTID_VALIDATION_FAILURE;
 }
 
 CryptidValidationResult validation_isAffinePointValid(const AffinePoint affinePoint, const mpz_t order)
