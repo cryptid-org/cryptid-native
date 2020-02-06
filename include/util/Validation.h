@@ -6,7 +6,7 @@
 #include "elliptic/AffinePoint.h"
 #include "elliptic/EllipticCurve.h"
 #include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCipherText.h"
-#include "identity-based/HashFunction.h"
+#include "util/HashFunction.h"
 #include "identity-based/PublicParameters.h"
 #include "identity-based/signature/hess/HessIdentityBasedSignatureSignature.h"
 
