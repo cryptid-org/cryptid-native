@@ -50,8 +50,6 @@ void writeCipherTextToFiles(CipherTextTuple* ciphertext)
     fp = fopen ("CT/cipher","wb");
     if (fp != NULL) {
 
-        //fwrite(&ciphertext->cipherU, sizeof(ciphertext->cipherU), 1, fp);
-
         fwrite(&ciphertext->cipherVLength, sizeof(ciphertext->cipherVLength), 1, fp);
         fwrite(ciphertext->cipherV, ciphertext->cipherVLength + 1, 1, fp);
 
@@ -66,19 +64,12 @@ void writeCipherTextToFiles(CipherTextTuple* ciphertext)
     printf("%lu\n", ciphertext->cipherWLength);
     printf("%s\n", ciphertext->cipherW);
 
-    fp = fopen ("CT/cipherUx","w+");
+    fp = fopen ("CT/cipherU","w+");
     if (fp != NULL) {
-        mpz_out_str(fp, BASE, ciphertext->cipherU.x);
+        gmp_fprintf(fp, "%Zd\n%Zd\n", ciphertext->cipherU.x, ciphertext->cipherU.y);
         fclose(fp);
     }
-    printf ("  wrote  "); mpz_out_str (stdout, BASE, ciphertext->cipherU.x); printf("\n");
 
-    fp = fopen ("CT/cipherUy","w+");
-    if (fp != NULL) {
-        mpz_out_str(fp, BASE, ciphertext->cipherU.y);
-        fclose(fp);
-    }
-    printf ("  wrote  "); mpz_out_str (stdout, BASE, ciphertext->cipherU.y); printf("\n");
 }
 
 void writePrivateKeyToFiles(AffinePoint privateKey)
@@ -114,6 +105,11 @@ PublicParameters readPublicParFromFile()
         fclose(fp);
     }
 
+    publicParameters.ellipticCurve = ellipticCurve_init(a, b, fieldOrder);
+    mpz_init(publicParameters.q);
+    mpz_set(publicParameters.q, q);
+    publicParameters.pointP = affine_init(px, py);
+    publicParameters.pointPpublic = affine_init(ppx, ppy);
 
     fp = fopen ("PP/PP.hashf","r");
     if (fp != NULL)
@@ -180,15 +176,9 @@ CipherTextTuple readCipherTextFromFile()
 
     mpz_t x, y;
     mpz_inits(x, y, NULL);
-    fp = fopen ("CT/cipherUx","r");
+    fp = fopen ("CT/cipherU","r");
     if (fp != NULL) {
-        mpz_inp_str(x, fp, BASE);
-        fclose(fp);
-    }
-
-    fp = fopen ("CT/cipherUy","r");
-    if (fp != NULL) {
-        mpz_inp_str(y, fp, BASE);
+        gmp_fscanf(fp,"%Zd\n%Zd\n", &x, &y);
         fclose(fp);
     }
 
