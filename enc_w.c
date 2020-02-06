@@ -7,6 +7,7 @@
 #include "CryptID.h"
 #include "util/Validation.h"
 #include "util/Utils.h"
+#include "util/IO.h"
 
 
 int main()
