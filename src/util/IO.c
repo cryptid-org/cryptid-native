@@ -19,61 +19,13 @@ void writePublicParToFiles(PublicParameters* publicParameters)
         mkdir("./PP", 0700);
     }
 
-    fp = fopen ("PP/PP.ellipticCurve.a","w+");
+    fp = fopen ("PP/PP","w+");
     if (fp != NULL)
     {
-        mpz_out_str(fp, BASE, publicParameters->ellipticCurve.a);
+        gmp_fprintf(fp, "%Zd\n%Zd\n%Zd\n%Zd\n%Zd\n%Zd\n%Zd\n%Zd\n", publicParameters->ellipticCurve.a, publicParameters->ellipticCurve.b, publicParameters->ellipticCurve.fieldOrder, publicParameters->q, publicParameters->pointP.x, publicParameters->pointP.y, publicParameters->pointPpublic.x, publicParameters->pointPpublic.y);
         fclose(fp);
     }
 
-    fp = fopen ("PP/PP.ellipticCurve.b","w+");
-    if (fp != NULL)
-    {
-        mpz_out_str(fp, BASE, publicParameters->ellipticCurve.b);
-        fclose(fp);
-    }
-
-    fp = fopen ("PP/PP.ellipticCurve.fieldOrder","w+");
-    if (fp != NULL)
-    {
-        mpz_out_str(fp, BASE, publicParameters->ellipticCurve.fieldOrder);
-        fclose(fp);
-    }
-
-    fp = fopen ("PP/PP.q","w+");
-    if (fp != NULL)
-    {
-        mpz_out_str(fp, BASE, publicParameters->q);
-        fclose(fp);
-    }
-
-    fp = fopen ("PP/PP.pointP.x","w+");
-    if (fp != NULL)
-    {
-        mpz_out_str(fp, BASE, publicParameters->pointP.x);
-        fclose(fp);
-    }
-
-    fp = fopen ("PP/PP.pointP.y","w+");
-    if (fp != NULL)
-    {
-        mpz_out_str(fp, BASE, publicParameters->pointP.y);
-        fclose(fp);
-    }
-
-    fp = fopen ("PP/PP.pointPpublic.x","w+");
-    if (fp != NULL)
-    {
-        mpz_out_str(fp, BASE, publicParameters->pointPpublic.x);
-        fclose(fp);
-    }
-
-    fp = fopen ("PP/PP.pointPpublic.y","w+");
-    if (fp != NULL)
-    {
-        mpz_out_str(fp, BASE, publicParameters->pointPpublic.y);
-        fclose(fp);
-    }
 
     fp = fopen ("PP/PP.hashf","wb");
     if (fp != NULL) {
@@ -139,15 +91,9 @@ void writePrivateKeyToFiles(AffinePoint privateKey)
     }
 
 
-    fp = fopen ("PK/privateX","w+");
+    fp = fopen ("PK/private","w+");
     if (fp != NULL) {
-        mpz_out_str(fp, BASE, privateKey.x);
-        fclose(fp);
-    }
-
-    fp = fopen ("PK/privateY","w+");
-    if (fp != NULL) {
-        mpz_out_str(fp, BASE, privateKey.y);
+        gmp_fprintf(fp, "%Zd\n%Zd\n", privateKey.x, privateKey.y);
         fclose(fp);
     }
 }
@@ -161,66 +107,13 @@ PublicParameters readPublicParFromFile()
     mpz_t a, b, fieldOrder, q, px, py, ppx, ppy;
     mpz_inits(a, b, fieldOrder, q, px, py, ppx, ppy, NULL);
 
-    fp = fopen ("PP/PP.ellipticCurve.a","r");
+    fp = fopen ("PP/PP","r");
     if (fp != NULL)
     {
-        mpz_inp_str(a, fp, BASE);
+        gmp_fscanf(fp, "%Zd\n%Zd\n%Zd\n%Zd\n%Zd\n%Zd\n%Zd\n%Zd\n", &a, &b, &fieldOrder, &q, &px, &py, &ppx, &ppy);
         fclose(fp);
     }
 
-    fp = fopen ("PP/PP.ellipticCurve.b","r");
-    if (fp != NULL)
-    {
-        mpz_inp_str(b, fp, BASE);
-        fclose(fp);
-    }
-
-    fp = fopen ("PP/PP.ellipticCurve.fieldOrder","r");
-    if (fp != NULL)
-    {
-        mpz_inp_str(fieldOrder, fp, BASE);
-        fclose(fp);
-    }
-    publicParameters.ellipticCurve = ellipticCurve_init(a, b, fieldOrder);
-
-    fp = fopen ("PP/PP.q","r");
-    if (fp != NULL)
-    {
-        mpz_inp_str(q, fp, BASE);
-        fclose(fp);
-    }
-    mpz_init(publicParameters.q);
-    mpz_set(publicParameters.q, q);
-
-    fp = fopen ("PP/PP.pointP.x","r");
-    if (fp != NULL)
-    {
-        mpz_inp_str(px, fp, BASE);
-        fclose(fp);
-    }
-
-    fp = fopen ("PP/PP.pointP.y","r");
-    if (fp != NULL)
-    {
-        mpz_inp_str(py, fp, BASE);
-        fclose(fp);
-    }
-    publicParameters.pointP = affine_init(px, py);
-
-    fp = fopen ("PP/PP.pointPpublic.x","r");
-    if (fp != NULL)
-    {
-        mpz_inp_str(ppx, fp, BASE);
-        fclose(fp);
-    }
-
-    fp = fopen ("PP/PP.pointPpublic.y","r");
-    if (fp != NULL)
-    {
-        mpz_inp_str(ppy, fp, BASE);
-        fclose(fp);
-    }
-    publicParameters.pointPpublic = affine_init(ppx, ppy);
 
     fp = fopen ("PP/PP.hashf","r");
     if (fp != NULL)
@@ -241,26 +134,18 @@ AffinePoint readPrivateKeyFromFiles()
     mpz_inits(x, y, NULL);
 
     FILE * fp;
-    fp = fopen ("PK/privateX","r");
+    fp = fopen ("PK/private","r");
     if (fp != NULL)
     {
-        mpz_inp_str(x, fp, BASE);
-        fclose(fp);
-    }
-    else printf("Can't open file");
-
-    fp = fopen ("PK/privateY","r");
-    if (fp != NULL)
-    {
-        mpz_inp_str(y, fp, BASE);
+        gmp_fscanf(fp,"%Zd\n%Zd\n", &x, &y);
         fclose(fp);
     }
     else printf("Can't open file");
 
     privateKey = affine_init(x, y);
 
-    printf ("privateY  read in  "); mpz_out_str (stdout, BASE, privateKey.y); printf("\n");
     printf ("privateX  read in  "); mpz_out_str (stdout, BASE, privateKey.x); printf("\n");
+    printf ("privateY  read in  "); mpz_out_str (stdout, BASE, privateKey.y); printf("\n");
 
     return privateKey;
 }
