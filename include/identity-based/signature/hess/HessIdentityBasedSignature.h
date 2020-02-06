@@ -8,7 +8,7 @@
 #include "elliptic/AffinePoint.h"
 #include "identity-based/signature/hess/HessIdentityBasedSignatureSignature.h"
 #include "identity-based/PublicParameters.h"
-#include "identity-based/SecurityLevel.h"
+#include "util/SecurityLevel.h"
 #include "util/Status.h"
 
 /**
