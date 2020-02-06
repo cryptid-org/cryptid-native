@@ -345,7 +345,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint
 
     if(!validation_isBonehFranklinIdentityBasedEncryptionCipherTextValid(ciphertext, publicParameters.ellipticCurve.fieldOrder))
     {
-        return CRYPTID_ILLEGAL_CIPHERTEXT_TUPLE_ERROR;
+        return CRYPTID_ILLEGAL_CIPHERTEXT_ERROR;
     }
 
     mpz_t l;

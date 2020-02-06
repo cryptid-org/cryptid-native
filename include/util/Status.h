@@ -51,9 +51,9 @@ typedef enum
     CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR,
 
     /*
-     * The given ciphertext tuple is incorrect.
+     * The given ciphertext is incorrect.
      */
-    CRYPTID_ILLEGAL_CIPHERTEXT_TUPLE_ERROR,
+    CRYPTID_ILLEGAL_CIPHERTEXT_ERROR,
     
     /*
      * Failed to decrypt the ciphertext, the input arguments might be incorrect.
