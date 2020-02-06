@@ -1,6 +1,6 @@
 #include "sha.h"
 
-#include "identity-based/HashFunction.h"
+#include "util/HashFunction.h"
 
 size_t hashFunction_getHashSize(const HashFunction hashFunction)
 {

@@ -6,7 +6,7 @@
 #include "complex/Complex.h"
 #include "elliptic/AffinePoint.h"
 #include "elliptic/EllipticCurve.h"
-#include "identity-based/HashFunction.h"
+#include "util/HashFunction.h"
 #include "util/Status.h"
 
 

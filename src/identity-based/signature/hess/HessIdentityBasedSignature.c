@@ -19,7 +19,7 @@ static const unsigned int POINT_GENERATION_ATTEMPT_LIMIT = 100;
 static const unsigned int Q_LENGTH_MAPPING[] = { 160, 224, 256, 384, 512 };
 static const unsigned int P_LENGTH_MAPPING[] = { 512, 1024, 1536, 3840, 7680 };
 
-CryptidStatus cryptid_ibs_hess_setup(const SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret)
+CryptidStatus cryptid_ibs_hess_setup(const SecurityLevel securityLevel, HessIdentityBasedSignaturePublicParameters* publicParameters, mpz_t masterSecret)
 {
     // Implementation of Algorithm 5.1.2 (BFsetup1) in [RFC-5091].
     // Note, that instead of taking the bitlengts of p and q as arguments, this function takes
@@ -136,7 +136,7 @@ CryptidStatus cryptid_ibs_hess_setup(const SecurityLevel securityLevel, PublicPa
 }
 
 CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const identity, const size_t identityLength,
-                    const PublicParameters publicParameters, const mpz_t masterSecret)
+                    const HessIdentityBasedSignaturePublicParameters publicParameters, const mpz_t masterSecret)
 {
     // Implementation of Algorithm 5.3.1 (BFextractPriv) in [RFC-5091].
 
@@ -150,7 +150,7 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const id
         return CRYPTID_IDENTITY_LENGTH_ERROR;
     }
 
-    if(!validation_isPublicParametersValid(publicParameters))
+    if(!validation_isHessIdentityBasedSignaturePublicParametersValid(publicParameters))
     {
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
@@ -174,8 +174,8 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const id
     return status;
 }
 
-CryptidStatus cryptid_ibs_hess_sign(Signature *result, const AffinePoint privateKey, const char *const message, const size_t messageLength,
-                    const char *const identity, const size_t identityLength, const PublicParameters publicParameters)
+CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result, const AffinePoint privateKey, const char *const message, const size_t messageLength,
+                    const char *const identity, const size_t identityLength, const HessIdentityBasedSignaturePublicParameters publicParameters)
 {
     // Implementation of Scheme 1. Sign in [HESS-IBS].
 
@@ -199,7 +199,7 @@ CryptidStatus cryptid_ibs_hess_sign(Signature *result, const AffinePoint private
         return CRYPTID_IDENTITY_LENGTH_ERROR;
     }
 
-    if(!validation_isPublicParametersValid(publicParameters))
+    if(!validation_isHessIdentityBasedSignaturePublicParametersValid(publicParameters))
     {
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
@@ -311,7 +311,7 @@ CryptidStatus cryptid_ibs_hess_sign(Signature *result, const AffinePoint private
         return status;
     }
 
-    *result = signature_init(u, v);
+    *result = hessIdentityBasedSignatureSignature_init(u, v);
 
     mpz_clears(k, v, NULL);
     affine_destroy(pointQId);
@@ -327,8 +327,8 @@ CryptidStatus cryptid_ibs_hess_sign(Signature *result, const AffinePoint private
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t messageLength, const Signature signature,
-                    const char *const identity, const size_t identityLength, const PublicParameters publicParameters)
+CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t messageLength, const HessIdentityBasedSignatureSignature signature,
+                    const char *const identity, const size_t identityLength, const HessIdentityBasedSignaturePublicParameters publicParameters)
 {
     // Implementation of Scheme 1. Verify in [HESS-IBS].
 
@@ -342,7 +342,7 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
         return CRYPTID_MESSAGE_LENGTH_ERROR;
     }
 
-    if(!validation_isSignatureValid(signature, publicParameters.ellipticCurve.fieldOrder))
+    if(!validation_isHessIdentityBasedSignatureSignatureValid(signature, publicParameters.ellipticCurve.fieldOrder))
     {
         return CRYPTID_ILLEGAL_SIGNATURE_ERROR;
     }
@@ -357,7 +357,7 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
         return CRYPTID_IDENTITY_LENGTH_ERROR;
     }
 
-    if(!validation_isPublicParametersValid(publicParameters))
+    if(!validation_isHessIdentityBasedSignaturePublicParametersValid(publicParameters))
     {
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }

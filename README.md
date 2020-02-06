@@ -66,7 +66,7 @@ int main()
     const char *message = "Ironic.";
     const char *identity = "darth.plagueis@sith.com";
 
-    PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
+    BonehFranklinIdentityBasedEncryptionPublicParameters* publicParameters = malloc(sizeof (BonehFranklinIdentityBasedEncryptionPublicParameters));
     mpz_t masterSecret;
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
@@ -76,7 +76,7 @@ int main()
         return -1;
     }
 
-    CipherTextTuple* ciphertext = malloc(sizeof (CipherTextTuple));
+    BonehFranklinIdentityBasedEncryptionCipherText* ciphertext = malloc(sizeof (BonehFranklinIdentityBasedEncryptionCipherText));
     if (CRYPTID_SUCCESS != cryptid_encrypt(ciphertext, message, strlen(message), identity, strlen(identity), *publicParameters))
     {
         printf("Encrypt failed\n");
@@ -100,7 +100,7 @@ int main()
     printf("Plaintext:\n%s\n", plaintext);
 
     free(plaintext);
-    cipherTextTuple_destroy(*ciphertext);
+    bonehFranklinIdentityBasedEncryptionCipherText_destroy(*ciphertext);
     free(ciphertext);
     affine_destroy(privateKey);
     mpz_clears(publicParameters->q, masterSecret, NULL);

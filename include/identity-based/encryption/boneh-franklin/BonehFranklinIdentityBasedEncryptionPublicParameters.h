@@ -1,11 +1,11 @@
-#ifndef __CRYPTID_PUBLICPARAMETERS_H
-#define __CRYPTID_PUBLICPARAMETERS_H
+#ifndef __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION_PUBLICPARAMETERS_H
+#define __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION_PUBLICPARAMETERS_H
 
 #include "gmp.h"
 
 #include "elliptic/AffinePoint.h"
 #include "elliptic/EllipticCurve.h"
-#include "identity-based/HashFunction.h"
+#include "util/HashFunction.h"
 
 
 // References
@@ -13,9 +13,9 @@
 
 
 /**
- * Struct storing the IBE Public Parameters. Corresponds to {@code BFPublicParameters} in [RFC-5091].
+ * Struct storing the BF-IBE Public Parameters. Corresponds to {@code BFPublicParameters} in [RFC-5091].
  */
-typedef struct PublicParameters
+typedef struct BonehFranklinIdentityBasedEncryptionPublicParameters
 {
     /**
      * The Type-1 elliptic curve we're operating over. Note, that the {@code p} field of {@code BFPublicParameters}
@@ -42,6 +42,6 @@ typedef struct PublicParameters
      * The used hash function.
      */
     HashFunction hashFunction;
-} PublicParameters;
+} BonehFranklinIdentityBasedEncryptionPublicParameters;
 
 #endif

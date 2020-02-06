@@ -18,7 +18,7 @@ int isVerbose = 0;
 
 TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel securityLevel, const char *const message, const char *const identity)
 {
-    PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
+    BonehFranklinIdentityBasedEncryptionPublicParameters* publicParameters = malloc(sizeof (BonehFranklinIdentityBasedEncryptionPublicParameters));
     mpz_t masterSecret;
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
@@ -32,7 +32,7 @@ TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel secu
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    CipherTextTuple* ciphertext = malloc(sizeof (CipherTextTuple));
+    BonehFranklinIdentityBasedEncryptionCipherText* ciphertext = malloc(sizeof (BonehFranklinIdentityBasedEncryptionCipherText));
     status = cryptid_ibe_bonehFranklin_encrypt(ciphertext, message, strlen(message), identity, strlen(identity), *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
@@ -44,7 +44,7 @@ TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel secu
     ASSERT_EQ(strcmp(message, plaintext), 0);
 
     free(plaintext);
-    cipherTextTuple_destroy(*ciphertext);
+    bonehFranklinIdentityBasedEncryptionCipherText_destroy(*ciphertext);
     free(ciphertext);
     affine_destroy(privateKey);
     mpz_clears(publicParameters->q, masterSecret, NULL);
@@ -58,7 +58,7 @@ TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel secu
 
 TEST fresh_boneh_franklin_ibe_setup_different_identities(const SecurityLevel securityLevel, const char *const message, const char *const encryptIdentity, const char *const decryptIdentity)
 {
-    PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
+    BonehFranklinIdentityBasedEncryptionPublicParameters* publicParameters = malloc(sizeof (BonehFranklinIdentityBasedEncryptionPublicParameters));
     mpz_t masterSecret;
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
@@ -72,7 +72,7 @@ TEST fresh_boneh_franklin_ibe_setup_different_identities(const SecurityLevel sec
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    CipherTextTuple* ciphertext = malloc(sizeof (CipherTextTuple));
+    BonehFranklinIdentityBasedEncryptionCipherText* ciphertext = malloc(sizeof (BonehFranklinIdentityBasedEncryptionCipherText));
     status = cryptid_ibe_bonehFranklin_encrypt(ciphertext, message, strlen(message), encryptIdentity, strlen(encryptIdentity), *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
@@ -82,7 +82,7 @@ TEST fresh_boneh_franklin_ibe_setup_different_identities(const SecurityLevel sec
 
     ASSERT_EQ(status, CRYPTID_DECRYPTION_FAILED_ERROR);
 
-    cipherTextTuple_destroy(*ciphertext);
+    bonehFranklinIdentityBasedEncryptionCipherText_destroy(*ciphertext);
     free(ciphertext);
     affine_destroy(privateKey);
     mpz_clears(publicParameters->q, masterSecret, NULL);
