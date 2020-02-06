@@ -1,14 +1,11 @@
 #include "identity-based/signature/hess/HessIdentityBasedSignatureSignature.h"
 
 
-HessIdentityBasedSignatureSignature hessIdentityBasedSignatureSignature_init(const AffinePoint u, const mpz_t v)
-{    
-    HessIdentityBasedSignatureSignature signature;
-    signature.u = affine_init(u.x, u.y);
+void hessIdentityBasedSignatureSignature_init(HessIdentityBasedSignatureSignature *signatureOutput, const AffinePoint u, const mpz_t v)
+{
+    signatureOutput->u = affine_init(u.x, u.y);
     
-    mpz_init_set(signature.v, v);
-
-    return signature;
+    mpz_init_set(signatureOutput->v, v);
 }
 
 void hessIdentityBasedSignatureSignature_destroy(HessIdentityBasedSignatureSignature signature)

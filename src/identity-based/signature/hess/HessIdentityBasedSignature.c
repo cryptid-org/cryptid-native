@@ -311,7 +311,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
         return status;
     }
 
-    *result = hessIdentityBasedSignatureSignature_init(u, v);
+    hessIdentityBasedSignatureSignature_init(result, u, v);
 
     mpz_clears(k, v, NULL);
     affine_destroy(pointQId);
