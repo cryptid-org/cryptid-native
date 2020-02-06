@@ -47,13 +47,13 @@ CryptidValidationResult validation_isPublicParametersValid(const PublicParameter
     return CRYPTID_VALIDATION_FAILURE;
 }
 
-CryptidValidationResult validation_isCipherTextTupleValid(const CipherTextTuple cipherTextTuple, const mpz_t order)
+CryptidValidationResult validation_isBonehFranklinIdentityBasedEncryptionCipherTextValid(const BonehFranklinIdentityBasedEncryptionCipherText bonehFranklinIdentityBasedEncryptionCipherText, const mpz_t order)
 {
-    if(validation_isAffinePointValid(cipherTextTuple.cipherU, order)
-        && cipherTextTuple.cipherV
-        && cipherTextTuple.cipherVLength != 0
-        && cipherTextTuple.cipherW
-        && cipherTextTuple.cipherWLength != 0)
+    if(validation_isAffinePointValid(bonehFranklinIdentityBasedEncryptionCipherText.cipherU, order)
+        && bonehFranklinIdentityBasedEncryptionCipherText.cipherV
+        && bonehFranklinIdentityBasedEncryptionCipherText.cipherVLength != 0
+        && bonehFranklinIdentityBasedEncryptionCipherText.cipherW
+        && bonehFranklinIdentityBasedEncryptionCipherText.cipherWLength != 0)
     {
         return CRYPTID_VALIDATION_SUCCESS;
     }
@@ -61,7 +61,7 @@ CryptidValidationResult validation_isCipherTextTupleValid(const CipherTextTuple 
     return CRYPTID_VALIDATION_FAILURE;
 }
 
-CryptidValidationResult validation_isSignatureValid(const Signature signature, const mpz_t order)
+CryptidValidationResult validation_isHessIdentityBasedSignatureSignatureValid(const HessIdentityBasedSignatureSignature signature, const mpz_t order)
 {
     if(validation_isAffinePointValid(signature.u, order)
         && signature.v != NULL)

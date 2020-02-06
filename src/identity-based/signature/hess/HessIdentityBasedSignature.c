@@ -174,7 +174,7 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const id
     return status;
 }
 
-CryptidStatus cryptid_ibs_hess_sign(Signature *result, const AffinePoint privateKey, const char *const message, const size_t messageLength,
+CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result, const AffinePoint privateKey, const char *const message, const size_t messageLength,
                     const char *const identity, const size_t identityLength, const PublicParameters publicParameters)
 {
     // Implementation of Scheme 1. Sign in [HESS-IBS].
@@ -311,7 +311,7 @@ CryptidStatus cryptid_ibs_hess_sign(Signature *result, const AffinePoint private
         return status;
     }
 
-    *result = signature_init(u, v);
+    *result = hessIdentityBasedSignatureSignature_init(u, v);
 
     mpz_clears(k, v, NULL);
     affine_destroy(pointQId);
@@ -327,7 +327,7 @@ CryptidStatus cryptid_ibs_hess_sign(Signature *result, const AffinePoint private
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t messageLength, const Signature signature,
+CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t messageLength, const HessIdentityBasedSignatureSignature signature,
                     const char *const identity, const size_t identityLength, const PublicParameters publicParameters)
 {
     // Implementation of Scheme 1. Verify in [HESS-IBS].
@@ -342,7 +342,7 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
         return CRYPTID_MESSAGE_LENGTH_ERROR;
     }
 
-    if(!validation_isSignatureValid(signature, publicParameters.ellipticCurve.fieldOrder))
+    if(!validation_isHessIdentityBasedSignatureSignatureValid(signature, publicParameters.ellipticCurve.fieldOrder))
     {
         return CRYPTID_ILLEGAL_SIGNATURE_ERROR;
     }

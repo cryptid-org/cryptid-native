@@ -6,7 +6,7 @@
 #include "gmp.h"
 
 #include "elliptic/AffinePoint.h"
-#include "identity-based/Signature.h"
+#include "identity-based/signature/hess/HessIdentityBasedSignatureSignature.h"
 #include "identity-based/PublicParameters.h"
 #include "identity-based/SecurityLevel.h"
 #include "util/Status.h"
@@ -39,7 +39,7 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const id
 /**
  * Signs a message with the given identity string.
  * @param result Out parameter storing the signature. If the return value is CRYPTID_SUCCESS
- *               then it will point to a Signature instance, that must be destroyed by the caller.
+ *               then it will point to a HessIdentityBasedSignatureSignature instance, that must be destroyed by the caller.
  *               Initialization is done by this function.
  * @param privateKey the private key to sign with
  * @param message the string to sign
@@ -49,7 +49,7 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const id
  * @param publicParameters the IBS public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_ibs_hess_sign(Signature *result, const AffinePoint privateKey, const char *const message, const size_t messageLength,
+CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result, const AffinePoint privateKey, const char *const message, const size_t messageLength,
                     const char *const identity, const size_t identityLength, const PublicParameters publicParameters);
 
 /**
@@ -62,7 +62,7 @@ CryptidStatus cryptid_ibs_hess_sign(Signature *result, const AffinePoint private
  * @param publicParameters the IBS public parameters
  * @return CRYPTID_SUCCESS if the signature was valid
  */
-CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t messageLength, const Signature signature,
+CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t messageLength, const HessIdentityBasedSignatureSignature signature,
                     const char *const identity, const size_t identityLength, const PublicParameters publicParameters);
 
 #endif

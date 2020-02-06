@@ -32,7 +32,7 @@ TEST fresh_hess_ibs_setup_matching_identities(const SecurityLevel securityLevel,
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    Signature* signature = malloc(sizeof (Signature));
+    HessIdentityBasedSignatureSignature* signature = malloc(sizeof (HessIdentityBasedSignatureSignature));
     status = cryptid_ibs_hess_sign(signature, privateKey, message, strlen(message), identity, strlen(identity), *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
@@ -41,7 +41,7 @@ TEST fresh_hess_ibs_setup_matching_identities(const SecurityLevel securityLevel,
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    signature_destroy(*signature);
+    hessIdentityBasedSignatureSignature_destroy(*signature);
     free(signature);
     affine_destroy(privateKey);
     mpz_clears(publicParameters->q, masterSecret, NULL);
@@ -69,7 +69,7 @@ TEST fresh_hess_ibs_setup_different_identities(const SecurityLevel securityLevel
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    Signature* signature = malloc(sizeof (Signature));
+    HessIdentityBasedSignatureSignature* signature = malloc(sizeof (HessIdentityBasedSignatureSignature));
     status = cryptid_ibs_hess_sign(signature, privateKey, message, strlen(message), signIdentity, strlen(signIdentity), *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
@@ -78,7 +78,7 @@ TEST fresh_hess_ibs_setup_different_identities(const SecurityLevel securityLevel
 
     ASSERT_EQ(status, CRYPTID_VERIFICATION_FAILED_ERROR);
 
-    signature_destroy(*signature);
+    hessIdentityBasedSignatureSignature_destroy(*signature);
     free(signature);
     affine_destroy(privateKey);
     mpz_clears(publicParameters->q, masterSecret, NULL);
@@ -106,7 +106,7 @@ TEST fresh_hess_ibs_setup_wrong_signature(const SecurityLevel securityLevel, con
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    Signature* signature = malloc(sizeof (Signature));
+    HessIdentityBasedSignatureSignature* signature = malloc(sizeof (HessIdentityBasedSignatureSignature));
     status = cryptid_ibs_hess_sign(signature, privateKey, message1, strlen(message1), identity, strlen(identity), *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
@@ -115,7 +115,7 @@ TEST fresh_hess_ibs_setup_wrong_signature(const SecurityLevel securityLevel, con
 
     ASSERT_EQ(status, CRYPTID_VERIFICATION_FAILED_ERROR);
 
-    signature_destroy(*signature);
+    hessIdentityBasedSignatureSignature_destroy(*signature);
     free(signature);
     affine_destroy(privateKey);
     mpz_clears(publicParameters->q, masterSecret, NULL);
