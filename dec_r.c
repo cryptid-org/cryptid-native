@@ -31,4 +31,14 @@ int main()
 
     printf("Plaintext:\n%s\n", plaintext);
 
+    free(plaintext);
+    cipherTextTuple_destroy(ciphertext);
+    affine_destroy(privateKey);
+    mpz_clear(publicParameters.q);
+    affine_destroy(publicParameters.pointP);
+    affine_destroy(publicParameters.pointPpublic);
+    ellipticCurve_destroy(publicParameters.ellipticCurve);
+
+    return 0;
+
 }

@@ -42,4 +42,14 @@ int main()
     writeCipherTextToFiles(ciphertext);
     writePublicParToFiles(publicParameters);
     writePrivateKeyToFiles(privateKey);
+
+    affine_destroy(privateKey);
+    mpz_clears(publicParameters->q, masterSecret, NULL);
+    affine_destroy(publicParameters->pointP);
+    affine_destroy(publicParameters->pointPpublic);
+    ellipticCurve_destroy(publicParameters->ellipticCurve);
+    free(publicParameters);
+
+    return 0;
+
 }
