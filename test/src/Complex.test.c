@@ -45,7 +45,8 @@ TEST complex_initMpz_should_work(void)
     mpz_init_set_ui(i, 4);
 
     // When
-    Complex c = complex_initMpz(r, i);
+    Complex c;
+    complex_initMpz(&c, r, i);
 
     // Then
     ASSERT_EQ(mpz_cmp_ui(c.real, 3), 0);

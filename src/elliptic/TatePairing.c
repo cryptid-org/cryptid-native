@@ -39,7 +39,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
         mpz_powm(bxi, three, quotient, ellipticCurve.fieldOrder);
 
         mpz_set_ui(one, 1);
-        tmp = complex_initMpz(one, bxi);
+        complex_initMpz(&tmp, one, bxi);
         xi = complex_modMulScalar(tmp, axi, ellipticCurve.fieldOrder);
 
         // \f$x^{\prime} = x \cdot xi\f$
@@ -51,7 +51,8 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
 
         mpz_t zero;
         mpz_init_set_ui(zero, 0);
-        Complex bY = complex_initMpz(b.y, zero);
+        Complex bY;
+        complex_initMpz(&bY, b.y, zero);
 
         q = complexAffine_init(xprime, bY);
 
@@ -164,7 +165,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
             tmpF = complex_modMul(f, frac, ellipticCurve.fieldOrder);
 
             complex_destroy(f);
-            f = complex_initMpz(tmpF.real, tmpF.imaginary);
+            complex_initMpz(&f, tmpF.real, tmpF.imaginary);
 
             affine_destroy(v);
             // \f$v = v + p\f$

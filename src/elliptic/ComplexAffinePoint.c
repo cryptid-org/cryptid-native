@@ -12,8 +12,8 @@
 ComplexAffinePoint complexAffine_init(const Complex x, const Complex y)
 {
     ComplexAffinePoint complexAffinePoint;
-    complexAffinePoint.x = complex_initMpz(x.real, x.imaginary);
-    complexAffinePoint.y = complex_initMpz(y.real, y.imaginary);
+    complex_initMpz(&complexAffinePoint.x, x.real, x.imaginary);
+    complex_initMpz(&complexAffinePoint.y, y.real, y.imaginary);
     return complexAffinePoint;
 }
 
@@ -306,7 +306,8 @@ int complexAffine_isOnCurve(ComplexAffinePoint point, EllipticCurve ellipticCurv
     mpz_t zero;
     mpz_init_set_ui(zero, 0);
 
-    Complex b = complex_initMpz(ellipticCurve.b, zero);
+    Complex b;
+    complex_initMpz(&b, ellipticCurve.b, zero);
 
     Complex rhs = complex_modAdd(xCubedPlusAx, b, ellipticCurve.fieldOrder);
 

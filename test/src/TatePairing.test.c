@@ -60,7 +60,8 @@ TEST RFC_5091_tate_pairing_should_work(void)
 
     mpz_set_str(expecteda, "8b2cac13cbd422658f9e5757b85493818", 16);
     mpz_set_str(expectedb, "bc6af59f54d0a5d83c8efd8f5214fad3c", 16);
-    Complex expected = complex_initMpz(expecteda, expectedb);
+    Complex expected;
+    complex_initMpz(&expected, expecteda, expectedb);
 
     EllipticCurve ec;
     {

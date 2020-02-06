@@ -26,17 +26,17 @@ typedef struct Complex
 
 /**
  * Initializes a new Complex number to (0, 0).
- * @param complex the Complex number to be initialized
+ * @param complexOutput the Complex number to be initialized
  */
-void complex_init(Complex* complex);
+void complex_init(Complex *complexOutput);
 
 /**
- * Returns a new Complex initialized with the specified arbitrary precision values.
+ * Initializes a new Complex with the specified arbitrary precision values.
+ * @param complexOutput the Complex number to be initialized
  * @param real the real part
  * @param imaginary the imaginary part
- * @return a new complex
  */
-Complex complex_initMpz(const mpz_t real, const mpz_t imaginary);
+void complex_initMpz(Complex *complexOutput, const mpz_t real, const mpz_t imaginary);
 
 /**
  * Returns a new Complex initialized with the specified long values.
