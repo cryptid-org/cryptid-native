@@ -18,7 +18,7 @@ int isVerbose = 0;
 
 TEST fresh_hess_ibs_setup_matching_identities(const SecurityLevel securityLevel, const char *const message, const char *const identity)
 {
-    PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
+    HessIdentityBasedSignaturePublicParameters* publicParameters = malloc(sizeof (HessIdentityBasedSignaturePublicParameters));
     mpz_t masterSecret;
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
@@ -55,7 +55,7 @@ TEST fresh_hess_ibs_setup_matching_identities(const SecurityLevel securityLevel,
 
 TEST fresh_hess_ibs_setup_different_identities(const SecurityLevel securityLevel, const char *const message, const char *const signIdentity, const char *const verifyIdentity)
 {
-    PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
+    HessIdentityBasedSignaturePublicParameters* publicParameters = malloc(sizeof (HessIdentityBasedSignaturePublicParameters));
     mpz_t masterSecret;
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
@@ -92,7 +92,7 @@ TEST fresh_hess_ibs_setup_different_identities(const SecurityLevel securityLevel
 
 TEST fresh_hess_ibs_setup_wrong_signature(const SecurityLevel securityLevel, const char *const message1, const char *const message2, const char *const identity)
 {
-    PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
+    HessIdentityBasedSignaturePublicParameters* publicParameters = malloc(sizeof (HessIdentityBasedSignaturePublicParameters));
     mpz_t masterSecret;
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);

@@ -5,10 +5,11 @@
 
 #include "elliptic/AffinePoint.h"
 #include "elliptic/EllipticCurve.h"
-#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCipherText.h"
 #include "util/HashFunction.h"
-#include "identity-based/PublicParameters.h"
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCipherText.h"
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h"
 #include "identity-based/signature/hess/HessIdentityBasedSignatureSignature.h"
+#include "identity-based/signature/hess/HessIdentityBasedSignaturePublicParameters.h"
 
 
 /**
@@ -58,7 +59,14 @@ CryptidValidationResult validation_isTypeOneEllipticCurve(const EllipticCurve el
  * @param publicParameters the parameters to check
  * @return CRYPTID_VALIDATION_SUCCESS if the parameters are valid
  */
-CryptidValidationResult validation_isPublicParametersValid(const PublicParameters publicParameters);
+CryptidValidationResult validation_isBonehFranklinIdentityBasedEncryptionPublicParametersValid(const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters);
+
+/**
+ * Validates that the specified public parameters are correct.
+ * @param publicParameters the parameters to check
+ * @return CRYPTID_VALIDATION_SUCCESS if the parameters are valid
+ */
+CryptidValidationResult validation_isHessIdentityBasedSignaturePublicParametersValid(const HessIdentityBasedSignaturePublicParameters publicParameters);
 
 /**
  * Validates that the specified ciphertext is correct.

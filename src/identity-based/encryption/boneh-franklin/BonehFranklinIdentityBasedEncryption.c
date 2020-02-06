@@ -19,7 +19,7 @@ static const unsigned int POINT_GENERATION_ATTEMPT_LIMIT = 100;
 static const unsigned int Q_LENGTH_MAPPING[] = { 160, 224, 256, 384, 512 };
 static const unsigned int P_LENGTH_MAPPING[] = { 512, 1024, 1536, 3840, 7680 };
 
-CryptidStatus cryptid_ibe_bonehFranklin_setup(const SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret)
+CryptidStatus cryptid_ibe_bonehFranklin_setup(const SecurityLevel securityLevel, BonehFranklinIdentityBasedEncryptionPublicParameters* publicParameters, mpz_t masterSecret)
 {
     // Implementation of Algorithm 5.1.2 (BFsetup1) in [RFC-5091].
     // Note, that instead of taking the bitlengts of p and q as arguments, this function takes
@@ -136,7 +136,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(const SecurityLevel securityLevel,
 }
 
 CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePoint* result, const char *const identity, const size_t identityLength, 
-                       const PublicParameters publicParameters, const mpz_t masterSecret)
+                       const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters, const mpz_t masterSecret)
 {
     // Implementation of Algorithm 5.3.1 (BFextractPriv) in [RFC-5091].
 
@@ -150,7 +150,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePoint* result, const char 
         return CRYPTID_IDENTITY_LENGTH_ERROR;
     }
 
-    if(!validation_isPublicParametersValid(publicParameters))
+    if(!validation_isBonehFranklinIdentityBasedEncryptionPublicParametersValid(publicParameters))
     {
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
@@ -175,7 +175,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePoint* result, const char 
 }
 
 CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryptionCipherText *result, const char *const message, const size_t messageLength,
-                       const char *const identity, const size_t identityLength, const PublicParameters publicParameters)
+                       const char *const identity, const size_t identityLength, const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters)
 {
     // Implementation of Algorithm 5.4.1 (BFencrypt) in [RFC-5091].
 
@@ -199,7 +199,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
         return CRYPTID_IDENTITY_LENGTH_ERROR;
     }
 
-    if(!validation_isPublicParametersValid(publicParameters))
+    if(!validation_isBonehFranklinIdentityBasedEncryptionPublicParametersValid(publicParameters))
     {
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
@@ -329,11 +329,11 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
 }
 
 CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint privateKey, const BonehFranklinIdentityBasedEncryptionCipherText ciphertext, 
-                       const PublicParameters publicParameters)
+                       const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters)
 {
     // Implementation of Algorithm 5.5.1 (BFdecrypt) in [RFC-5091].
 
-    if(!validation_isPublicParametersValid(publicParameters))
+    if(!validation_isBonehFranklinIdentityBasedEncryptionPublicParametersValid(publicParameters))
     {
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }

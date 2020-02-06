@@ -18,7 +18,7 @@ int isVerbose = 0;
 
 TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel securityLevel, const char *const message, const char *const identity)
 {
-    PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
+    BonehFranklinIdentityBasedEncryptionPublicParameters* publicParameters = malloc(sizeof (BonehFranklinIdentityBasedEncryptionPublicParameters));
     mpz_t masterSecret;
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
@@ -58,7 +58,7 @@ TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel secu
 
 TEST fresh_boneh_franklin_ibe_setup_different_identities(const SecurityLevel securityLevel, const char *const message, const char *const encryptIdentity, const char *const decryptIdentity)
 {
-    PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
+    BonehFranklinIdentityBasedEncryptionPublicParameters* publicParameters = malloc(sizeof (BonehFranklinIdentityBasedEncryptionPublicParameters));
     mpz_t masterSecret;
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);

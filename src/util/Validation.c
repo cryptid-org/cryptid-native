@@ -34,7 +34,20 @@ CryptidValidationResult validation_isTypeOneEllipticCurve(const EllipticCurve el
     return CRYPTID_VALIDATION_FAILURE;
 }
 
-CryptidValidationResult validation_isPublicParametersValid(const PublicParameters publicParameters)
+CryptidValidationResult validation_isBonehFranklinIdentityBasedEncryptionPublicParametersValid(const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters)
+{
+    if(validation_isTypeOneEllipticCurve(publicParameters.ellipticCurve) 
+        && validation_isProbablePrime(publicParameters.q)
+        && validation_isAffinePointValid(publicParameters.pointP, publicParameters.ellipticCurve.fieldOrder)  
+        && validation_isAffinePointValid(publicParameters.pointPpublic, publicParameters.ellipticCurve.fieldOrder))
+    {
+        return CRYPTID_VALIDATION_SUCCESS;
+    }
+
+    return CRYPTID_VALIDATION_FAILURE;
+}
+
+CryptidValidationResult validation_isHessIdentityBasedSignaturePublicParametersValid(const HessIdentityBasedSignaturePublicParameters publicParameters)
 {
     if(validation_isTypeOneEllipticCurve(publicParameters.ellipticCurve) 
         && validation_isProbablePrime(publicParameters.q)
