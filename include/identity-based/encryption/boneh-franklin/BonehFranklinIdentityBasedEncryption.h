@@ -6,7 +6,7 @@
 #include "gmp.h"
 
 #include "elliptic/AffinePoint.h"
-#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCipherText.h"
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h"
 #include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h"
 #include "util/SecurityLevel.h"
 #include "util/Status.h"
@@ -40,7 +40,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePoint* result, const char 
 /**
  * Encrypts a message with the given identity string.
  * @param result Out parameter storing the ciphertext. If the return value is CRYPTID_SUCCESS
- *               then it will point to an BonehFranklinIdentityBasedEncryptionCipherText instance, that must be destroyed by the caller.
+ *               then it will point to an BonehFranklinIdentityBasedEncryptionCiphertext instance, that must be destroyed by the caller.
  *               Initialization is done by this function.
  * @param message the string to encrypt
  * @param messageLength the length of the message
@@ -49,7 +49,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePoint* result, const char 
  * @param publicParameters the BF-IBE public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryptionCipherText *result, const char *const message, const size_t messageLength,
+CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryptionCiphertext *result, const char *const message, const size_t messageLength,
                        const char *const identity, const size_t identityLength, const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters);
 
 /**
@@ -61,7 +61,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
  * @param publicParameters the BF-IBE public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint privateKey, const BonehFranklinIdentityBasedEncryptionCipherText ciphertext, 
+CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint privateKey, const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext, 
                        const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters);
 
 #endif

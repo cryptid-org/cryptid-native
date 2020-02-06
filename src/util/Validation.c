@@ -60,13 +60,13 @@ CryptidValidationResult validation_isHessIdentityBasedSignaturePublicParametersV
     return CRYPTID_VALIDATION_FAILURE;
 }
 
-CryptidValidationResult validation_isBonehFranklinIdentityBasedEncryptionCipherTextValid(const BonehFranklinIdentityBasedEncryptionCipherText bonehFranklinIdentityBasedEncryptionCipherText, const mpz_t order)
+CryptidValidationResult validation_isBonehFranklinIdentityBasedEncryptionCiphertextValid(const BonehFranklinIdentityBasedEncryptionCiphertext bonehFranklinIdentityBasedEncryptionCiphertext, const mpz_t order)
 {
-    if(validation_isAffinePointValid(bonehFranklinIdentityBasedEncryptionCipherText.cipherU, order)
-        && bonehFranklinIdentityBasedEncryptionCipherText.cipherV
-        && bonehFranklinIdentityBasedEncryptionCipherText.cipherVLength != 0
-        && bonehFranklinIdentityBasedEncryptionCipherText.cipherW
-        && bonehFranklinIdentityBasedEncryptionCipherText.cipherWLength != 0)
+    if(validation_isAffinePointValid(bonehFranklinIdentityBasedEncryptionCiphertext.cipherU, order)
+        && bonehFranklinIdentityBasedEncryptionCiphertext.cipherV
+        && bonehFranklinIdentityBasedEncryptionCiphertext.cipherVLength != 0
+        && bonehFranklinIdentityBasedEncryptionCiphertext.cipherW
+        && bonehFranklinIdentityBasedEncryptionCiphertext.cipherWLength != 0)
     {
         return CRYPTID_VALIDATION_SUCCESS;
     }

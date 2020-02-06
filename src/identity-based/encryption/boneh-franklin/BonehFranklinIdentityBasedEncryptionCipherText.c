@@ -1,31 +1,28 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCipherText.h"
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h"
 
 
-BonehFranklinIdentityBasedEncryptionCipherText bonehFranklinIdentityBasedEncryptionCipherText_init(const AffinePoint cipherU, const unsigned char *const cipherV, const int cipherVLength,
+void bonehFranklinIdentityBasedEncryptionCiphertext_init(BonehFranklinIdentityBasedEncryptionCiphertext *ciphertextOutput, const AffinePoint cipherU, const unsigned char *const cipherV, const int cipherVLength,
                                      const unsigned char *const cipherW, const int cipherWLength)
 {
-    BonehFranklinIdentityBasedEncryptionCipherText bonehFranklinIdentityBasedEncryptionCipherText;
-    bonehFranklinIdentityBasedEncryptionCipherText.cipherU = affine_init(cipherU.x, cipherU.y);
+    ciphertextOutput->cipherU = affine_init(cipherU.x, cipherU.y);
     
-    bonehFranklinIdentityBasedEncryptionCipherText.cipherV = (unsigned char*)malloc(cipherVLength * sizeof(unsigned char) + 1);
-    memcpy(bonehFranklinIdentityBasedEncryptionCipherText.cipherV, cipherV, cipherVLength + 1);
+    ciphertextOutput->cipherV = (unsigned char*)malloc(cipherVLength * sizeof(unsigned char) + 1);
+    memcpy(ciphertextOutput->cipherV, cipherV, cipherVLength + 1);
     
-    bonehFranklinIdentityBasedEncryptionCipherText.cipherVLength = cipherVLength;
+    ciphertextOutput->cipherVLength = cipherVLength;
     
-    bonehFranklinIdentityBasedEncryptionCipherText.cipherW = (unsigned char*)malloc(cipherWLength * sizeof(unsigned char) + 1);
-    memcpy(bonehFranklinIdentityBasedEncryptionCipherText.cipherW, cipherW, cipherWLength + 1);
+    ciphertextOutput->cipherW = (unsigned char*)malloc(cipherWLength * sizeof(unsigned char) + 1);
+    memcpy(ciphertextOutput->cipherW, cipherW, cipherWLength + 1);
     
-    bonehFranklinIdentityBasedEncryptionCipherText.cipherWLength = cipherWLength;
-
-    return bonehFranklinIdentityBasedEncryptionCipherText;
+    ciphertextOutput->cipherWLength = cipherWLength;
 }
 
-void bonehFranklinIdentityBasedEncryptionCipherText_destroy(BonehFranklinIdentityBasedEncryptionCipherText bonehFranklinIdentityBasedEncryptionCipherText)
+void bonehFranklinIdentityBasedEncryptionCiphertext_destroy(BonehFranklinIdentityBasedEncryptionCiphertext ciphertext)
 {
-    affine_destroy(bonehFranklinIdentityBasedEncryptionCipherText.cipherU);
-    free(bonehFranklinIdentityBasedEncryptionCipherText.cipherV);
-    free(bonehFranklinIdentityBasedEncryptionCipherText.cipherW);
+    affine_destroy(ciphertext.cipherU);
+    free(ciphertext.cipherV);
+    free(ciphertext.cipherW);
 }

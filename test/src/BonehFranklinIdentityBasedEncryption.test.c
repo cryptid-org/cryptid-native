@@ -32,7 +32,7 @@ TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel secu
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    BonehFranklinIdentityBasedEncryptionCipherText* ciphertext = malloc(sizeof (BonehFranklinIdentityBasedEncryptionCipherText));
+    BonehFranklinIdentityBasedEncryptionCiphertext* ciphertext = malloc(sizeof (BonehFranklinIdentityBasedEncryptionCiphertext));
     status = cryptid_ibe_bonehFranklin_encrypt(ciphertext, message, strlen(message), identity, strlen(identity), *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
@@ -44,7 +44,7 @@ TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel secu
     ASSERT_EQ(strcmp(message, plaintext), 0);
 
     free(plaintext);
-    bonehFranklinIdentityBasedEncryptionCipherText_destroy(*ciphertext);
+    bonehFranklinIdentityBasedEncryptionCiphertext_destroy(*ciphertext);
     free(ciphertext);
     affine_destroy(privateKey);
     mpz_clears(publicParameters->q, masterSecret, NULL);
@@ -72,7 +72,7 @@ TEST fresh_boneh_franklin_ibe_setup_different_identities(const SecurityLevel sec
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    BonehFranklinIdentityBasedEncryptionCipherText* ciphertext = malloc(sizeof (BonehFranklinIdentityBasedEncryptionCipherText));
+    BonehFranklinIdentityBasedEncryptionCiphertext* ciphertext = malloc(sizeof (BonehFranklinIdentityBasedEncryptionCiphertext));
     status = cryptid_ibe_bonehFranklin_encrypt(ciphertext, message, strlen(message), encryptIdentity, strlen(encryptIdentity), *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
@@ -82,7 +82,7 @@ TEST fresh_boneh_franklin_ibe_setup_different_identities(const SecurityLevel sec
 
     ASSERT_EQ(status, CRYPTID_DECRYPTION_FAILED_ERROR);
 
-    bonehFranklinIdentityBasedEncryptionCipherText_destroy(*ciphertext);
+    bonehFranklinIdentityBasedEncryptionCiphertext_destroy(*ciphertext);
     free(ciphertext);
     affine_destroy(privateKey);
     mpz_clears(publicParameters->q, masterSecret, NULL);

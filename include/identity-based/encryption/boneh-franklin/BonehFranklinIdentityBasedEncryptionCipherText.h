@@ -13,7 +13,7 @@
 /**
  * Struct holding the ciphertext data. Refer to {@code BFCiphertextBlock} in [RFC-5091].
  */
-typedef struct BonehFranklinIdentityBasedEncryptionCipherText
+typedef struct BonehFranklinIdentityBasedEncryptionCiphertext
 {
     /**
      * A point in \f$E(F_p)\f$.
@@ -31,26 +31,26 @@ typedef struct BonehFranklinIdentityBasedEncryptionCipherText
      */
     unsigned char* cipherW;
     size_t cipherWLength;
-} BonehFranklinIdentityBasedEncryptionCipherText;
+} BonehFranklinIdentityBasedEncryptionCiphertext;
 
 
 /**
- * Returns a new BonehFranklinIdentityBasedEncryptionCipherText initialized with the specified values. Note, that {@code cipherV} and {@code cipherw}
+ * Initializes a new BonehFranklinIdentityBasedEncryptionCiphertext with the specified values. Note, that {@code cipherV} and {@code cipherw}
  * will be copied.
+ * @param ciphertextOutput the BonehFranklinIdentityBasedEncryptionCiphertext to be initialized
  * @param cipherU an AffinePointer
  * @param cipherV binary string
  * @param cipherVLength the size of {@code cipherV}
  * @param cipherW binary string
  * @param cipherWLength the size of {@code cipherW}
- * @return a new BonehFranklinIdentityBasedEncryptionCipherText instance
  */
-BonehFranklinIdentityBasedEncryptionCipherText bonehFranklinIdentityBasedEncryptionCipherText_init(const AffinePoint cipherU, const unsigned char *const cipherV, const int cipherVLength,
+void bonehFranklinIdentityBasedEncryptionCiphertext_init(BonehFranklinIdentityBasedEncryptionCiphertext *ciphertextOutput, const AffinePoint cipherU, const unsigned char *const cipherV, const int cipherVLength,
                                      const unsigned char *const cipherW, const int cipherWLength);
 
 /**
- * Frees a BonehFranklinIdentityBasedEncryptionCipherText.
- * @param bonehFranklinIdentityBasedEncryptionCipherText the BonehFranklinIdentityBasedEncryptionCipherText to be destroyed
+ * Frees a BonehFranklinIdentityBasedEncryptionCiphertext.
+ * @param bonehFranklinIdentityBasedEncryptionCiphertext the BonehFranklinIdentityBasedEncryptionCiphertext to be destroyed
  */
-void bonehFranklinIdentityBasedEncryptionCipherText_destroy(BonehFranklinIdentityBasedEncryptionCipherText bonehFranklinIdentityBasedEncryptionCipherText);
+void bonehFranklinIdentityBasedEncryptionCiphertext_destroy(BonehFranklinIdentityBasedEncryptionCiphertext bonehFranklinIdentityBasedEncryptionCiphertext);
 
 #endif

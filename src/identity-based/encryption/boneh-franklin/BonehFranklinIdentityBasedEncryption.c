@@ -174,7 +174,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePoint* result, const char 
     return status;
 }
 
-CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryptionCipherText *result, const char *const message, const size_t messageLength,
+CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryptionCiphertext *result, const char *const message, const size_t messageLength,
                        const char *const identity, const size_t identityLength, const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters)
 {
     // Implementation of Algorithm 5.4.1 (BFencrypt) in [RFC-5091].
@@ -310,7 +310,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
     cipherW[messageLength] = '\0';
 
     // The ciphertext is the triple \f$(U, V, W)\f$.
-    *result = bonehFranklinIdentityBasedEncryptionCipherText_init(cipherPointU, cipherV, hashLen, cipherW, messageLength);
+    bonehFranklinIdentityBasedEncryptionCiphertext_init(result, cipherPointU, cipherV, hashLen, cipherW, messageLength);
 
     mpz_clear(l);
     affine_destroy(pointQId);
@@ -328,7 +328,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint privateKey, const BonehFranklinIdentityBasedEncryptionCipherText ciphertext, 
+CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint privateKey, const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext, 
                        const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters)
 {
     // Implementation of Algorithm 5.5.1 (BFdecrypt) in [RFC-5091].
@@ -343,7 +343,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint
         return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR;
     }
 
-    if(!validation_isBonehFranklinIdentityBasedEncryptionCipherTextValid(ciphertext, publicParameters.ellipticCurve.fieldOrder))
+    if(!validation_isBonehFranklinIdentityBasedEncryptionCiphertextValid(ciphertext, publicParameters.ellipticCurve.fieldOrder))
     {
         return CRYPTID_ILLEGAL_CIPHERTEXT_ERROR;
     }

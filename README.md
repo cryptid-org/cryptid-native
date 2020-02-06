@@ -76,7 +76,7 @@ int main()
         return -1;
     }
 
-    BonehFranklinIdentityBasedEncryptionCipherText* ciphertext = malloc(sizeof (BonehFranklinIdentityBasedEncryptionCipherText));
+    BonehFranklinIdentityBasedEncryptionCiphertext* ciphertext = malloc(sizeof (BonehFranklinIdentityBasedEncryptionCiphertext));
     if (CRYPTID_SUCCESS != cryptid_encrypt(ciphertext, message, strlen(message), identity, strlen(identity), *publicParameters))
     {
         printf("Encrypt failed\n");
@@ -100,7 +100,7 @@ int main()
     printf("Plaintext:\n%s\n", plaintext);
 
     free(plaintext);
-    bonehFranklinIdentityBasedEncryptionCipherText_destroy(*ciphertext);
+    bonehFranklinIdentityBasedEncryptionCiphertext_destroy(*ciphertext);
     free(ciphertext);
     affine_destroy(privateKey);
     mpz_clears(publicParameters->q, masterSecret, NULL);

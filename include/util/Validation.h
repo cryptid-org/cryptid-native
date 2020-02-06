@@ -6,7 +6,7 @@
 #include "elliptic/AffinePoint.h"
 #include "elliptic/EllipticCurve.h"
 #include "util/HashFunction.h"
-#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCipherText.h"
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h"
 #include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h"
 #include "identity-based/signature/hess/HessIdentityBasedSignatureSignature.h"
 #include "identity-based/signature/hess/HessIdentityBasedSignaturePublicParameters.h"
@@ -70,11 +70,11 @@ CryptidValidationResult validation_isHessIdentityBasedSignaturePublicParametersV
 
 /**
  * Validates that the specified ciphertext is correct.
- * @param bonehFranklinIdentityBasedEncryptionCipherText the ciphertext to check
+ * @param bonehFranklinIdentityBasedEncryptionCiphertext the ciphertext to check
  * @param order the field order of the elliptic curve field, we operating over
  * @return CRYPTID_VALIDATION_SUCCESS if the ciphertext is valid
  */
-CryptidValidationResult validation_isBonehFranklinIdentityBasedEncryptionCipherTextValid(const BonehFranklinIdentityBasedEncryptionCipherText bonehFranklinIdentityBasedEncryptionCipherText, const mpz_t order);
+CryptidValidationResult validation_isBonehFranklinIdentityBasedEncryptionCiphertextValid(const BonehFranklinIdentityBasedEncryptionCiphertext bonehFranklinIdentityBasedEncryptionCiphertext, const mpz_t order);
 
 /**
  * Validates that the specified signature is correct.
