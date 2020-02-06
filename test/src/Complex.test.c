@@ -10,7 +10,8 @@
 TEST complex_init_should_be_zero(void)
 {
     // When
-    Complex c = complex_init();
+    Complex c;
+    complex_init(&c);
 
     // Then
     ASSERT_EQ(mpz_cmp_ui(c.real, 0), 0);
@@ -66,7 +67,8 @@ SUITE(init_suite)
 TEST zero_zero_should_act_as_the_additive_identity_element_for_any_p(void)
 {
     // Given
-    Complex zero = complex_init();
+    Complex zero;
+    complex_init(&zero);
 
     Complex c = complex_initLong(4, 3);
 

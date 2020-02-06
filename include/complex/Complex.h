@@ -25,10 +25,10 @@ typedef struct Complex
 } Complex;
 
 /**
- * Returns a new Complex number initialized to (0, 0).
- * @return (0,0)
+ * Initializes a new Complex number to (0, 0).
+ * @param complex the Complex number to be initialized
  */
-Complex complex_init(void);
+void complex_init(Complex* complex);
 
 /**
  * Returns a new Complex initialized with the specified arbitrary precision values.

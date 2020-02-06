@@ -3,13 +3,9 @@
 #include "complex/Complex.h"
 
 
-Complex complex_init(void)
+void complex_init(Complex* complex)
 {
-    Complex complex;
-
-    mpz_inits(complex.real, complex.imaginary, NULL);
-
-    return complex;
+    mpz_inits(complex->real, complex->imaginary, NULL);
 } 
 
 Complex complex_initMpz(const mpz_t real, const mpz_t imaginary)
