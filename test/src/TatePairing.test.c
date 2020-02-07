@@ -56,8 +56,10 @@ TEST RFC_5091_tate_pairing_should_work(void)
     mpz_set_str(ay, "510c6972d795ec0c2b081b81de767f808", 16);
     mpz_set_str(bx, "40e98b9382e0b1fa6747dcb1655f54f75", 16);
     mpz_set_str(by, "b497a6a02e7611511d0db2ff133b32a3f", 16);
-    AffinePoint a = affine_init(ax, ay);
-    AffinePoint b = affine_init(bx, by);
+    AffinePoint a;
+    affine_init(&a, ax, ay);
+    AffinePoint b;
+    affine_init(&b, bx, by);
 
     mpz_set_str(expecteda, "8b2cac13cbd422658f9e5757b85493818", 16);
     mpz_set_str(expectedb, "bc6af59f54d0a5d83c8efd8f5214fad3c", 16);

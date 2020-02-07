@@ -119,7 +119,8 @@ static AffinePoint mod3PointGenerationStrategy(const EllipticCurve ellipticCurve
 
     mpz_powm(x, base, exp, ellipticCurve.fieldOrder);
 
-    AffinePoint result = affine_init(x, y);
+    AffinePoint result;
+    affine_init(&result, x, y);
 
     mpz_clears(y, bAddInv, exp, ySquared, base, x, NULL);
 

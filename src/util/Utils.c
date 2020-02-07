@@ -104,7 +104,8 @@ CryptidStatus hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve
     mpz_powm(x, yPowTwo, pxTwoSubQ3, p);
 
     // Let \f$Q^{\prime} = (x, y)\f$, a non-zero point in \f$E(F_p)\f$.
-    AffinePoint qPrime = affine_init(x, y);
+    AffinePoint qPrime;
+    affine_init(&qPrime, x, y);
 
     mpz_add_ui(pAddOne, p, 1);
     mpz_cdiv_q(pAddOneQq, pAddOne, q);

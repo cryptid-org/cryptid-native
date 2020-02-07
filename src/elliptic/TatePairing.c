@@ -77,7 +77,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
 
     // 1. Set \f$f\f$ = 1 and \f$v\f$ = \f$p\f$
     f = complex_initLong(1, 0);
-    v = affine_init(p.x, p.y);
+    affine_init(&v, p.x, p.y);
     
     // 2. {@code for i = t - 1 to 0 do:}
     // where \f$t\f$ is the bitcount of the subgroup order.
@@ -122,7 +122,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
 
         affine_destroy(v);
         // \f$v = 2v\f$
-        v = affine_init(doubleV.x, doubleV.y);
+        affine_init(&v, doubleV.x, doubleV.y);
 
         complex_destroyMany(5, gVVQ, g2VMinus2VQ, g2VMinus2VQInv, frac, tmpF);
         affine_destroy(doubleV);
@@ -169,7 +169,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
 
             affine_destroy(v);
             // \f$v = v + p\f$
-            v = affine_init(vPlusP.x, vPlusP.y);
+            affine_init(&v, vPlusP.x, vPlusP.y);
 
             complex_destroyMany(5, gVPQ, gVPlusQ, gVPlusQInv, frac, tmpF);
             affine_destroy(vPlusP);

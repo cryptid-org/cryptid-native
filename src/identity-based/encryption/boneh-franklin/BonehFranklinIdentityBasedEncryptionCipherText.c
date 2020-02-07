@@ -7,7 +7,7 @@
 void bonehFranklinIdentityBasedEncryptionCiphertext_init(BonehFranklinIdentityBasedEncryptionCiphertext *ciphertextOutput, const AffinePoint cipherU, const unsigned char *const cipherV, const int cipherVLength,
                                      const unsigned char *const cipherW, const int cipherWLength)
 {
-    ciphertextOutput->cipherU = affine_init(cipherU.x, cipherU.y);
+    affine_init(&ciphertextOutput->cipherU, cipherU.x, cipherU.y);
     
     ciphertextOutput->cipherV = (unsigned char*)malloc(cipherVLength * sizeof(unsigned char) + 1);
     memcpy(ciphertextOutput->cipherV, cipherV, cipherVLength + 1);

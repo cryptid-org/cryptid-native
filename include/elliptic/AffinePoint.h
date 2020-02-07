@@ -30,12 +30,12 @@ typedef struct AffinePoint
 } AffinePoint;
 
 /**
- * Returns a new AffinePoint initialized with the specified arbitrary precision coordinates.
+ * Initializes a new AffinePoint with the specified arbitrary precision coordinates.
+ * @param affinePointOutput the AffinePoint to be initialized
  * @param x the \f$x\f$ coordinate
  * @param y the \f$y\f$ coordinate
- * @return a new AffinePoint
  */
-AffinePoint affine_init(const mpz_t x, const mpz_t y);
+void affine_init(AffinePoint *affinePointOutput, const mpz_t x, const mpz_t y);
 
 /**
  * Returns a new AffinePoint initialized with the specified long values.

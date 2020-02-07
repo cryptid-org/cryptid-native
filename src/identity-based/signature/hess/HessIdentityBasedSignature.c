@@ -398,7 +398,7 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     mpz_neg(yNegate, publicParameters.pointPpublic.y);
     mpz_mod(yNegateModP, yNegate, publicParameters.ellipticCurve.fieldOrder);
 
-    negativePointPpublic = affine_init(publicParameters.pointPpublic.x, yNegateModP);
+    affine_init(&negativePointPpublic, publicParameters.pointPpublic.x, yNegateModP);
 
     // Let \f$theta2 = \mathrm{Pairing}(E, p , q, Q_{id}, \f$-P_{pub}\f$)\f$ by applying the modified
     // Tate pairing.

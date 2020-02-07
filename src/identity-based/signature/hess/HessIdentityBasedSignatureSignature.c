@@ -3,7 +3,7 @@
 
 void hessIdentityBasedSignatureSignature_init(HessIdentityBasedSignatureSignature *signatureOutput, const AffinePoint u, const mpz_t v)
 {
-    signatureOutput->u = affine_init(u.x, u.y);
+    affine_init(&signatureOutput->u, u.x, u.y);
     
     mpz_init_set(signatureOutput->v, v);
 }

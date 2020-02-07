@@ -9,15 +9,11 @@
 //   * [Intro-to-IBE] Luther Martin. 2008. Introduction to Identity-Based Encryption (Information Security and Privacy Series) (1 ed.). Artech House, Inc., Norwood, MA, USA. 
 
 
-AffinePoint affine_init(const mpz_t x, const mpz_t y)
+void affine_init(AffinePoint *affinePointOutput, const mpz_t x, const mpz_t y)
 {
-    AffinePoint affinePoint;
-
-    mpz_inits(affinePoint.x, affinePoint.y, NULL);
-    mpz_set(affinePoint.x, x);
-    mpz_set(affinePoint.y, y);
-
-    return affinePoint;
+    mpz_inits(affinePointOutput->x, affinePointOutput->y, NULL);
+    mpz_set(affinePointOutput->x, x);
+    mpz_set(affinePointOutput->y, y);
 }
 
 AffinePoint affine_initLong(const long x, const long y)
@@ -110,7 +106,7 @@ CryptidStatus affine_double(AffinePoint *result, const AffinePoint affinePoint, 
     mpz_sub(y3, mMulx1Subx3, affinePoint.y);
     mpz_mod(y3, y3, ellipticCurve.fieldOrder);
 
-    *result = affine_init(x3, y3);
+    affine_init(result, x3, y3);
 
     mpz_clears(x1PowTwo, threex1PowTwo, num, y1MulTwo, denom, numMulDenom, m, mPowTwo, mPowTwoSubx1, x3, x1Subx3, mMulx1Subx3, y3, NULL);
 
@@ -126,13 +122,13 @@ CryptidStatus affine_add(AffinePoint *result, const AffinePoint affinePoint1, co
     // Adding infinity to a point does not change the point. 
     if(affine_isInfinity(affinePoint1))
     {
-        *result = affine_init(affinePoint2.x, affinePoint2.y);
+        affine_init(result, affinePoint2.x, affinePoint2.y);
         return CRYPTID_SUCCESS;
     }
 
     if(affine_isInfinity(affinePoint2))
     {
-        *result = affine_init(affinePoint1.x, affinePoint1.y);
+        affine_init(result, affinePoint1.x, affinePoint1.y);
         return CRYPTID_SUCCESS;
     }
 
@@ -180,7 +176,7 @@ CryptidStatus affine_add(AffinePoint *result, const AffinePoint affinePoint1, co
     mpz_sub(y3, mMulx1Subx3, affinePoint1.y);
     mpz_mod(y3, y3, ellipticCurve.fieldOrder);
 
-    *result = affine_init(x3, y3);
+    affine_init(result, x3, y3);
 
     mpz_clears(m, num, denom, numMulDenom, y2Suby1, x2Subx1, x2Subx1Mod, x3, y3, mPowTwo, mPowTwoSubx1, x1Subx3, mMulx1Subx3, NULL);
 
@@ -205,7 +201,8 @@ CryptidStatus affine_multiply(AffinePoint *result, const mpz_t s, const AffinePo
         return CRYPTID_SUCCESS;
     }
 
-    AffinePoint pointN = affine_init(affinePoint.x, affinePoint.y);
+    AffinePoint pointN;
+    affine_init(&pointN, affinePoint.x, affinePoint.y);
     // \f$Q = \infty\f$
     AffinePoint pointQ = affine_infinity();
 
@@ -276,8 +273,8 @@ CryptidStatus affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const Affi
     mpz_mod(yNegateModP, yNegate, ellipticCurve.fieldOrder);
 
     // \f$-1 \cdot P = (x, -y) and 1 \cdot P = P\f$.
-    preCalculatedPoints[0] = affine_init(affinePoint.x, yNegateModP);
-    preCalculatedPoints[1] = affine_init(affinePoint.x, affinePoint.y);
+    affine_init(&(preCalculatedPoints[0]), affinePoint.x, yNegateModP);
+    affine_init(&(preCalculatedPoints[1]), affinePoint.x, affinePoint.y);
     mpz_clears(yNegate, yNegateModP, NULL);
 
     int actualIndex = 2;
@@ -307,7 +304,7 @@ CryptidStatus affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const Affi
         mpz_neg(yNegate, preCalculatedPoints[actualIndex + 1].y);
         mpz_mod(yNegateModP, yNegate, ellipticCurve.fieldOrder);
 
-        preCalculatedPoints[actualIndex] = affine_init(preCalculatedPoints[actualIndex + 1].x, yNegateModP);
+        affine_init(&(preCalculatedPoints[actualIndex]), preCalculatedPoints[actualIndex + 1].x, yNegateModP);
 
         actualIndex += 2;
 
@@ -383,7 +380,7 @@ CryptidStatus affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const Affi
             return status;
         }
         affine_destroy(pointQ);
-        pointQ = affine_init(tmp.x, tmp.y);
+        affine_init(&pointQ, tmp.x, tmp.y);
         affine_destroy(tmp);
 
         // If the current value of the NAF form is not 0 continue with the body of the if, 
@@ -405,7 +402,7 @@ CryptidStatus affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const Affi
                 return status;
             }
             affine_destroy(pointQ);
-            pointQ = affine_init(tmp2.x, tmp2.y);
+            affine_init(&pointQ, tmp2.x, tmp2.y);
             affine_destroy(tmp2);
         }
     }
