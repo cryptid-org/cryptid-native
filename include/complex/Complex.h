@@ -130,12 +130,12 @@ void complex_modPow(Complex *result, const Complex complex, const mpz_t exp, con
 
 /**
  * Multiplies a Complex value with an integer.
+ * @param result the result of the multiplication.
  * @param complex a Complex
  * @param s the scalar.
  * @param p the modulus.
- * @return the result of the multiplication.
  */
-Complex complex_modMulScalar(const Complex complex, const mpz_t s, const mpz_t p);
+void complex_modMulScalar(Complex *result, const Complex complex, const mpz_t s, const mpz_t p);
 
 /**
  * Calculates the multiplicate inverse of a Complex with respect to p.

@@ -185,11 +185,10 @@ void complex_modPow(Complex *result, const Complex complex, const mpz_t exp, con
     mpz_clears(baseRealCopy, baseImaginaryCopy, expCopy, expMod, NULL);
 }
 
-Complex complex_modMulScalar(const Complex complex, const mpz_t s, const mpz_t p)
+void complex_modMulScalar(Complex *result, const Complex complex, const mpz_t s, const mpz_t p)
 {
     // Calculated as
     // \f$(r \cdot s \mod p, i \cdot s \mod p)\f$.
-    Complex result;
     mpz_t r, imag;
     mpz_inits(r, imag, NULL);
 
@@ -199,9 +198,8 @@ Complex complex_modMulScalar(const Complex complex, const mpz_t s, const mpz_t p
     mpz_mul(imag, s, complex.imaginary);
     mpz_mod(imag, imag, p);
 
-    complex_initMpz(&result, r, imag);
+    complex_initMpz(result, r, imag);
     mpz_clears(r, imag, NULL);
-    return result;
 }
 
 // The inverse of z is z^{-1} = \frac{1}{z} = \frac{r}{r^2+i^2}-\frac{i}{r^2+i^2}

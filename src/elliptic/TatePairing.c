@@ -40,14 +40,14 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
 
         mpz_set_ui(one, 1);
         complex_initMpz(&tmp, one, bxi);
-        xi = complex_modMulScalar(tmp, axi, ellipticCurve.fieldOrder);
+        complex_modMulScalar(&xi, tmp, axi, ellipticCurve.fieldOrder);
 
         // \f$x^{\prime} = x \cdot xi\f$
         // \f$x \in \f$F_p\f$ | \f$xi\f$ \in \f$F_p^2\f$
         //
         // Here we assume, that we have to convert \f$x\f$ to \f$F_p^2\f$ and then perform the multiplication
         // according to the complex multiplication rules.
-        xprime = complex_modMulScalar(xi, b.x, ellipticCurve.fieldOrder);
+        complex_modMulScalar(&xprime, xi, b.x, ellipticCurve.fieldOrder);
 
         mpz_t zero;
         mpz_init_set_ui(zero, 0);
