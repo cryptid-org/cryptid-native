@@ -16,15 +16,11 @@ void affine_init(AffinePoint *affinePointOutput, const mpz_t x, const mpz_t y)
     mpz_set(affinePointOutput->y, y);
 }
 
-AffinePoint affine_initLong(const long x, const long y)
+void affine_initLong(AffinePoint *affinePointOutput, const long x, const long y)
 {
-    AffinePoint affinePoint;
-    
-    mpz_inits(affinePoint.x, affinePoint.y, NULL);
-    mpz_set_si(affinePoint.x, x);
-    mpz_set_si(affinePoint.y, y);
-
-    return affinePoint;
+    mpz_inits(affinePointOutput->x, affinePointOutput->y, NULL);
+    mpz_set_si(affinePointOutput->x, x);
+    mpz_set_si(affinePointOutput->y, y);
 }
 
 void affine_destroy(AffinePoint affinePoint)
@@ -34,7 +30,11 @@ void affine_destroy(AffinePoint affinePoint)
 
 AffinePoint affine_infinity(void)
 {
-    return affine_initLong(-1, -1);
+    AffinePoint infinity;
+
+    affine_initLong(&infinity, -1, -1);
+
+    return infinity;
 }
 
 int affine_isEquals(const AffinePoint affinePoint1, const AffinePoint affinePoint2)

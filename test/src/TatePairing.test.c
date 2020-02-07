@@ -19,7 +19,8 @@ TEST GF_131_modified_tate_pairing_should_just_work(const long n, const Complex e
     mpz_init_set_ui(mul, n);
     EllipticCurve ec;
     ellipticCurve_initLong(&ec, 0, 1, 131);
-    AffinePoint a = affine_initLong(98, 58);
+    AffinePoint a;
+    affine_initLong(&a, 98, 58);
     AffinePoint b;
     affine_multiply(&b, mul, a, ec);
 

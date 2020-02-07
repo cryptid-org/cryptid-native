@@ -38,12 +38,12 @@ typedef struct AffinePoint
 void affine_init(AffinePoint *affinePointOutput, const mpz_t x, const mpz_t y);
 
 /**
- * Returns a new AffinePoint initialized with the specified long values.
+ * Initializes a new AffinePoint with the specified long values.
+ * @param affinePointOutput the AffinePoint to be initialized
  * @param x the \f$x\f$ coordinate
  * @param y the \f$y\f$ coordinate
- * @return a new AffinePoint
  */
-AffinePoint affine_initLong(const long x, const long y);
+void affine_initLong(AffinePoint *affinePointOutput, const long x, const long y);
 
 /**
  * Frees an AffinePoint. After calling this function on an AffinePoint instance,
