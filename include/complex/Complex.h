@@ -103,12 +103,12 @@ void complex_additiveInverse(Complex *result, const Complex complex, const mpz_t
 
 /**
  * Adds a Complex and an integer with respect to the specified modulus.
+ * @param result the result of the addition
  * @param complex a Complex
  * @param s a scalar
  * @param p the modulus
- * @return the result of the addition
  */
-Complex complex_modAddScalar(const Complex complex, const  mpz_t s, const mpz_t p);
+void complex_modAddScalar(Complex *result, const Complex complex, const  mpz_t s, const mpz_t p);
 
 /**
  * Multiplies two Complex values with respect to the specified modulus.

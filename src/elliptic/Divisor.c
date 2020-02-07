@@ -25,7 +25,7 @@ void divisor_evaluateVertical(Complex *result, const EllipticCurve ec, const Aff
     mpz_neg(axAddInv, a.x);
     mpz_mod(axAddInv, axAddInv, ec.fieldOrder);
 
-    *result = complex_modAddScalar(b.x, axAddInv, ec.fieldOrder);
+    complex_modAddScalar(result, b.x, axAddInv, ec.fieldOrder);
 
     mpz_clear(axAddInv);
 }
@@ -87,7 +87,7 @@ CryptidStatus divisor_evaluateTangent(Complex* result, const EllipticCurve ec, c
     axB = complex_modMulScalar(b.x, aprime, ec.fieldOrder);
     byB = complex_modMulScalar(b.y, bprime, ec.fieldOrder);
     complex_modAdd(&resultPart, axB, byB, ec.fieldOrder);
-    *result = complex_modAddScalar(resultPart, c, ec.fieldOrder);
+    complex_modAddScalar(result, resultPart, c, ec.fieldOrder);
 
     complex_destroyMany(3, axB, byB, resultPart);
     mpz_clears(threeAddInv, minusThree, xasquared, aprime, bprime, bAddInv, bAddInvyA, axA, axAaddInv, c, NULL);
@@ -162,7 +162,7 @@ CryptidStatus divisor_evaluateLine(Complex* result, const EllipticCurve ec, cons
     // \f$r = a \cdot x_B + b \cdot y_B + c\f$
     axb = complex_modMulScalar(b.x, linea, ec.fieldOrder);
     byb = complex_modMulScalar(b.y, lineb, ec.fieldOrder);
-    resultPart = complex_modAddScalar(byb, linec, ec.fieldOrder);
+    complex_modAddScalar(&resultPart, byb, linec, ec.fieldOrder);
     complex_modAdd(result, axb, resultPart, ec.fieldOrder);
 
     mpz_clears(linea, lineb, linebaddinv, q, t, taddinv, linec, NULL);

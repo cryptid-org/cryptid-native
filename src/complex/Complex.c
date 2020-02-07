@@ -103,20 +103,18 @@ void complex_additiveInverse(Complex *result, const Complex complex, const mpz_t
     mpz_clears(newReal, newImaginary, NULL);
 }
 
-Complex complex_modAddScalar(const Complex complex, const mpz_t s, const mpz_t p)
+void complex_modAddScalar(Complex *result, const Complex complex, const mpz_t s, const mpz_t p)
 {
     // Calculated as
     // \f$(r + s \mod p, i)\f$.
-    Complex result;
     mpz_t newReal;
     mpz_init(newReal);
 
     mpz_add(newReal, complex.real, s);
     mpz_mod(newReal, newReal, p);
 
-    complex_initMpz(&result, newReal, complex.imaginary);
+    complex_initMpz(result, newReal, complex.imaginary);
     mpz_clear(newReal);
-    return result;
 }
 
 Complex complex_modMul(const Complex complex1, const Complex complex2, const mpz_t p)
