@@ -279,7 +279,8 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
     }
 
     //Let \f$\mathrm{theta}^{\prime} = \mathrm{theta}^l\f$, which is theta raised to the power of \f$l\f$ in \f$F_p^2\f$.
-    Complex thetaPrime = complex_modPow(theta, l, publicParameters.ellipticCurve.fieldOrder);
+    Complex thetaPrime;
+    complex_modPow(&thetaPrime, theta, l, publicParameters.ellipticCurve.fieldOrder);
 
     // Let \f$z = \mathrm{Canonical}(p, k, 0, \mathrm{theta}^{\prime})\f$, a canonical string
     // representation of {@code theta'}.

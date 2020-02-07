@@ -186,7 +186,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
     mpz_sub_ui(exponentPart, pPow, 1);
     mpz_cdiv_q(exponent, exponentPart, subgroupOrder);
 
-    *result = complex_modPow(f, exponent, ellipticCurve.fieldOrder);
+    complex_modPow(result, f, exponent, ellipticCurve.fieldOrder);
 
     mpz_clears(exponent, pPow, exponentPart, NULL);
     complex_destroy(f);

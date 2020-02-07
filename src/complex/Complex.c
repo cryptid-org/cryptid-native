@@ -138,19 +138,18 @@ void complex_modMul(Complex *result, const Complex complex1, const Complex compl
     mpz_clears(r, i, leftPart, rightPart, NULL);
 }
 
-Complex complex_modPow(const Complex complex, const mpz_t exp, const mpz_t p)
+void complex_modPow(Complex *result, const Complex complex, const mpz_t exp, const mpz_t p)
 {
-    Complex result;
     if(!mpz_cmp_ui(p, 1))
     {
-        complex_initLong(&result, 0, 0);
-        return result;
+        complex_initLong(result, 0, 0);
+        return;
     }
 
     mpz_t baseRealCopy, baseImaginaryCopy, expCopy, expMod;
     mpz_inits(baseRealCopy, baseImaginaryCopy, expCopy, expMod, NULL);
 
-    complex_initLong(&result, 1, 0);
+    complex_initLong(result, 1, 0);
 
     mpz_set(baseRealCopy, complex.real);
     mpz_mod(baseRealCopy, baseRealCopy, p);
@@ -169,9 +168,9 @@ Complex complex_modPow(const Complex complex, const mpz_t exp, const mpz_t p)
         if(!mpz_cmp_ui(expMod, 1))
         {
             Complex tmp;
-            complex_modMul(&tmp, baseCopy, result, p);
-            complex_destroy(result);
-            result = tmp;
+            complex_modMul(&tmp, baseCopy, *result, p);
+            complex_destroy(*result);
+            *result = tmp;
         }
 
         mpz_fdiv_q_2exp(expCopy, expCopy, 1);
@@ -184,8 +183,6 @@ Complex complex_modPow(const Complex complex, const mpz_t exp, const mpz_t p)
 
     complex_destroy(baseCopy);
     mpz_clears(baseRealCopy, baseImaginaryCopy, expCopy, expMod, NULL);
-
-    return result;
 }
 
 Complex complex_modMulScalar(const Complex complex, const mpz_t s, const mpz_t p)

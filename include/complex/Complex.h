@@ -121,12 +121,12 @@ void complex_modMul(Complex *result, const Complex complex1, const Complex compl
 
 /**
  * Raised a Complex value to the specified exponent modulo p.
+ * @param result the result of the exponentiation
  * @param complex the base
  * @param exp the exponent
  * @param p the modulus
- * @return the result of the exponentiation
  */
-Complex complex_modPow(const Complex complex, const mpz_t exp, const mpz_t p);
+void complex_modPow(Complex *result, const Complex complex, const mpz_t exp, const mpz_t p);
 
 /**
  * Multiplies a Complex value with an integer.

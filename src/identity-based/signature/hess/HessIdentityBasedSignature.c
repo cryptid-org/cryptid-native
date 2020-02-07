@@ -237,7 +237,8 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     }
 
     // Let \f$\mathrm{r} = \mathrm{theta}^k\f$, which is theta raised to the power of \f$k\f$ in \f$F_p^2\f$.
-    Complex r = complex_modPow(theta, k, publicParameters.ellipticCurve.fieldOrder);
+    Complex r;
+    complex_modPow(&r, theta, k, publicParameters.ellipticCurve.fieldOrder);
 
     // Let \f$z = \mathrm{Canonical}(p, k, 0, \mathrm{r})\f$, a canonical string
     // representation of {@code r}.
@@ -414,7 +415,8 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     }
 
     // Let \f$\mathrm{theta2}^{\prime} = \mathrm{theta2}^v\f$, which is theta raised to the power of \f$v\f$ in \f$F_p^2\f$.
-    Complex theta2Prime = complex_modPow(theta2, signature.v, publicParameters.ellipticCurve.fieldOrder);
+    Complex theta2Prime;
+    complex_modPow(&theta2Prime, theta2, signature.v, publicParameters.ellipticCurve.fieldOrder);
 
     // Let \f$ r = \mathrm{theta1} \cdot \mathrm{theta2}^{\prime} \f$
     Complex r;
