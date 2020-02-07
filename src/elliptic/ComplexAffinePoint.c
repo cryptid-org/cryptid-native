@@ -95,12 +95,14 @@ CryptidStatus complexAffine_double(ComplexAffinePoint *result, const ComplexAffi
 
     mpz_set_ui(tmp, 3);
 
-    Complex ap1xSquared = complex_modMul(complexAffinePoint.x, complexAffinePoint.x, ellipticCurve.fieldOrder);
+    Complex ap1xSquared;
+    complex_modMul(&ap1xSquared, complexAffinePoint.x, complexAffinePoint.x, ellipticCurve.fieldOrder);
     Complex threeTimesAp1xSquared = complex_modMulScalar(ap1xSquared, tmp, ellipticCurve.fieldOrder);
     Complex num;
     complex_modAddScalar(&num, threeTimesAp1xSquared, ellipticCurve.a, ellipticCurve.fieldOrder);
 
-    Complex m = complex_modMul(num, denom, ellipticCurve.fieldOrder);
+    Complex m;
+    complex_modMul(&m, num, denom, ellipticCurve.fieldOrder);
 
     complex_destroyMany(4, num, threeTimesAp1xSquared, ap1xSquared, denom);
     mpz_clear(tmp);
@@ -109,7 +111,8 @@ CryptidStatus complexAffine_double(ComplexAffinePoint *result, const ComplexAffi
     // \f$x_n = m^{2}-2x\f$
     Complex x2AddInv;
     complex_additiveInverse(&x2AddInv, complexAffinePoint.x, ellipticCurve.fieldOrder);
-    Complex mSquared = complex_modMul(m, m, ellipticCurve.fieldOrder);
+    Complex mSquared;
+    complex_modMul(&mSquared, m, m, ellipticCurve.fieldOrder);
 
     Complex x1AddInv;
     complex_additiveInverse(&x1AddInv, complexAffinePoint.x, ellipticCurve.fieldOrder);
@@ -125,7 +128,8 @@ CryptidStatus complexAffine_double(ComplexAffinePoint *result, const ComplexAffi
     complex_additiveInverse(&xAddInv, xn, ellipticCurve.fieldOrder);
     Complex q;
     complex_modAdd(&q, complexAffinePoint.x, xAddInv, ellipticCurve.fieldOrder);
-    Complex r = complex_modMul(m, q, ellipticCurve.fieldOrder);
+    Complex r;
+    complex_modMul(&r, m, q, ellipticCurve.fieldOrder);
 
     Complex y1AddInv;
     complex_additiveInverse(&y1AddInv, complexAffinePoint.y, ellipticCurve.fieldOrder);
@@ -198,14 +202,16 @@ CryptidStatus complexAffine_add(ComplexAffinePoint *result, const ComplexAffineP
     Complex num;
     complex_modAdd(&num, complexAffinePoint2.y, y1AddInv, ellipticCurve.fieldOrder);
 
-    Complex m = complex_modMul(num, denom, ellipticCurve.fieldOrder);
+    Complex m;
+    complex_modMul(&m, num, denom, ellipticCurve.fieldOrder);
 
     complex_destroyMany(2, denom, num);
 
     // \f$x_n = m^{2}-x_1-x_2\f$
     Complex x2AddInv;
     complex_additiveInverse(&x2AddInv, complexAffinePoint2.x, ellipticCurve.fieldOrder);
-    Complex mSquared = complex_modMul(m, m, ellipticCurve.fieldOrder);
+    Complex mSquared;
+    complex_modMul(&mSquared, m, m, ellipticCurve.fieldOrder);
 
     Complex x1AddInvPlusx2AddInv;
     complex_modAdd(&x1AddInvPlusx2AddInv, x1AddInv, x2AddInv, ellipticCurve.fieldOrder);
@@ -218,7 +224,8 @@ CryptidStatus complexAffine_add(ComplexAffinePoint *result, const ComplexAffineP
     complex_additiveInverse(&xAddInv, xn, ellipticCurve.fieldOrder);
     Complex q;
     complex_modAdd(&q, complexAffinePoint1.x, xAddInv, ellipticCurve.fieldOrder);
-    Complex r = complex_modMul(m, q, ellipticCurve.fieldOrder);
+    Complex r;
+    complex_modMul(&r, m, q, ellipticCurve.fieldOrder);
 
     Complex yn;
     complex_modAdd(&yn, r, y1AddInv, ellipticCurve.fieldOrder);
@@ -315,9 +322,12 @@ int complexAffine_isOnCurve(ComplexAffinePoint point, EllipticCurve ellipticCurv
     // \f$y^2\f$
     // is equal to
     // \f$x^3 + ax + b\f$.
-    Complex ySquared = complex_modMul(point.y, point.y, ellipticCurve.fieldOrder);
-    Complex xSquared = complex_modMul(point.x, point.x, ellipticCurve.fieldOrder);
-    Complex xCubed = complex_modMul(xSquared, point.x, ellipticCurve.fieldOrder);
+    Complex ySquared;
+    complex_modMul(&ySquared, point.y, point.y, ellipticCurve.fieldOrder);
+    Complex xSquared;
+    complex_modMul(&xSquared, point.x, point.x, ellipticCurve.fieldOrder);
+    Complex xCubed;
+    complex_modMul(&xCubed, xSquared, point.x, ellipticCurve.fieldOrder);
 
     Complex ax = complex_modMulScalar(point.x, ellipticCurve.a, ellipticCurve.fieldOrder);
 

@@ -417,7 +417,8 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     Complex theta2Prime = complex_modPow(theta2, signature.v, publicParameters.ellipticCurve.fieldOrder);
 
     // Let \f$ r = \mathrm{theta1} \cdot \mathrm{theta2}^{\prime} \f$
-    Complex r = complex_modMul(theta1, theta2Prime, publicParameters.ellipticCurve.fieldOrder);
+    Complex r;
+    complex_modMul(&r, theta1, theta2Prime, publicParameters.ellipticCurve.fieldOrder);
 
     // Verify that the signature (@code v) equals with the now computed value.
     // The code is the same as in the sign method.

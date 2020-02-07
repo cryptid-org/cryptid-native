@@ -114,11 +114,11 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
             complex_destroyMany(3, f, gVVQ, g2VMinus2VQ);
             return status;
         }
-        frac = complex_modMul(gVVQ, g2VMinus2VQInv, ellipticCurve.fieldOrder);
-        tmpF = complex_modMul(f, f, ellipticCurve.fieldOrder);
+        complex_modMul(&frac, gVVQ, g2VMinus2VQInv, ellipticCurve.fieldOrder);
+        complex_modMul(&tmpF, f, f, ellipticCurve.fieldOrder);
 
         complex_destroy(f);
-        f = complex_modMul(tmpF, frac, ellipticCurve.fieldOrder);
+        complex_modMul(&f, tmpF, frac, ellipticCurve.fieldOrder);
 
         affine_destroy(v);
         // \f$v = 2v\f$
@@ -161,8 +161,8 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
                 complex_destroyMany(3, f, gVPQ, gVPlusQ);
                 return status;
             }
-            frac = complex_modMul(gVPQ, gVPlusQInv, ellipticCurve.fieldOrder);
-            tmpF = complex_modMul(f, frac, ellipticCurve.fieldOrder);
+            complex_modMul(&frac, gVPQ, gVPlusQInv, ellipticCurve.fieldOrder);
+            complex_modMul(&tmpF, f, frac, ellipticCurve.fieldOrder);
 
             complex_destroy(f);
             complex_initMpz(&f, tmpF.real, tmpF.imaginary);

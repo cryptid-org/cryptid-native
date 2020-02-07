@@ -112,12 +112,12 @@ void complex_modAddScalar(Complex *result, const Complex complex, const  mpz_t s
 
 /**
  * Multiplies two Complex values with respect to the specified modulus.
+ * @param result the result of the multiplication.
  * @param complex1 a Complex to multiply
  * @param complex2 a Complex to multiply
  * @param p the modulus.
- * @return the result of the multiplication.
  */
-Complex complex_modMul(const Complex complex1, const Complex complex2, const mpz_t p);
+void complex_modMul(Complex *result, const Complex complex1, const Complex complex2, const mpz_t p);
 
 /**
  * Raised a Complex value to the specified exponent modulo p.

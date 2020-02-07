@@ -117,11 +117,10 @@ void complex_modAddScalar(Complex *result, const Complex complex, const mpz_t s,
     mpz_clear(newReal);
 }
 
-Complex complex_modMul(const Complex complex1, const Complex complex2, const mpz_t p)
+void complex_modMul(Complex *result, const Complex complex1, const Complex complex2, const mpz_t p)
 {
     // Calculated as
     // \f$((r_1 \cdot r_2 - i_1 \cdot i_2) \mod p, (i_1 \cdot r_2 + r_1 \cdot i_2) \mod p)\f$.
-    Complex result;
     mpz_t r, i, leftPart, rightPart;
     mpz_inits(r, i, leftPart, rightPart, NULL);
 
@@ -135,9 +134,8 @@ Complex complex_modMul(const Complex complex1, const Complex complex2, const mpz
     mpz_add(i, leftPart, rightPart);
     mpz_mod(i, i, p);
 
-    complex_initMpz(&result, r, i);
+    complex_initMpz(result, r, i);
     mpz_clears(r, i, leftPart, rightPart, NULL);
-    return result;
 }
 
 Complex complex_modPow(const Complex complex, const mpz_t exp, const mpz_t p)
@@ -170,14 +168,16 @@ Complex complex_modPow(const Complex complex, const mpz_t exp, const mpz_t p)
         mpz_mod_ui(expMod, expCopy, 2);
         if(!mpz_cmp_ui(expMod, 1))
         {
-            Complex tmp = complex_modMul(baseCopy, result, p);
+            Complex tmp;
+            complex_modMul(&tmp, baseCopy, result, p);
             complex_destroy(result);
             result = tmp;
         }
 
         mpz_fdiv_q_2exp(expCopy, expCopy, 1);
 
-        Complex tmp = complex_modMul(baseCopy, baseCopy, p);
+        Complex tmp;
+        complex_modMul(&tmp, baseCopy, baseCopy, p);
         complex_destroy(baseCopy);
         baseCopy = tmp;
     }
