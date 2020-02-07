@@ -15,13 +15,10 @@ void complexAffine_init(ComplexAffinePoint *complexAffinePointOutput, const Comp
     complex_initMpz(&complexAffinePointOutput->y, y.real, y.imaginary);
 }
 
-ComplexAffinePoint complexAffine_initLong(const long xr, const long xi, const long yr, const long yi)
+void complexAffine_initLong(ComplexAffinePoint *complexAffinePointOutput, const long xr, const long xi, const long yr, const long yi)
 {
-    ComplexAffinePoint complexAffinePoint;
-    complexAffinePoint.x = complex_initLong(xr, xi);
-    complexAffinePoint.y = complex_initLong(yr, yi);
-
-    return complexAffinePoint;
+    complexAffinePointOutput->x = complex_initLong(xr, xi);
+    complexAffinePointOutput->y = complex_initLong(yr, yi);
 }
 
 void complexAffine_destroy(ComplexAffinePoint complexAffinePoint)
@@ -31,7 +28,11 @@ void complexAffine_destroy(ComplexAffinePoint complexAffinePoint)
 
 ComplexAffinePoint complexAffine_infinity(void)
 {
-    return complexAffine_initLong(-1, 0, -1, 0);
+    ComplexAffinePoint infinity;
+
+    complexAffine_initLong(&infinity, -1, 0, -1, 0);
+
+    return infinity;
 }
 
 int complexAffine_isEquals(const ComplexAffinePoint complexAffinePoint1, const ComplexAffinePoint complexAffinePoint2)

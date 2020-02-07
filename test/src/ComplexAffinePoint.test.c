@@ -42,8 +42,10 @@ TEST multiplication_should_just_work(const ComplexAffinePoint p, const long s, c
 SUITE(multiplication_suite)
 {
     {
-        ComplexAffinePoint p = complexAffine_initLong(0, 0, 1, 0);
-        ComplexAffinePoint expected = complexAffine_initLong(0, 0, 4, 0);
+        ComplexAffinePoint p;
+        complexAffine_initLong(&p, 0, 0, 1, 0);
+        ComplexAffinePoint expected;
+        complexAffine_initLong(&expected, 0, 0, 4, 0);
 
         RUN_TESTp(multiplication_should_just_work, p, 2, expected);
 
@@ -52,8 +54,10 @@ SUITE(multiplication_suite)
     }
 
     {
-        ComplexAffinePoint p = complexAffine_initLong(0, 0, 4, 0);
-        ComplexAffinePoint expected = complexAffine_initLong(0, 0, 1, 0);
+        ComplexAffinePoint p;
+        complexAffine_initLong(&p, 0, 0, 4, 0);
+        ComplexAffinePoint expected;
+        complexAffine_initLong(&expected, 0, 0, 1, 0);
 
         RUN_TESTp(multiplication_should_just_work, p, 2, expected);
 
@@ -62,7 +66,8 @@ SUITE(multiplication_suite)
     }
 
     {
-        ComplexAffinePoint p = complexAffine_initLong(2, 0, 2, 0);
+        ComplexAffinePoint p;
+        complexAffine_initLong(&p, 2, 0, 2, 0);
         ComplexAffinePoint expected = complexAffine_infinity();
 
         RUN_TESTp(multiplication_should_just_work, p, 0, expected);
@@ -75,7 +80,8 @@ SUITE(multiplication_suite)
 TEST adding_a_point_to_itself_with_y_equals_to_zero_should_yield_infinity(void)
 {
     // Given
-    ComplexAffinePoint p = complexAffine_initLong(1, 0, 0, 0);
+    ComplexAffinePoint p;
+    complexAffine_initLong(&p, 1, 0, 0, 0);
     EllipticCurve ec;
     ellipticCurve_initLong(&ec, 0, 1, 5);
 
@@ -133,7 +139,8 @@ TEST adding_infinity_to_infinity_should_result_in_infinity(void)
 TEST infinity_should_act_as_the_identity_element_for_addition(void)
 {
     // Given
-    ComplexAffinePoint p = complexAffine_initLong(0, 0, 1, 0);
+    ComplexAffinePoint p;
+    complexAffine_initLong(&p, 0, 0, 1, 0);
     EllipticCurve ec;
     ellipticCurve_initLong(&ec, 0, 1, 5);
     ComplexAffinePoint infty = complexAffine_infinity();
@@ -210,15 +217,28 @@ SUITE(addition_suite)
     RUN_TEST(infinity_should_act_as_the_identity_element_for_addition);
 
     {
-        ComplexAffinePoint data[21] = {
-            complexAffine_initLong(0, 0, 1, 0), complexAffine_initLong(0, 0, 1, 0), complexAffine_initLong(0, 0, 4, 0),
-            complexAffine_initLong(0, 0, 4, 0), complexAffine_initLong(0, 0, 4, 0), complexAffine_initLong(0, 0, 1, 0),
-            complexAffine_initLong(4, 0, 0, 0), complexAffine_initLong(0, 0, 4, 0), complexAffine_initLong(2, 0, 3, 0),
-            complexAffine_initLong(0, 0, 4, 0), complexAffine_initLong(4, 0, 0, 0), complexAffine_initLong(2, 0, 3, 0),
-            complexAffine_initLong(0, 0, 1, 0), complexAffine_initLong(0, 0, 4, 0), complexAffine_infinity(),
-            complexAffine_initLong(2, 0, 2, 0), complexAffine_initLong(0, 0, 4, 0), complexAffine_initLong(4, 0, 0, 0),
-            complexAffine_initLong(0, 0, 4, 0), complexAffine_initLong(2, 0, 2, 0), complexAffine_initLong(4, 0, 0, 0),
-        };
+        ComplexAffinePoint data[21];
+        complexAffine_initLong(&(data[0]), 0, 0, 1, 0);
+        complexAffine_initLong(&(data[1]), 0, 0, 1, 0);
+        complexAffine_initLong(&(data[2]), 0, 0, 4, 0);
+        complexAffine_initLong(&(data[3]), 0, 0, 4, 0);
+        complexAffine_initLong(&(data[4]), 0, 0, 4, 0);
+        complexAffine_initLong(&(data[5]), 0, 0, 1, 0);
+        complexAffine_initLong(&(data[6]), 4, 0, 0, 0);
+        complexAffine_initLong(&(data[7]), 0, 0, 4, 0);
+        complexAffine_initLong(&(data[8]), 2, 0, 3, 0);
+        complexAffine_initLong(&(data[9]), 0, 0, 4, 0);
+        complexAffine_initLong(&(data[10]), 4, 0, 0, 0);
+        complexAffine_initLong(&(data[11]), 2, 0, 3, 0);
+        complexAffine_initLong(&(data[12]), 0, 0, 1, 0);
+        complexAffine_initLong(&(data[13]), 0, 0, 4, 0);
+        data[14] = complexAffine_infinity();
+        complexAffine_initLong(&(data[15]), 2, 0, 2, 0);
+        complexAffine_initLong(&(data[16]), 0, 0, 4, 0);
+        complexAffine_initLong(&(data[17]), 4, 0, 0, 0);
+        complexAffine_initLong(&(data[18]), 0, 0, 4, 0);
+        complexAffine_initLong(&(data[19]), 2, 0, 2, 0);
+        complexAffine_initLong(&(data[20]), 4, 0, 0, 0);
 
         for (int i = 0; i < 7; ++i)
         {

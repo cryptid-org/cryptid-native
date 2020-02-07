@@ -26,20 +26,21 @@ typedef struct ComplexAffinePoint
 
 /**
  * Initializes a new ComplexAffinePoint with the specified coordinates.
+ * @param complexAffinePointOutput the ComplexAffinePoint to be initialized
  * @param x the \f$x\f$ coordinate
  * @param y the \f$y\f$ coordinate
  */
 void complexAffine_init(ComplexAffinePoint *complexAffinePointOutput, const Complex x, const Complex y);
 
 /**
- * Returns a new ComplexAffinePoint initialized with the specified long values.
+ * Initializes a new ComplexAffinePoint initialized with the specified long values.
+ * @param complexAffinePointOutput the ComplexAffinePoint to be initialized
  * @param xr the real part of the \f$x\f$ coordinate
  * @param xi the imaginary part of the \f$x\f$ coordinate
  * @param yr the real part of the \f$y\f$ coordinate
  * @param yi the imaginary part of the \f$y\f$ coordinate
- * @return a new ComplexAffinePoint
  */
-ComplexAffinePoint complexAffine_initLong(const long xr, const long xi, const long yr, const long yi);
+void complexAffine_initLong(ComplexAffinePoint *complexAffinePointOutput, const long xr, const long xi, const long yr, const long yi);
 
 /**
  * Frees a ComplexAffinePoint. After calling this function on a ComplexAffinePoint instance, 
