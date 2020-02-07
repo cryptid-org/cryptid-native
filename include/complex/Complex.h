@@ -95,11 +95,11 @@ void complex_modAdd(Complex *result, const Complex complex1, const Complex compl
 
 /**
  * Calculates the additive inverse of the specified Complex with respect to the specified modulus.
+ * @param result the additive inverse
  * @param complex the Complex to invert
  * @param p the modulus
- * @return the additive inverse
  */
-Complex complex_additiveInverse(const Complex complex, const mpz_t p);
+void complex_additiveInverse(Complex *result, const Complex complex, const mpz_t p);
 
 /**
  * Adds a Complex and an integer with respect to the specified modulus.
