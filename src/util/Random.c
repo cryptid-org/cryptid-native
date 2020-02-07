@@ -9,22 +9,18 @@ static const unsigned int MOST_SIGNIFICANT_WORD_FIRST = 1;
 static const unsigned int NATIVE_ENDIANNESS  = 0;
 static const unsigned int NO_SKIP = 0;
 
-unsigned int random_unsignedIntOfLength(const unsigned int numberOfBits)
+void random_unsignedIntOfLength(unsigned int *randomOutput, const unsigned int numberOfBits)
 {
-    unsigned int result;
-
     unsigned int numberOfBytes = (numberOfBits + 7) / 8;
 
-    unsigned char buffer[sizeof(result)] = {0};
+    unsigned char buffer[sizeof(unsigned int)] = {0};
 
     cryptid_randomBytes((unsigned char*) &buffer, numberOfBytes);
 
     unsigned int unneededBits = 8 * numberOfBytes - numberOfBits;
     buffer[numberOfBytes - 1] &= (1 << (8 - unneededBits)) - 1;
 
-    result = *((unsigned int*)&buffer);
-
-    return result;
+    *randomOutput = *((unsigned int*)&buffer);
 }
 
 //Using the method suggested by Johannes A. Buchmann in Introduction to Cryptography Second Edition Section 4.6
@@ -36,7 +32,7 @@ unsigned int random_unsignedIntInRange(const unsigned int range)
 
     do
     {
-        result = random_unsignedIntOfLength(rangeBitLength);
+        random_unsignedIntOfLength(&result, rangeBitLength);
     }while(result > range);
 
     return result;
