@@ -95,12 +95,19 @@ TEST RFC_5091_tate_pairing_should_work(void)
 SUITE(tate_pairing_suite)
 {
     {
-        Complex expected[11] = {
-            complex_initLong(28, 93), complex_initLong(126, 99), complex_initLong(85, 80), 
-            complex_initLong(49, 58), complex_initLong(39, 24), complex_initLong(39, 107),
-            complex_initLong(49, 73), complex_initLong(85, 51), complex_initLong(126, 32),
-            complex_initLong(28, 38), complex_initLong(1, 0)
-        };
+        Complex expected[11];
+        
+        complex_initLong(&(expected[0]), 28, 93);
+        complex_initLong(&(expected[1]), 126, 99);
+        complex_initLong(&(expected[2]), 85, 80);
+        complex_initLong(&(expected[3]), 49, 58);
+        complex_initLong(&(expected[4]), 39, 24);
+        complex_initLong(&(expected[5]), 39, 107);
+        complex_initLong(&(expected[6]), 49, 73);
+        complex_initLong(&(expected[7]), 85, 51);
+        complex_initLong(&(expected[8]), 126, 32);
+        complex_initLong(&(expected[9]), 28, 38);
+        complex_initLong(&(expected[10]), 1, 0);
 
         for (long n = 1; n <= 11; ++n)
         {

@@ -25,7 +25,8 @@ TEST complex_init_should_be_zero(void)
 TEST complex_initLong_should_work(void)
 {
     // When
-    Complex c = complex_initLong(3, 4);
+    Complex c;
+    complex_initLong(&c, 3, 4);
 
     // Then
     ASSERT_EQ(mpz_cmp_ui(c.real, 3), 0);
@@ -71,7 +72,8 @@ TEST zero_zero_should_act_as_the_additive_identity_element_for_any_p(void)
     Complex zero;
     complex_init(&zero);
 
-    Complex c = complex_initLong(4, 3);
+    Complex c;
+    complex_initLong(&c, 4, 3);
 
     mpz_t p;
     mpz_init_set_ui(p, 5);
@@ -93,9 +95,12 @@ TEST zero_zero_should_act_as_the_additive_identity_element_for_any_p(void)
 TEST modAdd_should_be_commutative(void)
 {
     // Given
-    Complex a = complex_initLong(4, 3);
-    Complex b = complex_initLong(3, 1);
-    Complex expected = complex_initLong(2, 4);
+    Complex a;
+    complex_initLong(&a, 4, 3);
+    Complex b;
+    complex_initLong(&b, 3, 1);
+    Complex expected;
+    complex_initLong(&expected, 2, 4);
 
     mpz_t p;
     mpz_init_set_ui(p, 5);
@@ -139,8 +144,10 @@ SUITE(additive_inverse_suite)
     mpz_init_set_ui(p, 5);
 
     {
-        Complex c = complex_initLong(4, 3);
-        Complex expected = complex_initLong(1, 2);
+        Complex c;
+        complex_initLong(&c, 4, 3);
+        Complex expected;
+        complex_initLong(&expected, 1, 2);
 
         RUN_TESTp(additiveInverse_should_return_the_additive_inverse, c, expected, p);
 
@@ -148,8 +155,10 @@ SUITE(additive_inverse_suite)
     }
 
     {
-        Complex c = complex_initLong(0, 0);
-        Complex expected = complex_initLong(0, 0);
+        Complex c;
+        complex_initLong(&c, 0, 0);
+        Complex expected;
+        complex_initLong(&expected, 0, 0);
 
         RUN_TESTp(additiveInverse_should_return_the_additive_inverse, c, expected, p);
 
@@ -162,7 +171,8 @@ SUITE(additive_inverse_suite)
 TEST the_power_of_1_0_is_1_0_for_any_p(void)
 {
     // Given
-    Complex base = complex_initLong(1, 0);
+    Complex base;
+    complex_initLong(&base, 1, 0);
     mpz_t exp, p;
 
     mpz_init_set_ui(exp, 5);
@@ -201,8 +211,10 @@ SUITE(modulo_power_suite)
     mpz_init_set_ui(p, 7);
     
     {
-        Complex base = complex_initLong(4, 1);
-        Complex expected = complex_initLong(3, 5);
+        Complex base;
+        complex_initLong(&base, 4, 1);
+        Complex expected;
+        complex_initLong(&expected, 3, 5);
         mpz_t exp;
         mpz_init_set_ui(exp, 3);
 
@@ -213,8 +225,10 @@ SUITE(modulo_power_suite)
     }
     
     {
-        Complex base = complex_initLong(0, 0);
-        Complex expected = complex_initLong(0, 0);
+        Complex base;
+        complex_initLong(&base, 0, 0);
+        Complex expected;
+        complex_initLong(&expected, 0, 0);
         mpz_t exp;
         mpz_init_set_ui(exp, 8);
 
@@ -225,8 +239,10 @@ SUITE(modulo_power_suite)
     }
 
     {
-        Complex base = complex_initLong(4, 3);
-        Complex expected = complex_initLong(6, 1);
+        Complex base;
+        complex_initLong(&base, 4, 3);
+        Complex expected;
+        complex_initLong(&expected, 6, 1);
         mpz_t exp;
         mpz_init_set_ui(exp, 5);
 
@@ -246,8 +262,10 @@ TEST GF_5_modMul_should_just_work(const long scalar, const long expectedReal, co
     mpz_init_set_ui(p, 5);
     mpz_init_set_ui(s, scalar);
 
-    Complex c = complex_initLong(2, 3);
-    Complex expected = complex_initLong(expectedReal, expectedImaginary);
+    Complex c;
+    complex_initLong(&c, 2, 3);
+    Complex expected;
+    complex_initLong(&expected, expectedReal, expectedImaginary);
 
     // When
     Complex result = complex_modMulScalar(c, s, p);
@@ -276,7 +294,8 @@ TEST the_multiplicative_inverse_of_1_0_should_be_1_0_for_any_p(void)
     mpz_t p;
     mpz_init_set_ui(p, 5);
 
-    Complex id = complex_initLong(1, 0);
+    Complex id;
+    complex_initLong(&id, 1, 0);
     Complex result;
 
     // When
@@ -298,7 +317,8 @@ TEST zero_zero_does_not_have_a_multiplicative_inverse(void)
     mpz_t p;
     mpz_init_set_ui(p, 5);
 
-    Complex zero = complex_initLong(0, 0);
+    Complex zero;
+    complex_initLong(&zero, 0, 0);
     Complex result;
 
     // When
@@ -316,11 +336,13 @@ TEST zero_zero_does_not_have_a_multiplicative_inverse(void)
 TEST GF_7_multiplying_an_element_with_its_multiplicative_inverse_should_yield_the_identity_element(const long real, const long imaginary)
 {
     // Given
-    Complex id = complex_initLong(1, 0);
+    Complex id;
+    complex_initLong(&id, 1, 0);
     mpz_t p;
     mpz_init_set_ui(p, 7);
 
-    Complex c = complex_initLong(real, imaginary);
+    Complex c;
+    complex_initLong(&c, real, imaginary);
 
     // When
     Complex inverse;

@@ -16,16 +16,12 @@ void complex_initMpz(Complex *complexOutput, const mpz_t real, const mpz_t imagi
     mpz_set(complexOutput->imaginary, imaginary);
 }
 
-Complex complex_initLong(const long real, const long imaginary)
+void complex_initLong(Complex *complexOutput, const long real, const long imaginary)
 {
-    Complex complex;
+    mpz_inits(complexOutput->real, complexOutput->imaginary, NULL);
 
-    mpz_inits(complex.real, complex.imaginary, NULL);
-
-    mpz_set_si(complex.real, real);
-    mpz_set_si(complex.imaginary, imaginary);
-
-    return complex;
+    mpz_set_si(complexOutput->real, real);
+    mpz_set_si(complexOutput->imaginary, imaginary);
 }
 
 Complex complex_initMpzLong(const mpz_t real, const long imaginary)
@@ -160,15 +156,17 @@ Complex complex_modMul(const Complex complex1, const Complex complex2, const mpz
 
 Complex complex_modPow(const Complex complex, const mpz_t exp, const mpz_t p)
 {
+    Complex result;
     if(!mpz_cmp_ui(p, 1))
     {
-        return complex_initLong(0, 0);
+        complex_initLong(&result, 0, 0);
+        return result;
     }
 
     mpz_t baseRealCopy, baseImaginaryCopy, expCopy, expMod;
     mpz_inits(baseRealCopy, baseImaginaryCopy, expCopy, expMod, NULL);
 
-    Complex result = complex_initLong(1, 0);
+    complex_initLong(&result, 1, 0);
 
     mpz_set(baseRealCopy, complex.real);
     mpz_mod(baseRealCopy, baseRealCopy, p);

@@ -66,7 +66,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
     if(complexAffine_isInfinity(q))
     {
         complexAffine_destroy(q);
-        *result = complex_initLong(1, 0);
+        complex_initLong(result, 1, 0);
         return CRYPTID_SUCCESS;
     }
 
@@ -76,7 +76,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
     AffinePoint v, doubleV, vPlusP;
 
     // 1. Set \f$f\f$ = 1 and \f$v\f$ = \f$p\f$
-    f = complex_initLong(1, 0);
+    complex_initLong(&f, 1, 0);
     affine_init(&v, p.x, p.y);
     
     // 2. {@code for i = t - 1 to 0 do:}

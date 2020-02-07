@@ -17,8 +17,8 @@ void complexAffine_init(ComplexAffinePoint *complexAffinePointOutput, const Comp
 
 void complexAffine_initLong(ComplexAffinePoint *complexAffinePointOutput, const long xr, const long xi, const long yr, const long yi)
 {
-    complexAffinePointOutput->x = complex_initLong(xr, xi);
-    complexAffinePointOutput->y = complex_initLong(yr, yi);
+    complex_initLong(&complexAffinePointOutput->x, xr, xi);
+    complex_initLong(&complexAffinePointOutput->y, yr, yi);
 }
 
 void complexAffine_destroy(ComplexAffinePoint complexAffinePoint)
@@ -61,7 +61,8 @@ CryptidStatus complexAffine_double(ComplexAffinePoint *result, const ComplexAffi
         return CRYPTID_SUCCESS;
     }
 
-    Complex complexZero = complex_initLong(0, 0);
+    Complex complexZero;
+    complex_initLong(&complexZero, 0, 0);
 
     // If the \f$y\f$ coordinate is equal to complex zero, then the result is infinity.
     if(complex_isEquals(complexAffinePoint.y, complexZero))

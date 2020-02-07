@@ -16,7 +16,7 @@ void divisor_evaluateVertical(Complex *result, const EllipticCurve ec, const Aff
 
     if(affine_isInfinity(a))
     {
-        *result = complex_initLong(1, 0);
+        complex_initLong(result, 1, 0);
         return;
     }
 
@@ -43,7 +43,7 @@ CryptidStatus divisor_evaluateTangent(Complex* result, const EllipticCurve ec, c
     // Special cases
     if(affine_isInfinity(a))
     {
-        *result = complex_initLong(1, 0);
+        complex_initLong(result, 1, 0);
         return CRYPTID_SUCCESS;
     }
 

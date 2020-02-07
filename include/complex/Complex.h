@@ -39,12 +39,12 @@ void complex_init(Complex *complexOutput);
 void complex_initMpz(Complex *complexOutput, const mpz_t real, const mpz_t imaginary);
 
 /**
- * Returns a new Complex initialized with the specified long values.
+ * Initializes a new Complex with the specified long values.
+ * @param complexOutput the Complex number to be initialized
  * @param real the real part
  * @param imaginary the imaginary part
- * @return a new complex
  */
-Complex complex_initLong(const long real, const long imaginary);
+void complex_initLong(Complex *complexOutput, const long real, const long imaginary);
 
 /**
  * Returns a new Complex initialized with an arbitrary precision real part and a long imaginary part.
