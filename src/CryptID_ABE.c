@@ -332,11 +332,86 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
             }
             secretkey->DjA[i] = &DjA;
 
+            secretkey->attributes[i] = &attributes[i];
+
+            secretkey->pubkey = masterkey->pubkey;
+
             mpz_clear(rj);
         }
     }
 
     mpz_clears(one, beta_inverse, NULL);
+
+    return CRYPTID_SUCCESS;
+}
+
+CryptidStatus Lagrange_coefficient(mpz_t result, mpz_t i, AccessTree** nodes)
+{
+
+    return CRYPTID_SUCCESS;
+}
+
+CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* secretkey, AccessTree* node, Complex* result)
+{
+    if(isLeaf(node))
+    {
+        int found = -1;
+        for(int i = 0; i < MAX_ATTRIBUTES; i++)
+        {
+            if(secretkey->attributes[i] != '\0')
+            {
+                if(secretkey->attributes[i] == node->attribute)
+                {
+                    found = i;
+                    break;
+                }
+            }
+        }
+        if(i >= 0)
+        {
+            Complex pairValue;
+            CryptidStatus status = tate_performPairing(&pairValue, 2, secretkey->pubkey->ellipticCurve, secretkey->pubkey->q, secretkey->Dj[i], node->Cy);
+            if(status)
+            {
+                return status;
+            }
+
+            Complex pairValueA;
+            status = tate_performPairing(&pairValue, 2, secretkey->pubkey->ellipticCurve, secretkey->pubkey->q, secretkey->DjA[i], node->CyA);
+            if(status)
+            {
+                return status;
+            }
+
+            Complex pairValueA_inverse;
+            status = complex_multiplicativeInverse(&pairValueA_inverse, pairValueA, secretkey->pubkey->ellipticCurve.fieldOrder);
+            if(status)
+            {
+                return status;
+            }
+
+            result = complex_modMul(pairValue, pairValueA_inverse, secretkey->pubkey->ellipticCurve.fieldOrder);
+        }
+    }
+    else
+    {
+        Complex* Sx[MAX_CHILDREN];
+        for(i = 0; i < MAX_CHILDREN; i++)
+        {
+            if(node->children[i] != NULL)
+            {
+                Complex F = NULL;
+                DecryptNode_ABE(encrypted, secretkey, node->children[i], &F);
+                Sx[i] = F;
+            }
+        }
+    }
+    
+    return CRYPTID_SUCCESS;
+}
+
+CryptidStatus cryptid_decrypt_ABE(char **result, EncryptedMessage_ABE* encrypted, SecretKey_ABE* secretkey)
+{
 
     return CRYPTID_SUCCESS;
 }
