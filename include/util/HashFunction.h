@@ -21,7 +21,7 @@ typedef enum HashFunction
 
 CryptidStatus hashFunction_getHashSize(int *hashSizeOutput, const HashFunction hashFunction);
 
-CryptidStatus hashFunction_hash(const HashFunction hashFunction, const unsigned char *const message, const size_t messageLength, unsigned char* hashResult);
+CryptidStatus hashFunction_hash(unsigned char* hashResult, const HashFunction hashFunction, const unsigned char *const message, const size_t messageLength);
 
 CryptidStatus hashFunction_initForSecurityLevel(HashFunction *hashFunctionOutput, const SecurityLevel securityLevel);
 

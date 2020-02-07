@@ -232,7 +232,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
     // Let \f$t = \mathrm{hashfcn}(m)\f$, a {@code hashlen}-octet string resulting from applying
     // the {@code hashfcn} algorithm to the input \f$m\f$.
     unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, (unsigned char*) message, messageLength, t);
+    hashFunction_hash(t, publicParameters.hashFunction, (unsigned char*) message, messageLength);
 
     // Let \f$l = \mathrm{HashToRange}(rho || t, q, \mathrm{hashfcn})\f$, an integer in the range
     // \f$0\f$ to \f$q - 1\f$ resulting from applying {@code HashToRange}
@@ -291,7 +291,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
     // Let \f$w = \mathrm{hashfcn}(z)\f$ using the {@code hashfcn} hashing algorithm, the
     // result of which is a {@code hashlen}-octet string.
     unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, z, zLength, w);
+    hashFunction_hash(w, publicParameters.hashFunction, z, zLength);
 
     // Let \f$V = w \oplus rho\f$, which is the {@code hashlen}-octet long bit-wise XOR
     // of \f$w\f$ and {@code rho}.
@@ -379,7 +379,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint
     // Let \f$w = \mathrm{hashfcn}(z)$ using the {@code hashfcn} hashing algorithm, the result
     // of which is a {@code hashlen}-octet string.
     unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, z, zLength, w);
+    hashFunction_hash(w, publicParameters.hashFunction, z, zLength);
 
     // Let \f$rho = w \oplus V\f$, the bit-wise XOR of \f$w\f$ and \f$V\f$.
     unsigned char* rho = (unsigned char*)calloc(hashLen + 1, sizeof(unsigned char));
@@ -403,7 +403,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint
 
     // Let \f$t = \mathrm{hashfcn}(m)\f$ using the \f$hashfcn\f$ algorithm.
     unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, (unsigned char*) m, ciphertext.cipherWLength, t);
+    hashFunction_hash(t, publicParameters.hashFunction, (unsigned char*) m, ciphertext.cipherWLength);
 
     // Let \f$l = \mathrm{HashToRange}(rho || t, q, \mathrm{hashfcn}) using HashToRange
     // on the \f$(2 * \mathrm{hashlen})\f$-octet concatenation of {@code rho} and

@@ -28,7 +28,7 @@ CryptidStatus hashFunction_getHashSize(int *hashSizeOutput, const HashFunction h
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus hashFunction_hash(const HashFunction hashFunction, const unsigned char *const message, const size_t messageLength, unsigned char* hashResult)
+CryptidStatus hashFunction_hash(unsigned char* hashResult, const HashFunction hashFunction, const unsigned char *const message, const size_t messageLength)
 {
     if(hashResult == NULL)
     {
