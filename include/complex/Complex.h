@@ -86,12 +86,12 @@ void complex_destroyMany(const size_t argumentCount, ...);
 
 /**
  * Adds two Complex valus with respect to the specified modulus.
+ * @param result the result of the addition
  * @param complex1 a value to add
  * @param complex2 a value to add
  * @param p the modulus
- * @return the result of the addition
  */
-Complex complex_modAdd(const Complex complex1, const Complex complex2, const mpz_t p);
+void complex_modAdd(Complex *result, const Complex complex1, const Complex complex2, const mpz_t p);
 
 /**
  * Calculates the additive inverse of the specified Complex with respect to the specified modulus.

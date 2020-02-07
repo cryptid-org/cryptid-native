@@ -79,8 +79,10 @@ TEST zero_zero_should_act_as_the_additive_identity_element_for_any_p(void)
     mpz_init_set_ui(p, 5);
 
     // When
-    Complex result1 = complex_modAdd(c, zero, p);
-    Complex result2 = complex_modAdd(zero, c, p);
+    Complex result1;
+    complex_modAdd(&result1, c, zero, p);
+    Complex result2;
+    complex_modAdd(&result2, zero, c, p);
 
     // Then
     ASSERT(complex_isEquals(c, result1));
@@ -106,8 +108,10 @@ TEST modAdd_should_be_commutative(void)
     mpz_init_set_ui(p, 5);
 
     // When
-    Complex result1 = complex_modAdd(a, b, p);
-    Complex result2 = complex_modAdd(b, a, p);
+    Complex result1;
+    complex_modAdd(&result1, a, b, p);
+    Complex result2;
+    complex_modAdd(&result2, b, a, p);
 
     // Then
     ASSERT(complex_isEquals(expected, result1));

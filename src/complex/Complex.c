@@ -69,11 +69,10 @@ void complex_destroyMany(const size_t argumentCount, ...)
     va_end(args);
 }
 
-Complex complex_modAdd(const Complex complex1, const Complex complex2, const mpz_t p)
+void complex_modAdd(Complex *result, const Complex complex1, const Complex complex2, const mpz_t p)
 {
     // Calculated as
     // \f$(r_1 + r_2 \mod p, c_1 + c_2 \mod p)\f$.
-    Complex result;
     mpz_t newReal, newImaginary;
     mpz_inits(newReal, newImaginary, NULL);
 
@@ -83,9 +82,8 @@ Complex complex_modAdd(const Complex complex1, const Complex complex2, const mpz
     mpz_add(newImaginary, complex1.imaginary, complex2.imaginary);
     mpz_mod(newImaginary, newImaginary, p);
 
-    complex_initMpz(&result, newReal, newImaginary);
+    complex_initMpz(result, newReal, newImaginary);
     mpz_clears(newReal, newImaginary, NULL);
-    return result;
 }
 
 Complex complex_additiveInverse(const Complex complex, const mpz_t p)

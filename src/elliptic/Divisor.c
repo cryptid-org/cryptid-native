@@ -86,7 +86,7 @@ CryptidStatus divisor_evaluateTangent(Complex* result, const EllipticCurve ec, c
     // \f$r = a^{\prime} \cdot x_B + b^{\prime} \cdot y_B + c\f$
     axB = complex_modMulScalar(b.x, aprime, ec.fieldOrder);
     byB = complex_modMulScalar(b.y, bprime, ec.fieldOrder);
-    resultPart = complex_modAdd(axB, byB, ec.fieldOrder);
+    complex_modAdd(&resultPart, axB, byB, ec.fieldOrder);
     *result = complex_modAddScalar(resultPart, c, ec.fieldOrder);
 
     complex_destroyMany(3, axB, byB, resultPart);
@@ -163,7 +163,7 @@ CryptidStatus divisor_evaluateLine(Complex* result, const EllipticCurve ec, cons
     axb = complex_modMulScalar(b.x, linea, ec.fieldOrder);
     byb = complex_modMulScalar(b.y, lineb, ec.fieldOrder);
     resultPart = complex_modAddScalar(byb, linec, ec.fieldOrder);
-    *result = complex_modAdd(axb, resultPart, ec.fieldOrder);
+    complex_modAdd(result, axb, resultPart, ec.fieldOrder);
 
     mpz_clears(linea, lineb, linebaddinv, q, t, taddinv, linec, NULL);
     complex_destroyMany(3, axb, byb, resultPart);
