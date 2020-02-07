@@ -67,7 +67,7 @@ TEST RFC_5091_tate_pairing_should_work(void)
     {
         mpz_t one;
         mpz_init_set_ui(one, 1);
-        ec = ellipticCurve_init(zero, one, p);
+        ellipticCurve_init(&ec, zero, one, p);
         mpz_clear(one);
     }
 

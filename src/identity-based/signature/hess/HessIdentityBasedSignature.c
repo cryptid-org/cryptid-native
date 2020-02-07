@@ -61,7 +61,8 @@ CryptidStatus cryptid_ibs_hess_setup(const SecurityLevel securityLevel, HessIden
     mpz_init_set_ui(zero, 0);
     mpz_init_set_ui(one, 1);
 
-    EllipticCurve ec = ellipticCurve_init(zero, one, p);
+    EllipticCurve ec;
+    ellipticCurve_init(&ec, zero, one, p);
 
     mpz_clears(zero, one, NULL);
 
