@@ -23,7 +23,7 @@ TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel secu
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    CryptidStatus status = cryptid_ibe_bonehFranklin_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = cryptid_ibe_bonehFranklin_setup(masterSecret, publicParameters, securityLevel);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
@@ -63,7 +63,7 @@ TEST fresh_boneh_franklin_ibe_setup_different_identities(const SecurityLevel sec
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    CryptidStatus status = cryptid_ibe_bonehFranklin_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = cryptid_ibe_bonehFranklin_setup(masterSecret, publicParameters, securityLevel);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 

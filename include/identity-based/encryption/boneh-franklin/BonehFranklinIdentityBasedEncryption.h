@@ -15,14 +15,14 @@
 /**
  * Establishes a master secret and public parameters for a given security level. The master secret (as its name suggests)
  * should be kept secret, while the public parameters can be distributed among the clients.
- * @param securityLevel the desired security level
+ * @param masterSecret Out parameter which will hold the master secret. Must be mpz_init'd and mpz_clear'd by the caller.
  * @param publicParameters Pointer in which the public parameters will be stored. If the return value is CRYPTID_SUCCESS
  *                         then it will point to correctly filled BonehFranklinIdentityBasedEncryptionPublicParameters instance. Note, that the
  *                         q field must be mpz_init'd and thus mpz_clear'd be the caller.
- * @param masterSecret Out parameter which will hold the master secret. Must be mpz_init'd and mpz_clear'd by the caller.
+ * @param securityLevel the desired security level
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_ibe_bonehFranklin_setup(const SecurityLevel securityLevel, BonehFranklinIdentityBasedEncryptionPublicParameters* publicParameters, mpz_t masterSecret);
+CryptidStatus cryptid_ibe_bonehFranklin_setup(mpz_t masterSecret, BonehFranklinIdentityBasedEncryptionPublicParameters* publicParameters, const SecurityLevel securityLevel);
 
 /**
  * Extracts the private key corresponding to a given identity string.
