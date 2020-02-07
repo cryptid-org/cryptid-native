@@ -48,12 +48,12 @@ void canonical(unsigned char **result, int *const resultLength, const mpz_t p, c
 
 /**
  * Keyed cryptographic pseudo-random bytes generator.
+ * @param result out parameter stroring a {@code b}-octet pseudo-random string
  * @param b The length of the result. Must be less than or equal to the number of bytes in the output of the hash function.
  * @param p a string that will key the generator
  * @param pLength the length of the string
  * @param hashFunction the hashFunction to be used
- * @return a {@code b}-octet pseudo-random string
  */
-unsigned char* hashBytes(const int b, const unsigned char *const p, const int pLength, const HashFunction hashFunction);
+void hashBytes(unsigned char **result, const int b, const unsigned char *const p, const int pLength, const HashFunction hashFunction);
 
 #endif

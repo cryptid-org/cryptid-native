@@ -304,7 +304,8 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
     // XOR of \f$m\f$ with the first \f$|m|\f$ octets of the pseudo-random bytes
     // produced by {@code HashBytes} with seed {@code rho}.
     unsigned char* cipherW = (unsigned char*)calloc(messageLength + 1, sizeof(unsigned char));
-    unsigned char* hashedBytes = hashBytes(messageLength, rho, hashLen, publicParameters.hashFunction);
+    unsigned char* hashedBytes;
+    hashBytes(&hashedBytes, messageLength, rho, hashLen, publicParameters.hashFunction);
     for(size_t i = 0; i < messageLength; i++) 
     {
         cipherW[i] = hashedBytes[i] ^ message[i];
@@ -390,7 +391,8 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint
     // XOR of \f$m\f$ with the first \f$|W|\f$ octets of the pseudo-random bytes
     // produced by HashBytes with seed {@code rho}.
     char* m = (char*)calloc(ciphertext.cipherWLength + 1, sizeof(char));
-    unsigned char* hashedBytes = hashBytes(ciphertext.cipherWLength, rho, hashLen, publicParameters.hashFunction);
+    unsigned char* hashedBytes;
+    hashBytes(&hashedBytes, ciphertext.cipherWLength, rho, hashLen, publicParameters.hashFunction);
     for(size_t i = 0; i < ciphertext.cipherWLength; i++) 
     {
         m[i] = hashedBytes[i] ^ ciphertext.cipherW[i];

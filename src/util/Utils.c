@@ -219,11 +219,11 @@ void canonical(unsigned char **result, int *const resultLength, const mpz_t p, c
     *resultLength = outputSize;
 }
 
-unsigned char* hashBytes(const int b, const unsigned char *const p, const int pLength, const HashFunction hashFunction)
+void hashBytes(unsigned char **result, const int b, const unsigned char *const p, const int pLength, const HashFunction hashFunction)
 {
     // Implementation of Algorithm 4.2.1 (HashBytes) in [RFC-5091].
 
-    unsigned char* result = (unsigned char*)calloc(b + 1, sizeof(unsigned char));
+    *result = (unsigned char*)calloc(b + 1, sizeof(unsigned char));
 
     // Let {@code hashlen{} be the number of octets comprising the output of {@code hashfcn}.
     int hashLen;
@@ -273,7 +273,7 @@ unsigned char* hashBytes(const int b, const unsigned char *const p, const int pL
         {
             if(generatedOctets + j < b)
             {
-                result[generatedOctets + j] = resultPart[j];
+                (*result)[generatedOctets + j] = resultPart[j];
             }
             else
             {
@@ -284,11 +284,10 @@ unsigned char* hashBytes(const int b, const unsigned char *const p, const int pL
         generatedOctets += hashLen;
     }
 
-    result[b] = '\0';
+    (*result)[b] = '\0';
 
     free(k);
     free(h);
     free(concat);
     free(resultPart);
-    return result;
 }
