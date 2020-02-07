@@ -25,12 +25,12 @@ void ellipticCurve_init(EllipticCurve *ellipticCurveOutput, const mpz_t a, const
 
 /**
  * Returns a new EllipticCurve instance initialized longs.
+ * @param ellipticCurveOutput the EllipticCurve to be initialized
  * @param a coefficient \f$a\f$
  * @param b coefficient \f$b\f$
  * @param fieldOrder the order of the finite field
- * @return a new EllipticCurve
  */
-EllipticCurve ellipticCurve_initLong(const long a, const long b, const long fieldOrder);
+void ellipticCurve_initLong(EllipticCurve *ellipticCurveOutput, const long a, const long b, const long fieldOrder);
 
 /**
  * Frees an EllipticCurve.

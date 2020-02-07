@@ -14,7 +14,8 @@ TEST multiplication_should_just_work(const ComplexAffinePoint p, const long s, c
     // Given
     mpz_t scalar;
     mpz_init_set_ui(scalar, s);
-    EllipticCurve ec = ellipticCurve_initLong(0, 1, 5);
+    EllipticCurve ec;
+    ellipticCurve_initLong(&ec, 0, 1, 5);
 
     // When
     ComplexAffinePoint result;
@@ -75,7 +76,8 @@ TEST adding_a_point_to_itself_with_y_equals_to_zero_should_yield_infinity(void)
 {
     // Given
     ComplexAffinePoint p = complexAffine_initLong(1, 0, 0, 0);
-    EllipticCurve ec = ellipticCurve_initLong(0, 1, 5);
+    EllipticCurve ec;
+    ellipticCurve_initLong(&ec, 0, 1, 5);
 
     // When
     ComplexAffinePoint result;
@@ -103,7 +105,8 @@ TEST adding_infinity_to_infinity_should_result_in_infinity(void)
 {
     // Given
     ComplexAffinePoint infty = complexAffine_infinity();
-    EllipticCurve ec = ellipticCurve_initLong(0, 1, 5);
+    EllipticCurve ec;
+    ellipticCurve_initLong(&ec, 0, 1, 5);
 
     // When
     ComplexAffinePoint result;
@@ -131,7 +134,8 @@ TEST infinity_should_act_as_the_identity_element_for_addition(void)
 {
     // Given
     ComplexAffinePoint p = complexAffine_initLong(0, 0, 1, 0);
-    EllipticCurve ec = ellipticCurve_initLong(0, 1, 5);
+    EllipticCurve ec;
+    ellipticCurve_initLong(&ec, 0, 1, 5);
     ComplexAffinePoint infty = complexAffine_infinity();
 
     // When
@@ -176,7 +180,8 @@ TEST infinity_should_act_as_the_identity_element_for_addition(void)
 TEST addition_on_non_special_cases_should_work_correctly(const ComplexAffinePoint a, const ComplexAffinePoint b, const ComplexAffinePoint expected)
 {
     // Given
-    EllipticCurve ec = ellipticCurve_initLong(0, 1, 5);
+    EllipticCurve ec;
+    ellipticCurve_initLong(&ec, 0, 1, 5);
 
     // When
     ComplexAffinePoint result;

@@ -13,7 +13,8 @@ TEST multiplication_should_just_work(const AffinePoint p, const long s, const Af
     // Given
     mpz_t scalar;
     mpz_init_set_ui(scalar, s);
-    EllipticCurve ec = ellipticCurve_initLong(0, 1, 5);
+    EllipticCurve ec;
+    ellipticCurve_initLong(&ec, 0, 1, 5);
 
     // When
     AffinePoint result;
@@ -42,7 +43,8 @@ TEST wnafmultiplication_should_just_work(const AffinePoint p, const long s, cons
     // Given
     mpz_t scalar;
     mpz_init_set_ui(scalar, s);
-    EllipticCurve ec = ellipticCurve_initLong(0, 1, 5);
+    EllipticCurve ec;
+    ellipticCurve_initLong(&ec, 0, 1, 5);
 
     // When
     AffinePoint result;
@@ -136,7 +138,8 @@ TEST adding_a_point_to_itself_with_y_equals_to_zero_should_yield_infinity(void)
 {
     // Given
     AffinePoint p = affine_initLong(1, 0);
-    EllipticCurve ec = ellipticCurve_initLong(0, 1, 5);
+    EllipticCurve ec;
+    ellipticCurve_initLong(&ec, 0, 1, 5);
 
     // When
     AffinePoint result;
@@ -164,7 +167,8 @@ TEST adding_infinity_to_infinity_should_result_in_infinity(void)
 {
     // Given
     AffinePoint infty = affine_infinity();
-    EllipticCurve ec = ellipticCurve_initLong(0, 1, 5);
+    EllipticCurve ec;
+    ellipticCurve_initLong(&ec, 0, 1, 5);
 
     // When
     AffinePoint result;
@@ -192,7 +196,8 @@ TEST infinity_should_act_as_the_identity_element_for_addition(void)
 {
     // Given
     AffinePoint p = affine_initLong(0, 1);
-    EllipticCurve ec = ellipticCurve_initLong(0, 1, 5);
+    EllipticCurve ec;
+    ellipticCurve_initLong(&ec, 0, 1, 5);
     AffinePoint infty = affine_infinity();
 
     // When
@@ -237,7 +242,8 @@ TEST infinity_should_act_as_the_identity_element_for_addition(void)
 TEST addition_on_non_special_cases_should_work_correctly(const AffinePoint a, const AffinePoint b, const AffinePoint expected)
 {
     // Given
-    EllipticCurve ec = ellipticCurve_initLong(0, 1, 5);
+    EllipticCurve ec;
+    ellipticCurve_initLong(&ec, 0, 1, 5);
 
     // When
     AffinePoint result;
