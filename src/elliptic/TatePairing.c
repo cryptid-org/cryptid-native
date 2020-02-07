@@ -54,7 +54,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
         Complex bY;
         complex_initMpz(&bY, b.y, zero);
 
-        q = complexAffine_init(xprime, bY);
+        complexAffine_init(&q, xprime, bY);
 
         complex_destroy(bY);
         mpz_clear(zero);

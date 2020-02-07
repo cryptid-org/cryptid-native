@@ -9,12 +9,10 @@
 //   * [Intro-to-IBE] Luther Martin. 2008. Introduction to Identity-Based Encryption (Information Security and Privacy Series) (1 ed.). Artech House, Inc., Norwood, MA, USA. 
 
 
-ComplexAffinePoint complexAffine_init(const Complex x, const Complex y)
+void complexAffine_init(ComplexAffinePoint *complexAffinePointOutput, const Complex x, const Complex y)
 {
-    ComplexAffinePoint complexAffinePoint;
-    complex_initMpz(&complexAffinePoint.x, x.real, x.imaginary);
-    complex_initMpz(&complexAffinePoint.y, y.real, y.imaginary);
-    return complexAffinePoint;
+    complex_initMpz(&complexAffinePointOutput->x, x.real, x.imaginary);
+    complex_initMpz(&complexAffinePointOutput->y, y.real, y.imaginary);
 }
 
 ComplexAffinePoint complexAffine_initLong(const long xr, const long xi, const long yr, const long yi)
@@ -123,7 +121,7 @@ CryptidStatus complexAffine_double(ComplexAffinePoint *result, const ComplexAffi
     Complex y1AddInv = complex_additiveInverse(complexAffinePoint.y, ellipticCurve.fieldOrder);
     Complex yn = complex_modAdd(r, y1AddInv, ellipticCurve.fieldOrder);
 
-    *result = complexAffine_init(xn, yn);
+    complexAffine_init(result, xn, yn);
 
 
     complex_destroyMany(11, yn, r, q, xAddInv, xn, x1AddInvPlusx2AddInv, mSquared, x2AddInv, m, x1AddInv, y1AddInv);
@@ -139,13 +137,13 @@ CryptidStatus complexAffine_add(ComplexAffinePoint *result, const ComplexAffineP
     // Adding infinity to a point does not change the point. 
     if(complexAffine_isInfinity(complexAffinePoint1))
     {
-        *result = complexAffine_init(complexAffinePoint2.x, complexAffinePoint2.y);
+        complexAffine_init(result, complexAffinePoint2.x, complexAffinePoint2.y);
         return CRYPTID_SUCCESS;
     }
 
     if(complexAffine_isInfinity(complexAffinePoint2))
     {
-        *result = complexAffine_init(complexAffinePoint1.x, complexAffinePoint1.y);
+        complexAffine_init(result, complexAffinePoint1.x, complexAffinePoint1.y);
         return CRYPTID_SUCCESS;
     }
 
@@ -204,7 +202,7 @@ CryptidStatus complexAffine_add(ComplexAffinePoint *result, const ComplexAffineP
 
     Complex yn = complex_modAdd(r, y1AddInv, ellipticCurve.fieldOrder);
 
-    *result = complexAffine_init(xn, yn);
+    complexAffine_init(result, xn, yn);
 
 
     complex_destroyMany(11, yn, r, q, xAddInv, xn, x1AddInvPlusx2AddInv, mSquared, x2AddInv, m, x1AddInv, y1AddInv);
@@ -236,7 +234,8 @@ CryptidStatus complexAffine_multiply(ComplexAffinePoint *result, const mpz_t s, 
         return CRYPTID_SUCCESS;
     }
 
-    ComplexAffinePoint pointN = complexAffine_init(complexAffinePoint.x, complexAffinePoint.y);
+    ComplexAffinePoint pointN;
+    complexAffine_init(&pointN, complexAffinePoint.x, complexAffinePoint.y);
     // \f$Q = \infty\f$
     ComplexAffinePoint pointQ = complexAffine_infinity();
 
