@@ -23,7 +23,7 @@ TEST fresh_hess_ibs_setup_matching_identities(const SecurityLevel securityLevel,
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    CryptidStatus status = cryptid_ibs_hess_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = cryptid_ibs_hess_setup(masterSecret, publicParameters, securityLevel);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
@@ -60,7 +60,7 @@ TEST fresh_hess_ibs_setup_different_identities(const SecurityLevel securityLevel
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    CryptidStatus status = cryptid_ibs_hess_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = cryptid_ibs_hess_setup(masterSecret, publicParameters, securityLevel);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
@@ -97,7 +97,7 @@ TEST fresh_hess_ibs_setup_wrong_signature(const SecurityLevel securityLevel, con
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    CryptidStatus status = cryptid_ibs_hess_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = cryptid_ibs_hess_setup(masterSecret, publicParameters, securityLevel);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
