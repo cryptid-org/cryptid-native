@@ -39,33 +39,48 @@ CryptidStatus hashFunction_hash(const HashFunction hashFunction, const unsigned 
     {
         case hashFunction_SHA1:
             SHA1_OneCall(message, messageLength, hashResult);
-            return CRYPTID_SUCCESS;
+            break;
         case hashFunction_SHA224:
             SHA224_OneCall(message, messageLength, hashResult);
-            return CRYPTID_SUCCESS;
+            break;
         case hashFunction_SHA256:
             SHA256_OneCall(message, messageLength, hashResult);
-            return CRYPTID_SUCCESS;
+            break;
         case hashFunction_SHA384:
             SHA384_OneCall(message, messageLength, hashResult);
-            return CRYPTID_SUCCESS;
+            break;
         case hashFunction_SHA512:
             SHA512_OneCall(message, messageLength,hashResult);
-            return CRYPTID_SUCCESS;
+            break;
         default:
             return CRPYTID_UNKNOWN_HASH_TYPE_ERROR;
     }
+
+    return CRYPTID_SUCCESS;
 }
 
-HashFunction hashFunction_initForSecurityLevel(const SecurityLevel securityLevel)
+CryptidStatus hashFunction_initForSecurityLevel(HashFunction *hashFunctionOutput, const SecurityLevel securityLevel)
 {
     switch(securityLevel)
     {
-        case LOWEST: return hashFunction_SHA1;
-        case LOW: return hashFunction_SHA224;
-        case MEDIUM: return hashFunction_SHA256;
-        case HIGH: return hashFunction_SHA384;
-        case HIGHEST: return hashFunction_SHA512;
-        default: return -1;
+        case LOWEST:
+            *hashFunctionOutput = hashFunction_SHA1;
+            break;
+        case LOW:
+            *hashFunctionOutput = hashFunction_SHA224;
+            break;
+        case MEDIUM:
+            *hashFunctionOutput = hashFunction_SHA256;
+            break;
+        case HIGH:
+            *hashFunctionOutput = hashFunction_SHA384;
+            break;
+        case HIGHEST:
+            *hashFunctionOutput = hashFunction_SHA512;
+            break;
+        default:
+            return CRPYTID_UNKNOWN_HASH_TYPE_ERROR;
     }
+
+    return CRYPTID_SUCCESS;
 }

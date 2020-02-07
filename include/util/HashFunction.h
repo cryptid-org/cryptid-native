@@ -23,6 +23,6 @@ CryptidStatus hashFunction_getHashSize(int *hashSizeOutput, const HashFunction h
 
 CryptidStatus hashFunction_hash(const HashFunction hashFunction, const unsigned char *const message, const size_t messageLength, unsigned char* hashResult);
 
-HashFunction hashFunction_initForSecurityLevel(const SecurityLevel securityLevel);
+CryptidStatus hashFunction_initForSecurityLevel(HashFunction *hashFunctionOutput, const SecurityLevel securityLevel);
 
 #endif

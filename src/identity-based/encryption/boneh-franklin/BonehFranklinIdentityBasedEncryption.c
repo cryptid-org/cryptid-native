@@ -126,7 +126,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(const SecurityLevel securityLevel,
     mpz_set(publicParameters->q, q);
     publicParameters->pointP = pointP;
     publicParameters->pointPpublic = pointPpublic;
-    publicParameters->hashFunction = hashFunction_initForSecurityLevel(securityLevel);
+    hashFunction_initForSecurityLevel(&publicParameters->hashFunction, securityLevel);
 
     mpz_set(masterSecret, s);
 
