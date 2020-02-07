@@ -241,7 +241,8 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     // Let \f$z = \mathrm{Canonical}(p, k, 0, \mathrm{r})\f$, a canonical string
     // representation of {@code r}.
     int zLength;
-    unsigned char* z = canonical(&zLength, publicParameters.ellipticCurve.fieldOrder, r, 1);
+    unsigned char* z;
+    canonical(&z, &zLength, publicParameters.ellipticCurve.fieldOrder, r, 1);
 
     // Let \f$w = \mathrm{hashfcn}(z)\f$ using the {@code hashfcn} hashing algorithm, the
     // result of which is a {@code hashlen}-octet string.
@@ -420,7 +421,8 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     // Verify that the signature (@code v) equals with the now computed value.
     // The code is the same as in the sign method.
     int zLength;
-    unsigned char* z = canonical(&zLength, publicParameters.ellipticCurve.fieldOrder, r, 1);
+    unsigned char* z;
+    canonical(&z, &zLength, publicParameters.ellipticCurve.fieldOrder, r, 1);
 
     unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
     hashFunction_hash(publicParameters.hashFunction, z, zLength, w);

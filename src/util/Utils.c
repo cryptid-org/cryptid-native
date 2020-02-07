@@ -123,7 +123,7 @@ CryptidStatus hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve
     return CRYPTID_SUCCESS;
 }
 
-unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v, const int order)
+void canonical(unsigned char **result, int *const resultLength, const mpz_t p, const Complex v, const int order)
 {
     // Implementation of Algorithm 4.3.2 (Canonical1) in [RFC-5091].
 
@@ -137,7 +137,7 @@ unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v
     char * realPartHexString = mpz_get_str(NULL, 16, v.real);
     char * imagPartHexString = mpz_get_str(NULL, 16, v.imaginary);
 
-    unsigned char* result = (unsigned char*)calloc(outputSize, sizeof(unsigned char));
+    *result = (unsigned char*)calloc(outputSize, sizeof(unsigned char));
     unsigned char* resultHexString = (unsigned char*)calloc(2 * outputSize + 1,sizeof(unsigned char));
     int index = 0;
 
@@ -208,7 +208,7 @@ unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v
     unsigned char* pos = resultHexString;
     for(size_t i = 0; i < outputSize; i++)
     {
-        sscanf((char*) pos, "%2hhx", result + i);
+        sscanf((char*) pos, "%2hhx", *result + i);
         pos += 2;
     }
     
@@ -217,7 +217,6 @@ unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v
     free(imagPartHexString);
     free(resultHexString);
     *resultLength = outputSize;
-    return result;
 }
 
 unsigned char* hashBytes(const int b, const unsigned char *const p, const int pLength, const HashFunction hashFunction)

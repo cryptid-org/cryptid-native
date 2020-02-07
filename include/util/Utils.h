@@ -38,13 +38,13 @@ CryptidStatus hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve
 
 /**
  * Canonically represents elements of an extension field \f$F_p^2.\f$
+ * @param result out parameter storing the resulting string of size \f$2 \cdot \mathrm{Ceiling}(\frac{\log(p)}{8})\f$ octets. SHOULD NOT BE INITIALIZED
  * @param resultLength out parameter storing the length of the resulting string
  * @param p an integer congruent to \f$3\f$ modulo \f$4\f$
  * @param v an element of \f$F_p^2\f$
  * @param order an ordering parameter that can be {@code 0} or {@code 1}
- * @return a string of size \f$2 \cdot \mathrm{Ceiling}(\frac{\log(p)}{8})\f$ octets
  */
-unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v, const int order);
+void canonical(unsigned char **result, int *const resultLength, const mpz_t p, const Complex v, const int order);
 
 /**
  * Keyed cryptographic pseudo-random bytes generator.
