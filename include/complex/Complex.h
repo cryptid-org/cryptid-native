@@ -55,12 +55,12 @@ void complex_initLong(Complex *complexOutput, const long real, const long imagin
 void complex_initMpzLong(Complex *complexOutput, const mpz_t real, const long imaginary);
 
 /**
- * Returns a new Complex initialized with a long real part and ann arbitrary precision imaginary part.
+ * Initializes a new Complex with a long real part and ann arbitrary precision imaginary part.
+ * @param complexOutput the Complex number to be initialized
  * @param real the real part
  * @param imaginary the imaginary part
- * @return a new complex.
  */
-Complex complex_initLongMpz(const long real, const mpz_t imaginary);
+void complex_initLongMpz(Complex *complexOutput, const long real, const mpz_t imaginary);
 
 /**
  * Checks if two Complex instances hold the same values.
