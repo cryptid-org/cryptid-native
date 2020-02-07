@@ -132,7 +132,8 @@ SUITE(add_suite)
 TEST additiveInverse_should_return_the_additive_inverse(const Complex complex, const Complex expected, const mpz_t p)
 {
     // When
-    Complex result = complex_additiveInverse(complex, p);
+    Complex result;
+    complex_additiveInverse(&result, complex, p);
 
     // Then
     ASSERT(complex_isEquals(result, expected));
@@ -183,7 +184,8 @@ TEST the_power_of_1_0_is_1_0_for_any_p(void)
     mpz_init_set_ui(p, 5);
 
     // When
-    Complex result = complex_modPow(base, exp, p);
+    Complex result;
+    complex_modPow(&result, base, exp, p);
 
     // Then
     ASSERT(complex_isEquals(result, base));
@@ -197,7 +199,8 @@ TEST the_power_of_1_0_is_1_0_for_any_p(void)
 TEST the_modulo_power_of_complex_numbers_should_work_well(const Complex base, const mpz_t exp, const mpz_t p, const Complex expected)
 {
     // When
-    Complex result = complex_modPow(base, exp, p);
+    Complex result;
+    complex_modPow(&result,base, exp, p);
 
     // Then
     ASSERT(complex_isEquals(result, expected));
@@ -272,7 +275,8 @@ TEST GF_5_modMul_should_just_work(const long scalar, const long expectedReal, co
     complex_initLong(&expected, expectedReal, expectedImaginary);
 
     // When
-    Complex result = complex_modMulScalar(c, s, p);
+    Complex result;
+    complex_modMulScalar(&result, c, s, p);
 
     // Then
     ASSERT(complex_isEquals(result, expected));
@@ -354,7 +358,8 @@ TEST GF_7_multiplying_an_element_with_its_multiplicative_inverse_should_yield_th
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    Complex result = complex_modMul(c, inverse, p);
+    Complex result;
+    complex_modMul(&result, c, inverse, p);
 
     // Then
     ASSERT(complex_isEquals(result, id));
