@@ -24,18 +24,14 @@ void random_unsignedIntOfLength(unsigned int *randomOutput, const unsigned int n
 }
 
 //Using the method suggested by Johannes A. Buchmann in Introduction to Cryptography Second Edition Section 4.6
-unsigned int random_unsignedIntInRange(const unsigned int range)
+void random_unsignedIntInRange(unsigned int *randomOutput, const unsigned int range)
 {
-    unsigned int result;
-
     unsigned int rangeBitLength = (int)log2(range)+1;
 
     do
     {
-        random_unsignedIntOfLength(&result, rangeBitLength);
-    }while(result > range);
-
-    return result;
+        random_unsignedIntOfLength(randomOutput, rangeBitLength);
+    }while(*randomOutput > range);
 }
 
 void random_mpzOfLength(mpz_t result, const unsigned int numberOfBits)
@@ -72,7 +68,8 @@ CryptidStatus random_solinasPrime(mpz_t result, const unsigned int numberOfBits,
     {
         lastrandom = random;
 
-        random = random_unsignedIntInRange(numberOfBits - (lastrandom + 1)) + lastrandom;
+        random_unsignedIntInRange(&random, numberOfBits - (lastrandom + 1));
+        random += lastrandom;
         for (unsigned int i = random; i > lastrandom; i--)
         {
             mpz_ui_pow_ui(result, 2, numberOfBits);

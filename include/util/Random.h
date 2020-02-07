@@ -16,10 +16,10 @@ void random_unsignedIntOfLength(unsigned int *randomOutput, const unsigned int n
 
 /**
  * Generates a cryptographically secure random unsigned integer between zero and {@code range} inclusive.
+ * @param randomOutput the generated random unsigned integer
  * @param range the upper limit of the generation
- * @return a random unsigned integer
  */
-unsigned int random_unsignedIntInRange(const unsigned int range);
+void random_unsignedIntInRange(unsigned int *randomOutput, const unsigned int range);
 
 /**
  * Generates a cryptographically secure arbitrary precision integer of the specified bitlength.
