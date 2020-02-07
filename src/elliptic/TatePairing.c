@@ -104,7 +104,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
             affine_destroy(doubleV);
             return status;
         }
-        g2VMinus2VQ = divisor_evaluateVertical(ellipticCurve, doubleV, q);
+        divisor_evaluateVertical(&g2VMinus2VQ, ellipticCurve, doubleV, q);
         status = complex_multiplicativeInverse(&g2VMinus2VQInv, g2VMinus2VQ, ellipticCurve.fieldOrder);
         if(status)
         {
@@ -150,7 +150,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
                 return status;
             }
 
-            gVPlusQ = divisor_evaluateVertical(ellipticCurve, vPlusP, q);
+            divisor_evaluateVertical(&gVPlusQ, ellipticCurve, vPlusP, q);
 
             status = complex_multiplicativeInverse(&gVPlusQInv, gVPlusQ, ellipticCurve.fieldOrder);
             if(status)

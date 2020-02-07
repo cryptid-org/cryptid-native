@@ -7,18 +7,17 @@
 //  * [RFC-5091] Xavier Boyen, Luther Martin. 2007. RFC 5091. Identity-Based Cryptography Standard (IBCS) #1: Supersingular Curve Implementations of the BF and BB1 Cryptosystems
 
 
-Complex divisor_evaluateVertical(const EllipticCurve ec, const AffinePoint a, const ComplexAffinePoint b)
+void divisor_evaluateVertical(Complex *result, const EllipticCurve ec, const AffinePoint a, const ComplexAffinePoint b)
 {
     // Implementation of Algorithm 3.4.1 in [RFC-5091].
 
     // Let \f$r\f$ denote the result of the operation:
     // \f$r = x_B - x_A\f$
-    Complex result;
 
     if(affine_isInfinity(a))
     {
-        result = complex_initLong(1, 0);
-        return result;
+        *result = complex_initLong(1, 0);
+        return;
     }
 
     mpz_t axAddInv;
@@ -26,11 +25,9 @@ Complex divisor_evaluateVertical(const EllipticCurve ec, const AffinePoint a, co
     mpz_neg(axAddInv, a.x);
     mpz_mod(axAddInv, axAddInv, ec.fieldOrder);
 
-    result = complex_modAddScalar(b.x, axAddInv, ec.fieldOrder);
+    *result = complex_modAddScalar(b.x, axAddInv, ec.fieldOrder);
 
     mpz_clear(axAddInv);
-
-    return result;
 }
 
 CryptidStatus divisor_evaluateTangent(Complex* result, const EllipticCurve ec, const AffinePoint a, const ComplexAffinePoint b)
@@ -52,7 +49,7 @@ CryptidStatus divisor_evaluateTangent(Complex* result, const EllipticCurve ec, c
 
     if(!mpz_cmp_ui(a.y, 0))
     {
-        *result = divisor_evaluateVertical(ec, a, b);
+        divisor_evaluateVertical(result, ec, a, b);
         return CRYPTID_SUCCESS;
     }
 
@@ -111,7 +108,7 @@ CryptidStatus divisor_evaluateLine(Complex* result, const EllipticCurve ec, cons
     // Special cases
     if(affine_isInfinity(a))
     {
-        *result = divisor_evaluateVertical(ec, aprime, b);
+        divisor_evaluateVertical(result, ec, aprime, b);
         return CRYPTID_SUCCESS;
     }
 
@@ -124,7 +121,7 @@ CryptidStatus divisor_evaluateLine(Complex* result, const EllipticCurve ec, cons
 
     if(affine_isInfinity(aprime) || affine_isInfinity(aPlusAPrime))
     {
-        *result = divisor_evaluateVertical(ec, a, b);
+        divisor_evaluateVertical(result, ec, a, b);
         affine_destroy(aPlusAPrime);
         return CRYPTID_SUCCESS;
     }

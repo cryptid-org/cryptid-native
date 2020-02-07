@@ -10,12 +10,12 @@
 
 /**
  * Evaluates the divisor of a vertical line on a Type-1 elliptic curve.
+ * @param result the resulting element of \f$F_p^2\f$ that is the divisor of the vertical line going through \f$A\f$ evaluated at \f$B\f$
  * @param ec the elliptic curve to operate on
  * @param a a point in \f$E(F_p)\f$
  * @param b a point \f$E(F_p^2)\f$
- * @return an element of \f$F_p^2\f$ that is the divisor of the vertical line going through \f$A\f$ evaluated at \f$B\f$
  */
-Complex divisor_evaluateVertical(const EllipticCurve ec, const AffinePoint a, const ComplexAffinePoint b);
+void divisor_evaluateVertical(Complex *result, const EllipticCurve ec, const AffinePoint a, const ComplexAffinePoint b);
 
 /**
  * Evaluates the divisor of a tangent on a Type-1 elliptic curve.
