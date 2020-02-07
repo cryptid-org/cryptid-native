@@ -211,7 +211,8 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
 
     // Let {@code hashlen} be the length of the output of the cryptographic hash
     // function hashfcn from the public parameters.
-    int hashLen = hashFunction_getHashSize(publicParameters.hashFunction);
+    int hashLen;
+    hashFunction_getHashSize(&hashLen, publicParameters.hashFunction);
 
     // \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$
     // which results in a point of order \f$q\f$ in \f$E(F_p)\f$.
@@ -366,7 +367,8 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
 
     // Let {@code hashlen} be the length of the output of the hash function
     // {@code hashfcn} measured in octets.
-    int hashLen = hashFunction_getHashSize(publicParameters.hashFunction);
+    int hashLen;
+    hashFunction_getHashSize(&hashLen, publicParameters.hashFunction);
 
     // Let \f$theta1 = \mathrm{Pairing}(E, p ,q, u, P_{pub})\f$ by applying the modified
     // Tate pairing.

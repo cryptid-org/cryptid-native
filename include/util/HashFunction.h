@@ -19,7 +19,7 @@ typedef enum HashFunction
     hashFunction_SHA512 = 4
 } HashFunction;
 
-size_t hashFunction_getHashSize(const HashFunction hashFunction);
+CryptidStatus hashFunction_getHashSize(int *hashSizeOutput, const HashFunction hashFunction);
 
 CryptidStatus hashFunction_hash(const HashFunction hashFunction, const unsigned char *const message, const size_t messageLength, unsigned char* hashResult);
 

@@ -18,7 +18,8 @@ void hashToRange(mpz_t result, const unsigned char *const s, const int sLength, 
     mpz_inits(v, a, twoFiveSix, twoFiveSixPow, vxTwoFiveSixPow, NULL);
 
     // Let {@code hashlen} be the number of octets comprising the output of {@code hashfcn}.
-    int hashLen = hashFunction_getHashSize(hashFunction);
+    int hashLen;
+    hashFunction_getHashSize(&hashLen, hashFunction);
 
     // Let \f$v_{0} = 0\f$.
     mpz_set_ui(v, 0);
@@ -226,7 +227,8 @@ unsigned char* hashBytes(const int b, const unsigned char *const p, const int pL
     unsigned char* result = (unsigned char*)calloc(b + 1, sizeof(unsigned char));
 
     // Let {@code hashlen{} be the number of octets comprising the output of {@code hashfcn}.
-    int hashLen = hashFunction_getHashSize(hashFunction);
+    int hashLen;
+    hashFunction_getHashSize(&hashLen, hashFunction);
 
     // Let \f$k = \mathrm{hashfcn}(p)\f$.
     unsigned char* k = (unsigned char*)calloc(hashLen, sizeof(unsigned char));

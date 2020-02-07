@@ -2,24 +2,37 @@
 
 #include "util/HashFunction.h"
 
-size_t hashFunction_getHashSize(const HashFunction hashFunction)
+CryptidStatus hashFunction_getHashSize(int *hashSizeOutput, const HashFunction hashFunction)
 {
     switch(hashFunction)
     {
-        case hashFunction_SHA1: return 20;
-        case hashFunction_SHA224: return 28;
-        case hashFunction_SHA256: return 32;
-        case hashFunction_SHA384: return 48;
-        case hashFunction_SHA512: return 64;
-        default: return 0;
+        case hashFunction_SHA1:
+            *hashSizeOutput = 20;
+            break;
+        case hashFunction_SHA224:
+            *hashSizeOutput = 28;
+            break;
+        case hashFunction_SHA256:
+            *hashSizeOutput = 32;
+            break;
+        case hashFunction_SHA384:
+            *hashSizeOutput = 48;
+            break;
+        case hashFunction_SHA512:
+            *hashSizeOutput = 64;
+            break;
+        default:
+            return CRPYTID_UNKNOWN_HASH_TYPE_ERROR;
     }
+
+    return CRYPTID_SUCCESS;
 }
 
 CryptidStatus hashFunction_hash(const HashFunction hashFunction, const unsigned char *const message, const size_t messageLength, unsigned char* hashResult)
 {
     if(hashResult == NULL)
     {
-        return HASH_NULLPOINTER_OUTPUT_PARAM_ERROR;
+        return CRYPTID_HASH_NULLPOINTER_OUTPUT_PARAM_ERROR;
     }
 
     switch(hashFunction)
@@ -40,7 +53,7 @@ CryptidStatus hashFunction_hash(const HashFunction hashFunction, const unsigned 
             SHA512_OneCall(message, messageLength,hashResult);
             return CRYPTID_SUCCESS;
         default:
-            return HASH_UNKNOWN_TYPE_ERROR;
+            return CRPYTID_UNKNOWN_HASH_TYPE_ERROR;
     }
 }
 
