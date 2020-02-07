@@ -15,7 +15,7 @@ typedef struct EllipticCurve
 } EllipticCurve;
 
 /**
- * Returns a new EllipticCurve instance initialized with arbitrary precision integers.
+ * Initializes a new EllipticCurve instance initialized with arbitrary precision integers.
  * @param ellipticCurveOutput the EllipticCurve to be initialized
  * @param a coefficient \f$a\f$
  * @param b coefficient \f$b\f$
@@ -24,7 +24,7 @@ typedef struct EllipticCurve
 void ellipticCurve_init(EllipticCurve *ellipticCurveOutput, const mpz_t a, const mpz_t b, const mpz_t fieldOrder);
 
 /**
- * Returns a new EllipticCurve instance initialized longs.
+ * Initializes a new EllipticCurve instance initialized longs.
  * @param ellipticCurveOutput the EllipticCurve to be initialized
  * @param a coefficient \f$a\f$
  * @param b coefficient \f$b\f$
