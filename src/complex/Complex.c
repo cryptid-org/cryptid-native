@@ -24,16 +24,12 @@ void complex_initLong(Complex *complexOutput, const long real, const long imagin
     mpz_set_si(complexOutput->imaginary, imaginary);
 }
 
-Complex complex_initMpzLong(const mpz_t real, const long imaginary)
+void complex_initMpzLong(Complex *complexOutput, const mpz_t real, const long imaginary)
 {
-    Complex complex;
+    mpz_inits(complexOutput->real, complexOutput->imaginary, NULL);
 
-    mpz_inits(complex.real, complex.imaginary, NULL);
-
-    mpz_set(complex.real, real);
-    mpz_set_si(complex.imaginary, imaginary);
-
-    return complex;
+    mpz_set(complexOutput->real, real);
+    mpz_set_si(complexOutput->imaginary, imaginary);
 }
 
 Complex complex_initLongMpz(const long real, const mpz_t imaginary)
@@ -239,7 +235,7 @@ CryptidStatus complex_multiplicativeInverse(Complex *result, const Complex compl
     if(!mpz_cmp_ui(complex.imaginary, 0))
     {
         mpz_invert(real, complex.real, p);
-        *result = complex_initMpzLong(real, 0);
+        complex_initMpzLong(result, real, 0);
         
         mpz_clears(real, imaginary, denom, realSquare, imagSquare, denomInv, negImag, NULL);
         return CRYPTID_SUCCESS;
