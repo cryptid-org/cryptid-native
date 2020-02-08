@@ -58,6 +58,6 @@ void affineAsString_toAffine(AffinePoint *affinePointOutput, const AffinePointAs
  * @param affinePointAsStringOutput the AffinePointAsString to be initialized based on an AffinePoint
  * @param affinePoint the AffinePoint, which needs to be converted to AffinePointAsString
  */
-void affine_toAffineAsString(AffinePointAsString *affinePointAsStringOutput, const AffinePoint affinePoint);
+void affine_toAffineAsString(AffinePointAsString *affinePointAsStringOutput, const AffinePoint affinePoint, const int xBase, const int yBase);
 
 #endif

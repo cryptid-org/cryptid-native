@@ -51,6 +51,6 @@ void ellipticCurveAsString_toEllipticCurve(EllipticCurve *ellipticCurveOutput, c
  * @param ellipticCurveAsStringOutput the EllipticCurveAsString to be initialized based on an EllipticCurve
  * @param ellipticCurve the EllipticCurve, which needs to be converted to EllipticCurveAsString
  */
-void ellipticCurve_toEllipticCurveAsString(EllipticCurveAsString *ellipticCurveAsStringOutput, const EllipticCurve ellipticCurve);
+void ellipticCurve_toEllipticCurveAsString(EllipticCurveAsString *ellipticCurveAsStringOutput, const EllipticCurve ellipticCurve, const int aBase, const int bBase, const int fieldOrderBase);
 
 #endif
