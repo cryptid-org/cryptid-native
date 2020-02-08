@@ -14,6 +14,6 @@ typedef struct HessIdentityBasedSignatureSignature
 
 void hessIdentityBasedSignatureSignature_init(HessIdentityBasedSignatureSignature *signatureOutput, const AffinePoint u, const mpz_t v);
 
-void hessIdentityBasedSignatureSignature_destroy(HessIdentityBasedSignatureSignature hessIdentityBasedSignatureSignature);
+void hessIdentityBasedSignatureSignature_destroy(HessIdentityBasedSignatureSignature signature);
 
 #endif

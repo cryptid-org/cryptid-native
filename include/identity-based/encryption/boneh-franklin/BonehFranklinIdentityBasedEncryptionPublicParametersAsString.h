@@ -18,7 +18,7 @@ typedef struct BonehFranklinIdentityBasedEncryptionPublicParametersAsString
     EllipticCurveAsString ellipticCurve;
 
     /**
-     * Subgroup order.
+     * Subgroup order represented as a string.
      */
     char *q;
 
