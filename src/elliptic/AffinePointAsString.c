@@ -8,14 +8,14 @@
 void affineAsString_init(AffinePointAsString *affinePointAsStringOutput, const char *const x, const int xBase, const char *const y, const int yBase)
 {
     int xLength = strlen(x);
-    affinePointAsStringOutput->x = (char*)malloc(xLength * sizeof(char));
-    memcpy(affinePointAsStringOutput->x, x, xLength);
+    affinePointAsStringOutput->x = (char*)malloc(xLength * sizeof(char) + 1);
+    memcpy(affinePointAsStringOutput->x, x, xLength + 1);
 
     affinePointAsStringOutput->xBase = xBase;
 
     int yLength = strlen(y);
-    affinePointAsStringOutput->y = (char*)malloc(yLength * sizeof(char));
-    memcpy(affinePointAsStringOutput->y, y, yLength);
+    affinePointAsStringOutput->y = (char*)malloc(yLength * sizeof(char) + 1);
+    memcpy(affinePointAsStringOutput->y, y, yLength + 1);
 
     affinePointAsStringOutput->yBase = yBase;
 }

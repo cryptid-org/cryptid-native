@@ -8,8 +8,8 @@ void bonehFranklinIdentityBasedEncryptionPublicParametersAsString_init(BonehFran
     ellipticCurveAsString_init(&publicParametersAsStringOutput->ellipticCurve, ellipticCurve.a, ellipticCurve.aBase, ellipticCurve.b, ellipticCurve.bBase, ellipticCurve.fieldOrder, ellipticCurve.fieldOrderBase);
 
     int qLength = strlen(q);
-    publicParametersAsStringOutput->q = (char*)malloc(qLength * sizeof(char));
-    memcpy(publicParametersAsStringOutput->q, q, qLength);
+    publicParametersAsStringOutput->q = (char*)malloc(qLength * sizeof(char) + 1);
+    memcpy(publicParametersAsStringOutput->q, q, qLength + 1);
 
     publicParametersAsStringOutput->qBase = qBase;
 

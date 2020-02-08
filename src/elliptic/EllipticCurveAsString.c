@@ -6,20 +6,20 @@
 void ellipticCurveAsString_init(EllipticCurveAsString *ellipticCurveAsStringOutput, const char *const a, const int aBase, const char *const b, const int bBase, const char *const fieldOrder, const int fieldOrderBase)
 {
     int aLength = strlen(a);
-    ellipticCurveAsStringOutput->a = (char*)malloc(aLength * sizeof(char));
-    memcpy(ellipticCurveAsStringOutput->a, a, aLength);
+    ellipticCurveAsStringOutput->a = (char*)malloc(aLength * sizeof(char) + 1);
+    memcpy(ellipticCurveAsStringOutput->a, a, aLength + 1);
 
     ellipticCurveAsStringOutput->aBase = aBase;
 
     int bLength = strlen(b);
-    ellipticCurveAsStringOutput->b = (char*)malloc(bLength * sizeof(char));
-    memcpy(ellipticCurveAsStringOutput->b, b, bLength);
+    ellipticCurveAsStringOutput->b = (char*)malloc(bLength * sizeof(char) + 1);
+    memcpy(ellipticCurveAsStringOutput->b, b, bLength + 1);
 
     ellipticCurveAsStringOutput->bBase = bBase;
 
     int fieldOrderLength = strlen(fieldOrder);
-    ellipticCurveAsStringOutput->fieldOrder = (char*)malloc(fieldOrderLength * sizeof(char));
-    memcpy(ellipticCurveAsStringOutput->fieldOrder, fieldOrder, fieldOrderLength);
+    ellipticCurveAsStringOutput->fieldOrder = (char*)malloc(fieldOrderLength * sizeof(char) + 1);
+    memcpy(ellipticCurveAsStringOutput->fieldOrder, fieldOrder, fieldOrderLength + 1);
 
     ellipticCurveAsStringOutput->fieldOrderBase = fieldOrderBase;
 }
