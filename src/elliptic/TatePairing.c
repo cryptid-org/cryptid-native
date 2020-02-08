@@ -6,8 +6,7 @@
 //   * [Intro-to-IBE] Luther Martin. 2008. Introduction to Identity-Based Encryption (Information Security and Privacy Series) (1 ed.). Artech House, Inc., Norwood, MA, USA. 
 
 
-CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, const EllipticCurve ellipticCurve,
-                           const mpz_t subgroupOrder, const AffinePoint p, const AffinePoint b)
+CryptidStatus tate_performPairing(Complex *result, const AffinePoint p, const AffinePoint b, const int embeddingDegree, const mpz_t subgroupOrder, const EllipticCurve ellipticCurve)
 {
     // Implementation of Miller's algorithm as it's written on this page:
     // https://crypto.stanford.edu/pbc/notes/ep/miller.html

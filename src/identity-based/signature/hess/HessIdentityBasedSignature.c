@@ -228,7 +228,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     // Let \f$\mathrm{theta} = \mathrm{Pairing}(E, p, q, Q_{id}, P_{pub})\f$, which is an element of
     // the extension field \f$F_p^2\f$ obtained using the modified Tate pairing.
     Complex theta;
-    status = tate_performPairing(&theta, 2, publicParameters.ellipticCurve, publicParameters.q, pointQId, publicParameters.pointP);
+    status = tate_performPairing(&theta, pointQId, publicParameters.pointP, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
         mpz_clear(k);
@@ -376,7 +376,7 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     // Let \f$theta1 = \mathrm{Pairing}(E, p ,q, u, P_{pub})\f$ by applying the modified
     // Tate pairing.
     Complex theta1;
-    status = tate_performPairing(&theta1, 2, publicParameters.ellipticCurve, publicParameters.q, signature.u, publicParameters.pointP);
+    status = tate_performPairing(&theta1, signature.u, publicParameters.pointP, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
         return status;
@@ -404,7 +404,7 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     // Let \f$theta2 = \mathrm{Pairing}(E, p , q, Q_{id}, \f$-P_{pub}\f$)\f$ by applying the modified
     // Tate pairing.
     Complex theta2;
-    status = tate_performPairing(&theta2, 2, publicParameters.ellipticCurve, publicParameters.q, pointQId, negativePointPpublic);
+    status = tate_performPairing(&theta2, pointQId, negativePointPpublic, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
         complex_destroy(theta1);

@@ -26,7 +26,7 @@ TEST GF_131_modified_tate_pairing_should_just_work(const long n, const Complex e
 
     // When
     Complex result;
-    CryptidStatus status = tate_performPairing(&result, embeddingDegree, ec, subgroupOrder, a, b);
+    CryptidStatus status = tate_performPairing(&result, a, b, embeddingDegree, subgroupOrder, ec);
 
     // Then
     ASSERT_EQ(status, CRYPTID_SUCCESS);
@@ -77,7 +77,7 @@ TEST RFC_5091_tate_pairing_should_work(void)
 
     // When
     Complex result;
-    CryptidStatus status = tate_performPairing(&result, embeddingDegree, ec, subgroupOrder, a, b);
+    CryptidStatus status = tate_performPairing(&result, a, b, embeddingDegree, subgroupOrder, ec);
 
     // Then
     ASSERT_EQ(status, CRYPTID_SUCCESS);

@@ -266,7 +266,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
     // Let \f$\mathrm{theta} = \mathrm{Pairing}(E, p, q, P_{pub}, Q_{id})\f$, which is an element of
     // the extension field \f$F_p^2\f$ obtained using the modified Tate pairing.
     Complex theta;
-    status = tate_performPairing(&theta, 2, publicParameters.ellipticCurve, publicParameters.q, publicParameters.pointPpublic, pointQId);
+    status = tate_performPairing(&theta, publicParameters.pointPpublic, pointQId, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
         mpz_clear(l);
@@ -364,7 +364,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint
     // Let \f$theta = \mathrm{Pairing}(E, p ,q, U, S_{id})\f$ by applying the modified
     // Tate pairing.
     Complex theta;
-    CryptidStatus status = tate_performPairing(&theta, 2, publicParameters.ellipticCurve, publicParameters.q, ciphertext.cipherU, privateKey);
+    CryptidStatus status = tate_performPairing(&theta, ciphertext.cipherU, privateKey, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
         mpz_clear(l);
