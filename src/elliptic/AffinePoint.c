@@ -183,7 +183,7 @@ CryptidStatus affine_add(AffinePoint *result, const AffinePoint affinePoint1, co
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus affine_multiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve)
+CryptidStatus affine_multiply(AffinePoint *result, const AffinePoint affinePoint, const mpz_t s, const EllipticCurve ellipticCurve)
 {
     // Implementation of Algorithm 3.26 in [Guide-to-ECC].
 
@@ -252,7 +252,7 @@ CryptidStatus affine_multiply(AffinePoint *result, const mpz_t s, const AffinePo
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const AffinePoint affinePoint, const EllipticCurve ellipticCurve)
+CryptidStatus affine_wNAFMultiply(AffinePoint *result, const AffinePoint affinePoint, const mpz_t s, const EllipticCurve ellipticCurve)
 {
     // Precomputation of small scalar point multiplications used for Window NAF point multiplication
     // \f$-1 \cdot P, 1 \cdot P, -3 \cdot P, 3 \cdot P, -5 \cdot P, 5 \cdot P, -7 \cdot P, 7 \cdot P, ... \f$
@@ -287,7 +287,7 @@ CryptidStatus affine_wNAFMultiply(AffinePoint *result, const mpz_t s, const Affi
         mpz_init_set_ui(tmpS, i);
 
         // The computation of \f$x \cdot P \f$
-        status = affine_multiply(&preCalculatedPoints[actualIndex + 1], tmpS, affinePoint, ellipticCurve);
+        status = affine_multiply(&preCalculatedPoints[actualIndex + 1], affinePoint, tmpS, ellipticCurve);
         if(status)
         {
             mpz_clears(d, tmpS, NULL);

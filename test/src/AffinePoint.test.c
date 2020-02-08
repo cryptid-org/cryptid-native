@@ -18,7 +18,7 @@ TEST multiplication_should_just_work(const AffinePoint p, const long s, const Af
 
     // When
     AffinePoint result;
-    int err = affine_multiply(&result, scalar, p, ec);
+    int err = affine_multiply(&result, p, scalar, ec);
 
     if (err)
     {
@@ -48,7 +48,7 @@ TEST wnafmultiplication_should_just_work(const AffinePoint p, const long s, cons
 
     // When
     AffinePoint result;
-    int err = affine_wNAFMultiply(&result, scalar, p, ec);
+    int err = affine_wNAFMultiply(&result, p, scalar, ec);
 
     if (err)
     {

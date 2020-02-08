@@ -84,7 +84,7 @@ CryptidStatus cryptid_ibs_hess_setup(mpz_t masterSecret, HessIdentityBasedSignat
         mpz_init_set(rMul, r);
         mpz_mul_ui(rMul, rMul, 12);
 
-        status = affine_wNAFMultiply(&pointP, rMul, pointPprime, ec);
+        status = affine_wNAFMultiply(&pointP, pointPprime, rMul, ec);
 
         if (status)
         {
@@ -112,7 +112,7 @@ CryptidStatus cryptid_ibs_hess_setup(mpz_t masterSecret, HessIdentityBasedSignat
     // Determine the public parameters
     AffinePoint pointPpublic;
 
-    status = affine_wNAFMultiply(&pointPpublic, s, pointP, ec);
+    status = affine_wNAFMultiply(&pointPpublic, pointP, s, ec);
 
     if (status)
     {
@@ -168,7 +168,7 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const id
     }
 
     // Let \f$S_{id} = [s]Q_{id}\f$.
-    status = affine_wNAFMultiply(result, masterSecret, qId, publicParameters.ellipticCurve);
+    status = affine_wNAFMultiply(result, qId, masterSecret, publicParameters.ellipticCurve);
 
     affine_destroy(qId);
 
@@ -275,7 +275,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     // Let \f$u = v \cdot \mathrm{privateKey} + k \cdot Q_{id}\f$ be a point on the elliptic-curve,
     // part of the signature.
     AffinePoint u, kMulPointQId, vMulPrivateKey;
-    status = affine_wNAFMultiply(&vMulPrivateKey, v, privateKey, publicParameters.ellipticCurve);
+    status = affine_wNAFMultiply(&vMulPrivateKey, privateKey, v, publicParameters.ellipticCurve);
     if(status)
     {
         mpz_clears(k, v, NULL);
@@ -287,7 +287,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
         free(concat);
         return status;
     }
-    status = affine_wNAFMultiply(&kMulPointQId, k, pointQId, publicParameters.ellipticCurve);
+    status = affine_wNAFMultiply(&kMulPointQId, pointQId, k, publicParameters.ellipticCurve);
     if(status)
     {
         mpz_clears(k, v, NULL);

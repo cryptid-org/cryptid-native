@@ -22,7 +22,7 @@ TEST GF_131_modified_tate_pairing_should_just_work(const long n, const Complex e
     AffinePoint a;
     affine_initLong(&a, 98, 58);
     AffinePoint b;
-    affine_multiply(&b, mul, a, ec);
+    affine_multiply(&b, a, mul, ec);
 
     // When
     Complex result;
