@@ -82,8 +82,7 @@ void hashToRange(mpz_t result, const unsigned char *const s, const int sLength, 
     mpz_clears(v, a, twoFiveSix, twoFiveSixPow, vxTwoFiveSixPow, NULL);
 }
 
-CryptidStatus hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve, const mpz_t p, const mpz_t q, 
-                   const char *const id, const int idLength, const HashFunction hashFunction)
+CryptidStatus hashToPoint(AffinePoint *result, const char *const id, const int idLength, const mpz_t q, const EllipticCurve ellipticCurve, const HashFunction hashFunction)
 {
     // Implementation of Algorithm 4.4.2 (HashToPoint1) in [RFC-5091].
 
@@ -91,23 +90,23 @@ CryptidStatus hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve
     mpz_inits(y, x, pxTwo, pxTwoSub, pxTwoSubQ3, yPowTwo, yPowTwoSub, pAddOne, pAddOneQq, NULL);
 
     // Let \f$y = \mathrm{HashToRange}(id, p, \mathrm{hashfcn})\f$, using {@code HashToRange}, an element of \f$F_p\f$.
-    hashToRange(y, (unsigned char*) id, idLength, p, hashFunction);
+    hashToRange(y, (unsigned char*) id, idLength, ellipticCurve.fieldOrder, hashFunction);
 
     // Let \f$x = (y^2 - 1)^{\frac{2 \cdot p - 1}{3}} \mod p\f$, an element of \f$F_p\f$.
     mpz_pow_ui(yPowTwo, y, 2);
     mpz_sub_ui(yPowTwo, yPowTwo, 1);
 
-    mpz_mul_ui(pxTwo, p, 2);
+    mpz_mul_ui(pxTwo, ellipticCurve.fieldOrder, 2);
     mpz_sub_ui(pxTwoSub, pxTwo, 1);
     mpz_cdiv_q_ui(pxTwoSubQ3, pxTwoSub, 3);
 
-    mpz_powm(x, yPowTwo, pxTwoSubQ3, p);
+    mpz_powm(x, yPowTwo, pxTwoSubQ3, ellipticCurve.fieldOrder);
 
     // Let \f$Q^{\prime} = (x, y)\f$, a non-zero point in \f$E(F_p)\f$.
     AffinePoint qPrime;
     affine_init(&qPrime, x, y);
 
-    mpz_add_ui(pAddOne, p, 1);
+    mpz_add_ui(pAddOne, ellipticCurve.fieldOrder, 1);
     mpz_cdiv_q(pAddOneQq, pAddOne, q);
 
     // Let \f$Q = [(p + 1) / q ]Q^{\prime}\f$, a point of order \f$q\f$ in \f$E(F_p)\f$.
@@ -124,7 +123,7 @@ CryptidStatus hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve
     return CRYPTID_SUCCESS;
 }
 
-void canonical(unsigned char **result, int *const resultLength, const mpz_t p, const Complex v, const int order)
+void canonical(unsigned char **result, int *const resultLength, const Complex v, const mpz_t p, const int order)
 {
     // Implementation of Algorithm 4.3.2 (Canonical1) in [RFC-5091].
 

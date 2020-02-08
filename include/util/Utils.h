@@ -25,26 +25,24 @@ void hashToRange(mpz_t result, const unsigned char *const s, const int sLength, 
  * Cryptographically hashes a string to a point on the specified elliptic curve.
  * @param result Out parameter storing a point of order \f$q\f$ in \f$E(F_p)\f$. On CRYPTID_SUCCESS, it must be
  *               destroyed by the caller.
- * @param ellipticCurve the curve to operate on
- * @param p a prime
- * @param q a prime
  * @param id a string
  * @param idLength the length of the id string
+ * @param q a prime
+ * @param ellipticCurve the curve to operate on
  * @param hashFunction the hash function to use
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve, const mpz_t p, const mpz_t q, 
-                   const char *const id, const int idLength, const HashFunction hashFunction);
+CryptidStatus hashToPoint(AffinePoint *result, const char *const id, const int idLength, const mpz_t q, const EllipticCurve ellipticCurve, const HashFunction hashFunction);
 
 /**
  * Canonically represents elements of an extension field \f$F_p^2.\f$
  * @param result out parameter storing the resulting string of size \f$2 \cdot \mathrm{Ceiling}(\frac{\log(p)}{8})\f$ octets. SHOULD NOT BE INITIALIZED
  * @param resultLength out parameter storing the length of the resulting string
- * @param p an integer congruent to \f$3\f$ modulo \f$4\f$
  * @param v an element of \f$F_p^2\f$
+ * @param p an integer congruent to \f$3\f$ modulo \f$4\f$
  * @param order an ordering parameter that can be {@code 0} or {@code 1}
  */
-void canonical(unsigned char **result, int *const resultLength, const mpz_t p, const Complex v, const int order);
+void canonical(unsigned char **result, int *const resultLength, const Complex v, const mpz_t p, const int order);
 
 /**
  * Keyed cryptographic pseudo-random bytes generator.

@@ -160,7 +160,7 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const id
 
     // Let \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$.
     CryptidStatus status =
-        hashToPoint(&qId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
+        hashToPoint(&qId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
 
     if (status) 
     {
@@ -218,7 +218,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     // \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$
     // which results in a point of order \f$q\f$ in \f$E(F_p)\f$.
     AffinePoint pointQId;
-    CryptidStatus status = hashToPoint(&pointQId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
+    CryptidStatus status = hashToPoint(&pointQId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
     if(status)
     {
         mpz_clear(k);
@@ -244,7 +244,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     // representation of {@code r}.
     int zLength;
     unsigned char* z;
-    canonical(&z, &zLength, publicParameters.ellipticCurve.fieldOrder, r, 1);
+    canonical(&z, &zLength, r, publicParameters.ellipticCurve.fieldOrder, 1);
 
     // Let \f$w = \mathrm{hashfcn}(z)\f$ using the {@code hashfcn} hashing algorithm, the
     // result of which is a {@code hashlen}-octet string.
@@ -385,7 +385,7 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     // \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$
     // which results in a point of order \f$q\f$ in \f$E(F_p)\f$.
     AffinePoint pointQId;
-    status = hashToPoint(&pointQId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
+    status = hashToPoint(&pointQId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
     if(status)
     {
         complex_destroy(theta1);
@@ -426,7 +426,7 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     // The code is the same as in the sign method.
     int zLength;
     unsigned char* z;
-    canonical(&z, &zLength, publicParameters.ellipticCurve.fieldOrder, r, 1);
+    canonical(&z, &zLength, r, publicParameters.ellipticCurve.fieldOrder, 1);
 
     unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
     hashFunction_hash(w, z, zLength, publicParameters.hashFunction);

@@ -160,7 +160,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePoint* result, const char 
 
     // Let \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$.
     CryptidStatus status =
-        hashToPoint(&qId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
+        hashToPoint(&qId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
 
     if (status) 
     {
@@ -216,7 +216,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
     // \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$
     // which results in a point of order \f$q\f$ in \f$E(F_p)\f$.
     AffinePoint pointQId;
-    CryptidStatus status = hashToPoint(&pointQId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
+    CryptidStatus status = hashToPoint(&pointQId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
     if(status)
     {
         mpz_clear(l);
@@ -286,7 +286,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
     // representation of {@code theta'}.
     int zLength;
     unsigned char* z;
-    canonical(&z, &zLength, publicParameters.ellipticCurve.fieldOrder, thetaPrime, 1);
+    canonical(&z, &zLength, thetaPrime, publicParameters.ellipticCurve.fieldOrder, 1);
 
     // Let \f$w = \mathrm{hashfcn}(z)\f$ using the {@code hashfcn} hashing algorithm, the
     // result of which is a {@code hashlen}-octet string.
@@ -374,7 +374,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint
     // Let \f$z = \mathrm{Canonical}(p, k, 0, theta)\f$ a canonical string representation of {@code theta}.
     int zLength;
     unsigned char* z;
-    canonical(&z, &zLength, publicParameters.ellipticCurve.fieldOrder, theta, 1);
+    canonical(&z, &zLength, theta, publicParameters.ellipticCurve.fieldOrder, 1);
 
     // Let \f$w = \mathrm{hashfcn}(z)$ using the {@code hashfcn} hashing algorithm, the result
     // of which is a {@code hashlen}-octet string.
