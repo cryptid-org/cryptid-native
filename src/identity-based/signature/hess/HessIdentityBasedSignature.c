@@ -249,11 +249,11 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     // Let \f$w = \mathrm{hashfcn}(z)\f$ using the {@code hashfcn} hashing algorithm, the
     // result of which is a {@code hashlen}-octet string.
     unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(w, publicParameters.hashFunction, z, zLength);
+    hashFunction_hash(w, z, zLength, publicParameters.hashFunction);
 
     // Let \f$t = \mathrm{hashfcn}(message)\f$ using the \f$hashfcn\f$ algorithm.
     unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(t, publicParameters.hashFunction, (unsigned char*) message, messageLength);
+    hashFunction_hash(t, (unsigned char*) message, messageLength, publicParameters.hashFunction);
 
     // Let \f$v = \mathrm{HashToRange}(w || t, q, \mathrm{hashfcn}) using HashToRange
     // on the \f$(2 \cdot \mathrm{hashlen})\f$-octet concatenation of {@code w} and
@@ -429,10 +429,10 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     canonical(&z, &zLength, publicParameters.ellipticCurve.fieldOrder, r, 1);
 
     unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(w, publicParameters.hashFunction, z, zLength);
+    hashFunction_hash(w, z, zLength, publicParameters.hashFunction);
 
     unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(t, publicParameters.hashFunction, (unsigned char*) message, messageLength);
+    hashFunction_hash(t, (unsigned char*) message, messageLength, publicParameters.hashFunction);
 
     unsigned char* concat = (unsigned char*)calloc(2*hashLen + 1, sizeof(unsigned char));
     for(int i = 0; i < hashLen; i++)
