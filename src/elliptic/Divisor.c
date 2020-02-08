@@ -7,7 +7,7 @@
 //  * [RFC-5091] Xavier Boyen, Luther Martin. 2007. RFC 5091. Identity-Based Cryptography Standard (IBCS) #1: Supersingular Curve Implementations of the BF and BB1 Cryptosystems
 
 
-void divisor_evaluateVertical(Complex *result, const EllipticCurve ec, const AffinePoint a, const ComplexAffinePoint b)
+void divisor_evaluateVertical(Complex *result, const AffinePoint a, const ComplexAffinePoint b, const EllipticCurve ec)
 {
     // Implementation of Algorithm 3.4.1 in [RFC-5091].
 
@@ -30,7 +30,7 @@ void divisor_evaluateVertical(Complex *result, const EllipticCurve ec, const Aff
     mpz_clear(axAddInv);
 }
 
-CryptidStatus divisor_evaluateTangent(Complex* result, const EllipticCurve ec, const AffinePoint a, const ComplexAffinePoint b)
+CryptidStatus divisor_evaluateTangent(Complex* result, const AffinePoint a, const ComplexAffinePoint b, const EllipticCurve ec)
 {
     // Implementation of Algorithm 3.4.2 in [RFC-5091].
 
@@ -49,7 +49,7 @@ CryptidStatus divisor_evaluateTangent(Complex* result, const EllipticCurve ec, c
 
     if(!mpz_cmp_ui(a.y, 0))
     {
-        divisor_evaluateVertical(result, ec, a, b);
+        divisor_evaluateVertical(result, a, b, ec);
         return CRYPTID_SUCCESS;
     }
 
@@ -94,8 +94,8 @@ CryptidStatus divisor_evaluateTangent(Complex* result, const EllipticCurve ec, c
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus divisor_evaluateLine(Complex* result, const EllipticCurve ec, const AffinePoint a, const AffinePoint aprime, 
-                            const ComplexAffinePoint b)
+CryptidStatus divisor_evaluateLine(Complex* result, const AffinePoint a, const AffinePoint aprime, 
+                            const ComplexAffinePoint b, const EllipticCurve ec)
 {
     // Implementation of Algorithm 3.4.3 in [RFC-5091].
 
@@ -108,7 +108,7 @@ CryptidStatus divisor_evaluateLine(Complex* result, const EllipticCurve ec, cons
     // Special cases
     if(affine_isInfinity(a))
     {
-        divisor_evaluateVertical(result, ec, aprime, b);
+        divisor_evaluateVertical(result, aprime, b, ec);
         return CRYPTID_SUCCESS;
     }
 
@@ -121,7 +121,7 @@ CryptidStatus divisor_evaluateLine(Complex* result, const EllipticCurve ec, cons
 
     if(affine_isInfinity(aprime) || affine_isInfinity(aPlusAPrime))
     {
-        divisor_evaluateVertical(result, ec, a, b);
+        divisor_evaluateVertical(result, a, b, ec);
         affine_destroy(aPlusAPrime);
         return CRYPTID_SUCCESS;
     }
@@ -129,7 +129,7 @@ CryptidStatus divisor_evaluateLine(Complex* result, const EllipticCurve ec, cons
 
     if(affine_isEquals(a, aprime))
     {
-        return divisor_evaluateTangent(result, ec, a, b);
+        return divisor_evaluateTangent(result, a, b, ec);
     }
 
     mpz_t linea, lineb, linebaddinv, q, t, taddinv, linec;
