@@ -94,12 +94,12 @@ CryptidStatus complexAffine_add(ComplexAffinePoint *result, const ComplexAffineP
 /**
  * Multiplies a ComplexAffinePoint with a scalar.
  * @param result The result of the multiplication. On CRYPTID_SUCCESS, this should be destroyed by the caller.
- * @param s the scalar to multiply with
  * @param complexAffinePoint the point to multiply
+ * @param s the scalar to multiply with
  * @param ec the elliptic curve to operate over
  * @return CRYPTID_SUCCESS if everything went right, error otherwise
  */
-CryptidStatus complexAffine_multiply(ComplexAffinePoint *result, const mpz_t s, const ComplexAffinePoint complexAffinePoint,
+CryptidStatus complexAffine_multiply(ComplexAffinePoint *result, const ComplexAffinePoint complexAffinePoint, const mpz_t s,
                               const EllipticCurve ellipticCurve);
 
 /**

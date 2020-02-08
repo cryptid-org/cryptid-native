@@ -240,7 +240,7 @@ CryptidStatus complexAffine_add(ComplexAffinePoint *result, const ComplexAffineP
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus complexAffine_multiply(ComplexAffinePoint *result, const mpz_t s, const ComplexAffinePoint complexAffinePoint,
+CryptidStatus complexAffine_multiply(ComplexAffinePoint *result, const ComplexAffinePoint complexAffinePoint, const mpz_t s,
                               const EllipticCurve ellipticCurve)
 {
     // Implementation of Algorithm 3.26 in [Guide-to-ECC].

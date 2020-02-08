@@ -19,7 +19,7 @@ TEST multiplication_should_just_work(const ComplexAffinePoint p, const long s, c
 
     // When
     ComplexAffinePoint result;
-    int err = complexAffine_multiply(&result, scalar, p, ec);
+    int err = complexAffine_multiply(&result, p, scalar, ec);
 
     if (err)
     {
