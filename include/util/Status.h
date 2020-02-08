@@ -93,12 +93,12 @@ typedef enum
     /*
      * The given output parameter is NULL.
      */
-    HASH_NULLPOINTER_OUTPUT_PARAM_ERROR,
+    CRYPTID_HASH_NULLPOINTER_OUTPUT_PARAM_ERROR,
 
     /*
      * The given hash type is invalid.
      */
-    HASH_UNKNOWN_TYPE_ERROR
+    CRPYTID_UNKNOWN_HASH_TYPE_ERROR
 } CryptidStatus;
 
 #endif

@@ -23,17 +23,17 @@ TEST fresh_hess_ibs_setup_matching_identities(const SecurityLevel securityLevel,
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    CryptidStatus status = cryptid_ibs_hess_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = cryptid_ibs_hess_setup(masterSecret, publicParameters, securityLevel);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     AffinePoint privateKey;
-    status = cryptid_ibs_hess_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret);
+    status = cryptid_ibs_hess_extract(&privateKey, identity, strlen(identity), masterSecret, *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     HessIdentityBasedSignatureSignature* signature = malloc(sizeof (HessIdentityBasedSignatureSignature));
-    status = cryptid_ibs_hess_sign(signature, privateKey, message, strlen(message), identity, strlen(identity), *publicParameters);
+    status = cryptid_ibs_hess_sign(signature, message, strlen(message), identity, strlen(identity), privateKey, *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
@@ -60,17 +60,17 @@ TEST fresh_hess_ibs_setup_different_identities(const SecurityLevel securityLevel
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    CryptidStatus status = cryptid_ibs_hess_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = cryptid_ibs_hess_setup(masterSecret, publicParameters, securityLevel);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     AffinePoint privateKey;
-    status = cryptid_ibs_hess_extract(&privateKey, signIdentity, strlen(signIdentity), *publicParameters, masterSecret);
+    status = cryptid_ibs_hess_extract(&privateKey, signIdentity, strlen(signIdentity), masterSecret, *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     HessIdentityBasedSignatureSignature* signature = malloc(sizeof (HessIdentityBasedSignatureSignature));
-    status = cryptid_ibs_hess_sign(signature, privateKey, message, strlen(message), signIdentity, strlen(signIdentity), *publicParameters);
+    status = cryptid_ibs_hess_sign(signature, message, strlen(message), signIdentity, strlen(signIdentity), privateKey, *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
@@ -97,17 +97,17 @@ TEST fresh_hess_ibs_setup_wrong_signature(const SecurityLevel securityLevel, con
     mpz_init(masterSecret);
     mpz_init(publicParameters->q);
 
-    CryptidStatus status = cryptid_ibs_hess_setup(securityLevel, publicParameters, masterSecret);
+    CryptidStatus status = cryptid_ibs_hess_setup(masterSecret, publicParameters, securityLevel);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     AffinePoint privateKey;
-    status = cryptid_ibs_hess_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret);
+    status = cryptid_ibs_hess_extract(&privateKey, identity, strlen(identity), masterSecret, *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     HessIdentityBasedSignatureSignature* signature = malloc(sizeof (HessIdentityBasedSignatureSignature));
-    status = cryptid_ibs_hess_sign(signature, privateKey, message1, strlen(message1), identity, strlen(identity), *publicParameters);
+    status = cryptid_ibs_hess_sign(signature, message1, strlen(message1), identity, strlen(identity), privateKey, *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 

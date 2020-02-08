@@ -19,10 +19,10 @@ typedef enum HashFunction
     hashFunction_SHA512 = 4
 } HashFunction;
 
-size_t hashFunction_getHashSize(const HashFunction hashFunction);
+CryptidStatus hashFunction_getHashSize(int *hashSizeOutput, const HashFunction hashFunction);
 
-CryptidStatus hashFunction_hash(const HashFunction hashFunction, const unsigned char *const message, const size_t messageLength, unsigned char* hashResult);
+CryptidStatus hashFunction_hash(unsigned char* hashResult, const unsigned char *const message, const size_t messageLength, const HashFunction hashFunction);
 
-HashFunction hashFunction_initForSecurityLevel(const SecurityLevel securityLevel);
+CryptidStatus hashFunction_initForSecurityLevel(HashFunction *hashFunctionOutput, const SecurityLevel securityLevel);
 
 #endif

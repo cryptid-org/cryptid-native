@@ -12,7 +12,7 @@ typedef struct HessIdentityBasedSignatureSignature
     mpz_t v;
 } HessIdentityBasedSignatureSignature;
 
-HessIdentityBasedSignatureSignature hessIdentityBasedSignatureSignature_init(const AffinePoint u, const mpz_t v);
+void hessIdentityBasedSignatureSignature_init(HessIdentityBasedSignatureSignature *signatureOutput, const AffinePoint u, const mpz_t v);
 
 void hessIdentityBasedSignatureSignature_destroy(HessIdentityBasedSignatureSignature hessIdentityBasedSignatureSignature);
 

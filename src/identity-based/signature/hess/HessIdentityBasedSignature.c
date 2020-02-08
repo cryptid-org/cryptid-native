@@ -19,7 +19,7 @@ static const unsigned int POINT_GENERATION_ATTEMPT_LIMIT = 100;
 static const unsigned int Q_LENGTH_MAPPING[] = { 160, 224, 256, 384, 512 };
 static const unsigned int P_LENGTH_MAPPING[] = { 512, 1024, 1536, 3840, 7680 };
 
-CryptidStatus cryptid_ibs_hess_setup(const SecurityLevel securityLevel, HessIdentityBasedSignaturePublicParameters* publicParameters, mpz_t masterSecret)
+CryptidStatus cryptid_ibs_hess_setup(mpz_t masterSecret, HessIdentityBasedSignaturePublicParameters* publicParameters, const SecurityLevel securityLevel)
 {
     // Implementation of Algorithm 5.1.2 (BFsetup1) in [RFC-5091].
     // Note, that instead of taking the bitlengts of p and q as arguments, this function takes
@@ -61,7 +61,8 @@ CryptidStatus cryptid_ibs_hess_setup(const SecurityLevel securityLevel, HessIden
     mpz_init_set_ui(zero, 0);
     mpz_init_set_ui(one, 1);
 
-    EllipticCurve ec = ellipticCurve_init(zero, one, p);
+    EllipticCurve ec;
+    ellipticCurve_init(&ec, zero, one, p);
 
     mpz_clears(zero, one, NULL);
 
@@ -83,7 +84,7 @@ CryptidStatus cryptid_ibs_hess_setup(const SecurityLevel securityLevel, HessIden
         mpz_init_set(rMul, r);
         mpz_mul_ui(rMul, rMul, 12);
 
-        status = affine_wNAFMultiply(&pointP, rMul, pointPprime, ec);
+        status = affine_wNAFMultiply(&pointP, pointPprime, rMul, ec);
 
         if (status)
         {
@@ -111,7 +112,7 @@ CryptidStatus cryptid_ibs_hess_setup(const SecurityLevel securityLevel, HessIden
     // Determine the public parameters
     AffinePoint pointPpublic;
 
-    status = affine_wNAFMultiply(&pointPpublic, s, pointP, ec);
+    status = affine_wNAFMultiply(&pointPpublic, pointP, s, ec);
 
     if (status)
     {
@@ -126,7 +127,7 @@ CryptidStatus cryptid_ibs_hess_setup(const SecurityLevel securityLevel, HessIden
     mpz_set(publicParameters->q, q);
     publicParameters->pointP = pointP;
     publicParameters->pointPpublic = pointPpublic;
-    publicParameters->hashFunction = hashFunction_initForSecurityLevel(securityLevel);
+    hashFunction_initForSecurityLevel(&publicParameters->hashFunction, securityLevel);
 
     mpz_set(masterSecret, s);
 
@@ -135,8 +136,8 @@ CryptidStatus cryptid_ibs_hess_setup(const SecurityLevel securityLevel, HessIden
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const identity, const size_t identityLength,
-                    const HessIdentityBasedSignaturePublicParameters publicParameters, const mpz_t masterSecret)
+CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const identity, const size_t identityLength, const mpz_t masterSecret,
+                    const HessIdentityBasedSignaturePublicParameters publicParameters)
 {
     // Implementation of Algorithm 5.3.1 (BFextractPriv) in [RFC-5091].
 
@@ -159,7 +160,7 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const id
 
     // Let \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$.
     CryptidStatus status =
-        hashToPoint(&qId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
+        hashToPoint(&qId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
 
     if (status) 
     {
@@ -167,15 +168,15 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const id
     }
 
     // Let \f$S_{id} = [s]Q_{id}\f$.
-    status = affine_wNAFMultiply(result, masterSecret, qId, publicParameters.ellipticCurve);
+    status = affine_wNAFMultiply(result, qId, masterSecret, publicParameters.ellipticCurve);
 
     affine_destroy(qId);
 
     return status;
 }
 
-CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result, const AffinePoint privateKey, const char *const message, const size_t messageLength,
-                    const char *const identity, const size_t identityLength, const HessIdentityBasedSignaturePublicParameters publicParameters)
+CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result, const char *const message, const size_t messageLength,
+                    const char *const identity, const size_t identityLength, const AffinePoint privateKey, const HessIdentityBasedSignaturePublicParameters publicParameters)
 {
     // Implementation of Scheme 1. Sign in [HESS-IBS].
 
@@ -211,12 +212,13 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
 
     // Let {@code hashlen} be the length of the output of the cryptographic hash
     // function hashfcn from the public parameters.
-    int hashLen = hashFunction_getHashSize(publicParameters.hashFunction);
+    int hashLen;
+    hashFunction_getHashSize(&hashLen, publicParameters.hashFunction);
 
     // \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$
     // which results in a point of order \f$q\f$ in \f$E(F_p)\f$.
     AffinePoint pointQId;
-    CryptidStatus status = hashToPoint(&pointQId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
+    CryptidStatus status = hashToPoint(&pointQId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
     if(status)
     {
         mpz_clear(k);
@@ -226,7 +228,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     // Let \f$\mathrm{theta} = \mathrm{Pairing}(E, p, q, Q_{id}, P_{pub})\f$, which is an element of
     // the extension field \f$F_p^2\f$ obtained using the modified Tate pairing.
     Complex theta;
-    status = tate_performPairing(&theta, 2, publicParameters.ellipticCurve, publicParameters.q, pointQId, publicParameters.pointP);
+    status = tate_performPairing(&theta, pointQId, publicParameters.pointP, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
         mpz_clear(k);
@@ -235,21 +237,23 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     }
 
     // Let \f$\mathrm{r} = \mathrm{theta}^k\f$, which is theta raised to the power of \f$k\f$ in \f$F_p^2\f$.
-    Complex r = complex_modPow(theta, k, publicParameters.ellipticCurve.fieldOrder);
+    Complex r;
+    complex_modPow(&r, theta, k, publicParameters.ellipticCurve.fieldOrder);
 
     // Let \f$z = \mathrm{Canonical}(p, k, 0, \mathrm{r})\f$, a canonical string
     // representation of {@code r}.
     int zLength;
-    unsigned char* z = canonical(&zLength, publicParameters.ellipticCurve.fieldOrder, r, 1);
+    unsigned char* z;
+    canonical(&z, &zLength, r, publicParameters.ellipticCurve.fieldOrder, 1);
 
     // Let \f$w = \mathrm{hashfcn}(z)\f$ using the {@code hashfcn} hashing algorithm, the
     // result of which is a {@code hashlen}-octet string.
     unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, z, zLength, w);
+    hashFunction_hash(w, z, zLength, publicParameters.hashFunction);
 
     // Let \f$t = \mathrm{hashfcn}(message)\f$ using the \f$hashfcn\f$ algorithm.
     unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, (unsigned char*) message, messageLength, t);
+    hashFunction_hash(t, (unsigned char*) message, messageLength, publicParameters.hashFunction);
 
     // Let \f$v = \mathrm{HashToRange}(w || t, q, \mathrm{hashfcn}) using HashToRange
     // on the \f$(2 \cdot \mathrm{hashlen})\f$-octet concatenation of {@code w} and
@@ -271,7 +275,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     // Let \f$u = v \cdot \mathrm{privateKey} + k \cdot Q_{id}\f$ be a point on the elliptic-curve,
     // part of the signature.
     AffinePoint u, kMulPointQId, vMulPrivateKey;
-    status = affine_wNAFMultiply(&vMulPrivateKey, v, privateKey, publicParameters.ellipticCurve);
+    status = affine_wNAFMultiply(&vMulPrivateKey, privateKey, v, publicParameters.ellipticCurve);
     if(status)
     {
         mpz_clears(k, v, NULL);
@@ -283,7 +287,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
         free(concat);
         return status;
     }
-    status = affine_wNAFMultiply(&kMulPointQId, k, pointQId, publicParameters.ellipticCurve);
+    status = affine_wNAFMultiply(&kMulPointQId, pointQId, k, publicParameters.ellipticCurve);
     if(status)
     {
         mpz_clears(k, v, NULL);
@@ -311,7 +315,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
         return status;
     }
 
-    *result = hessIdentityBasedSignatureSignature_init(u, v);
+    hessIdentityBasedSignatureSignature_init(result, u, v);
 
     mpz_clears(k, v, NULL);
     affine_destroy(pointQId);
@@ -366,12 +370,13 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
 
     // Let {@code hashlen} be the length of the output of the hash function
     // {@code hashfcn} measured in octets.
-    int hashLen = hashFunction_getHashSize(publicParameters.hashFunction);
+    int hashLen;
+    hashFunction_getHashSize(&hashLen, publicParameters.hashFunction);
 
     // Let \f$theta1 = \mathrm{Pairing}(E, p ,q, u, P_{pub})\f$ by applying the modified
     // Tate pairing.
     Complex theta1;
-    status = tate_performPairing(&theta1, 2, publicParameters.ellipticCurve, publicParameters.q, signature.u, publicParameters.pointP);
+    status = tate_performPairing(&theta1, signature.u, publicParameters.pointP, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
         return status;
@@ -380,7 +385,7 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     // \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$
     // which results in a point of order \f$q\f$ in \f$E(F_p)\f$.
     AffinePoint pointQId;
-    status = hashToPoint(&pointQId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
+    status = hashToPoint(&pointQId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
     if(status)
     {
         complex_destroy(theta1);
@@ -394,12 +399,12 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     mpz_neg(yNegate, publicParameters.pointPpublic.y);
     mpz_mod(yNegateModP, yNegate, publicParameters.ellipticCurve.fieldOrder);
 
-    negativePointPpublic = affine_init(publicParameters.pointPpublic.x, yNegateModP);
+    affine_init(&negativePointPpublic, publicParameters.pointPpublic.x, yNegateModP);
 
     // Let \f$theta2 = \mathrm{Pairing}(E, p , q, Q_{id}, \f$-P_{pub}\f$)\f$ by applying the modified
     // Tate pairing.
     Complex theta2;
-    status = tate_performPairing(&theta2, 2, publicParameters.ellipticCurve, publicParameters.q, pointQId, negativePointPpublic);
+    status = tate_performPairing(&theta2, pointQId, negativePointPpublic, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
         complex_destroy(theta1);
@@ -410,21 +415,24 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     }
 
     // Let \f$\mathrm{theta2}^{\prime} = \mathrm{theta2}^v\f$, which is theta raised to the power of \f$v\f$ in \f$F_p^2\f$.
-    Complex theta2Prime = complex_modPow(theta2, signature.v, publicParameters.ellipticCurve.fieldOrder);
+    Complex theta2Prime;
+    complex_modPow(&theta2Prime, theta2, signature.v, publicParameters.ellipticCurve.fieldOrder);
 
     // Let \f$ r = \mathrm{theta1} \cdot \mathrm{theta2}^{\prime} \f$
-    Complex r = complex_modMul(theta1, theta2Prime, publicParameters.ellipticCurve.fieldOrder);
+    Complex r;
+    complex_modMul(&r, theta1, theta2Prime, publicParameters.ellipticCurve.fieldOrder);
 
     // Verify that the signature (@code v) equals with the now computed value.
     // The code is the same as in the sign method.
     int zLength;
-    unsigned char* z = canonical(&zLength, publicParameters.ellipticCurve.fieldOrder, r, 1);
+    unsigned char* z;
+    canonical(&z, &zLength, r, publicParameters.ellipticCurve.fieldOrder, 1);
 
     unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, z, zLength, w);
+    hashFunction_hash(w, z, zLength, publicParameters.hashFunction);
 
     unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, (unsigned char*) message, messageLength, t);
+    hashFunction_hash(t, (unsigned char*) message, messageLength, publicParameters.hashFunction);
 
     unsigned char* concat = (unsigned char*)calloc(2*hashLen + 1, sizeof(unsigned char));
     for(int i = 0; i < hashLen; i++)
