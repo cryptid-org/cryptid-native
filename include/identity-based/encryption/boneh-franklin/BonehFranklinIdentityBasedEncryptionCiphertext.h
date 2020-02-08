@@ -5,7 +5,6 @@
 
 #include "elliptic/AffinePoint.h"
 
-
 // References
 //  * [RFC-5091] Xavier Boyen, Luther Martin. 2007. RFC 5091. Identity-Based Cryptography Standard (IBCS) #1: Supersingular Curve Implementations of the BF and BB1 Cryptosystems
 
@@ -38,7 +37,7 @@ typedef struct BonehFranklinIdentityBasedEncryptionCiphertext
  * Initializes a new BonehFranklinIdentityBasedEncryptionCiphertext with the specified values. Note, that {@code cipherV} and {@code cipherw}
  * will be copied.
  * @param ciphertextOutput the BonehFranklinIdentityBasedEncryptionCiphertext to be initialized
- * @param cipherU an AffinePointer
+ * @param cipherU an AffinePoint
  * @param cipherV binary string
  * @param cipherVLength the size of {@code cipherV}
  * @param cipherW binary string
@@ -51,6 +50,6 @@ void bonehFranklinIdentityBasedEncryptionCiphertext_init(BonehFranklinIdentityBa
  * Frees a BonehFranklinIdentityBasedEncryptionCiphertext.
  * @param bonehFranklinIdentityBasedEncryptionCiphertext the BonehFranklinIdentityBasedEncryptionCiphertext to be destroyed
  */
-void bonehFranklinIdentityBasedEncryptionCiphertext_destroy(BonehFranklinIdentityBasedEncryptionCiphertext bonehFranklinIdentityBasedEncryptionCiphertext);
+void bonehFranklinIdentityBasedEncryptionCiphertext_destroy(BonehFranklinIdentityBasedEncryptionCiphertext ciphertext);
 
 #endif
