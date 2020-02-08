@@ -110,7 +110,7 @@ CryptidStatus hashToPoint(AffinePoint *result, const char *const id, const int i
     mpz_cdiv_q(pAddOneQq, pAddOne, q);
 
     // Let \f$Q = [(p + 1) / q ]Q^{\prime}\f$, a point of order \f$q\f$ in \f$E(F_p)\f$.
-    CryptidStatus status = AFFINE_MULTIPLY_IMPL(result, qPrime, pAddOneQq, ellipticCurve);
+    CryptidStatus status = affine_wNAFMultiply(result, qPrime, pAddOneQq, ellipticCurve);
     if(status)
     {
         mpz_clears(y, x, pxTwo, pxTwoSub, pxTwoSubQ3, yPowTwo, yPowTwoSub, pAddOne, pAddOneQq, NULL);

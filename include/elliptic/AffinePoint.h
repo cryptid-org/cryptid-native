@@ -7,13 +7,6 @@
 #include "util/Status.h"
 
 /**
- * We have multiple implemetations of the affine-scalar multiplication. This macro
- * defines which one to use.
- */
-#define AFFINE_MULTIPLY_IMPL affine_wNAFMultiply
-
-
-/**
  * Represents an affine point with coordinates.
  */
 typedef struct AffinePoint
@@ -93,18 +86,6 @@ CryptidStatus affine_double(AffinePoint *result, const AffinePoint affinePoint, 
  * @return CRYPTID_SUCCESS if everything went right, error otherwise
  */
 CryptidStatus affine_add(AffinePoint *result, const AffinePoint affinePoint1, const AffinePoint affinePoint2, const EllipticCurve ellipticCurve);
-
-/**
- * Multiplies an AffinePoint with a scalar.
- * 
- * Implementation note: Uses the double-and-add algorithm.
- * @param result The result of the multiplication. On CRYPTID_SUCCESS, this should be destroyed by the caller.
- * @param affinePoint the point to multiply
- * @param s the scalar to multiply with
- * @param ellipticCurve the elliptic curve to operate over
- * @return CRYPTID_SUCCESS if everything went right, error otherwise
- */
-CryptidStatus affine_multiply(AffinePoint *result, const AffinePoint affinePoint, const mpz_t s, const EllipticCurve ellipticCurve);
 
 /**
  * Multiplies an AffinePoint with a scalar.

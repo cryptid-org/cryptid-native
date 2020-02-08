@@ -84,7 +84,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(mpz_t masterSecret, BonehFranklinI
         mpz_init_set(rMul, r);
         mpz_mul_ui(rMul, rMul, 12);
 
-        status = AFFINE_MULTIPLY_IMPL(&pointP, pointPprime, rMul, ec);
+        status = affine_wNAFMultiply(&pointP, pointPprime, rMul, ec);
 
         if (status)
         {
@@ -112,7 +112,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(mpz_t masterSecret, BonehFranklinI
     // Determine the public parameters.
     AffinePoint pointPpublic;
 
-    status = AFFINE_MULTIPLY_IMPL(&pointPpublic, pointP, s, ec);
+    status = affine_wNAFMultiply(&pointPpublic, pointP, s, ec);
 
     if (status)
     {
@@ -168,7 +168,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePoint* result, const char 
     }
 
     // Let \f$S_{id} = [s]Q_{id}\f$.
-    status = AFFINE_MULTIPLY_IMPL(result, qId, masterSecret, publicParameters.ellipticCurve);
+    status = affine_wNAFMultiply(result, qId, masterSecret, publicParameters.ellipticCurve);
 
     affine_destroy(qId);
 
@@ -252,7 +252,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
 
     // Let \f$U = [l]P\f$, which is a point of order \f$q\f$ in \f$E(F_p)\f$.
     AffinePoint cipherPointU;
-    status = AFFINE_MULTIPLY_IMPL(&cipherPointU, publicParameters.pointP, l, publicParameters.ellipticCurve);
+    status = affine_wNAFMultiply(&cipherPointU, publicParameters.pointP, l, publicParameters.ellipticCurve);
     if(status)
     {
         mpz_clear(l);
@@ -431,7 +431,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const BonehFrankl
     
     // Verify that \f$U = [l]P\f$.
     AffinePoint testPoint;
-    status = AFFINE_MULTIPLY_IMPL(&testPoint, publicParameters.pointP, l, publicParameters.ellipticCurve);
+    status = affine_wNAFMultiply(&testPoint, publicParameters.pointP, l, publicParameters.ellipticCurve);
     if(status)
     {
         mpz_clear(l);

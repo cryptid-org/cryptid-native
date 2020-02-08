@@ -7,37 +7,6 @@
 #include "elliptic/AffinePoint.h"
 #include "elliptic/EllipticCurve.h"
 
-
-TEST multiplication_should_just_work(const AffinePoint p, const long s, const AffinePoint expected)
-{
-    // Given
-    mpz_t scalar;
-    mpz_init_set_ui(scalar, s);
-    EllipticCurve ec;
-    ellipticCurve_initLong(&ec, 0, 1, 5);
-
-    // When
-    AffinePoint result;
-    int err = affine_multiply(&result, p, scalar, ec);
-
-    if (err)
-    {
-        ellipticCurve_destroy(ec);
-        mpz_clear(scalar);
-
-        FAIL();
-    }
-
-    // Then
-    ASSERT(affine_isEquals(result, expected));
-
-    affine_destroy(result);
-    ellipticCurve_destroy(ec);
-    mpz_clear(scalar);
-
-    PASS();
-}
-
 TEST wnafmultiplication_should_just_work(const AffinePoint p, const long s, const AffinePoint expected)
 {
     // Given
@@ -66,44 +35,6 @@ TEST wnafmultiplication_should_just_work(const AffinePoint p, const long s, cons
     mpz_clear(scalar);
 
     PASS();
-}
-
-SUITE(multiplication_suite)
-{
-    {
-        AffinePoint p;
-        affine_initLong(&p, 0, 1);
-        AffinePoint expected;
-        affine_initLong(&expected, 0, 4);
-
-        RUN_TESTp(multiplication_should_just_work, p, 2, expected);
-
-        affine_destroy(p);
-        affine_destroy(expected);
-    }
-
-    {
-        AffinePoint p;
-        affine_initLong(&p, 0, 4);
-        AffinePoint expected;
-        affine_initLong(&expected, 0, 1);
-
-        RUN_TESTp(multiplication_should_just_work, p, 2, expected);
-
-        affine_destroy(p);
-        affine_destroy(expected);
-    }
-
-    {
-        AffinePoint p;
-        affine_initLong(&p, 2, 2);
-        AffinePoint expected = affine_infinity();
-
-        RUN_TESTp(multiplication_should_just_work, p, 0, expected);
-
-        affine_destroy(p);
-        affine_destroy(expected);
-    }
 }
 
 SUITE(wnafmultiplication_suite)
@@ -329,7 +260,6 @@ int main(int argc, char **argv)
 {
     GREATEST_MAIN_BEGIN();
 
-    RUN_SUITE(multiplication_suite);
     RUN_SUITE(wnafmultiplication_suite);
     RUN_SUITE(addition_suite);
 

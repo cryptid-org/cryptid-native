@@ -183,7 +183,7 @@ CryptidStatus affine_add(AffinePoint *result, const AffinePoint affinePoint1, co
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus affine_multiply(AffinePoint *result, const AffinePoint affinePoint, const mpz_t s, const EllipticCurve ellipticCurve)
+static CryptidStatus affine_multiply(AffinePoint *result, const AffinePoint affinePoint, const mpz_t s, const EllipticCurve ellipticCurve)
 {
     // Implementation of Algorithm 3.26 in [Guide-to-ECC].
 
