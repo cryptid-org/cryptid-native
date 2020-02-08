@@ -30,12 +30,12 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(mpz_t masterSecret, BonehFranklinI
  *               the caller. Initialization is done by this function.
  * @param identity the identity string we're extracting the private key for
  * @param identityLength the length of the identity string
- * @param publicParameters the BF-IBE public parameters
  * @param masterSecret the master secret corresponding to the public parameters
+ * @param publicParameters the BF-IBE public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePoint* result, const char *const identity, const size_t identityLength, 
-                       const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters, const mpz_t masterSecret);
+CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePoint* result, const char *const identity, const size_t identityLength, const mpz_t masterSecret, 
+                       const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters);
 
 /**
  * Encrypts a message with the given identity string.
@@ -56,12 +56,12 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
  * Decrypts a previously encrypted message using the specified private key.
  * @param result Out parameter holding the message in plaintext. If the return value is CRYPTID_SUCCESS
  *               then it will point to a zero-terminated string, that must be destroyed by the caller. 
- * @param privateKey the private key to decrypt with
  * @param ciphertext the ciphertext to decrypt
+ * @param privateKey the private key to decrypt with
  * @param publicParameters the BF-IBE public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint privateKey, const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext, 
+CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext, const AffinePoint privateKey, 
                        const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters);
 
 #endif

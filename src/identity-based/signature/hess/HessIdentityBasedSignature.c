@@ -136,8 +136,8 @@ CryptidStatus cryptid_ibs_hess_setup(mpz_t masterSecret, HessIdentityBasedSignat
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const identity, const size_t identityLength,
-                    const HessIdentityBasedSignaturePublicParameters publicParameters, const mpz_t masterSecret)
+CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const identity, const size_t identityLength, const mpz_t masterSecret,
+                    const HessIdentityBasedSignaturePublicParameters publicParameters)
 {
     // Implementation of Algorithm 5.3.1 (BFextractPriv) in [RFC-5091].
 
@@ -175,8 +175,8 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const id
     return status;
 }
 
-CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result, const AffinePoint privateKey, const char *const message, const size_t messageLength,
-                    const char *const identity, const size_t identityLength, const HessIdentityBasedSignaturePublicParameters publicParameters)
+CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result, const char *const message, const size_t messageLength,
+                    const char *const identity, const size_t identityLength, const AffinePoint privateKey, const HessIdentityBasedSignaturePublicParameters publicParameters)
 {
     // Implementation of Scheme 1. Sign in [HESS-IBS].
 

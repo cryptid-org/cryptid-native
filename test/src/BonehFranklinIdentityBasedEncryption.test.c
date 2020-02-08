@@ -28,7 +28,7 @@ TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel secu
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     AffinePoint privateKey;
-    status = cryptid_ibe_bonehFranklin_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret);
+    status = cryptid_ibe_bonehFranklin_extract(&privateKey, identity, strlen(identity), masterSecret, *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
@@ -38,7 +38,7 @@ TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel secu
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     char *plaintext;
-    status = cryptid_ibe_bonehFranklin_decrypt(&plaintext, privateKey, *ciphertext, *publicParameters);
+    status = cryptid_ibe_bonehFranklin_decrypt(&plaintext, *ciphertext, privateKey, *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
     ASSERT_EQ(strcmp(message, plaintext), 0);
@@ -68,7 +68,7 @@ TEST fresh_boneh_franklin_ibe_setup_different_identities(const SecurityLevel sec
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     AffinePoint privateKey;
-    status = cryptid_ibe_bonehFranklin_extract(&privateKey, decryptIdentity, strlen(decryptIdentity), *publicParameters, masterSecret);
+    status = cryptid_ibe_bonehFranklin_extract(&privateKey, decryptIdentity, strlen(decryptIdentity), masterSecret, *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
@@ -78,7 +78,7 @@ TEST fresh_boneh_franklin_ibe_setup_different_identities(const SecurityLevel sec
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     char *plaintext;
-    status = cryptid_ibe_bonehFranklin_decrypt(&plaintext, privateKey, *ciphertext, *publicParameters);
+    status = cryptid_ibe_bonehFranklin_decrypt(&plaintext, *ciphertext, privateKey, *publicParameters);
 
     ASSERT_EQ(status, CRYPTID_DECRYPTION_FAILED_ERROR);
 

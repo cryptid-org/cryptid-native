@@ -29,28 +29,28 @@ CryptidStatus cryptid_ibs_hess_setup(mpz_t masterSecret, HessIdentityBasedSignat
  *               the caller. Initialization is done by this function.
  * @param identity the identity string we're extracting the private key for
  * @param identityLength the length of the identity string
- * @param publicParameters the Hess-IBS public parameters
  * @param masterSecret the master secret corresponding to the public parameters
+ * @param publicParameters the Hess-IBS public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const identity, const size_t identityLength,
-                    const HessIdentityBasedSignaturePublicParameters publicParameters, const mpz_t masterSecret);
+CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const identity, const size_t identityLength, const mpz_t masterSecret,
+                    const HessIdentityBasedSignaturePublicParameters publicParameters);
 
 /**
  * Signs a message with the given identity string.
  * @param result Out parameter storing the signature. If the return value is CRYPTID_SUCCESS
  *               then it will point to a HessIdentityBasedSignatureSignature instance, that must be destroyed by the caller.
  *               Initialization is done by this function.
- * @param privateKey the private key to sign with
  * @param message the string to sign
  * @param messageLength the length of the message
  * @param identity the identity string to sign with
  * @param identityLength the length of the identity
+ * @param privateKey the private key to sign with
  * @param publicParameters the Hess-IBS public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result, const AffinePoint privateKey, const char *const message, const size_t messageLength,
-                    const char *const identity, const size_t identityLength, const HessIdentityBasedSignaturePublicParameters publicParameters);
+CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result, const char *const message, const size_t messageLength,
+                    const char *const identity, const size_t identityLength, const AffinePoint privateKey, const HessIdentityBasedSignaturePublicParameters publicParameters);
 
 /**
  * Verifies the signature to a previously signed message.

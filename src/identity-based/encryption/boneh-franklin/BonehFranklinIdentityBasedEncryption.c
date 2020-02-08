@@ -136,8 +136,8 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(mpz_t masterSecret, BonehFranklinI
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePoint* result, const char *const identity, const size_t identityLength, 
-                       const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters, const mpz_t masterSecret)
+CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePoint* result, const char *const identity, const size_t identityLength, const mpz_t masterSecret, 
+                       const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters)
 {
     // Implementation of Algorithm 5.3.1 (BFextractPriv) in [RFC-5091].
 
@@ -333,7 +333,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const AffinePoint privateKey, const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext, 
+CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext , const AffinePoint privateKey, 
                        const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters)
 {
     // Implementation of Algorithm 5.5.1 (BFdecrypt) in [RFC-5091].
