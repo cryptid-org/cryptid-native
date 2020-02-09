@@ -18,111 +18,99 @@ int isVerbose = 0;
 
 TEST fresh_hess_ibs_setup_matching_identities(const SecurityLevel securityLevel, const char *const message, const char *const identity)
 {
-    HessIdentityBasedSignaturePublicParameters* publicParameters = malloc(sizeof (HessIdentityBasedSignaturePublicParameters));
-    mpz_t masterSecret;
-    mpz_init(masterSecret);
-    mpz_init(publicParameters->q);
+    int base = 10;
 
-    CryptidStatus status = cryptid_ibs_hess_setup(masterSecret, publicParameters, securityLevel);
+    HessIdentityBasedSignaturePublicParametersAsString publicParameters;
+    char *masterSecret;
 
-    ASSERT_EQ(status, CRYPTID_SUCCESS);
-
-    AffinePoint privateKey;
-    status = cryptid_ibs_hess_extract(&privateKey, identity, strlen(identity), masterSecret, *publicParameters);
+    CryptidStatus status = cryptid_ibs_hess_setup(&masterSecret, &publicParameters, base, securityLevel, base);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    HessIdentityBasedSignatureSignature* signature = malloc(sizeof (HessIdentityBasedSignatureSignature));
-    status = cryptid_ibs_hess_sign(signature, message, strlen(message), identity, strlen(identity), privateKey, *publicParameters);
+    AffinePointAsString privateKey;
+    status = cryptid_ibs_hess_extract(&privateKey, identity, strlen(identity), masterSecret, base, publicParameters, base);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    status = cryptid_ibs_hess_verify(message, strlen(message), *signature, identity, strlen(identity), *publicParameters);
+    HessIdentityBasedSignatureSignatureAsString signature;
+    status = cryptid_ibs_hess_sign(&signature, message, strlen(message), identity, strlen(identity), privateKey, publicParameters, base);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    hessIdentityBasedSignatureSignature_destroy(*signature);
-    free(signature);
-    affine_destroy(privateKey);
-    mpz_clears(publicParameters->q, masterSecret, NULL);
-    affine_destroy(publicParameters->pointP);
-    affine_destroy(publicParameters->pointPpublic);
-    ellipticCurve_destroy(publicParameters->ellipticCurve);
-    free(publicParameters);
+    status = cryptid_ibs_hess_verify(message, strlen(message), signature, identity, strlen(identity), publicParameters);
+
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
+
+    hessIdentityBasedSignatureSignatureAsString_destroy(signature);
+    affineAsString_destroy(privateKey);
+    free(masterSecret);
+    hessIdentityBasedSignaturePublicParametersAsString_destroy(publicParameters);
 
     PASS();
 }
 
 TEST fresh_hess_ibs_setup_different_identities(const SecurityLevel securityLevel, const char *const message, const char *const signIdentity, const char *const verifyIdentity)
 {
-    HessIdentityBasedSignaturePublicParameters* publicParameters = malloc(sizeof (HessIdentityBasedSignaturePublicParameters));
-    mpz_t masterSecret;
-    mpz_init(masterSecret);
-    mpz_init(publicParameters->q);
+    int base = 10;
 
-    CryptidStatus status = cryptid_ibs_hess_setup(masterSecret, publicParameters, securityLevel);
+    HessIdentityBasedSignaturePublicParametersAsString publicParameters;
+    char *masterSecret;
 
-    ASSERT_EQ(status, CRYPTID_SUCCESS);
-
-    AffinePoint privateKey;
-    status = cryptid_ibs_hess_extract(&privateKey, signIdentity, strlen(signIdentity), masterSecret, *publicParameters);
+    CryptidStatus status = cryptid_ibs_hess_setup(&masterSecret, &publicParameters, base, securityLevel, base);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    HessIdentityBasedSignatureSignature* signature = malloc(sizeof (HessIdentityBasedSignatureSignature));
-    status = cryptid_ibs_hess_sign(signature, message, strlen(message), signIdentity, strlen(signIdentity), privateKey, *publicParameters);
+    AffinePointAsString privateKey;
+    status = cryptid_ibs_hess_extract(&privateKey, signIdentity, strlen(signIdentity), masterSecret, base, publicParameters, base);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    status = cryptid_ibs_hess_verify(message, strlen(message), *signature, verifyIdentity, strlen(verifyIdentity), *publicParameters);
+    HessIdentityBasedSignatureSignatureAsString signature;
+    status = cryptid_ibs_hess_sign(&signature, message, strlen(message), signIdentity, strlen(signIdentity), privateKey, publicParameters, base);
+
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
+
+    status = cryptid_ibs_hess_verify(message, strlen(message), signature, verifyIdentity, strlen(verifyIdentity), publicParameters);
 
     ASSERT_EQ(status, CRYPTID_VERIFICATION_FAILED_ERROR);
 
-    hessIdentityBasedSignatureSignature_destroy(*signature);
-    free(signature);
-    affine_destroy(privateKey);
-    mpz_clears(publicParameters->q, masterSecret, NULL);
-    affine_destroy(publicParameters->pointP);
-    affine_destroy(publicParameters->pointPpublic);
-    ellipticCurve_destroy(publicParameters->ellipticCurve);
-    free(publicParameters);
+    hessIdentityBasedSignatureSignatureAsString_destroy(signature);
+    affineAsString_destroy(privateKey);
+    free(masterSecret);
+    hessIdentityBasedSignaturePublicParametersAsString_destroy(publicParameters);
 
     PASS();
 }
 
 TEST fresh_hess_ibs_setup_wrong_signature(const SecurityLevel securityLevel, const char *const message1, const char *const message2, const char *const identity)
 {
-    HessIdentityBasedSignaturePublicParameters* publicParameters = malloc(sizeof (HessIdentityBasedSignaturePublicParameters));
-    mpz_t masterSecret;
-    mpz_init(masterSecret);
-    mpz_init(publicParameters->q);
+    int base = 10;
 
-    CryptidStatus status = cryptid_ibs_hess_setup(masterSecret, publicParameters, securityLevel);
+    HessIdentityBasedSignaturePublicParametersAsString publicParameters;
+    char *masterSecret;
 
-    ASSERT_EQ(status, CRYPTID_SUCCESS);
-
-    AffinePoint privateKey;
-    status = cryptid_ibs_hess_extract(&privateKey, identity, strlen(identity), masterSecret, *publicParameters);
+    CryptidStatus status = cryptid_ibs_hess_setup(&masterSecret, &publicParameters, base, securityLevel, base);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    HessIdentityBasedSignatureSignature* signature = malloc(sizeof (HessIdentityBasedSignatureSignature));
-    status = cryptid_ibs_hess_sign(signature, message1, strlen(message1), identity, strlen(identity), privateKey, *publicParameters);
+    AffinePointAsString privateKey;
+    status = cryptid_ibs_hess_extract(&privateKey, identity, strlen(identity), masterSecret, base, publicParameters, base);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    status = cryptid_ibs_hess_verify(message2, strlen(message2), *signature, identity, strlen(identity), *publicParameters);
+    HessIdentityBasedSignatureSignatureAsString signature;
+    status = cryptid_ibs_hess_sign(&signature, message1, strlen(message1), identity, strlen(identity), privateKey, publicParameters, base);
+
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
+
+    status = cryptid_ibs_hess_verify(message2, strlen(message2), signature, identity, strlen(identity), publicParameters);
 
     ASSERT_EQ(status, CRYPTID_VERIFICATION_FAILED_ERROR);
 
-    hessIdentityBasedSignatureSignature_destroy(*signature);
-    free(signature);
-    affine_destroy(privateKey);
-    mpz_clears(publicParameters->q, masterSecret, NULL);
-    affine_destroy(publicParameters->pointP);
-    affine_destroy(publicParameters->pointPpublic);
-    ellipticCurve_destroy(publicParameters->ellipticCurve);
-    free(publicParameters);
+    hessIdentityBasedSignatureSignatureAsString_destroy(signature);
+    affineAsString_destroy(privateKey);
+    free(masterSecret);
+    hessIdentityBasedSignaturePublicParametersAsString_destroy(publicParameters);
 
     PASS();
 }

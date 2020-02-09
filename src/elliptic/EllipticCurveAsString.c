@@ -33,7 +33,7 @@ void ellipticCurveAsString_destroy(EllipticCurveAsString ellipticCurveAsString)
 
 void ellipticCurveAsString_toEllipticCurve(EllipticCurve *ellipticCurveOutput, const EllipticCurveAsString ellipticCurveAsString)
 {
-    mpz_inits(ellipticCurveOutput->a,ellipticCurveOutput->b, ellipticCurveOutput->fieldOrder, NULL);
+    mpz_inits(ellipticCurveOutput->a, ellipticCurveOutput->b, ellipticCurveOutput->fieldOrder, NULL);
 
     mpz_set_str(ellipticCurveOutput->a, ellipticCurveAsString.a, ellipticCurveAsString.aBase);
     mpz_set_str(ellipticCurveOutput->b, ellipticCurveAsString.b, ellipticCurveAsString.bBase);

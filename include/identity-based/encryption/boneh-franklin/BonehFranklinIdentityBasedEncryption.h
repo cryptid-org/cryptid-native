@@ -18,7 +18,9 @@
  * @param masterSecretAsString Out parameter which will hold the master secret.
  * @param publicParametersAsString Pointer in which the public parameters will be stored. If the return value is CRYPTID_SUCCESS
  *                         then it will point to correctly filled BonehFranklinIdentityBasedEncryptionPublicParametersAsString instance.
+ * @param masterSecretAsStringBase the base of the masterSecret string representation
  * @param securityLevel the desired security level
+ * @param base the base of every other number's string representation
  * @return CRYPTID_SUCCESS if everything went right
  */
 CryptidStatus cryptid_ibe_bonehFranklin_setup(char **masterSecretAsString, BonehFranklinIdentityBasedEncryptionPublicParametersAsString* publicParametersAsString, const int masterSecretAsStringBase, const SecurityLevel securityLevel, const int base);
@@ -30,7 +32,9 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(char **masterSecretAsString, Boneh
  * @param identity the identity string we're extracting the private key for
  * @param identityLength the length of the identity string
  * @param masterSecretAsString the master secret corresponding to the public parameters
+ * @param masterSecretAsStringBase the base of the masterSecret string representation
  * @param publicParametersAsString the BF-IBE public parameters
+ * @param base the base of every other number's string representation
  * @return CRYPTID_SUCCESS if everything went right
  */
 CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePointAsString *result, const char *const identity, const size_t identityLength, const char *const masterSecretAsString, const int masterSecretAsStringBase, const BonehFranklinIdentityBasedEncryptionPublicParametersAsString publicParametersAsString, const int base);
@@ -45,6 +49,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePointAsString *result, con
  * @param identity the identity string to encrypt with
  * @param identityLength the length of the identity
  * @param publicParametersAsString the BF-IBE public parameters
+ * @param base the base of every other number's string representation
  * @return CRYPTID_SUCCESS if everything went right
  */
 CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryptionCiphertextAsString *result, const char *const message, const size_t messageLength, const char *const identity, const size_t identityLength, const BonehFranklinIdentityBasedEncryptionPublicParametersAsString publicParametersAsString, const int base);

@@ -40,7 +40,7 @@ void hessIdentityBasedSignaturePublicParametersAsString_toHessIdentityBasedSigna
 void hessIdentityBasedSignaturePublicParameters_toHessIdentityBasedSignaturePublicParametersAsString(HessIdentityBasedSignaturePublicParametersAsString *publicParametersAsStringOutput, const HessIdentityBasedSignaturePublicParameters publicParameters, const int base)
 {
     ellipticCurve_toEllipticCurveAsString(&publicParametersAsStringOutput->ellipticCurve, publicParameters.ellipticCurve, base, base, base);
-    
+
     publicParametersAsStringOutput->q = mpz_get_str(NULL, base, publicParameters.q);
 
     publicParametersAsStringOutput->qBase = base;

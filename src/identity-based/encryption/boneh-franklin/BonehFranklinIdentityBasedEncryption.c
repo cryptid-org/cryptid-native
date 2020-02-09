@@ -1,8 +1,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+//TODO remove this later
 #define __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION
-
 #include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryption.h"
 #include "elliptic/TatePairing.h"
 #include "util/Random.h"
@@ -128,7 +128,6 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(char **masterSecretAsString, Boneh
     hashFunction_initForSecurityLevel(&hashFunction, securityLevel);
 
     BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters;
-
     bonehFranklinIdentityBasedEncryptionPublicParameters_init(&publicParameters, ec, q, pointP, pointPpublic, hashFunction);
 
     bonehFranklinIdentityBasedEncryptionPublicParameters_toBonehFranklinIdentityBasedEncryptionPublicParametersAsString(publicParametersAsString, publicParameters, base);
@@ -186,10 +185,10 @@ CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePointAsString *result, con
 
     affine_toAffineAsString(result, affineResult, base, base);
 
+    bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
     affine_destroy(qId);
     affine_destroy(affineResult);
     mpz_clear(masterSecret);
-    bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
 
     return status;
 }
