@@ -5,9 +5,9 @@
 
 #include "gmp.h"
 
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsString.h"
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsString.h"
 #include "elliptic/AffinePoint.h"
-#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h"
-#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h"
 #include "util/SecurityLevel.h"
 #include "util/Status.h"
 
@@ -15,14 +15,13 @@
 /**
  * Establishes a master secret and public parameters for a given security level. The master secret (as its name suggests)
  * should be kept secret, while the public parameters can be distributed among the clients.
- * @param masterSecret Out parameter which will hold the master secret. Must be mpz_init'd and mpz_clear'd by the caller.
- * @param publicParameters Pointer in which the public parameters will be stored. If the return value is CRYPTID_SUCCESS
- *                         then it will point to correctly filled BonehFranklinIdentityBasedEncryptionPublicParameters instance. Note, that the
- *                         q field must be mpz_init'd and thus mpz_clear'd be the caller.
+ * @param masterSecretAsString Out parameter which will hold the master secret.
+ * @param publicParametersAsString Pointer in which the public parameters will be stored. If the return value is CRYPTID_SUCCESS
+ *                         then it will point to correctly filled BonehFranklinIdentityBasedEncryptionPublicParametersAsString instance.
  * @param securityLevel the desired security level
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_ibe_bonehFranklin_setup(mpz_t masterSecret, BonehFranklinIdentityBasedEncryptionPublicParameters* publicParameters, const SecurityLevel securityLevel);
+CryptidStatus cryptid_ibe_bonehFranklin_setup(char **masterSecretAsString, BonehFranklinIdentityBasedEncryptionPublicParametersAsString* publicParametersAsString, const int masterSecretAsStringBase, const SecurityLevel securityLevel, const int base);
 
 /**
  * Extracts the private key corresponding to a given identity string.
@@ -30,39 +29,36 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(mpz_t masterSecret, BonehFranklinI
  *               the caller. Initialization is done by this function.
  * @param identity the identity string we're extracting the private key for
  * @param identityLength the length of the identity string
- * @param masterSecret the master secret corresponding to the public parameters
- * @param publicParameters the BF-IBE public parameters
+ * @param masterSecretAsString the master secret corresponding to the public parameters
+ * @param publicParametersAsString the BF-IBE public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePoint* result, const char *const identity, const size_t identityLength, const mpz_t masterSecret, 
-                       const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters);
+CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePointAsString *result, const char *const identity, const size_t identityLength, const char *const masterSecretAsString, const int masterSecretAsStringBase, const BonehFranklinIdentityBasedEncryptionPublicParametersAsString publicParametersAsString, const int base);
 
 /**
  * Encrypts a message with the given identity string.
  * @param result Out parameter storing the ciphertext. If the return value is CRYPTID_SUCCESS
- *               then it will point to an BonehFranklinIdentityBasedEncryptionCiphertext instance, that must be destroyed by the caller.
+ *               then it will point to an BonehFranklinIdentityBasedEncryptionCiphertextAsString instance, that must be destroyed by the caller.
  *               Initialization is done by this function.
  * @param message the string to encrypt
  * @param messageLength the length of the message
  * @param identity the identity string to encrypt with
  * @param identityLength the length of the identity
- * @param publicParameters the BF-IBE public parameters
+ * @param publicParametersAsString the BF-IBE public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryptionCiphertext *result, const char *const message, const size_t messageLength,
-                       const char *const identity, const size_t identityLength, const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters);
+CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryptionCiphertextAsString *result, const char *const message, const size_t messageLength, const char *const identity, const size_t identityLength, const BonehFranklinIdentityBasedEncryptionPublicParametersAsString publicParametersAsString, const int base);
 
 /**
  * Decrypts a previously encrypted message using the specified private key.
  * @param result Out parameter holding the message in plaintext. If the return value is CRYPTID_SUCCESS
  *               then it will point to a zero-terminated string, that must be destroyed by the caller. 
- * @param ciphertext the ciphertext to decrypt
- * @param privateKey the private key to decrypt with
- * @param publicParameters the BF-IBE public parameters
+ * @param ciphertextAsString the ciphertext to decrypt
+ * @param privateKeyAsString the private key to decrypt with
+ * @param publicParametersAsString the BF-IBE public parameters
  * @return CRYPTID_SUCCESS if everything went right
  */
-CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext, const AffinePoint privateKey, 
-                       const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters);
+CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const BonehFranklinIdentityBasedEncryptionCiphertextAsString ciphertextAsString, const AffinePointAsString privateKeyAsString, const BonehFranklinIdentityBasedEncryptionPublicParametersAsString publicParametersAsString);
 
 #endif
 

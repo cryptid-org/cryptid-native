@@ -18,78 +18,70 @@ int isVerbose = 0;
 
 TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel securityLevel, const char *const message, const char *const identity)
 {
-    BonehFranklinIdentityBasedEncryptionPublicParameters* publicParameters = malloc(sizeof (BonehFranklinIdentityBasedEncryptionPublicParameters));
-    mpz_t masterSecret;
-    mpz_init(masterSecret);
-    mpz_init(publicParameters->q);
+    int base = 10;
 
-    CryptidStatus status = cryptid_ibe_bonehFranklin_setup(masterSecret, publicParameters, securityLevel);
+    BonehFranklinIdentityBasedEncryptionPublicParametersAsString publicParameters;
+    char *masterSecret;
 
-    ASSERT_EQ(status, CRYPTID_SUCCESS);
-
-    AffinePoint privateKey;
-    status = cryptid_ibe_bonehFranklin_extract(&privateKey, identity, strlen(identity), masterSecret, *publicParameters);
+    CryptidStatus status = cryptid_ibe_bonehFranklin_setup(&masterSecret, &publicParameters, base, securityLevel, base);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    BonehFranklinIdentityBasedEncryptionCiphertext* ciphertext = malloc(sizeof (BonehFranklinIdentityBasedEncryptionCiphertext));
-    status = cryptid_ibe_bonehFranklin_encrypt(ciphertext, message, strlen(message), identity, strlen(identity), *publicParameters);
+    AffinePointAsString privateKey;
+    status = cryptid_ibe_bonehFranklin_extract(&privateKey, identity, strlen(identity), masterSecret, base, publicParameters, base);
+
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
+
+    BonehFranklinIdentityBasedEncryptionCiphertextAsString ciphertext;
+    status = cryptid_ibe_bonehFranklin_encrypt(&ciphertext, message, strlen(message), identity, strlen(identity), publicParameters, base);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     char *plaintext;
-    status = cryptid_ibe_bonehFranklin_decrypt(&plaintext, *ciphertext, privateKey, *publicParameters);
+    status = cryptid_ibe_bonehFranklin_decrypt(&plaintext, ciphertext, privateKey, publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
     ASSERT_EQ(strcmp(message, plaintext), 0);
 
     free(plaintext);
-    bonehFranklinIdentityBasedEncryptionCiphertext_destroy(*ciphertext);
-    free(ciphertext);
-    affine_destroy(privateKey);
-    mpz_clears(publicParameters->q, masterSecret, NULL);
-    affine_destroy(publicParameters->pointP);
-    affine_destroy(publicParameters->pointPpublic);
-    ellipticCurve_destroy(publicParameters->ellipticCurve);
-    free(publicParameters);
+    bonehFranklinIdentityBasedEncryptionCiphertextAsString_destroy(ciphertext);
+    affineAsString_destroy(privateKey);
+    free(masterSecret);
+    bonehFranklinIdentityBasedEncryptionPublicParametersAsString_destroy(publicParameters);
 
     PASS();
 }
 
 TEST fresh_boneh_franklin_ibe_setup_different_identities(const SecurityLevel securityLevel, const char *const message, const char *const encryptIdentity, const char *const decryptIdentity)
 {
-    BonehFranklinIdentityBasedEncryptionPublicParameters* publicParameters = malloc(sizeof (BonehFranklinIdentityBasedEncryptionPublicParameters));
-    mpz_t masterSecret;
-    mpz_init(masterSecret);
-    mpz_init(publicParameters->q);
+    int base = 10;
 
-    CryptidStatus status = cryptid_ibe_bonehFranklin_setup(masterSecret, publicParameters, securityLevel);
+    BonehFranklinIdentityBasedEncryptionPublicParametersAsString publicParameters;
+    char *masterSecret;
 
-    ASSERT_EQ(status, CRYPTID_SUCCESS);
-
-    AffinePoint privateKey;
-    status = cryptid_ibe_bonehFranklin_extract(&privateKey, decryptIdentity, strlen(decryptIdentity), masterSecret, *publicParameters);
+    CryptidStatus status = cryptid_ibe_bonehFranklin_setup(&masterSecret, &publicParameters, 10, securityLevel, 10);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    BonehFranklinIdentityBasedEncryptionCiphertext* ciphertext = malloc(sizeof (BonehFranklinIdentityBasedEncryptionCiphertext));
-    status = cryptid_ibe_bonehFranklin_encrypt(ciphertext, message, strlen(message), encryptIdentity, strlen(encryptIdentity), *publicParameters);
+    AffinePointAsString privateKey;
+    status = cryptid_ibe_bonehFranklin_extract(&privateKey, decryptIdentity, strlen(decryptIdentity), masterSecret, base, publicParameters, base);
+
+    ASSERT_EQ(status, CRYPTID_SUCCESS);
+
+    BonehFranklinIdentityBasedEncryptionCiphertextAsString ciphertext;
+    status = cryptid_ibe_bonehFranklin_encrypt(&ciphertext, message, strlen(message), encryptIdentity, strlen(encryptIdentity), publicParameters, base);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     char *plaintext;
-    status = cryptid_ibe_bonehFranklin_decrypt(&plaintext, *ciphertext, privateKey, *publicParameters);
+    status = cryptid_ibe_bonehFranklin_decrypt(&plaintext, ciphertext, privateKey, publicParameters);
 
     ASSERT_EQ(status, CRYPTID_DECRYPTION_FAILED_ERROR);
 
-    bonehFranklinIdentityBasedEncryptionCiphertext_destroy(*ciphertext);
-    free(ciphertext);
-    affine_destroy(privateKey);
-    mpz_clears(publicParameters->q, masterSecret, NULL);
-    affine_destroy(publicParameters->pointP);
-    affine_destroy(publicParameters->pointPpublic);
-    ellipticCurve_destroy(publicParameters->ellipticCurve);
-    free(publicParameters);
+    bonehFranklinIdentityBasedEncryptionCiphertextAsString_destroy(ciphertext);
+    affineAsString_destroy(privateKey);
+    free(masterSecret);
+    bonehFranklinIdentityBasedEncryptionPublicParametersAsString_destroy(publicParameters);
 
     PASS();
 }

@@ -8,12 +8,12 @@ void bonehFranklinIdentityBasedEncryptionCiphertextAsString_init(BonehFranklinId
     affineAsString_init(&ciphertextAsStringOutput->cipherU, cipherU.x, cipherU.xBase, cipherU.y, cipherU.yBase);
 
     ciphertextAsStringOutput->cipherV = (unsigned char*)malloc(cipherVLength * sizeof(unsigned char) + 1);
-    memcpy(ciphertextAsStringOutput->cipherV, cipherV, cipherVLength);
+    memcpy(ciphertextAsStringOutput->cipherV, cipherV, cipherVLength + 1);
 
     ciphertextAsStringOutput->cipherVLength = cipherVLength;
 
     ciphertextAsStringOutput->cipherW = (unsigned char*)malloc(cipherWLength * sizeof(unsigned char) + 1);
-    memcpy(ciphertextAsStringOutput->cipherW, cipherW, cipherWLength);
+    memcpy(ciphertextAsStringOutput->cipherW, cipherW, cipherWLength + 1);
 
     ciphertextAsStringOutput->cipherWLength = cipherWLength;
 }
@@ -45,12 +45,12 @@ void bonehFranklinIdentityBasedEncryptionCiphertext_toBonehFranklinIdentityBased
     affine_toAffineAsString(&ciphertextAsStringOutput->cipherU, ciphertext.cipherU, cipherUXBase, cipherUYBase);
 
     ciphertextAsStringOutput->cipherV = (unsigned char*)malloc(ciphertext.cipherVLength * sizeof(unsigned char) + 1);
-    memcpy(ciphertextAsStringOutput->cipherV, ciphertext.cipherV, ciphertext.cipherVLength);
+    memcpy(ciphertextAsStringOutput->cipherV, ciphertext.cipherV, ciphertext.cipherVLength + 1);
 
     ciphertextAsStringOutput->cipherVLength = ciphertext.cipherVLength;
 
     ciphertextAsStringOutput->cipherW = (unsigned char*)malloc(ciphertext.cipherWLength * sizeof(unsigned char) + 1);
-    memcpy(ciphertextAsStringOutput->cipherW, ciphertext.cipherW, ciphertext.cipherWLength);
+    memcpy(ciphertextAsStringOutput->cipherW, ciphertext.cipherW, ciphertext.cipherWLength + 1);
 
     ciphertextAsStringOutput->cipherWLength = ciphertext.cipherWLength;
 }
