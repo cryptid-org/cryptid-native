@@ -136,6 +136,9 @@ CryptidStatus cryptid_ibs_hess_setup(HessIdentityBasedSignatureMasterSecretAsBin
 
     mpz_clears(p, q, s, r, NULL);
     hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+    affine_destroy(pointP);
+    affine_destroy(pointPpublic);
+    ellipticCurve_destroy(ec);
 
     return CRYPTID_SUCCESS;
 }

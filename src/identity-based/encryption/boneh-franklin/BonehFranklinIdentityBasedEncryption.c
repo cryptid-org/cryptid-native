@@ -136,6 +136,9 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(BonehFranklinIdentityBasedEncrypti
 
     mpz_clears(p, q, s, r, NULL);
     bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
+    affine_destroy(pointP);
+    affine_destroy(pointPpublic);
+    ellipticCurve_destroy(ec);
 
     return CRYPTID_SUCCESS;
 }
