@@ -1,3 +1,6 @@
+#ifndef __CRYPTID_CRYPTID_PUBLICKEY_ABE_H
+#define __CRYPTID_CRYPTID_PUBLICKEY_ABE_H
+
 #include "gmp.h"
 
 #include "elliptic/AffinePoint.h"
@@ -15,3 +18,5 @@ typedef struct PublicKey_ABE
 	HashFunction hashFunction;
 	mpz_t q;
 } PublicKey_ABE;
+
+#endif
