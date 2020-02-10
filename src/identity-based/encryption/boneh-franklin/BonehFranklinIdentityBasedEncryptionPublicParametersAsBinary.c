@@ -41,15 +41,15 @@ void bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_toBonehFrankli
     publicParametersOutput->hashFunction = publicParametersAsBinary.hashFunction;
 }
 
-void bonehFranklinIdentityBasedEncryptionPublicParameters_toBonehFranklinIdentityBasedEncryptionPublicParametersAsBinary(BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary *publicParametersAsBinaryOutput, const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters)
+void bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_fromBonehFranklinIdentityBasedEncryptionPublicParameters(BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary *publicParametersAsBinaryOutput, const BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters)
 {
-    ellipticCurve_toEllipticCurveAsBinary(&publicParametersAsBinaryOutput->ellipticCurve, publicParameters.ellipticCurve);
+    ellipticCurveAsBinary_fromEllipticCurve(&publicParametersAsBinaryOutput->ellipticCurve, publicParameters.ellipticCurve);
     
     publicParametersAsBinaryOutput->q = mpz_export(NULL, &publicParametersAsBinaryOutput->qLength, 1, 1, 0, 0, publicParameters.q);
     
-    affine_toAffineAsBinary(&publicParametersAsBinaryOutput->pointP, publicParameters.pointP);
+    affineAsBinary_fromAffine(&publicParametersAsBinaryOutput->pointP, publicParameters.pointP);
 
-    affine_toAffineAsBinary(&publicParametersAsBinaryOutput->pointPpublic, publicParameters.pointPpublic);
+    affineAsBinary_fromAffine(&publicParametersAsBinaryOutput->pointPpublic, publicParameters.pointPpublic);
     
     publicParametersAsBinaryOutput->hashFunction = publicParameters.hashFunction;
 }

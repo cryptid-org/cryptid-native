@@ -27,9 +27,9 @@ void hessIdentityBasedSignatureSignatureAsBinary_toHessIdentityBasedSignatureSig
     mpz_import(signatureOutput->v, signatureAsBinary.vLength, 1, 1, 0, 0, signatureAsBinary.v);
 }
 
-void hessIdentityBasedSignatureSignature_toHessIdentityBasedSignatureSignatureAsBinary(HessIdentityBasedSignatureSignatureAsBinary *signatureAsBinaryOutput, const HessIdentityBasedSignatureSignature signature)
+void hessIdentityBasedSignatureSignatureAsBinary_fromHessIdentityBasedSignatureSignature(HessIdentityBasedSignatureSignatureAsBinary *signatureAsBinaryOutput, const HessIdentityBasedSignatureSignature signature)
 {
-    affine_toAffineAsBinary(&signatureAsBinaryOutput->u, signature.u);
+    affineAsBinary_fromAffine(&signatureAsBinaryOutput->u, signature.u);
 
     signatureAsBinaryOutput->v = mpz_export(NULL, &signatureAsBinaryOutput->vLength, 1, 1, 0, 0, signature.v);
 }

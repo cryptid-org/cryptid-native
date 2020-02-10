@@ -31,7 +31,7 @@ void affineAsBinary_toAffine(AffinePoint *affinePointOutput, const AffinePointAs
     mpz_import(affinePointOutput->y, affinePointAsBinary.yLength, 1, 1, 0, 0, affinePointAsBinary.y);
 }
 
-void affine_toAffineAsBinary(AffinePointAsBinary *affinePointAsBinaryOutput, const AffinePoint affinePoint)
+void affineAsBinary_fromAffine(AffinePointAsBinary *affinePointAsBinaryOutput, const AffinePoint affinePoint)
 {
     affinePointAsBinaryOutput->x = mpz_export(NULL, &affinePointAsBinaryOutput->xLength, 1, 1, 0, 0, affinePoint.x);
 

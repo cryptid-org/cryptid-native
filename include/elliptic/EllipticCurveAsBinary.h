@@ -51,6 +51,6 @@ void ellipticCurveAsBinary_toEllipticCurve(EllipticCurve *ellipticCurveOutput, c
  * @param ellipticCurveAsBinaryOutput the EllipticCurveAsBinary to be initialized based on an EllipticCurve
  * @param ellipticCurve the EllipticCurve, which needs to be converted to EllipticCurveAsBinary
  */
-void ellipticCurve_toEllipticCurveAsBinary(EllipticCurveAsBinary *ellipticCurveAsBinaryOutput, const EllipticCurve ellipticCurve);
+void ellipticCurveAsBinary_fromEllipticCurve(EllipticCurveAsBinary *ellipticCurveAsBinaryOutput, const EllipticCurve ellipticCurve);
 
 #endif

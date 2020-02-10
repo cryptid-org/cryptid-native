@@ -37,7 +37,7 @@ void ellipticCurveAsBinary_toEllipticCurve(EllipticCurve *ellipticCurveOutput, c
     mpz_import(ellipticCurveOutput->fieldOrder, ellipticCurveAsBinary.fieldOrderLength, 1, 1, 0, 0, ellipticCurveAsBinary.fieldOrder);
 }
 
-void ellipticCurve_toEllipticCurveAsBinary(EllipticCurveAsBinary *ellipticCurveAsBinaryOutput, const EllipticCurve ellipticCurve)
+void ellipticCurveAsBinary_fromEllipticCurve(EllipticCurveAsBinary *ellipticCurveAsBinaryOutput, const EllipticCurve ellipticCurve)
 {
     ellipticCurveAsBinaryOutput->a = mpz_export(NULL, &ellipticCurveAsBinaryOutput->aLength, 1, 1, 0, 0, ellipticCurve.a);
 

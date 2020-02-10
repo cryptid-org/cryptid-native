@@ -130,7 +130,7 @@ CryptidStatus cryptid_ibs_hess_setup(HessIdentityBasedSignatureMasterSecretAsBin
     HessIdentityBasedSignaturePublicParameters publicParameters;
     hessIdentityBasedSignaturePublicParameters_init(&publicParameters, ec, q, pointP, pointPpublic, hashFunction);
 
-    hessIdentityBasedSignaturePublicParameters_toHessIdentityBasedSignaturePublicParametersAsBinary(publicParametersAsBinary, publicParameters);
+    hessIdentityBasedSignaturePublicParametersAsBinary_fromHessIdentityBasedSignaturePublicParameters(publicParametersAsBinary, publicParameters);
 
     masterSecretAsBinary->masterSecret = mpz_export(NULL, &masterSecretAsBinary->masterSecretLength, 1, 1 ,0 ,0, s);
 
@@ -187,7 +187,7 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePointAsBinary *result, const char *
     // Let \f$S_{id} = [s]Q_{id}\f$.
     status = affine_wNAFMultiply(&affineResult, qId, masterSecret, publicParameters.ellipticCurve);
 
-    affine_toAffineAsBinary(result, affineResult);
+    affineAsBinary_fromAffine(result, affineResult);
 
     hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
     affine_destroy(qId);
@@ -354,7 +354,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignatureAsBinary 
     HessIdentityBasedSignatureSignature signature;
     hessIdentityBasedSignatureSignature_init(&signature, u, v);
 
-    hessIdentityBasedSignatureSignature_toHessIdentityBasedSignatureSignatureAsBinary(result, signature);
+    hessIdentityBasedSignatureSignatureAsBinary_fromHessIdentityBasedSignatureSignature(result, signature);
 
     hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
     affine_destroy(privateKey);

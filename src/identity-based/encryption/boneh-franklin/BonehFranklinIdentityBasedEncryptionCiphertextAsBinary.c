@@ -40,9 +40,9 @@ void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_toBonehFranklinIdent
     ciphertextOutput->cipherWLength = ciphertextAsBinary.cipherWLength;
 }
 
-void bonehFranklinIdentityBasedEncryptionCiphertext_toBonehFranklinIdentityBasedEncryptionCiphertextAsBinary(BonehFranklinIdentityBasedEncryptionCiphertextAsBinary *ciphertextAsBinaryOutput, const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext)
+void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_fromBonehFranklinIdentityBasedEncryptionCiphertext(BonehFranklinIdentityBasedEncryptionCiphertextAsBinary *ciphertextAsBinaryOutput, const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext)
 {
-    affine_toAffineAsBinary(&ciphertextAsBinaryOutput->cipherU, ciphertext.cipherU);
+    affineAsBinary_fromAffine(&ciphertextAsBinaryOutput->cipherU, ciphertext.cipherU);
 
     ciphertextAsBinaryOutput->cipherV = (unsigned char*)malloc(ciphertext.cipherVLength * sizeof(unsigned char) + 1);
     memcpy(ciphertextAsBinaryOutput->cipherV, ciphertext.cipherV, ciphertext.cipherVLength + 1);

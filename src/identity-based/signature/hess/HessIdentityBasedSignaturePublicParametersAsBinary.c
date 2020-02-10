@@ -41,15 +41,15 @@ void hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSigna
     publicParametersOutput->hashFunction = publicParametersAsBinary.hashFunction;
 }
 
-void hessIdentityBasedSignaturePublicParameters_toHessIdentityBasedSignaturePublicParametersAsBinary(HessIdentityBasedSignaturePublicParametersAsBinary *publicParametersAsBinaryOutput, const HessIdentityBasedSignaturePublicParameters publicParameters)
+void hessIdentityBasedSignaturePublicParametersAsBinary_fromHessIdentityBasedSignaturePublicParameters(HessIdentityBasedSignaturePublicParametersAsBinary *publicParametersAsBinaryOutput, const HessIdentityBasedSignaturePublicParameters publicParameters)
 {
-    ellipticCurve_toEllipticCurveAsBinary(&publicParametersAsBinaryOutput->ellipticCurve, publicParameters.ellipticCurve);
+    ellipticCurveAsBinary_fromEllipticCurve(&publicParametersAsBinaryOutput->ellipticCurve, publicParameters.ellipticCurve);
 
     publicParametersAsBinaryOutput->q = mpz_export(NULL, &publicParametersAsBinaryOutput->qLength, 1, 1, 0, 0, publicParameters.q);
     
-    affine_toAffineAsBinary(&publicParametersAsBinaryOutput->pointP, publicParameters.pointP);
+    affineAsBinary_fromAffine(&publicParametersAsBinaryOutput->pointP, publicParameters.pointP);
 
-    affine_toAffineAsBinary(&publicParametersAsBinaryOutput->pointPpublic, publicParameters.pointPpublic);
+    affineAsBinary_fromAffine(&publicParametersAsBinaryOutput->pointPpublic, publicParameters.pointPpublic);
     
     publicParametersAsBinaryOutput->hashFunction = publicParameters.hashFunction;
 }

@@ -58,6 +58,6 @@ void affineAsBinary_toAffine(AffinePoint *affinePointOutput, const AffinePointAs
  * @param affinePointAsBinaryOutput the AffinePointAsBinary to be initialized based on an AffinePoint
  * @param affinePoint the AffinePoint, which needs to be converted to AffinePointAsBinary
  */
-void affine_toAffineAsBinary(AffinePointAsBinary *affinePointAsBinaryOutput, const AffinePoint affinePoint);
+void affineAsBinary_fromAffine(AffinePointAsBinary *affinePointAsBinaryOutput, const AffinePoint affinePoint);
 
 #endif

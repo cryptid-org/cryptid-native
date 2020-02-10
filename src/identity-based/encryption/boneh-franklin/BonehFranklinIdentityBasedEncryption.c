@@ -130,7 +130,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(BonehFranklinIdentityBasedEncrypti
     BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters;
     bonehFranklinIdentityBasedEncryptionPublicParameters_init(&publicParameters, ec, q, pointP, pointPpublic, hashFunction);
 
-    bonehFranklinIdentityBasedEncryptionPublicParameters_toBonehFranklinIdentityBasedEncryptionPublicParametersAsBinary(publicParametersAsBinary, publicParameters);
+    bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_fromBonehFranklinIdentityBasedEncryptionPublicParameters(publicParametersAsBinary, publicParameters);
 
     masterSecretAsBinary->masterSecret = mpz_export(NULL, &masterSecretAsBinary->masterSecretLength, 1, 1, 0, 0, s);
 
@@ -187,7 +187,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePointAsBinary *result, con
     // Let \f$S_{id} = [s]Q_{id}\f$.
     status = affine_wNAFMultiply(&affineResult, qId, masterSecret, publicParameters.ellipticCurve);
 
-    affine_toAffineAsBinary(result, affineResult);
+    affineAsBinary_fromAffine(result, affineResult);
 
     bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
     affine_destroy(qId);
@@ -346,7 +346,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
     BonehFranklinIdentityBasedEncryptionCiphertext ciphertext;
     bonehFranklinIdentityBasedEncryptionCiphertext_init(&ciphertext, cipherPointU, cipherV, hashLen, cipherW, messageLength);
 
-    bonehFranklinIdentityBasedEncryptionCiphertext_toBonehFranklinIdentityBasedEncryptionCiphertextAsBinary(result, ciphertext);
+    bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_fromBonehFranklinIdentityBasedEncryptionCiphertext(result, ciphertext);
 
     bonehFranklinIdentityBasedEncryptionCiphertext_destroy(ciphertext);
     bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
