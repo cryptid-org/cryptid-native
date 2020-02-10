@@ -39,4 +39,8 @@ typedef struct HessIdentityBasedSignaturePublicParameters
     HashFunction hashFunction;
 } HessIdentityBasedSignaturePublicParameters;
 
+void hessIdentityBasedSignaturePublicParameters_init(HessIdentityBasedSignaturePublicParameters *publicParametersOutput, const EllipticCurve ellipticCurve, const mpz_t q, const AffinePoint pointP, const AffinePoint pointPpublic, const HashFunction hashFunction);
+
+void hessIdentityBasedSignaturePublicParameters_destroy(HessIdentityBasedSignaturePublicParameters publicParameters);
+
 #endif

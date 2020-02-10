@@ -1,6 +1,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+//TODO remove this later
+#define __CRYPTID_HESS_IDENTITY_BASED_SIGNATURE
 #include "identity-based/signature/hess/HessIdentityBasedSignature.h"
 #include "elliptic/TatePairing.h"
 #include "util/Random.h"
@@ -19,17 +21,17 @@ static const unsigned int POINT_GENERATION_ATTEMPT_LIMIT = 100;
 static const unsigned int Q_LENGTH_MAPPING[] = { 160, 224, 256, 384, 512 };
 static const unsigned int P_LENGTH_MAPPING[] = { 512, 1024, 1536, 3840, 7680 };
 
-CryptidStatus cryptid_ibs_hess_setup(mpz_t masterSecret, HessIdentityBasedSignaturePublicParameters* publicParameters, const SecurityLevel securityLevel)
+CryptidStatus cryptid_ibs_hess_setup(HessIdentityBasedSignatureMasterSecretAsBinary *masterSecretAsBinary, HessIdentityBasedSignaturePublicParametersAsBinary *publicParametersAsBinary, const SecurityLevel securityLevel)
 {
     // Implementation of Algorithm 5.1.2 (BFsetup1) in [RFC-5091].
     // Note, that instead of taking the bitlengts of p and q as arguments, this function takes
     // a security level which is in turn translated to bitlengths using {@code P_LENGTH_MAPPING} and
     // {@code Q_LENGTH_MAPPING}.
 
-    if (!publicParameters)
+    /*if (!publicParameters)
     {
         return CRYPTID_PUBLIC_PARAMETERS_NULL_ERROR;
-    }
+    }*/
 
     // Construct the elliptic curve and its subgroup of interest
     // Select a random n_q-bit Solinas prime q
@@ -122,37 +124,45 @@ CryptidStatus cryptid_ibs_hess_setup(mpz_t masterSecret, HessIdentityBasedSignat
         return status;
     }
 
-    publicParameters->ellipticCurve = ec;
-    // TODO: Also init to better conform with other functions.
-    mpz_set(publicParameters->q, q);
-    publicParameters->pointP = pointP;
-    publicParameters->pointPpublic = pointPpublic;
-    hashFunction_initForSecurityLevel(&publicParameters->hashFunction, securityLevel);
+    HashFunction hashFunction;
+    hashFunction_initForSecurityLevel(&hashFunction, securityLevel);
 
-    mpz_set(masterSecret, s);
+    HessIdentityBasedSignaturePublicParameters publicParameters;
+    hessIdentityBasedSignaturePublicParameters_init(&publicParameters, ec, q, pointP, pointPpublic, hashFunction);
+
+    hessIdentityBasedSignaturePublicParametersAsBinary_fromHessIdentityBasedSignaturePublicParameters(publicParametersAsBinary, publicParameters);
+
+    masterSecretAsBinary->masterSecret = mpz_export(NULL, &masterSecretAsBinary->masterSecretLength, 1, 1 ,0 ,0, s);
 
     mpz_clears(p, q, s, r, NULL);
+    hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+    affine_destroy(pointP);
+    affine_destroy(pointPpublic);
+    ellipticCurve_destroy(ec);
 
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const identity, const size_t identityLength, const mpz_t masterSecret,
-                    const HessIdentityBasedSignaturePublicParameters publicParameters)
+CryptidStatus cryptid_ibs_hess_extract(AffinePointAsBinary *result, const char *const identity, const size_t identityLength, const HessIdentityBasedSignatureMasterSecretAsBinary masterSecretAsBinary, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary)
 {
     // Implementation of Algorithm 5.3.1 (BFextractPriv) in [RFC-5091].
 
-    if (!result)
+    /*if (!result)
     {
         return CRYPTID_RESULT_POINTER_NULL_ERROR;
-    }
+    }*/
 
     if (identityLength == 0)
     {
         return CRYPTID_IDENTITY_LENGTH_ERROR;
     }
 
+    HessIdentityBasedSignaturePublicParameters publicParameters;
+    hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsBinary);
+
     if(!validation_isHessIdentityBasedSignaturePublicParametersValid(publicParameters))
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
 
@@ -164,19 +174,30 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePoint* result, const char *const id
 
     if (status) 
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         return status;
     }
 
-    // Let \f$S_{id} = [s]Q_{id}\f$.
-    status = affine_wNAFMultiply(result, qId, masterSecret, publicParameters.ellipticCurve);
+    mpz_t masterSecret;
+    mpz_init(masterSecret);
+    mpz_import(masterSecret, masterSecretAsBinary.masterSecretLength, 1, 1 ,0, 0, masterSecretAsBinary.masterSecret);
 
+    AffinePoint affineResult;
+
+    // Let \f$S_{id} = [s]Q_{id}\f$.
+    status = affine_wNAFMultiply(&affineResult, qId, masterSecret, publicParameters.ellipticCurve);
+
+    affineAsBinary_fromAffine(result, affineResult);
+
+    hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
     affine_destroy(qId);
+    affine_destroy(affineResult);
+    mpz_clear(masterSecret);
 
     return status;
 }
 
-CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result, const char *const message, const size_t messageLength,
-                    const char *const identity, const size_t identityLength, const AffinePoint privateKey, const HessIdentityBasedSignaturePublicParameters publicParameters)
+CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignatureAsBinary *result, const char *const message, const size_t messageLength, const char *const identity, const size_t identityLength, const AffinePointAsBinary privateKeyAsBinary, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary)
 {
     // Implementation of Scheme 1. Sign in [HESS-IBS].
 
@@ -200,8 +221,12 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
         return CRYPTID_IDENTITY_LENGTH_ERROR;
     }
 
+    HessIdentityBasedSignaturePublicParameters publicParameters;
+    hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsBinary);
+
     if(!validation_isHessIdentityBasedSignaturePublicParametersValid(publicParameters))
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
 
@@ -221,6 +246,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     CryptidStatus status = hashToPoint(&pointQId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         mpz_clear(k);
         return status;
     }
@@ -231,6 +257,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     status = tate_performPairing(&theta, pointQId, publicParameters.pointP, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         mpz_clear(k);
         affine_destroy(pointQId);
         return status;
@@ -274,10 +301,15 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
 
     // Let \f$u = v \cdot \mathrm{privateKey} + k \cdot Q_{id}\f$ be a point on the elliptic-curve,
     // part of the signature.
-    AffinePoint u, kMulPointQId, vMulPrivateKey;
+    AffinePoint privateKey, u, kMulPointQId, vMulPrivateKey;
+
+    affineAsBinary_toAffine(&privateKey, privateKeyAsBinary);
+
     status = affine_wNAFMultiply(&vMulPrivateKey, privateKey, v, publicParameters.ellipticCurve);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        affine_destroy(privateKey);
         mpz_clears(k, v, NULL);
         affine_destroy(pointQId);
         complex_destroyMany(2, theta, r);
@@ -290,6 +322,8 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     status = affine_wNAFMultiply(&kMulPointQId, pointQId, k, publicParameters.ellipticCurve);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        affine_destroy(privateKey);
         mpz_clears(k, v, NULL);
         affine_destroy(pointQId);
         affine_destroy(vMulPrivateKey);
@@ -303,6 +337,8 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     status = affine_add(&u, vMulPrivateKey, kMulPointQId, publicParameters.ellipticCurve);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        affine_destroy(privateKey);
         mpz_clears(k, v, NULL);
         affine_destroy(pointQId);
         affine_destroy(vMulPrivateKey);
@@ -315,8 +351,14 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
         return status;
     }
 
-    hessIdentityBasedSignatureSignature_init(result, u, v);
+    HessIdentityBasedSignatureSignature signature;
+    hessIdentityBasedSignatureSignature_init(&signature, u, v);
 
+    hessIdentityBasedSignatureSignatureAsBinary_fromHessIdentityBasedSignatureSignature(result, signature);
+
+    hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+    affine_destroy(privateKey);
+    hessIdentityBasedSignatureSignature_destroy(signature);
     mpz_clears(k, v, NULL);
     affine_destroy(pointQId);
     affine_destroy(vMulPrivateKey);
@@ -331,8 +373,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignature *result,
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t messageLength, const HessIdentityBasedSignatureSignature signature,
-                    const char *const identity, const size_t identityLength, const HessIdentityBasedSignaturePublicParameters publicParameters)
+CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t messageLength, const HessIdentityBasedSignatureSignatureAsBinary signatureAsBinary, const char *const identity, const size_t identityLength, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary)
 {
     // Implementation of Scheme 1. Verify in [HESS-IBS].
 
@@ -346,24 +387,37 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
         return CRYPTID_MESSAGE_LENGTH_ERROR;
     }
 
+    HessIdentityBasedSignaturePublicParameters publicParameters;
+    hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsBinary);
+
+    if(!validation_isHessIdentityBasedSignaturePublicParametersValid(publicParameters))
+    {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
+    }
+
+    HessIdentityBasedSignatureSignature signature;
+    hessIdentityBasedSignatureSignatureAsBinary_toHessIdentityBasedSignatureSignature(&signature, signatureAsBinary);
+
     if(!validation_isHessIdentityBasedSignatureSignatureValid(signature, publicParameters.ellipticCurve.fieldOrder))
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        hessIdentityBasedSignatureSignature_destroy(signature);
         return CRYPTID_ILLEGAL_SIGNATURE_ERROR;
     }
 
     if(!identity)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        hessIdentityBasedSignatureSignature_destroy(signature);
         return CRYPTID_IDENTITY_NULL_ERROR;
     }
 
     if(identityLength == 0)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        hessIdentityBasedSignatureSignature_destroy(signature);
         return CRYPTID_IDENTITY_LENGTH_ERROR;
-    }
-
-    if(!validation_isHessIdentityBasedSignaturePublicParametersValid(publicParameters))
-    {
-        return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
 
     CryptidStatus status;
@@ -379,6 +433,8 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     status = tate_performPairing(&theta1, signature.u, publicParameters.pointP, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        hessIdentityBasedSignatureSignature_destroy(signature);
         return status;
     }
 
@@ -388,6 +444,8 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     status = hashToPoint(&pointQId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        hessIdentityBasedSignatureSignature_destroy(signature);
         complex_destroy(theta1);
         return status;
     }
@@ -407,6 +465,8 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     status = tate_performPairing(&theta2, pointQId, negativePointPpublic, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        hessIdentityBasedSignatureSignature_destroy(signature);
         complex_destroy(theta1);
         affine_destroy(pointQId);
         affine_destroy(negativePointPpublic);
@@ -452,6 +512,8 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     // If the values were the same, the verification returns succes.
     if(mpz_cmp(signature.v, v) == 0)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        hessIdentityBasedSignatureSignature_destroy(signature);
         complex_destroyMany(4, theta1, theta2, theta2Prime, r);
         affine_destroy(pointQId);
         affine_destroy(negativePointPpublic);
@@ -464,6 +526,8 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     }
 
     // Otherwise, failure.
+    hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+    hessIdentityBasedSignatureSignature_destroy(signature);
     complex_destroyMany(4, theta1, theta2, theta2Prime, r);
     affine_destroy(pointQId);
     affine_destroy(negativePointPpublic);
