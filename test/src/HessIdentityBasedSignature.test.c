@@ -18,22 +18,20 @@ int isVerbose = 0;
 
 TEST fresh_hess_ibs_setup_matching_identities(const SecurityLevel securityLevel, const char *const message, const char *const identity)
 {
-    int base = 10;
+    HessIdentityBasedSignaturePublicParametersAsBinary publicParameters;
+    HessIdentityBasedSignatureMasterSecretAsBinary masterSecret;
 
-    HessIdentityBasedSignaturePublicParametersAsString publicParameters;
-    char *masterSecret;
-
-    CryptidStatus status = cryptid_ibs_hess_setup(&masterSecret, &publicParameters, base, securityLevel, base);
+    CryptidStatus status = cryptid_ibs_hess_setup(&masterSecret, &publicParameters, securityLevel);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    AffinePointAsString privateKey;
-    status = cryptid_ibs_hess_extract(&privateKey, identity, strlen(identity), masterSecret, base, publicParameters, base);
+    AffinePointAsBinary privateKey;
+    status = cryptid_ibs_hess_extract(&privateKey, identity, strlen(identity), masterSecret, publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    HessIdentityBasedSignatureSignatureAsString signature;
-    status = cryptid_ibs_hess_sign(&signature, message, strlen(message), identity, strlen(identity), privateKey, publicParameters, base);
+    HessIdentityBasedSignatureSignatureAsBinary signature;
+    status = cryptid_ibs_hess_sign(&signature, message, strlen(message), identity, strlen(identity), privateKey, publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
@@ -41,32 +39,30 @@ TEST fresh_hess_ibs_setup_matching_identities(const SecurityLevel securityLevel,
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    hessIdentityBasedSignatureSignatureAsString_destroy(signature);
-    affineAsString_destroy(privateKey);
-    free(masterSecret);
-    hessIdentityBasedSignaturePublicParametersAsString_destroy(publicParameters);
+    hessIdentityBasedSignatureSignatureAsBinary_destroy(signature);
+    affineAsBinary_destroy(privateKey);
+    free(masterSecret.masterSecret);
+    hessIdentityBasedSignaturePublicParametersAsBinary_destroy(publicParameters);
 
     PASS();
 }
 
 TEST fresh_hess_ibs_setup_different_identities(const SecurityLevel securityLevel, const char *const message, const char *const signIdentity, const char *const verifyIdentity)
 {
-    int base = 10;
+    HessIdentityBasedSignaturePublicParametersAsBinary publicParameters;
+    HessIdentityBasedSignatureMasterSecretAsBinary masterSecret;
 
-    HessIdentityBasedSignaturePublicParametersAsString publicParameters;
-    char *masterSecret;
-
-    CryptidStatus status = cryptid_ibs_hess_setup(&masterSecret, &publicParameters, base, securityLevel, base);
+    CryptidStatus status = cryptid_ibs_hess_setup(&masterSecret, &publicParameters, securityLevel);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    AffinePointAsString privateKey;
-    status = cryptid_ibs_hess_extract(&privateKey, signIdentity, strlen(signIdentity), masterSecret, base, publicParameters, base);
+    AffinePointAsBinary privateKey;
+    status = cryptid_ibs_hess_extract(&privateKey, signIdentity, strlen(signIdentity), masterSecret, publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    HessIdentityBasedSignatureSignatureAsString signature;
-    status = cryptid_ibs_hess_sign(&signature, message, strlen(message), signIdentity, strlen(signIdentity), privateKey, publicParameters, base);
+    HessIdentityBasedSignatureSignatureAsBinary signature;
+    status = cryptid_ibs_hess_sign(&signature, message, strlen(message), signIdentity, strlen(signIdentity), privateKey, publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
@@ -74,32 +70,30 @@ TEST fresh_hess_ibs_setup_different_identities(const SecurityLevel securityLevel
 
     ASSERT_EQ(status, CRYPTID_VERIFICATION_FAILED_ERROR);
 
-    hessIdentityBasedSignatureSignatureAsString_destroy(signature);
-    affineAsString_destroy(privateKey);
-    free(masterSecret);
-    hessIdentityBasedSignaturePublicParametersAsString_destroy(publicParameters);
+    hessIdentityBasedSignatureSignatureAsBinary_destroy(signature);
+    affineAsBinary_destroy(privateKey);
+    free(masterSecret.masterSecret);
+    hessIdentityBasedSignaturePublicParametersAsBinary_destroy(publicParameters);
 
     PASS();
 }
 
 TEST fresh_hess_ibs_setup_wrong_signature(const SecurityLevel securityLevel, const char *const message1, const char *const message2, const char *const identity)
 {
-    int base = 10;
+    HessIdentityBasedSignaturePublicParametersAsBinary publicParameters;
+    HessIdentityBasedSignatureMasterSecretAsBinary masterSecret;
 
-    HessIdentityBasedSignaturePublicParametersAsString publicParameters;
-    char *masterSecret;
-
-    CryptidStatus status = cryptid_ibs_hess_setup(&masterSecret, &publicParameters, base, securityLevel, base);
+    CryptidStatus status = cryptid_ibs_hess_setup(&masterSecret, &publicParameters, securityLevel);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    AffinePointAsString privateKey;
-    status = cryptid_ibs_hess_extract(&privateKey, identity, strlen(identity), masterSecret, base, publicParameters, base);
+    AffinePointAsBinary privateKey;
+    status = cryptid_ibs_hess_extract(&privateKey, identity, strlen(identity), masterSecret, publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    HessIdentityBasedSignatureSignatureAsString signature;
-    status = cryptid_ibs_hess_sign(&signature, message1, strlen(message1), identity, strlen(identity), privateKey, publicParameters, base);
+    HessIdentityBasedSignatureSignatureAsBinary signature;
+    status = cryptid_ibs_hess_sign(&signature, message1, strlen(message1), identity, strlen(identity), privateKey, publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
@@ -107,10 +101,10 @@ TEST fresh_hess_ibs_setup_wrong_signature(const SecurityLevel securityLevel, con
 
     ASSERT_EQ(status, CRYPTID_VERIFICATION_FAILED_ERROR);
 
-    hessIdentityBasedSignatureSignatureAsString_destroy(signature);
-    affineAsString_destroy(privateKey);
-    free(masterSecret);
-    hessIdentityBasedSignaturePublicParametersAsString_destroy(publicParameters);
+    hessIdentityBasedSignatureSignatureAsBinary_destroy(signature);
+    affineAsBinary_destroy(privateKey);
+    free(masterSecret.masterSecret);
+    hessIdentityBasedSignaturePublicParametersAsBinary_destroy(publicParameters);
 
     PASS();
 }

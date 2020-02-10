@@ -18,22 +18,20 @@ int isVerbose = 0;
 
 TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel securityLevel, const char *const message, const char *const identity)
 {
-    int base = 10;
+    BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary publicParameters;
+    BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary masterSecret;
 
-    BonehFranklinIdentityBasedEncryptionPublicParametersAsString publicParameters;
-    char *masterSecret;
-
-    CryptidStatus status = cryptid_ibe_bonehFranklin_setup(&masterSecret, &publicParameters, base, securityLevel, base);
+    CryptidStatus status = cryptid_ibe_bonehFranklin_setup(&masterSecret, &publicParameters, securityLevel);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    AffinePointAsString privateKey;
-    status = cryptid_ibe_bonehFranklin_extract(&privateKey, identity, strlen(identity), masterSecret, base, publicParameters, base);
+    AffinePointAsBinary privateKey;
+    status = cryptid_ibe_bonehFranklin_extract(&privateKey, identity, strlen(identity), masterSecret, publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    BonehFranklinIdentityBasedEncryptionCiphertextAsString ciphertext;
-    status = cryptid_ibe_bonehFranklin_encrypt(&ciphertext, message, strlen(message), identity, strlen(identity), publicParameters, base);
+    BonehFranklinIdentityBasedEncryptionCiphertextAsBinary ciphertext;
+    status = cryptid_ibe_bonehFranklin_encrypt(&ciphertext, message, strlen(message), identity, strlen(identity), publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
@@ -44,32 +42,30 @@ TEST fresh_boneh_franklin_ibe_setup_matching_identities(const SecurityLevel secu
     ASSERT_EQ(strcmp(message, plaintext), 0);
 
     free(plaintext);
-    bonehFranklinIdentityBasedEncryptionCiphertextAsString_destroy(ciphertext);
-    affineAsString_destroy(privateKey);
-    free(masterSecret);
-    bonehFranklinIdentityBasedEncryptionPublicParametersAsString_destroy(publicParameters);
+    bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_destroy(ciphertext);
+    affineAsBinary_destroy(privateKey);
+    free(masterSecret.masterSecret);
+    bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_destroy(publicParameters);
 
     PASS();
 }
 
 TEST fresh_boneh_franklin_ibe_setup_different_identities(const SecurityLevel securityLevel, const char *const message, const char *const encryptIdentity, const char *const decryptIdentity)
 {
-    int base = 10;
+    BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary publicParameters;
+    BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary masterSecret;
 
-    BonehFranklinIdentityBasedEncryptionPublicParametersAsString publicParameters;
-    char *masterSecret;
-
-    CryptidStatus status = cryptid_ibe_bonehFranklin_setup(&masterSecret, &publicParameters, 10, securityLevel, 10);
+    CryptidStatus status = cryptid_ibe_bonehFranklin_setup(&masterSecret, &publicParameters, securityLevel);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    AffinePointAsString privateKey;
-    status = cryptid_ibe_bonehFranklin_extract(&privateKey, decryptIdentity, strlen(decryptIdentity), masterSecret, base, publicParameters, base);
+    AffinePointAsBinary privateKey;
+    status = cryptid_ibe_bonehFranklin_extract(&privateKey, decryptIdentity, strlen(decryptIdentity), masterSecret, publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    BonehFranklinIdentityBasedEncryptionCiphertextAsString ciphertext;
-    status = cryptid_ibe_bonehFranklin_encrypt(&ciphertext, message, strlen(message), encryptIdentity, strlen(encryptIdentity), publicParameters, base);
+    BonehFranklinIdentityBasedEncryptionCiphertextAsBinary ciphertext;
+    status = cryptid_ibe_bonehFranklin_encrypt(&ciphertext, message, strlen(message), encryptIdentity, strlen(encryptIdentity), publicParameters);
 
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
@@ -78,10 +74,10 @@ TEST fresh_boneh_franklin_ibe_setup_different_identities(const SecurityLevel sec
 
     ASSERT_EQ(status, CRYPTID_DECRYPTION_FAILED_ERROR);
 
-    bonehFranklinIdentityBasedEncryptionCiphertextAsString_destroy(ciphertext);
-    affineAsString_destroy(privateKey);
-    free(masterSecret);
-    bonehFranklinIdentityBasedEncryptionPublicParametersAsString_destroy(publicParameters);
+    bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_destroy(ciphertext);
+    affineAsBinary_destroy(privateKey);
+    free(masterSecret.masterSecret);
+    bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_destroy(publicParameters);
 
     PASS();
 }

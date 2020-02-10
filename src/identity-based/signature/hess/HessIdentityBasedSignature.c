@@ -21,7 +21,7 @@ static const unsigned int POINT_GENERATION_ATTEMPT_LIMIT = 100;
 static const unsigned int Q_LENGTH_MAPPING[] = { 160, 224, 256, 384, 512 };
 static const unsigned int P_LENGTH_MAPPING[] = { 512, 1024, 1536, 3840, 7680 };
 
-CryptidStatus cryptid_ibs_hess_setup(char **masterSecretAsString, HessIdentityBasedSignaturePublicParametersAsString *publicParametersAsString, const int masterSecretAsStringBase, const SecurityLevel securityLevel, const int base)
+CryptidStatus cryptid_ibs_hess_setup(HessIdentityBasedSignatureMasterSecretAsBinary *masterSecretAsBinary, HessIdentityBasedSignaturePublicParametersAsBinary *publicParametersAsBinary, const SecurityLevel securityLevel)
 {
     // Implementation of Algorithm 5.1.2 (BFsetup1) in [RFC-5091].
     // Note, that instead of taking the bitlengts of p and q as arguments, this function takes
@@ -130,9 +130,9 @@ CryptidStatus cryptid_ibs_hess_setup(char **masterSecretAsString, HessIdentityBa
     HessIdentityBasedSignaturePublicParameters publicParameters;
     hessIdentityBasedSignaturePublicParameters_init(&publicParameters, ec, q, pointP, pointPpublic, hashFunction);
 
-    hessIdentityBasedSignaturePublicParameters_toHessIdentityBasedSignaturePublicParametersAsString(publicParametersAsString, publicParameters, base);
+    hessIdentityBasedSignaturePublicParameters_toHessIdentityBasedSignaturePublicParametersAsBinary(publicParametersAsBinary, publicParameters);
 
-    *masterSecretAsString = mpz_get_str(NULL, masterSecretAsStringBase, s);
+    masterSecretAsBinary->masterSecret = mpz_export(NULL, &masterSecretAsBinary->masterSecretLength, 1, 1 ,0 ,0, s);
 
     mpz_clears(p, q, s, r, NULL);
     hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
@@ -140,7 +140,7 @@ CryptidStatus cryptid_ibs_hess_setup(char **masterSecretAsString, HessIdentityBa
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_ibs_hess_extract(AffinePointAsString *result, const char *const identity, const size_t identityLength, const char *const masterSecretAsString, const int masterSecretAsStringBase, const HessIdentityBasedSignaturePublicParametersAsString publicParametersAsString, const int base)
+CryptidStatus cryptid_ibs_hess_extract(AffinePointAsBinary *result, const char *const identity, const size_t identityLength, const HessIdentityBasedSignatureMasterSecretAsBinary masterSecretAsBinary, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary)
 {
     // Implementation of Algorithm 5.3.1 (BFextractPriv) in [RFC-5091].
 
@@ -155,7 +155,7 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePointAsString *result, const char *
     }
 
     HessIdentityBasedSignaturePublicParameters publicParameters;
-    hessIdentityBasedSignaturePublicParametersAsString_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsString);
+    hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsBinary);
 
     if(!validation_isHessIdentityBasedSignaturePublicParametersValid(publicParameters))
     {
@@ -176,14 +176,15 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePointAsString *result, const char *
     }
 
     mpz_t masterSecret;
-    mpz_init_set_str(masterSecret, masterSecretAsString, masterSecretAsStringBase);
+    mpz_init(masterSecret);
+    mpz_import(masterSecret, masterSecretAsBinary.masterSecretLength, 1, 1 ,0, 0, masterSecretAsBinary.masterSecret);
 
     AffinePoint affineResult;
 
     // Let \f$S_{id} = [s]Q_{id}\f$.
     status = affine_wNAFMultiply(&affineResult, qId, masterSecret, publicParameters.ellipticCurve);
 
-    affine_toAffineAsString(result, affineResult, base, base);
+    affine_toAffineAsBinary(result, affineResult);
 
     hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
     affine_destroy(qId);
@@ -193,7 +194,7 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePointAsString *result, const char *
     return status;
 }
 
-CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignatureAsString *result, const char *const message, const size_t messageLength, const char *const identity, const size_t identityLength, const AffinePointAsString privateKeyAsString, const HessIdentityBasedSignaturePublicParametersAsString publicParametersAsString, const int base)
+CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignatureAsBinary *result, const char *const message, const size_t messageLength, const char *const identity, const size_t identityLength, const AffinePointAsBinary privateKeyAsBinary, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary)
 {
     // Implementation of Scheme 1. Sign in [HESS-IBS].
 
@@ -218,7 +219,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignatureAsString 
     }
 
     HessIdentityBasedSignaturePublicParameters publicParameters;
-    hessIdentityBasedSignaturePublicParametersAsString_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsString);
+    hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsBinary);
 
     if(!validation_isHessIdentityBasedSignaturePublicParametersValid(publicParameters))
     {
@@ -299,7 +300,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignatureAsString 
     // part of the signature.
     AffinePoint privateKey, u, kMulPointQId, vMulPrivateKey;
 
-    affineAsString_toAffine(&privateKey, privateKeyAsString);
+    affineAsBinary_toAffine(&privateKey, privateKeyAsBinary);
 
     status = affine_wNAFMultiply(&vMulPrivateKey, privateKey, v, publicParameters.ellipticCurve);
     if(status)
@@ -350,7 +351,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignatureAsString 
     HessIdentityBasedSignatureSignature signature;
     hessIdentityBasedSignatureSignature_init(&signature, u, v);
 
-    hessIdentityBasedSignatureSignature_toHessIdentityBasedSignatureSignatureAsString(result, signature, base, base, base);
+    hessIdentityBasedSignatureSignature_toHessIdentityBasedSignatureSignatureAsBinary(result, signature);
 
     hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
     affine_destroy(privateKey);
@@ -369,7 +370,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignatureAsString 
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t messageLength, const HessIdentityBasedSignatureSignatureAsString signatureAsString, const char *const identity, const size_t identityLength, const HessIdentityBasedSignaturePublicParametersAsString publicParametersAsString)
+CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t messageLength, const HessIdentityBasedSignatureSignatureAsBinary signatureAsBinary, const char *const identity, const size_t identityLength, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary)
 {
     // Implementation of Scheme 1. Verify in [HESS-IBS].
 
@@ -384,7 +385,7 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     }
 
     HessIdentityBasedSignaturePublicParameters publicParameters;
-    hessIdentityBasedSignaturePublicParametersAsString_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsString);
+    hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsBinary);
 
     if(!validation_isHessIdentityBasedSignaturePublicParametersValid(publicParameters))
     {
@@ -393,7 +394,7 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     }
 
     HessIdentityBasedSignatureSignature signature;
-    hessIdentityBasedSignatureSignatureAsString_toHessIdentityBasedSignatureSignature(&signature, signatureAsString);
+    hessIdentityBasedSignatureSignatureAsBinary_toHessIdentityBasedSignatureSignature(&signature, signatureAsBinary);
 
     if(!validation_isHessIdentityBasedSignatureSignatureValid(signature, publicParameters.ellipticCurve.fieldOrder))
     {
