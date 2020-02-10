@@ -20,7 +20,7 @@ typedef struct BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary
     /**
      * Subgroup order represented as a binary.
      */
-    char *q;
+    void *q;
 
     /**
      * The length of the Subgroup order's binary representation.
@@ -43,7 +43,7 @@ typedef struct BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary
     HashFunction hashFunction;
 } BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary;
 
-void bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_init(BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary *publicParametersAsBinaryOutput, const EllipticCurveAsBinary ellipticCurve, const char *const q, const size_t qLength, const AffinePointAsBinary pointP, const AffinePointAsBinary pointPpublic, const HashFunction hashFunction);
+void bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_init(BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary *publicParametersAsBinaryOutput, const EllipticCurveAsBinary ellipticCurve, const void *const q, const size_t qLength, const AffinePointAsBinary pointP, const AffinePointAsBinary pointPpublic, const HashFunction hashFunction);
 
 void bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_destroy(BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary publicParametersAsBinary);
 

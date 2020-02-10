@@ -5,14 +5,14 @@
 
 #include "elliptic/AffinePointAsBinary.h"
 
-void affineAsBinary_init(AffinePointAsBinary *affinePointAsBinaryOutput, const char *const x, const size_t xLength, const char *const y, const size_t yLength)
+void affineAsBinary_init(AffinePointAsBinary *affinePointAsBinaryOutput, const void *const x, const size_t xLength, const void *const y, const size_t yLength)
 {
-    affinePointAsBinaryOutput->x = (char*)malloc(xLength * sizeof(char) + 1);
+    affinePointAsBinaryOutput->x = malloc(xLength + 1);
     memcpy(affinePointAsBinaryOutput->x, x, xLength + 1);
 
     affinePointAsBinaryOutput->xLength = xLength;
 
-    affinePointAsBinaryOutput->y = (char*)malloc(yLength * sizeof(char) + 1);
+    affinePointAsBinaryOutput->y = malloc(yLength + 1);
     memcpy(affinePointAsBinaryOutput->y, y, yLength + 1);
 
     affinePointAsBinaryOutput->yLength = yLength;

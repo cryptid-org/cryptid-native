@@ -3,11 +3,11 @@
 
 #include "identity-based/signature/hess/HessIdentityBasedSignatureSignatureAsBinary.h"
 
-void hessIdentityBasedSignatureSignatureAsBinary_init(HessIdentityBasedSignatureSignatureAsBinary *signatureAsBinaryOutput, const AffinePointAsBinary u, const char *const v, const size_t vLength)
+void hessIdentityBasedSignatureSignatureAsBinary_init(HessIdentityBasedSignatureSignatureAsBinary *signatureAsBinaryOutput, const AffinePointAsBinary u, const void *const v, const size_t vLength)
 {
     affineAsBinary_init(&signatureAsBinaryOutput->u, u.x, u.xLength, u.y, u.yLength);
 
-    signatureAsBinaryOutput->v = (char*)malloc(vLength * sizeof(char) + 1);
+    signatureAsBinaryOutput->v = malloc(vLength + 1);
     memcpy(signatureAsBinaryOutput->v, v, vLength + 1);
 
     signatureAsBinaryOutput->vLength = vLength;

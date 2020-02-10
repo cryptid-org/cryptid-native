@@ -11,7 +11,7 @@ typedef struct AffinePointAsBinary
     /**
      * The binary representation of the \f$x\f$ coordinate.
      */
-    char *x;
+    void *x;
 
     /**
      * The length of the x coordinate's binary representation.
@@ -21,7 +21,7 @@ typedef struct AffinePointAsBinary
     /**
      * The binary representation of the \f$y\f$ coordinate.
      */
-    char *y;
+    void *y;
 
     /**
      * The length of the y coordinate's binary representation.
@@ -37,7 +37,7 @@ typedef struct AffinePointAsBinary
  * @param y the binary representation of the \f$y\f$ coordinate
  * @param yLength the length of the y coordinate's binary representation
  */
-void affineAsBinary_init(AffinePointAsBinary *affinePointAsBinaryOutput, const char *const x, const size_t xLength, const char *const y, const size_t yLength);
+void affineAsBinary_init(AffinePointAsBinary *affinePointAsBinaryOutput, const void *const x, const size_t xLength, const void *const y, const size_t yLength);
 
 /**
  * Frees an AffinePointAsBinary. After calling this function on an AffinePointAsBinary instance,

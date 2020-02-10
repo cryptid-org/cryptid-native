@@ -3,11 +3,11 @@
 
 #include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h"
 
-void bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_init(BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary *publicParametersAsBinaryOutput, const EllipticCurveAsBinary ellipticCurve, const char *const q, const size_t qLength, const AffinePointAsBinary pointP, const AffinePointAsBinary pointPpublic, const HashFunction hashFunction)
+void bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_init(BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary *publicParametersAsBinaryOutput, const EllipticCurveAsBinary ellipticCurve, const void *const q, const size_t qLength, const AffinePointAsBinary pointP, const AffinePointAsBinary pointPpublic, const HashFunction hashFunction)
 {
     ellipticCurveAsBinary_init(&publicParametersAsBinaryOutput->ellipticCurve, ellipticCurve.a, ellipticCurve.aLength, ellipticCurve.b, ellipticCurve.bLength, ellipticCurve.fieldOrder, ellipticCurve.fieldOrderLength);
 
-    publicParametersAsBinaryOutput->q = (char*)malloc(qLength * sizeof(char) + 1);
+    publicParametersAsBinaryOutput->q = malloc(qLength + 1);
     memcpy(publicParametersAsBinaryOutput->q, q, qLength + 1);
 
     publicParametersAsBinaryOutput->qLength = qLength;

@@ -3,19 +3,19 @@
 
 #include "elliptic/EllipticCurveAsBinary.h"
 
-void ellipticCurveAsBinary_init(EllipticCurveAsBinary *ellipticCurveAsBinaryOutput, const char *const a, const size_t aLength, const char *const b, const size_t bLength, const char *const fieldOrder, const size_t fieldOrderLength)
+void ellipticCurveAsBinary_init(EllipticCurveAsBinary *ellipticCurveAsBinaryOutput, const void *const a, const size_t aLength, const void *const b, const size_t bLength, const void *const fieldOrder, const size_t fieldOrderLength)
 {
-    ellipticCurveAsBinaryOutput->a = (char*)malloc(aLength * sizeof(char) + 1);
+    ellipticCurveAsBinaryOutput->a = malloc(aLength + 1);
     memcpy(ellipticCurveAsBinaryOutput->a, a, aLength + 1);
 
     ellipticCurveAsBinaryOutput->aLength = aLength;
 
-    ellipticCurveAsBinaryOutput->b = (char*)malloc(bLength * sizeof(char) + 1);
+    ellipticCurveAsBinaryOutput->b = malloc(bLength + 1);
     memcpy(ellipticCurveAsBinaryOutput->b, b, bLength + 1);
 
     ellipticCurveAsBinaryOutput->bLength = bLength;
 
-    ellipticCurveAsBinaryOutput->fieldOrder = (char*)malloc(fieldOrderLength * sizeof(char) + 1);
+    ellipticCurveAsBinaryOutput->fieldOrder = malloc(fieldOrderLength + 1);
     memcpy(ellipticCurveAsBinaryOutput->fieldOrder, fieldOrder, fieldOrderLength + 1);
 
     ellipticCurveAsBinaryOutput->fieldOrderLength = fieldOrderLength;

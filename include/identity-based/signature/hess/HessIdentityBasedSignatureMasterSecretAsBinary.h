@@ -3,7 +3,7 @@
 
 typedef struct HessIdentityBasedSignatureMasterSecretAsBinary
 {
-    char *masterSecret;
+    void *masterSecret;
 
     size_t masterSecretLength;
 } HessIdentityBasedSignatureMasterSecretAsBinary;

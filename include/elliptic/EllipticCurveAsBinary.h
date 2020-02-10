@@ -8,15 +8,15 @@
  */
 typedef struct EllipticCurveAsBinary
 {
-    char *a;
+    void *a;
 
     size_t aLength;
 
-    char *b;
+    void *b;
 
     size_t bLength;
 
-    char *fieldOrder;
+    void *fieldOrder;
 
     size_t fieldOrderLength;
 } EllipticCurveAsBinary;
@@ -31,7 +31,7 @@ typedef struct EllipticCurveAsBinary
  * @param fieldOrder the binary representation of the order of the finite field
  * @param fieldOrderLength the length of the finite field order's binary representation
  */
-void ellipticCurveAsBinary_init(EllipticCurveAsBinary *ellipticCurveAsBinaryOutput, const char *const a, const size_t aLength, const char *const b, const size_t bLength, const char *const fieldOrder, const size_t fieldOrderLength);
+void ellipticCurveAsBinary_init(EllipticCurveAsBinary *ellipticCurveAsBinaryOutput, const void *const a, const size_t aLength, const void *const b, const size_t bLength, const void *const fieldOrder, const size_t fieldOrderLength);
 
 /**
  * Frees an EllipticCurveAsBinary.

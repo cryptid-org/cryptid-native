@@ -19,13 +19,15 @@ typedef struct BonehFranklinIdentityBasedEncryptionCiphertextAsBinary
     /**
      * A binary string.
      */
-    unsigned char* cipherV;
+    void *cipherV;
+
     size_t cipherVLength;
 
     /**
      * A binary string.
      */
-    unsigned char* cipherW;
+    void *cipherW;
+
     size_t cipherWLength;
 } BonehFranklinIdentityBasedEncryptionCiphertextAsBinary;
 
@@ -39,7 +41,7 @@ typedef struct BonehFranklinIdentityBasedEncryptionCiphertextAsBinary
  * @param cipherW binary string
  * @param cipherWLength the size of {@code cipherW}
  */
-void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_init(BonehFranklinIdentityBasedEncryptionCiphertextAsBinary *ciphertextAsBinaryOutput, const AffinePointAsBinary cipherU, const unsigned char *const cipherV, const size_t cipherVLength, const unsigned char *const cipherW, const size_t cipherWLength);
+void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_init(BonehFranklinIdentityBasedEncryptionCiphertextAsBinary *ciphertextAsBinaryOutput, const AffinePointAsBinary cipherU, const void *const cipherV, const size_t cipherVLength, const void *const cipherW, const size_t cipherWLength);
 
 /**
  * Frees a BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.

@@ -9,12 +9,12 @@ typedef struct HessIdentityBasedSignatureSignatureAsBinary
 {
     AffinePointAsBinary u;
 
-    char *v;
+    void *v;
 
     size_t vLength;
 } HessIdentityBasedSignatureSignatureAsBinary;
 
-void hessIdentityBasedSignatureSignatureAsBinary_init(HessIdentityBasedSignatureSignatureAsBinary *signatureAsBinaryOutput, const AffinePointAsBinary u, const char *const v, const size_t vLength);
+void hessIdentityBasedSignatureSignatureAsBinary_init(HessIdentityBasedSignatureSignatureAsBinary *signatureAsBinaryOutput, const AffinePointAsBinary u, const void *const v, const size_t vLength);
 
 void hessIdentityBasedSignatureSignatureAsBinary_destroy(HessIdentityBasedSignatureSignatureAsBinary signatureAsBinary);
 

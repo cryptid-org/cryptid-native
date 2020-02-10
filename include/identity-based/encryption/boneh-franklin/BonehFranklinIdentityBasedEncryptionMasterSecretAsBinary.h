@@ -3,7 +3,7 @@
 
 typedef struct BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary
 {
-    char *masterSecret;
+    void *masterSecret;
 
     size_t masterSecretLength;
 } BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary;
