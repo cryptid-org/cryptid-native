@@ -278,12 +278,12 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
     }
 
     AffinePoint Gar;
-    affine_add(&Gar, masterkey->g_alpha, Gr, publickey->ellipticCurve);
+    status = AFFINE_MULTIPLY_IMPL(&Gar, r, masterkey->g_alpha, publickey->ellipticCurve);
+    if(status) {
+        return status;
+    }
 
     AffinePoint GarBi;
-
-    mpz_t one;
-    mpz_init_set_ui(one, 1);
 
     mpz_t beta_inverse;
     mpz_init(beta_inverse);
@@ -301,6 +301,14 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
     {
         if((*attributes)[i] != '\0')
         {
+            int attributeLength = 0;
+            for(int c = 0; c < ATTRIBUTE_LENGTH; c++) {
+                if(attributes[i][c] == '\0') {
+                    break;
+                }
+                attributeLength++;
+            }
+
             mpz_t rj;
             mpz_init(rj);
             ABE_randomNumber(rj, publickey);
@@ -308,7 +316,7 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
             AffinePoint Hj;
 
             status = hashToPoint(&Hj, publickey->ellipticCurve, publickey->ellipticCurve.fieldOrder,
-                                    publickey->q, attributes[i], ATTRIBUTE_LENGTH, publickey->hashFunction);
+                                    publickey->q, attributes[i], attributeLength, publickey->hashFunction);
             if(status) {
                 return status;
             }
@@ -341,7 +349,7 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
         }
     }
 
-    mpz_clears(one, beta_inverse, NULL);
+    mpz_clear(beta_inverse);
 
     return CRYPTID_SUCCESS;
 }
