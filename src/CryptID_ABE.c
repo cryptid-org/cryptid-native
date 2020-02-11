@@ -299,7 +299,7 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
 
     for(int i = 0; i < MAX_ATTRIBUTES; i++)
     {
-        if(attributes[i] != '\0')
+        if((*attributes)[i] != '\0')
         {
             mpz_t rj;
             mpz_init(rj);
@@ -369,7 +369,7 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
         int found = -1;
         for(int i = 0; i < MAX_ATTRIBUTES; i++)
         {
-            if(secretkey->attributes[i] != '\0')
+            if((*secretkey->attributes)[i] != '\0')
             {
                 if(strcmp(secretkey->attributes[i], node->attribute) == 0)
                 {
