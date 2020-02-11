@@ -4,10 +4,11 @@
 
 #include "gmp.h"
 
+#include "greatest.h"
+
 #include "CryptID_ABE.h"
 
-
-int main()
+TEST make_abe_work()
 {
     const char *message = "a";
 
@@ -34,5 +35,21 @@ int main()
     char* result = malloc(sizeof(char)*100);
     cryptid_decrypt_ABE(result, encrypted, secretkey);
 
-    return 0;
+    PASS();
+}
+
+SUITE(make_it_work)
+{
+    RUN_TEST(make_abe_work);
+}
+
+GREATEST_MAIN_DEFS();
+
+int main(int argc, char **argv)
+{
+    GREATEST_MAIN_BEGIN();
+
+    RUN_SUITE(make_it_work);
+
+    GREATEST_MAIN_END();
 }

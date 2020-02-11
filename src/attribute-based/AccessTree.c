@@ -44,7 +44,7 @@ int hasAttribute(char** attributes, char* val) {
 	{
 	    for(int i = 0; i < MAX_ATTRIBUTES; i++)
 	    {
-	        if(attributes[i] != '\0' && strcmp(attributes[i], val) == 0)
+	        if((*attributes)[i] != '\0' && strcmp(attributes[i], val) == 0)
 	            return 1;
 	    }
 	}
