@@ -109,7 +109,7 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
 
     mpz_t beta_inverse;
     mpz_init(beta_inverse);
-    mpz_invert(beta_inverse, beta, one);
+    mpz_invert(beta_inverse, beta, publickey->ellipticCurve.fieldOrder);
 
     status = AFFINE_MULTIPLY_IMPL(&publickey->f, beta_inverse, publickey->g, publickey->ellipticCurve);
     if(status) {
@@ -287,7 +287,7 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
 
     mpz_t beta_inverse;
     mpz_init(beta_inverse);
-    mpz_invert(beta_inverse, masterkey->beta, one);
+    mpz_invert(beta_inverse, masterkey->beta, publickey->ellipticCurve.fieldOrder);
 
     status = AFFINE_MULTIPLY_IMPL(&GarBi, beta_inverse, Gar, publickey->ellipticCurve);
     if(status) {
