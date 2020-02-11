@@ -33,6 +33,7 @@ char** attributeArray() {
 
 	for(size_t i = 0; i < MAX_ATTRIBUTES; i++){
 	   attributes[i] = malloc(ATTRIBUTE_LENGTH*sizeof(char));
+	   attributes[i] = "";
 	}
 
 	return attributes;
