@@ -239,7 +239,13 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
     mpz_init(M);
     mpz_import (M, messageLength, 1, sizeof(values[0]), 0, 0, values);
     gmp_printf("M: %Zd\n", M);
-    // TO DO check - M splitting if M.length>=P.length
+
+    AffinePoint GM;
+    CryptidStatus status = AFFINE_MULTIPLY_IMPL(&GM, M, publickey->g, publickey->ellipticCurve);
+    if(status) {
+        return status;
+    }
+    // TO DO
 
     mpz_t s;
     mpz_init(s);
@@ -249,9 +255,11 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
     encrypted->tree = accessTree;
     Complex eggalphas = complex_modPow(publickey->eggalpha, s, publickey->ellipticCurve.fieldOrder);
     Complex Ctilde = complex_modMulScalar(eggalphas, M, publickey->ellipticCurve.fieldOrder);
+    gmp_printf("eggalphas.real: %Zd\n", eggalphas.real);
+    gmp_printf("eggalphas.imaginary: %Zd\n", eggalphas.imaginary);
     encrypted->Ctilde = Ctilde;
 
-    CryptidStatus status = AFFINE_MULTIPLY_IMPL(&encrypted->C, s, publickey->h, publickey->ellipticCurve);
+    status = AFFINE_MULTIPLY_IMPL(&encrypted->C, s, publickey->h, publickey->ellipticCurve);
     if(status) {
         // TO DO clears
         return status;
@@ -278,11 +286,11 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
     }
 
     AffinePoint Gar;
-    status = AFFINE_MULTIPLY_IMPL(&Gar, r, masterkey->g_alpha, publickey->ellipticCurve);
+    /*status = AFFINE_MULTIPLY_IMPL(&Gar, r, masterkey->g_alpha, publickey->ellipticCurve);
     if(status) {
         return status;
-    }
-    //affine_add(&Gar, masterkey->g_alpha, Gr, publickey->ellipticCurve);
+    }*/
+    affine_add(&Gar, masterkey->g_alpha, Gr, publickey->ellipticCurve);
 
     AffinePoint GarBi;
 
