@@ -239,12 +239,6 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
     mpz_init(M);
     mpz_import (M, messageLength, 1, sizeof(values[0]), 0, 0, values);
     gmp_printf("M: %Zd\n", M);
-
-    AffinePoint GM;
-    CryptidStatus status = AFFINE_MULTIPLY_IMPL(&GM, M, publickey->g, publickey->ellipticCurve);
-    if(status) {
-        return status;
-    }
     // TO DO
 
     mpz_t s;
@@ -255,11 +249,9 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
     encrypted->tree = accessTree;
     Complex eggalphas = complex_modPow(publickey->eggalpha, s, publickey->ellipticCurve.fieldOrder);
     Complex Ctilde = complex_modMulScalar(eggalphas, M, publickey->ellipticCurve.fieldOrder);
-    gmp_printf("eggalphas.real: %Zd\n", eggalphas.real);
-    gmp_printf("eggalphas.imaginary: %Zd\n", eggalphas.imaginary);
     encrypted->Ctilde = Ctilde;
 
-    status = AFFINE_MULTIPLY_IMPL(&encrypted->C, s, publickey->h, publickey->ellipticCurve);
+    CryptidStatus status = AFFINE_MULTIPLY_IMPL(&encrypted->C, s, publickey->h, publickey->ellipticCurve);
     if(status) {
         // TO DO clears
         return status;
