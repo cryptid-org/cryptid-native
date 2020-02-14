@@ -5,6 +5,7 @@
 
 #include "elliptic/EllipticCurve.h"
 #include "util/Status.h"
+#include "util/Validation.h"
 
 /**
  * Represents an affine point with coordinates.
@@ -106,5 +107,14 @@ CryptidStatus affine_wNAFMultiply(AffinePoint *result, const AffinePoint affineP
  * @return 1 if the point satisfies the curve equation, 0 otherwise
  */
 int affine_isOnCurve(const AffinePoint point, const EllipticCurve ellipticCurve);
+
+//TODO we could check if it is a real point or not, if we add the elliptic curve too to the param list.
+/**
+ * Validates that the affine point is between 0 and order-1
+ * @param affinePoint an AffinePoint
+ * @param order the field order of the elliptic curve field, we are operating over
+ * @return CRYPTID_VALIDATION_SUCCESS if the point is valid, CRYPTID_VALIDATION_FAILURE otherwise
+ */
+CryptidValidationResult affine_isValid(const AffinePoint affinePoint, const mpz_t order);
 
 #endif

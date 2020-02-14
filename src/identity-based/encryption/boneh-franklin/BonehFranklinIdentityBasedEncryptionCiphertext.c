@@ -26,3 +26,17 @@ void bonehFranklinIdentityBasedEncryptionCiphertext_destroy(BonehFranklinIdentit
     free(ciphertext.cipherV);
     free(ciphertext.cipherW);
 }
+
+CryptidValidationResult bonehFranklinIdentityBasedEncryptionCiphertext_isValid(const BonehFranklinIdentityBasedEncryptionCiphertext bonehFranklinIdentityBasedEncryptionCiphertext, const mpz_t order)
+{
+    if(affine_isValid(bonehFranklinIdentityBasedEncryptionCiphertext.cipherU, order)
+        && bonehFranklinIdentityBasedEncryptionCiphertext.cipherV
+        && bonehFranklinIdentityBasedEncryptionCiphertext.cipherVLength != 0
+        && bonehFranklinIdentityBasedEncryptionCiphertext.cipherW
+        && bonehFranklinIdentityBasedEncryptionCiphertext.cipherWLength != 0)
+    {
+        return CRYPTID_VALIDATION_SUCCESS;
+    }
+
+    return CRYPTID_VALIDATION_FAILURE;
+}

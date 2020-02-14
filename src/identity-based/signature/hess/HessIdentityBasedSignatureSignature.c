@@ -13,3 +13,14 @@ void hessIdentityBasedSignatureSignature_destroy(HessIdentityBasedSignatureSigna
     affine_destroy(signature.u);
     mpz_clear(signature.v);
 }
+
+CryptidValidationResult hessIdentityBasedSignatureSignature_isValid(const HessIdentityBasedSignatureSignature signature, const mpz_t order)
+{
+    if(affine_isValid(signature.u, order)
+        && signature.v != NULL)
+    {
+        return CRYPTID_VALIDATION_SUCCESS;
+    }
+    
+    return CRYPTID_VALIDATION_FAILURE;
+}

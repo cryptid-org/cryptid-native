@@ -8,7 +8,7 @@
 #include "util/Random.h"
 #include "util/RandBytes.h"
 #include "util/Utils.h"
-#include "util/Validation.h"
+#include "util/PrimalityTest.h"
 
 // References
 //  * [HESS-IBS] Florian Hess. 2003. Efficient Identity Based Signature Schemes Based on Pairings.
@@ -57,7 +57,7 @@ CryptidStatus cryptid_ibs_hess_setup(HessIdentityBasedSignatureMasterSecretAsBin
         mpz_mul(p, p, q);
         mpz_sub_ui(p, p, 1);
     }
-    while (!validation_isProbablePrime(p));
+    while (!primaltyTest_isProbablePrime(p));
 
     mpz_t zero, one;
     mpz_init_set_ui(zero, 0);
@@ -160,7 +160,7 @@ CryptidStatus cryptid_ibs_hess_extract(AffinePointAsBinary *result, const char *
     HessIdentityBasedSignaturePublicParameters publicParameters;
     hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsBinary);
 
-    if(!validation_isHessIdentityBasedSignaturePublicParametersValid(publicParameters))
+    if(!hessIdentityBasedSignaturePublicParameters_isValid(publicParameters))
     {
         hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
@@ -224,7 +224,7 @@ CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignatureAsBinary 
     HessIdentityBasedSignaturePublicParameters publicParameters;
     hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsBinary);
 
-    if(!validation_isHessIdentityBasedSignaturePublicParametersValid(publicParameters))
+    if(!hessIdentityBasedSignaturePublicParameters_isValid(publicParameters))
     {
         hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
@@ -390,7 +390,7 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     HessIdentityBasedSignaturePublicParameters publicParameters;
     hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsBinary);
 
-    if(!validation_isHessIdentityBasedSignaturePublicParametersValid(publicParameters))
+    if(!hessIdentityBasedSignaturePublicParameters_isValid(publicParameters))
     {
         hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
@@ -399,7 +399,7 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     HessIdentityBasedSignatureSignature signature;
     hessIdentityBasedSignatureSignatureAsBinary_toHessIdentityBasedSignatureSignature(&signature, signatureAsBinary);
 
-    if(!validation_isHessIdentityBasedSignatureSignatureValid(signature, publicParameters.ellipticCurve.fieldOrder))
+    if(!hessIdentityBasedSignatureSignature_isValid(signature, publicParameters.ellipticCurve.fieldOrder))
     {
         hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         hessIdentityBasedSignatureSignature_destroy(signature);

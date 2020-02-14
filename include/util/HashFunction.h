@@ -5,6 +5,7 @@
 
 #include "util/SecurityLevel.h"
 #include "util/Status.h"
+#include "util/Validation.h"
 
 
 // References
@@ -24,5 +25,12 @@ CryptidStatus hashFunction_getHashSize(int *hashSizeOutput, const HashFunction h
 CryptidStatus hashFunction_hash(unsigned char* hashResult, const unsigned char *const message, const size_t messageLength, const HashFunction hashFunction);
 
 CryptidStatus hashFunction_initForSecurityLevel(HashFunction *hashFunctionOutput, const SecurityLevel securityLevel);
+
+/**
+ * Validates that the passed HashFunction struct is correct.
+ * @param hashFunction the struct to check
+ * @result CRYPTID_VALIDATION_SUCCESS if the struct is valid
+ */
+CryptidValidationResult hashFunction_isValid(const HashFunction hashFunction);
 
 #endif

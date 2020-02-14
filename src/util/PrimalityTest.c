@@ -1,11 +1,14 @@
 #include "util/PrimalityTest.h"
 #include "util/Random.h"
 
+static const int MIGHT_BE_PRIME = 1;
+static const int NOT_PRIME = 0;
+
 int primaltyTest_millerrabin_mpz(const mpz_srcptr p, const int repetitions)
 {
     if(mpz_cmp_ui(p, 3L) <= 0)
     {
-        return 1;
+        return MIGHT_BE_PRIME;
     }
 
     mpz_t pMinus1, pMinus3, base, basePow, d;
@@ -20,7 +23,7 @@ int primaltyTest_millerrabin_mpz(const mpz_srcptr p, const int repetitions)
     if (mpz_cmp_ui(basePow, 1L) != 0)
     {
         mpz_clears(pMinus1, pMinus3, base, basePow, d, NULL);
-        return 0;
+        return NOT_PRIME;
     }
 
     s = mpz_scan1(pMinus1, 0L);
@@ -46,16 +49,21 @@ int primaltyTest_millerrabin(const mpz_srcptr p, const mpz_srcptr pMinus1, const
     mpz_powm(basePow, base, d, p);
 
     if (mpz_cmp_ui(basePow, 1L) == 0 || mpz_cmp(basePow, pMinus1) == 0)
-        return 1;
+        return MIGHT_BE_PRIME;
 
     for (unsigned long int i = 1; i < s; i++)
     {
         mpz_powm_ui(basePow, basePow, 2L, p);
         if (mpz_cmp(basePow, pMinus1) == 0)
-            return 1;
+            return MIGHT_BE_PRIME;
 
         if (mpz_cmp_ui(basePow, 1L) <= 0)
-            return 0;
+            return NOT_PRIME;
     }
-    return 0;
+    return NOT_PRIME;
+}
+
+CryptidValidationResult primaltyTest_isProbablePrime(const mpz_t p)
+{
+    return primaltyTest_millerrabin_mpz(p, 50) >= MIGHT_BE_PRIME ? CRYPTID_VALIDATION_SUCCESS : CRYPTID_VALIDATION_FAILURE;
 }

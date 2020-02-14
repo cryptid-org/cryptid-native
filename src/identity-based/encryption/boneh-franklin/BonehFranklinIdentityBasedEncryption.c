@@ -8,7 +8,7 @@
 #include "util/Random.h"
 #include "util/RandBytes.h"
 #include "util/Utils.h"
-#include "util/Validation.h"
+#include "util/PrimalityTest.h"
 
 
 // References
@@ -57,7 +57,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(BonehFranklinIdentityBasedEncrypti
         mpz_mul(p, p, q);
         mpz_sub_ui(p, p, 1);
     }
-    while (!validation_isProbablePrime(p));
+    while (!primaltyTest_isProbablePrime(p));
 
     mpz_t zero, one;
     mpz_init_set_ui(zero, 0);
@@ -160,7 +160,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePointAsBinary *result, con
     BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters;
     bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_toBonehFranklinIdentityBasedEncryptionPublicParameters(&publicParameters, publicParametersAsBinary);
 
-    if(!validation_isBonehFranklinIdentityBasedEncryptionPublicParametersValid(publicParameters))
+    if(!bonehFranklinIdentityBasedEncryptionPublicParameters_isValid(publicParameters))
     {
         bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
@@ -224,7 +224,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
     BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters;
     bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_toBonehFranklinIdentityBasedEncryptionPublicParameters(&publicParameters, publicParametersAsBinary);
 
-    if(!validation_isBonehFranklinIdentityBasedEncryptionPublicParametersValid(publicParameters))
+    if(!bonehFranklinIdentityBasedEncryptionPublicParameters_isValid(publicParameters))
     {
         bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
@@ -373,7 +373,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const BonehFrankl
     BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters;
     bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_toBonehFranklinIdentityBasedEncryptionPublicParameters(&publicParameters, publicParametersAsBinary);
 
-    if(!validation_isBonehFranklinIdentityBasedEncryptionPublicParametersValid(publicParameters))
+    if(!bonehFranklinIdentityBasedEncryptionPublicParameters_isValid(publicParameters))
     {
         bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
@@ -382,7 +382,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const BonehFrankl
     AffinePoint privateKey;
     affineAsBinary_toAffine(&privateKey, privateKeyAsBinary);
 
-    if(!validation_isAffinePointValid(privateKey, publicParameters.ellipticCurve.fieldOrder))
+    if(!affine_isValid(privateKey, publicParameters.ellipticCurve.fieldOrder))
     {
         bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
         affine_destroy(privateKey);
@@ -392,7 +392,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const BonehFrankl
     BonehFranklinIdentityBasedEncryptionCiphertext ciphertext;
     bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_toBonehFranklinIdentityBasedEncryptionCiphertext(&ciphertext, ciphertextAsBinary);
 
-    if(!validation_isBonehFranklinIdentityBasedEncryptionCiphertextValid(ciphertext, publicParameters.ellipticCurve.fieldOrder))
+    if(!bonehFranklinIdentityBasedEncryptionCiphertext_isValid(ciphertext, publicParameters.ellipticCurve.fieldOrder))
     {
         bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
         affine_destroy(privateKey);
