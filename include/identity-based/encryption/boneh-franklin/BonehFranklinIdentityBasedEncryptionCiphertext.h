@@ -56,9 +56,9 @@ void bonehFranklinIdentityBasedEncryptionCiphertext_destroy(BonehFranklinIdentit
 /**
  * Validates that the specified ciphertext is correct.
  * @param ciphertext the ciphertext to check
- * @param order the field order of the elliptic curve field, we operating over
+ * @param ellipticCurve the elliptic curve field, we operating over
  * @return CRYPTID_VALIDATION_SUCCESS if the ciphertext is valid
  */
-CryptidValidationResult bonehFranklinIdentityBasedEncryptionCiphertext_isValid(const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext, const mpz_t order);
+CryptidValidationResult bonehFranklinIdentityBasedEncryptionCiphertext_isValid(const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext, const EllipticCurve ellipticCurve);
 
 #endif

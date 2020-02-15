@@ -382,7 +382,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const BonehFrankl
     AffinePoint privateKey;
     affineAsBinary_toAffine(&privateKey, privateKeyAsBinary);
 
-    if(!affine_isValid(privateKey, publicParameters.ellipticCurve.fieldOrder))
+    if(!affine_isValid(privateKey, publicParameters.ellipticCurve))
     {
         bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
         affine_destroy(privateKey);
@@ -392,7 +392,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const BonehFrankl
     BonehFranklinIdentityBasedEncryptionCiphertext ciphertext;
     bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_toBonehFranklinIdentityBasedEncryptionCiphertext(&ciphertext, ciphertextAsBinary);
 
-    if(!bonehFranklinIdentityBasedEncryptionCiphertext_isValid(ciphertext, publicParameters.ellipticCurve.fieldOrder))
+    if(!bonehFranklinIdentityBasedEncryptionCiphertext_isValid(ciphertext, publicParameters.ellipticCurve))
     {
         bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
         affine_destroy(privateKey);

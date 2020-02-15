@@ -399,7 +399,7 @@ CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t me
     HessIdentityBasedSignatureSignature signature;
     hessIdentityBasedSignatureSignatureAsBinary_toHessIdentityBasedSignatureSignature(&signature, signatureAsBinary);
 
-    if(!hessIdentityBasedSignatureSignature_isValid(signature, publicParameters.ellipticCurve.fieldOrder))
+    if(!hessIdentityBasedSignatureSignature_isValid(signature, publicParameters.ellipticCurve))
     {
         hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         hessIdentityBasedSignatureSignature_destroy(signature);

@@ -14,9 +14,9 @@ void hessIdentityBasedSignatureSignature_destroy(HessIdentityBasedSignatureSigna
     mpz_clear(signature.v);
 }
 
-CryptidValidationResult hessIdentityBasedSignatureSignature_isValid(const HessIdentityBasedSignatureSignature signature, const mpz_t order)
+CryptidValidationResult hessIdentityBasedSignatureSignature_isValid(const HessIdentityBasedSignatureSignature signature, const EllipticCurve ellipticCurve)
 {
-    if(affine_isValid(signature.u, order)
+    if(affine_isValid(signature.u, ellipticCurve)
         && signature.v != NULL)
     {
         return CRYPTID_VALIDATION_SUCCESS;

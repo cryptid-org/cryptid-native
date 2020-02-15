@@ -444,12 +444,15 @@ int affine_isOnCurve(const AffinePoint point, const EllipticCurve ellipticCurve)
     return result;
 }
 
-CryptidValidationResult affine_isValid(const AffinePoint affinePoint, const mpz_t order)
+CryptidValidationResult affine_isValid(const AffinePoint affinePoint, const EllipticCurve ellipticCurve)
 {
-    if(mpz_cmp_si(affinePoint.x, -1) > 0 && mpz_cmp(affinePoint.x, order) < 0
-        && mpz_cmp_si(affinePoint.y, -1) > 0 && mpz_cmp(affinePoint.y, order) < 0)
+    if(mpz_cmp_si(affinePoint.x, -1) > 0 && mpz_cmp(affinePoint.x, ellipticCurve.fieldOrder) < 0
+        && mpz_cmp_si(affinePoint.y, -1) > 0 && mpz_cmp(affinePoint.y, ellipticCurve.fieldOrder) < 0)
     {
-        return CRYPTID_VALIDATION_SUCCESS;
+        if(affine_isInfinity(affinePoint) || affine_isOnCurve(affinePoint, ellipticCurve))
+        {
+            return CRYPTID_VALIDATION_SUCCESS;
+        }
     }
 
     return CRYPTID_VALIDATION_FAILURE;

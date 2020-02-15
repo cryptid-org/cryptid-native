@@ -22,8 +22,8 @@ CryptidValidationResult hessIdentityBasedSignaturePublicParameters_isValid(const
 {
     if(ellipticCurve_isTypeOne(publicParameters.ellipticCurve) 
         && primaltyTest_isProbablePrime(publicParameters.q)
-        && affine_isValid(publicParameters.pointP, publicParameters.ellipticCurve.fieldOrder)  
-        && affine_isValid(publicParameters.pointPpublic, publicParameters.ellipticCurve.fieldOrder))
+        && affine_isValid(publicParameters.pointP, publicParameters.ellipticCurve)  
+        && affine_isValid(publicParameters.pointPpublic, publicParameters.ellipticCurve))
     {
         return CRYPTID_VALIDATION_SUCCESS;
     }

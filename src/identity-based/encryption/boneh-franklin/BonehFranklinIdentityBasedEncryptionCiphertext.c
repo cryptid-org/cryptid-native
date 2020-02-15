@@ -27,9 +27,9 @@ void bonehFranklinIdentityBasedEncryptionCiphertext_destroy(BonehFranklinIdentit
     free(ciphertext.cipherW);
 }
 
-CryptidValidationResult bonehFranklinIdentityBasedEncryptionCiphertext_isValid(const BonehFranklinIdentityBasedEncryptionCiphertext bonehFranklinIdentityBasedEncryptionCiphertext, const mpz_t order)
+CryptidValidationResult bonehFranklinIdentityBasedEncryptionCiphertext_isValid(const BonehFranklinIdentityBasedEncryptionCiphertext bonehFranklinIdentityBasedEncryptionCiphertext, const EllipticCurve ellipticCurve)
 {
-    if(affine_isValid(bonehFranklinIdentityBasedEncryptionCiphertext.cipherU, order)
+    if(affine_isValid(bonehFranklinIdentityBasedEncryptionCiphertext.cipherU, ellipticCurve)
         && bonehFranklinIdentityBasedEncryptionCiphertext.cipherV
         && bonehFranklinIdentityBasedEncryptionCiphertext.cipherVLength != 0
         && bonehFranklinIdentityBasedEncryptionCiphertext.cipherW

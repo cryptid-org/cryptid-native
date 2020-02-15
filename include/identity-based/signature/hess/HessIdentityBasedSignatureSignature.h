@@ -3,6 +3,7 @@
 
 #include "gmp.h"
 
+#include "elliptic/EllipticCurve.h"
 #include "elliptic/AffinePoint.h"
 #include "util/Validation.h"
 
@@ -19,9 +20,9 @@ void hessIdentityBasedSignatureSignature_destroy(HessIdentityBasedSignatureSigna
 /**
  * Validates that the specified signature is correct.
  * @param signature the signature to check
- * @param order the field order of the elliptic curve field, we operating over
+ * @param ellipticCurve the elliptic curve field, we operating over
  * @return CRYPTID_VALIDATION_SUCCESS if the signature is valid
  */ 
-CryptidValidationResult hessIdentityBasedSignatureSignature_isValid(const HessIdentityBasedSignatureSignature signature, const mpz_t order);
+CryptidValidationResult hessIdentityBasedSignatureSignature_isValid(const HessIdentityBasedSignatureSignature signature, const EllipticCurve ellipticCurve);
 
 #endif
