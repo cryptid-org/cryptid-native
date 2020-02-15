@@ -1,7 +1,7 @@
 #include "gmp.h"
 
 #include "elliptic/EllipticCurve.h"
-
+#include "util/PrimalityTest.h"
 
 void ellipticCurve_init(EllipticCurve *ellipticCurveOutput, const mpz_t a, const mpz_t b, const mpz_t fieldOrder)
 {
@@ -24,4 +24,16 @@ void ellipticCurve_initLong(EllipticCurve *ellipticCurveOutput, const long a, co
 void ellipticCurve_destroy(EllipticCurve ellipticCurve)
 {
     mpz_clears(ellipticCurve.a, ellipticCurve.b, ellipticCurve.fieldOrder, NULL);
+}
+
+CryptidValidationResult ellipticCurve_isTypeOne(const EllipticCurve ellipticCurve)
+{
+    if(!mpz_cmp_ui(ellipticCurve.a, 0)
+        && !mpz_cmp_ui(ellipticCurve.b, 1)
+        && primalityTest_isProbablePrime(ellipticCurve.fieldOrder))
+    {
+        return CRYPTID_VALIDATION_SUCCESS;
+    }
+
+    return CRYPTID_VALIDATION_FAILURE;
 }

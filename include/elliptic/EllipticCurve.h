@@ -2,6 +2,7 @@
 #define __CRYPTID_ELLIPTICCURVE_H
 
 #include "gmp.h"
+#include "util/Validation.h"
 
 /**
  * A finite field on an elliptic curve of form \f$y^2 = x^3 + ax + b\f$.
@@ -36,5 +37,12 @@ void ellipticCurve_initLong(EllipticCurve *ellipticCurveOutput, const long a, co
  * @param ellipticCurve the EllipticCurve to be destroyed
  */
 void ellipticCurve_destroy(EllipticCurve ellipticCurve);
+
+/**
+ * Validates that the specified EllipticCurve instance is a Type-1 elliptic curve.
+ * @param ellipticCurve the struct to check
+ * @return CRYPTID_VALIDATION_SUCCESS if the struct is valid
+ */
+CryptidValidationResult ellipticCurve_isTypeOne(const EllipticCurve ellipticCurve);
 
 #endif

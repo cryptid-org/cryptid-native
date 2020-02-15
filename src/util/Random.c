@@ -1,6 +1,6 @@
 #include "util/Random.h"
 #include "util/RandBytes.h"
-#include "util/Validation.h"
+#include "util/PrimalityTest.h"
 #include <math.h>
 #include <stdio.h>
 
@@ -83,7 +83,7 @@ CryptidStatus random_solinasPrime(mpz_t result, const unsigned int numberOfBits,
 
             mpz_sub_ui(result, result, 1);
 
-            if (validation_isProbablePrime(result))
+            if (primalityTest_isProbablePrime(result))
             {
                 isPrimeGenerated = 1;
                 break;

@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 #include "elliptic/AffinePoint.h"
+#include "util/Validation.h"
 
 // References
 //  * [RFC-5091] Xavier Boyen, Luther Martin. 2007. RFC 5091. Identity-Based Cryptography Standard (IBCS) #1: Supersingular Curve Implementations of the BF and BB1 Cryptosystems
@@ -51,5 +52,13 @@ void bonehFranklinIdentityBasedEncryptionCiphertext_init(BonehFranklinIdentityBa
  * @param bonehFranklinIdentityBasedEncryptionCiphertext the BonehFranklinIdentityBasedEncryptionCiphertext to be destroyed
  */
 void bonehFranklinIdentityBasedEncryptionCiphertext_destroy(BonehFranklinIdentityBasedEncryptionCiphertext ciphertext);
+
+/**
+ * Validates that the specified ciphertext is correct.
+ * @param ciphertext the ciphertext to check
+ * @param ellipticCurve the elliptic curve field, we operating over
+ * @return CRYPTID_VALIDATION_SUCCESS if the ciphertext is valid
+ */
+CryptidValidationResult bonehFranklinIdentityBasedEncryptionCiphertext_isValid(const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext, const EllipticCurve ellipticCurve);
 
 #endif

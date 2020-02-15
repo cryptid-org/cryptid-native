@@ -84,3 +84,13 @@ CryptidStatus hashFunction_initForSecurityLevel(HashFunction *hashFunctionOutput
 
     return CRYPTID_SUCCESS;
 }
+
+CryptidValidationResult hashFunction_isValid(const HashFunction hashFunction)
+{
+    if(hashFunction >= 0 && hashFunction <= HASHFUNCTION_MAX_VALUE)
+    {
+        return CRYPTID_VALIDATION_SUCCESS;
+    }
+
+    return CRYPTID_VALIDATION_FAILURE;
+}
