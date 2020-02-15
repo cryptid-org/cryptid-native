@@ -21,7 +21,7 @@ void hessIdentityBasedSignaturePublicParameters_destroy(HessIdentityBasedSignatu
 CryptidValidationResult hessIdentityBasedSignaturePublicParameters_isValid(const HessIdentityBasedSignaturePublicParameters publicParameters)
 {
     if(ellipticCurve_isTypeOne(publicParameters.ellipticCurve) 
-        && primaltyTest_isProbablePrime(publicParameters.q)
+        && primalityTest_isProbablePrime(publicParameters.q)
         && affine_isValid(publicParameters.pointP, publicParameters.ellipticCurve)  
         && affine_isValid(publicParameters.pointPpublic, publicParameters.ellipticCurve)
         && hashFunction_isValid(publicParameters.hashFunction))

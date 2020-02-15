@@ -30,7 +30,7 @@ CryptidValidationResult ellipticCurve_isTypeOne(const EllipticCurve ellipticCurv
 {
     if(!mpz_cmp_ui(ellipticCurve.a, 0)
         && !mpz_cmp_ui(ellipticCurve.b, 1)
-        && primaltyTest_isProbablePrime(ellipticCurve.fieldOrder))
+        && primalityTest_isProbablePrime(ellipticCurve.fieldOrder))
     {
         return CRYPTID_VALIDATION_SUCCESS;
     }

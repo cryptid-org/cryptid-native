@@ -83,7 +83,7 @@ CryptidStatus random_solinasPrime(mpz_t result, const unsigned int numberOfBits,
 
             mpz_sub_ui(result, result, 1);
 
-            if (primaltyTest_isProbablePrime(result))
+            if (primalityTest_isProbablePrime(result))
             {
                 isPrimeGenerated = 1;
                 break;

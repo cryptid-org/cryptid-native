@@ -57,7 +57,7 @@ CryptidStatus cryptid_ibs_hess_setup(HessIdentityBasedSignatureMasterSecretAsBin
         mpz_mul(p, p, q);
         mpz_sub_ui(p, p, 1);
     }
-    while (!primaltyTest_isProbablePrime(p));
+    while (!primalityTest_isProbablePrime(p));
 
     mpz_t zero, one;
     mpz_init_set_ui(zero, 0);
