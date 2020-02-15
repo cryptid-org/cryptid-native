@@ -11,13 +11,14 @@
 // References
 //  * [RFC-5091] Xavier Boyen, Luther Martin. 2007. RFC 5091. Identity-Based Cryptography Standard (IBCS) #1: Supersingular Curve Implementations of the BF and BB1 Cryptosystems
 
+#define HASHFUNCTION_MAX_VALUE 4
 typedef enum HashFunction
 {
     hashFunction_SHA1 = 0,
     hashFunction_SHA224 = 1,
     hashFunction_SHA256 = 2,
     hashFunction_SHA384 = 3,
-    hashFunction_SHA512 = 4
+    hashFunction_SHA512 = 4,
 } HashFunction;
 
 CryptidStatus hashFunction_getHashSize(int *hashSizeOutput, const HashFunction hashFunction);
