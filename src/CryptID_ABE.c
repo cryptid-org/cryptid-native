@@ -109,7 +109,7 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
 
     mpz_t beta_inverse;
     mpz_init(beta_inverse);
-    mpz_invert(beta_inverse, beta, publickey->ellipticCurve.fieldOrder);
+    mpz_invert(beta_inverse, beta, q);
 
     status = AFFINE_MULTIPLY_IMPL(&publickey->f, beta_inverse, publickey->g, publickey->ellipticCurve);
     if(status) {
@@ -229,15 +229,15 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
     mpz_init(pMinusOne);
     mpz_sub_ui(pMinusOne, publickey->ellipticCurve.fieldOrder, 1);
 
-    unsigned long values[messageLength];
+    /*unsigned long values[messageLength];
     for(size_t i = 0; i < messageLength; i++) 
     {
         values[i] = (long) message[i];
-    }
+    }*/
 
     mpz_t M;
     mpz_init(M);
-    mpz_import (M, messageLength, 1, sizeof(values[0]), 0, 0, values);
+    mpz_import (M, messageLength, 1, 1, 0, 0, message);
     gmp_printf("M: %Zd\n", M);
     // TO DO
 
@@ -288,7 +288,7 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
 
     mpz_t beta_inverse;
     mpz_init(beta_inverse);
-    mpz_invert(beta_inverse, masterkey->beta, publickey->ellipticCurve.fieldOrder);
+    mpz_invert(beta_inverse, masterkey->beta, publickey->q);
 
     status = AFFINE_MULTIPLY_IMPL(&GarBi, beta_inverse, Gar, publickey->ellipticCurve);
     if(status) {
@@ -507,7 +507,16 @@ CryptidStatus cryptid_decrypt_ABE(char *result, EncryptedMessage_ABE* encrypted,
     printf("z: %s\n", z);
     printf("zLength: %d\n", zLength);*/
 
-    printf("result: %s\n", result);
+    size_t resultLength;
+
+    result = mpz_export(NULL, &resultLength, 1, 1, 0, 0, decrypted.real);
+
+    printf("%d\n", (int)resultLength);
+    for(size_t i = 0; i < resultLength; i++)
+    {
+        printf("%c", result[i]);
+    }
+    printf("\n");
 
     gmp_printf("real: %Zd\n", decrypted.real);
     gmp_printf("imaginary: %Zd\n", decrypted.imaginary);

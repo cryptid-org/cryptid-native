@@ -10,7 +10,7 @@
 
 TEST make_abe_work()
 {
-    const char *message = "a";
+    const char *message = "OGS";
 
     PublicKey_ABE* publickey = malloc(sizeof (PublicKey_ABE));
     MasterKey_ABE* masterkey = malloc(sizeof (MasterKey_ABE));
