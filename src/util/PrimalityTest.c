@@ -63,7 +63,20 @@ int primaltyTest_millerrabin(const mpz_srcptr p, const mpz_srcptr pMinus1, const
     return NOT_PRIME;
 }
 
+#if defined(__CRYPTID_EXTERN_PRIMALITY_TEST)
+
+extern int __primaltyTest_isProbablePrime(const mpz_t p);
+
+CryptidValidationResult primaltyTest_isProbablePrime(const mpz_t p)
+{
+    return __primaltyTest_isProbablePrime(p) >= MIGHT_BE_PRIME ? CRYPTID_VALIDATION_SUCCESS : CRYPTID_VALIDATION_FAILURE;
+}
+
+#else
+
 CryptidValidationResult primaltyTest_isProbablePrime(const mpz_t p)
 {
     return primaltyTest_millerrabin_mpz(p, 50) >= MIGHT_BE_PRIME ? CRYPTID_VALIDATION_SUCCESS : CRYPTID_VALIDATION_FAILURE;
 }
+
+#endif
