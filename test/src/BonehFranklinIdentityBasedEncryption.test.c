@@ -5,6 +5,7 @@
 
 #include "greatest.h"
 
+//TODO remove if cmake is ready
 #define __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION
 #include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryption.h"
 #include "complex/Complex.h"
