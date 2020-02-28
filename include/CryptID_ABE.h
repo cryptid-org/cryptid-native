@@ -27,6 +27,6 @@ int Lagrange_coefficient(int xi, int* S, int sLength, int x);
 
 CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* secretkey, AccessTree* node, Complex* result, int* statusCode);
 
-CryptidStatus cryptid_decrypt_ABE(char *result, EncryptedMessage_ABE* encrypted, SecretKey_ABE* secretkey);
+CryptidStatus cryptid_decrypt_ABE(char **result, EncryptedMessage_ABE* encrypted, SecretKey_ABE* secretkey);
 
 #endif

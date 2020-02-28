@@ -3,10 +3,17 @@
 
 #include "gmp.h"
 
+typedef struct Ctilde_set
+{
+	Complex Ctilde;
+	struct Ctilde_set* Ctilde_set;
+	int last;
+} Ctilde_set;
+
 typedef struct EncryptedMessage_ABE
 {
 	AccessTree* tree;
-	Complex Ctilde;
+	Ctilde_set* Ctilde_set;
 	AffinePoint C;
 } EncryptedMessage_ABE;
 

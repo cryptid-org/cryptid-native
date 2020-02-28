@@ -14,7 +14,6 @@ typedef struct AccessTree {
     size_t attributeLength;
     AffinePoint Cy;
     AffinePoint CyA;
-    //Polynom* polynom;
 } AccessTree;
 
 int isRoot(AccessTree* accessTree);

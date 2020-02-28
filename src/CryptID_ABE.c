@@ -7,11 +7,6 @@
 #include "util/Utils.h"
 #include "util/Validation.h"
 
-
-// References
-//  * [RFC-5091] Xavier Boyen, Luther Martin. 2007. RFC 5091. Identity-Based Cryptography Standard (IBCS) #1: Supersingular Curve Implementations of the BF and BB1 Cryptosystems
-
-
 static const unsigned int SOLINAS_GENERATION_ATTEMPT_LIMIT = 100;
 static const unsigned int POINT_GENERATION_ATTEMPT_LIMIT = 100;
 
@@ -154,17 +149,16 @@ CryptidStatus compute_tree(AccessTree* accessTree, mpz_t s, PublicKey_ABE* publi
     int d = accessTree->value - 1; // dx = kx-1, degree = threshold-1
 
     Polynom* q = createPolynom(d, s, publickey);
-    //accessTree->polynom = q;
     if(!isLeaf(accessTree))
     {
         int i;
-        for(i = 1; i < MAX_CHILDREN; i++)
+        for(i = 0; i < MAX_CHILDREN; i++)
         {
             if(accessTree->children[i] != NULL)
             {
                 mpz_t sum;
                 mpz_init(sum);
-                polynomSum(q, i, sum);
+                polynomSum(q, i+1, sum);
                 compute_tree(accessTree->children[i], sum, publickey);
                 mpz_clear(sum);
             }
@@ -229,18 +223,6 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
     mpz_init(pMinusOne);
     mpz_sub_ui(pMinusOne, publickey->ellipticCurve.fieldOrder, 1);
 
-    /*unsigned long values[messageLength];
-    for(size_t i = 0; i < messageLength; i++) 
-    {
-        values[i] = (long) message[i];
-    }*/
-
-    mpz_t M;
-    mpz_init(M);
-    mpz_import (M, messageLength, 1, 1, 0, 0, message);
-    gmp_printf("M: %Zd\n", M);
-    // TO DO
-
     mpz_t s;
     mpz_init(s);
     random_mpzInRange(s, pMinusOne);
@@ -248,8 +230,41 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
 
     encrypted->tree = accessTree;
     Complex eggalphas = complex_modPow(publickey->eggalpha, s, publickey->ellipticCurve.fieldOrder);
-    Complex Ctilde = complex_modMulScalar(eggalphas, M, publickey->ellipticCurve.fieldOrder);
-    encrypted->Ctilde = Ctilde;
+
+    mpz_t M;
+    mpz_init(M);
+    size_t n = messageLength;
+    size_t startFrom = 0;
+    char* msg = malloc(sizeof(char)*messageLength);
+    strncpy(msg, message, messageLength);
+    Ctilde_set* prevSet = (Ctilde_set*) malloc(sizeof(Ctilde_set));
+    encrypted->Ctilde_set = prevSet;
+    prevSet->last = 2;
+    while(n > 0)
+    {
+        while(prevSet->last == 2 || mpz_cmp(M, publickey->ellipticCurve.fieldOrder) >= 0)
+        {
+            if(prevSet->last == 0) {
+                n--;
+            }
+            prevSet->last = 0;
+            char* msgPart = malloc(sizeof(char)*(n+1));
+            strncpy(msgPart, msg + 0, n);
+            msgPart[n] = '\0';
+            mpz_import (M, n+1, 1, 1, 0, 0, msgPart);
+            free(msgPart);
+        }
+        Complex Ctilde = complex_modMulScalar(eggalphas, M, publickey->ellipticCurve.fieldOrder);
+        prevSet->Ctilde = Ctilde;
+        startFrom += n;
+        n = messageLength-startFrom;
+        prevSet->Ctilde_set = (Ctilde_set*) malloc(sizeof(Ctilde_set));
+        prevSet = prevSet->Ctilde_set;
+        prevSet->last = 2;
+        strncpy(msg, message + startFrom, n);
+    }
+    prevSet->Ctilde_set = NULL;
+    prevSet->last = 1;
 
     CryptidStatus status = AFFINE_MULTIPLY_IMPL(&encrypted->C, s, publickey->h, publickey->ellipticCurve);
     if(status) {
@@ -257,7 +272,7 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
         return status;
     }
 
-    mpz_clears(M, pMinusOne, s, NULL);
+    mpz_clears(pMinusOne, s, NULL);
 
     return CRYPTID_SUCCESS;
 }
@@ -379,7 +394,7 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
         int found = -1;
         for(int i = 0; i < MAX_ATTRIBUTES; i++)
         {
-            if(secretkey->attributes[i][0] != '\0')
+            if(secretkey->attributes[i] && secretkey->attributes[i][0] != '\0')
             {
                 if(strcmp(secretkey->attributes[i], node->attribute) == 0)
                 {
@@ -418,20 +433,30 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
     }
     else
     {
-        Complex* Sx[MAX_CHILDREN];
+        Complex Sx[MAX_CHILDREN];
+        int Codes[MAX_CHILDREN];
         int num = 0;
         for(int i = 0; i < MAX_CHILDREN; i++)
         {
-            if(node->children[i] != NULL)
+            if(node->children[i] && node->children[i] != NULL)
             {
                 Complex F;
                 int code = 0;
                 DecryptNode_ABE(encrypted, secretkey, node->children[i], &F, &code);
                 if(code == 1)
                 {
-                    Sx[i] = &F;
+                    Sx[i] = F;
+                    Codes[i] = 1;
                     num++;
                 }
+                else
+                {
+                    Codes[i] = 0;
+                }
+            }
+            else
+            {
+                Codes[i] = 0;
             }
         }
 
@@ -441,9 +466,9 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
             int c = 0;
             for(int i = 0; i < MAX_CHILDREN; i++)
             {
-                if(Sx[i] != NULL)
+                if(Codes[i] == 1)
                 {
-                    indexes[c] = i;
+                    indexes[c] = i+1;
                     c++;
                 }
             }
@@ -451,15 +476,26 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
             Complex Fx = complex_initLong(1, 0);
             for(int i = 0; i < num; i++)
             {
-                int result = Lagrange_coefficient(i, indexes, num, 0);
+                int result = Lagrange_coefficient(indexes[i], indexes, num, 0);
                 mpz_t resultMpz;
-                mpz_init_set_ui(resultMpz, result);
-                Complex tmp = complex_modPow(*Sx[indexes[c]], resultMpz, secretkey->pubkey->ellipticCurve.fieldOrder); // Sx[indexes[c]] ^ result
+                mpz_init_set_ui(resultMpz, abs(result));
+                Complex res = complex_modPow(Sx[indexes[i]-1], resultMpz, secretkey->pubkey->ellipticCurve.fieldOrder); // Sx[indexes[c]] ^ result
+                Complex tmp;
+                if(result < 0) {
+                    CryptidStatus status = complex_multiplicativeInverse(&tmp, res, secretkey->pubkey->ellipticCurve.fieldOrder);
+                    if(status)
+                    {
+                        return status;
+                    }
+                } else {
+                    tmp = res;
+                }
                 Fx = complex_modMul(Fx, tmp, secretkey->pubkey->ellipticCurve.fieldOrder);
                 mpz_clear(resultMpz);
+
                 //Fx = Fx * Sx[indexes[c]] ^ result
             }
-            result = &Fx;
+            *result = Fx;
             *statusCode = 1;
         }
     }
@@ -467,8 +503,20 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_decrypt_ABE(char *result, EncryptedMessage_ABE* encrypted, SecretKey_ABE* secretkey)
+char* concat(const char *s1, const char *s2) // TO DO move to utils
 {
+    char *result = malloc(strlen(s1) + strlen(s2) + 1);
+    strcpy(result, s1);
+    strcat(result, s2);
+    return result;
+}
+
+CryptidStatus cryptid_decrypt_ABE(char **result, EncryptedMessage_ABE* encrypted, SecretKey_ABE* secretkey)
+{
+    if (!result)
+    {
+        return CRYPTID_RESULT_POINTER_NULL_ERROR;
+    }
     int satisfy = satisfyValue(encrypted->tree, secretkey->attributes);
     if(satisfy == 0)
     {
@@ -481,8 +529,6 @@ CryptidStatus cryptid_decrypt_ABE(char *result, EncryptedMessage_ABE* encrypted,
     {
         return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR; // TO DO
     }
-
-    Complex Ctilde_A = complex_modMul(encrypted->Ctilde, A, secretkey->pubkey->ellipticCurve.fieldOrder);
 
     Complex eCD;
     CryptidStatus status = tate_performPairing(&eCD, 2, secretkey->pubkey->ellipticCurve, secretkey->pubkey->q, encrypted->C, secretkey->D);
@@ -498,28 +544,22 @@ CryptidStatus cryptid_decrypt_ABE(char *result, EncryptedMessage_ABE* encrypted,
         return status;
     }
 
-    Complex decrypted = complex_modMul(Ctilde_A, eCD_inverse, secretkey->pubkey->ellipticCurve.fieldOrder);
+    Ctilde_set* lastSet = encrypted->Ctilde_set;
+    //char* fullNumber = "";
+    char* fullString = "";
+    while(lastSet->last == 0) {
+        Complex Ctilde_A = complex_modMul(lastSet->Ctilde, A, secretkey->pubkey->ellipticCurve.fieldOrder);
 
-    /*int zLength;
-    unsigned char* z = canonical(&zLength, secretkey->pubkey->ellipticCurve.fieldOrder, decrypted, 1);
-    
-    
-    printf("z: %s\n", z);
-    printf("zLength: %d\n", zLength);*/
+        Complex decrypted = complex_modMul(Ctilde_A, eCD_inverse, secretkey->pubkey->ellipticCurve.fieldOrder);
 
-    size_t resultLength;
+        size_t resultLength;
+        char *tmpResult = mpz_export(NULL, &resultLength, 1, 1, 0, 0, decrypted.real);
+        fullString = concat(fullString, tmpResult);
 
-    result = mpz_export(NULL, &resultLength, 1, 1, 0, 0, decrypted.real);
-
-    printf("%d\n", (int)resultLength);
-    for(size_t i = 0; i < resultLength; i++)
-    {
-        printf("%c", result[i]);
+        lastSet = lastSet->Ctilde_set;
     }
-    printf("\n");
 
-    gmp_printf("real: %Zd\n", decrypted.real);
-    gmp_printf("imaginary: %Zd\n", decrypted.imaginary);
+    *result = fullString;
 
     return CRYPTID_SUCCESS;
 }
