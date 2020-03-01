@@ -23,6 +23,8 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
 
 CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, SecretKey_ABE* secretkey);
 
+CryptidStatus cryptid_delegate_ABE(SecretKey_ABE* secretkey, char** attributes, SecretKey_ABE* secretkey_new);
+
 int Lagrange_coefficient(int xi, int* S, int sLength, int x);
 
 CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* secretkey, AccessTree* node, Complex* result, int* statusCode);

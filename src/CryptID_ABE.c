@@ -371,6 +371,104 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
     return CRYPTID_SUCCESS;
 }
 
+CryptidStatus cryptid_delegate_ABE(SecretKey_ABE* secretkey, char** attributes, SecretKey_ABE* secretkey_new)
+{
+    PublicKey_ABE* publickey = secretkey->pubkey;
+
+    AffinePoint Fr;
+    AffinePoint Gr;
+
+    mpz_t r;
+    mpz_init(r);
+    ABE_randomNumber(r, publickey);
+
+    CryptidStatus status = AFFINE_MULTIPLY_IMPL(&Fr, r, publickey->f, publickey->ellipticCurve);
+    if(status) {
+        return status;
+    }
+
+    status = AFFINE_MULTIPLY_IMPL(&Gr, r, publickey->g, publickey->ellipticCurve);
+    if(status) {
+        return status;
+    }
+
+    affine_add(&secretkey_new->D, secretkey->D, Fr, publickey->ellipticCurve);
+
+    for(int i = 0; i < MAX_ATTRIBUTES; i++)
+    {
+        if(attributes[i][0] != '\0')
+        {
+            int attributeLength = 0;
+            for(int c = 0; c < ATTRIBUTE_LENGTH; c++) {
+                if(attributes[i][c] == '\0') {
+                    break;
+                }
+                attributeLength++;
+            }
+
+            int otherID = -1;
+            for(int o = 0; o < MAX_ATTRIBUTES; o++)
+            {
+                if(strcmp(secretkey->attributes[o], attributes[i]) == 0)
+                {
+                    otherID = o;
+                    break;
+                }
+            }
+            if(otherID == -1)
+            {
+                return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR; // TO DO
+            }
+
+            mpz_t rj;
+            mpz_init(rj);
+            ABE_randomNumber(rj, publickey);
+
+            AffinePoint Hj;
+
+            status = hashToPoint(&Hj, publickey->ellipticCurve, publickey->ellipticCurve.fieldOrder,
+                                    publickey->q, attributes[i], attributeLength, publickey->hashFunction);
+
+            if(status) {
+                return status;
+            }
+
+
+            AffinePoint HjRj;
+
+            status = AFFINE_MULTIPLY_IMPL(&HjRj, rj, Hj, publickey->ellipticCurve);
+            if(status) {
+                return status;
+            }
+
+            AffinePoint Dj;
+            affine_add(&Dj, HjRj, Gr, publickey->ellipticCurve);
+            AffinePoint DjDk;
+            affine_add(&DjDk, Dj, secretkey->Dj[otherID], publickey->ellipticCurve);
+            secretkey_new->Dj[i] = DjDk;
+
+            AffinePoint DjA;
+            status = AFFINE_MULTIPLY_IMPL(&DjA, rj, publickey->g, publickey->ellipticCurve);
+            if(status) {
+                return status;
+            }
+
+            AffinePoint DjADjK;
+            affine_add(&DjADjK, DjA, secretkey->DjA[otherID], publickey->ellipticCurve);
+            secretkey_new->DjA[i] = DjADjK;
+
+            secretkey_new->attributes[i] = malloc(strlen(attributes[i]) + 1);
+            strcpy(secretkey_new->attributes[i], attributes[i]);
+
+            secretkey_new->pubkey = secretkey->pubkey;
+
+            mpz_clear(rj);
+        }
+    }
+
+    return CRYPTID_SUCCESS;
+}
+
 int Lagrange_coefficient(int xi, int* S, int sLength, int x)
 {
     int result = 1;
