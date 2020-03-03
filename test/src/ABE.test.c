@@ -6,7 +6,7 @@
 
 #include "greatest.h"
 
-#include "CryptID_ABE.h"
+#include "attribute-based/ABE.h"
 
 TEST basic_abe_test(SecurityLevel securityLevel, char* message, AccessTree* accessTree, char** attributes)
 {

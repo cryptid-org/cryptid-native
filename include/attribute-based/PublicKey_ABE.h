@@ -5,7 +5,7 @@
 
 #include "elliptic/AffinePoint.h"
 #include "elliptic/EllipticCurve.h"
-#include "identity-based/HashFunction.h"
+#include "util/HashFunction.h"
 #include "elliptic/TatePairing.h"
 
 typedef struct PublicKey_ABE

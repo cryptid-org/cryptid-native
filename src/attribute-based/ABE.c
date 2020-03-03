@@ -1,11 +1,11 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "CryptID_ABE.h"
+#include "attribute-based/ABE.h"
 #include "elliptic/TatePairing.h"
 #include "util/RandBytes.h"
 #include "util/Utils.h"
-#include "util/Validation.h"
+#include "util/PrimalityTest.h"
 
 static const unsigned int SOLINAS_GENERATION_ATTEMPT_LIMIT = 100;
 static const unsigned int POINT_GENERATION_ATTEMPT_LIMIT = 100;
@@ -39,13 +39,14 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
         mpz_mul(p, p, q);
         mpz_sub_ui(p, p, 1);
     }
-    while (!validation_isProbablePrime(p));
+    while (!primalityTest_isProbablePrime(p));
 
     mpz_t zero, one;
     mpz_init_set_ui(zero, 0);
     mpz_init_set_ui(one, 1);
 
-    EllipticCurve ec = ellipticCurve_init(zero, one, p);
+    EllipticCurve ec;
+    ellipticCurve_init(&ec, zero, one, p);
 
 
     // Select a point \f$P\f$ of order \f$q\f$ in \f$E(F_p)\f$.
@@ -66,7 +67,7 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
         mpz_init_set(rMul, r);
         mpz_mul_ui(rMul, rMul, 12);
 
-        status = AFFINE_MULTIPLY_IMPL(&pointP, rMul, pointPprime, ec);
+        status = affine_wNAFMultiply(&pointP, pointPprime, rMul, ec);
 
         if (status)
         {
@@ -96,7 +97,7 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
     publickey->ellipticCurve = ec;
     publickey->g = pointP;
 
-    status = AFFINE_MULTIPLY_IMPL(&publickey->h, beta, publickey->g, publickey->ellipticCurve);
+    status = affine_wNAFMultiply(&publickey->h, publickey->g, beta, publickey->ellipticCurve);
     if(status) {
         mpz_clears(p, q, r, pMinusOne, alpha, beta, NULL);
         ellipticCurve_destroy(ec);
@@ -107,7 +108,7 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
     mpz_init(beta_inverse);
     mpz_invert(beta_inverse, beta, q);
 
-    status = AFFINE_MULTIPLY_IMPL(&publickey->f, beta_inverse, publickey->g, publickey->ellipticCurve);
+    status = affine_wNAFMultiply(&publickey->f, publickey->g, beta_inverse, publickey->ellipticCurve);
     if(status) {
         mpz_clears(p, q, r, pMinusOne, alpha, beta, beta_inverse, NULL);
         return status;
@@ -116,7 +117,7 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
     mpz_init(masterkey->beta);
     mpz_set(masterkey->beta, beta);
 
-    status = AFFINE_MULTIPLY_IMPL(&masterkey->g_alpha, alpha, publickey->g, publickey->ellipticCurve);
+    status = affine_wNAFMultiply(&masterkey->g_alpha, publickey->g, alpha, publickey->ellipticCurve);
     if(status) {
         mpz_clears(p, q, r, pMinusOne, alpha, beta, beta_inverse, NULL);
         return status;
@@ -125,17 +126,18 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
     mpz_init(publickey->q);
     mpz_set(publickey->q, q);
 
-    publickey->hashFunction = hashFunction_initForSecurityLevel(securityLevel);
+    hashFunction_initForSecurityLevel(&(publickey->hashFunction), securityLevel);
 
     Complex pairValue;
-    status = tate_performPairing(&pairValue, 2, ec, q, pointP, pointP);
+    status = tate_performPairing(&pairValue, pointP, pointP, 2, q, ec);
     if(status)
     {
         complex_destroy(pairValue);
         return status;
     }
 
-    Complex eggalpha = complex_modPow(pairValue, alpha, publickey->ellipticCurve.fieldOrder);
+    Complex eggalpha;
+    complex_modPow(&eggalpha, pairValue, alpha, publickey->ellipticCurve.fieldOrder);
     publickey->eggalpha = eggalpha;
     complex_destroy(pairValue);
 
@@ -172,7 +174,7 @@ CryptidStatus compute_tree(AccessTree* accessTree, mpz_t s, PublicKey_ABE* publi
     else
     {
         AffinePoint Cy;
-        CryptidStatus status = AFFINE_MULTIPLY_IMPL(&Cy, s, publickey->g, publickey->ellipticCurve);
+        CryptidStatus status = affine_wNAFMultiply(&Cy, publickey->g, s, publickey->ellipticCurve);
         if(status) {
             affine_destroy(Cy);
             return status;
@@ -180,8 +182,7 @@ CryptidStatus compute_tree(AccessTree* accessTree, mpz_t s, PublicKey_ABE* publi
 
         AffinePoint hashedPoint;
 
-        status = hashToPoint(&hashedPoint, publickey->ellipticCurve, publickey->ellipticCurve.fieldOrder,
-                                publickey->q, accessTree->attribute, accessTree->attributeLength, publickey->hashFunction);
+        status = hashToPoint(&hashedPoint, accessTree->attribute, accessTree->attributeLength, publickey->q, publickey->ellipticCurve, publickey->hashFunction);
 
         if (status) 
         {
@@ -189,7 +190,7 @@ CryptidStatus compute_tree(AccessTree* accessTree, mpz_t s, PublicKey_ABE* publi
         }
 
         AffinePoint CyA;
-        status = AFFINE_MULTIPLY_IMPL(&CyA, s, hashedPoint, publickey->ellipticCurve);
+        status = affine_wNAFMultiply(&CyA, hashedPoint, s, publickey->ellipticCurve);
         if(status) {
             return status;
         }
@@ -236,7 +237,8 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
     compute_tree(accessTree, s, publickey);
 
     encrypted->tree = accessTree;
-    Complex eggalphas = complex_modPow(publickey->eggalpha, s, publickey->ellipticCurve.fieldOrder);
+    Complex eggalphas;
+    complex_modPow(&eggalphas, publickey->eggalpha, s, publickey->ellipticCurve.fieldOrder);
 
     mpz_t M;
     mpz_init(M);
@@ -261,7 +263,8 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
             mpz_import (M, n+1, 1, 1, 0, 0, msgPart);
             free(msgPart);
         }
-        Complex Ctilde = complex_modMulScalar(eggalphas, M, publickey->ellipticCurve.fieldOrder);
+        Complex Ctilde;
+        complex_modMulScalar(&Ctilde, eggalphas, M, publickey->ellipticCurve.fieldOrder);
         prevSet->Ctilde = Ctilde;
         startFrom += n;
         n = messageLength-startFrom;
@@ -275,7 +278,7 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
     prevSet->Ctilde_set = NULL;
     prevSet->last = 1;
 
-    CryptidStatus status = AFFINE_MULTIPLY_IMPL(&encrypted->C, s, publickey->h, publickey->ellipticCurve);
+    CryptidStatus status = affine_wNAFMultiply(&encrypted->C, publickey->h, s, publickey->ellipticCurve);
     if(status) {
         mpz_clear(M);
         mpz_clears(pMinusOne, s, NULL);
@@ -299,16 +302,12 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
     mpz_init(r);
     ABE_randomNumber(r, publickey);
 
-    CryptidStatus status = AFFINE_MULTIPLY_IMPL(&Gr, r, publickey->g, publickey->ellipticCurve);
+    CryptidStatus status = affine_wNAFMultiply(&Gr, publickey->g, r, publickey->ellipticCurve);
     if(status) {
         return status;
     }
 
     AffinePoint Gar;
-    /*status = AFFINE_MULTIPLY_IMPL(&Gar, r, masterkey->g_alpha, publickey->ellipticCurve);
-    if(status) {
-        return status;
-    }*/
     affine_add(&Gar, masterkey->g_alpha, Gr, publickey->ellipticCurve);
 
     AffinePoint GarBi;
@@ -317,7 +316,7 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
     mpz_init(beta_inverse);
     mpz_invert(beta_inverse, masterkey->beta, publickey->q);
 
-    status = AFFINE_MULTIPLY_IMPL(&GarBi, beta_inverse, Gar, publickey->ellipticCurve);
+    status = affine_wNAFMultiply(&GarBi, Gar, beta_inverse, publickey->ellipticCurve);
     if(status) {
         affine_destroy(GarBi);
         mpz_clear(r);
@@ -348,8 +347,7 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
 
             AffinePoint Hj;
 
-            status = hashToPoint(&Hj, publickey->ellipticCurve, publickey->ellipticCurve.fieldOrder,
-                                    publickey->q, attributes[i], attributeLength, publickey->hashFunction);
+            status = hashToPoint(&Hj, attributes[i], attributeLength, publickey->q, publickey->ellipticCurve, publickey->hashFunction);
 
             if(status) {
                 return status;
@@ -358,7 +356,7 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
 
             AffinePoint HjRj;
 
-            status = AFFINE_MULTIPLY_IMPL(&HjRj, rj, Hj, publickey->ellipticCurve);
+            status = affine_wNAFMultiply(&HjRj, Hj, rj, publickey->ellipticCurve);
             if(status) {
                 return status;
             }
@@ -368,7 +366,7 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
             secretkey->Dj[i] = Dj;
 
             AffinePoint DjA;
-            status = AFFINE_MULTIPLY_IMPL(&DjA, rj, publickey->g, publickey->ellipticCurve);
+            status = affine_wNAFMultiply(&DjA, publickey->g, rj, publickey->ellipticCurve);
             if(status) {
                 return status;
             }
@@ -411,12 +409,12 @@ CryptidStatus cryptid_delegate_ABE(SecretKey_ABE* secretkey, char** attributes, 
     mpz_init(r);
     ABE_randomNumber(r, publickey);
 
-    CryptidStatus status = AFFINE_MULTIPLY_IMPL(&Fr, r, publickey->f, publickey->ellipticCurve);
+    CryptidStatus status = affine_wNAFMultiply(&Fr, publickey->f, r, publickey->ellipticCurve);
     if(status) {
         return status;
     }
 
-    status = AFFINE_MULTIPLY_IMPL(&Gr, r, publickey->g, publickey->ellipticCurve);
+    status = affine_wNAFMultiply(&Gr, publickey->g, r, publickey->ellipticCurve);
     if(status) {
         return status;
     }
@@ -455,8 +453,7 @@ CryptidStatus cryptid_delegate_ABE(SecretKey_ABE* secretkey, char** attributes, 
 
             AffinePoint Hj;
 
-            status = hashToPoint(&Hj, publickey->ellipticCurve, publickey->ellipticCurve.fieldOrder,
-                                    publickey->q, attributes[i], attributeLength, publickey->hashFunction);
+            status = hashToPoint(&Hj, attributes[i], attributeLength, publickey->q, publickey->ellipticCurve, publickey->hashFunction);
 
             if(status) {
                 return status;
@@ -465,7 +462,7 @@ CryptidStatus cryptid_delegate_ABE(SecretKey_ABE* secretkey, char** attributes, 
 
             AffinePoint HjRj;
 
-            status = AFFINE_MULTIPLY_IMPL(&HjRj, rj, Hj, publickey->ellipticCurve);
+            status = affine_wNAFMultiply(&HjRj, Hj, rj, publickey->ellipticCurve);
             if(status) {
                 return status;
             }
@@ -477,7 +474,7 @@ CryptidStatus cryptid_delegate_ABE(SecretKey_ABE* secretkey, char** attributes, 
             secretkey_new->Dj[i] = DjDk;
 
             AffinePoint DjA;
-            status = AFFINE_MULTIPLY_IMPL(&DjA, rj, publickey->g, publickey->ellipticCurve);
+            status = affine_wNAFMultiply(&DjA, publickey->g, rj, publickey->ellipticCurve);
             if(status) {
                 return status;
             }
@@ -548,14 +545,14 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
         if(found >= 0)
         {
             Complex pairValue;
-            CryptidStatus status = tate_performPairing(&pairValue, 2, secretkey->pubkey->ellipticCurve, secretkey->pubkey->q, secretkey->Dj[found], node->Cy);
+            CryptidStatus status = tate_performPairing(&pairValue, secretkey->Dj[found], node->Cy, 2, secretkey->pubkey->q, secretkey->pubkey->ellipticCurve);
             if(status)
             {
                 return status;
             }
 
             Complex pairValueA;
-            status = tate_performPairing(&pairValueA, 2, secretkey->pubkey->ellipticCurve, secretkey->pubkey->q, secretkey->DjA[found], node->CyA);
+            status = tate_performPairing(&pairValueA, secretkey->DjA[found], node->CyA, 2, secretkey->pubkey->q, secretkey->pubkey->ellipticCurve);
             if(status)
             {
                 return status;
@@ -568,7 +565,7 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
                 return status;
             }
 
-            *result = complex_modMul(pairValue, pairValueA_inverse, secretkey->pubkey->ellipticCurve.fieldOrder);
+            complex_modMul(result, pairValue, pairValueA_inverse, secretkey->pubkey->ellipticCurve.fieldOrder);
 
             complex_destroy(pairValue);
             complex_destroy(pairValueA);
@@ -619,13 +616,15 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
                 }
             }
 
-            Complex Fx = complex_initLong(1, 0);
+            Complex Fx;
+            complex_initLong(&Fx, 1, 0);
             for(int i = 0; i < num; i++)
             {
                 int result = Lagrange_coefficient(indexes[i], indexes, num, 0);
                 mpz_t resultMpz;
                 mpz_init_set_ui(resultMpz, abs(result));
-                Complex res = complex_modPow(Sx[indexes[i]-1], resultMpz, secretkey->pubkey->ellipticCurve.fieldOrder); // Sx[indexes[c]] ^ result
+                Complex res;
+                complex_modPow(&res, Sx[indexes[i]-1], resultMpz, secretkey->pubkey->ellipticCurve.fieldOrder); // Sx[indexes[c]] ^ result
                 complex_destroy(Sx[indexes[i]-1]);
                 Complex tmp;
                 if(result < 0) {
@@ -641,7 +640,7 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
                     tmp = res;
                 }
                 Complex oldFx = Fx;
-                Fx = complex_modMul(oldFx, tmp, secretkey->pubkey->ellipticCurve.fieldOrder);
+                complex_modMul(&Fx, oldFx, tmp, secretkey->pubkey->ellipticCurve.fieldOrder);
                 complex_destroy(oldFx);
                 complex_destroy(tmp);
                 mpz_clear(resultMpz);
@@ -684,7 +683,7 @@ CryptidStatus cryptid_decrypt_ABE(char **result, EncryptedMessage_ABE* encrypted
     }
 
     Complex eCD;
-    CryptidStatus status = tate_performPairing(&eCD, 2, secretkey->pubkey->ellipticCurve, secretkey->pubkey->q, encrypted->C, secretkey->D);
+    CryptidStatus status = tate_performPairing(&eCD, encrypted->C, secretkey->D, 2, secretkey->pubkey->q, secretkey->pubkey->ellipticCurve);
     if(status)
     {
         return status;
@@ -704,9 +703,11 @@ CryptidStatus cryptid_decrypt_ABE(char **result, EncryptedMessage_ABE* encrypted
     char* fullString = malloc(strlen("")+1);
     strcpy(fullString, "");
     while(lastSet->last == 0) {
-        Complex Ctilde_A = complex_modMul(lastSet->Ctilde, A, secretkey->pubkey->ellipticCurve.fieldOrder);
+        Complex Ctilde_A;
+        complex_modMul(&Ctilde_A, lastSet->Ctilde, A, secretkey->pubkey->ellipticCurve.fieldOrder);
 
-        Complex decrypted = complex_modMul(Ctilde_A, eCD_inverse, secretkey->pubkey->ellipticCurve.fieldOrder);
+        Complex decrypted;
+        complex_modMul(&decrypted, Ctilde_A, eCD_inverse, secretkey->pubkey->ellipticCurve.fieldOrder);
         complex_destroy(Ctilde_A);
 
         size_t resultLength;

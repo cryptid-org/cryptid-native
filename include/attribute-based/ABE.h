@@ -10,7 +10,7 @@
 #include "attribute-based/Polynom.h"
 #include "attribute-based/AccessTree.h"
 #include "attribute-based/EncryptedMessage_ABE.h"
-#include "identity-based/SecurityLevel.h"
+#include "util/SecurityLevel.h"
 #include "util/Status.h"
 
 CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE* publickey, MasterKey_ABE* masterkey);
