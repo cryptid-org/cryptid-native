@@ -15,7 +15,6 @@ CryptidStatus ABE_randomNumber(mpz_t randElement, PublicKey_ABE* publickey)
 
 Polynom* createPolynom(int degree, mpz_t zeroValue, PublicKey_ABE* publickey) {
 	Polynom* polynom = malloc(sizeof(Polynom));
-	//PolynomExpression[degree+1] expression_array = {};
 	polynom->children = malloc(sizeof(PolynomExpression)*(degree+1));
 	polynom->children[0] = malloc(sizeof(PolynomExpression));
 	polynom->children[0]->degree = 0;

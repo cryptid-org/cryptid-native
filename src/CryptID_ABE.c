@@ -174,7 +174,7 @@ CryptidStatus compute_tree(AccessTree* accessTree, mpz_t s, PublicKey_ABE* publi
         AffinePoint Cy;
         CryptidStatus status = AFFINE_MULTIPLY_IMPL(&Cy, s, publickey->g, publickey->ellipticCurve);
         if(status) {
-            // TO DO clears
+            affine_destroy(Cy);
             return status;
         }
 
@@ -199,7 +199,6 @@ CryptidStatus compute_tree(AccessTree* accessTree, mpz_t s, PublicKey_ABE* publi
         accessTree->Cy = Cy;
         accessTree->CyA = CyA;
         accessTree->computed = 1;
-        // TO DO AffinePoint destroy
     }
 
     return CRYPTID_SUCCESS;
@@ -278,7 +277,9 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
 
     CryptidStatus status = AFFINE_MULTIPLY_IMPL(&encrypted->C, s, publickey->h, publickey->ellipticCurve);
     if(status) {
-        // TO DO clears
+        mpz_clear(M);
+        mpz_clears(pMinusOne, s, NULL);
+        affine_destroy(encrypted->C);
         return status;
     }
 
@@ -318,7 +319,12 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
 
     status = AFFINE_MULTIPLY_IMPL(&GarBi, beta_inverse, Gar, publickey->ellipticCurve);
     if(status) {
-        // TO DO clears
+        affine_destroy(GarBi);
+        mpz_clear(r);
+        mpz_clear(beta_inverse);
+
+        affine_destroy(Gr);
+        affine_destroy(Gar);
         return status;
     }
 
@@ -440,7 +446,7 @@ CryptidStatus cryptid_delegate_ABE(SecretKey_ABE* secretkey, char** attributes, 
             }
             if(otherID == -1)
             {
-                return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR; // TO DO
+                return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR;
             }
 
             mpz_t rj;
@@ -650,7 +656,7 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
     return CRYPTID_SUCCESS;
 }
 
-char* concat(const char *s1, const char *s2) // TO DO move to utils
+char* concat(const char *s1, const char *s2)
 {
     char *result = malloc(strlen(s1) + strlen(s2) + 1);
     strcpy(result, s1);
@@ -667,14 +673,14 @@ CryptidStatus cryptid_decrypt_ABE(char **result, EncryptedMessage_ABE* encrypted
     int satisfy = satisfyValue(encrypted->tree, secretkey->attributes);
     if(satisfy == 0)
     {
-        return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR; // TO DO
+        return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR;
     }
     Complex A;
     int code = 0;
     DecryptNode_ABE(encrypted, secretkey, encrypted->tree, &A, &code);
     if(code == 0)
     {
-        return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR; // TO DO
+        return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR;
     }
 
     Complex eCD;
