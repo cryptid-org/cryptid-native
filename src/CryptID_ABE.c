@@ -98,7 +98,8 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
 
     status = AFFINE_MULTIPLY_IMPL(&publickey->h, beta, publickey->g, publickey->ellipticCurve);
     if(status) {
-        // TO DO clears
+        mpz_clears(p, q, r, pMinusOne, alpha, beta, NULL);
+        ellipticCurve_destroy(ec);
         return status;
     }
 
@@ -108,7 +109,7 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
 
     status = AFFINE_MULTIPLY_IMPL(&publickey->f, beta_inverse, publickey->g, publickey->ellipticCurve);
     if(status) {
-        // TO DO clears
+        mpz_clears(p, q, r, pMinusOne, alpha, beta, beta_inverse, NULL);
         return status;
     }
 
@@ -117,7 +118,7 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
 
     status = AFFINE_MULTIPLY_IMPL(&masterkey->g_alpha, alpha, publickey->g, publickey->ellipticCurve);
     if(status) {
-        // TO DO clears
+        mpz_clears(p, q, r, pMinusOne, alpha, beta, beta_inverse, NULL);
         return status;
     }
 
@@ -130,11 +131,13 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
     status = tate_performPairing(&pairValue, 2, ec, q, pointP, pointP);
     if(status)
     {
+        complex_destroy(pairValue);
         return status;
     }
 
     Complex eggalpha = complex_modPow(pairValue, alpha, publickey->ellipticCurve.fieldOrder);
     publickey->eggalpha = eggalpha;
+    complex_destroy(pairValue);
 
     masterkey->pubkey = publickey;
 
@@ -146,15 +149,15 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
 
 CryptidStatus compute_tree(AccessTree* accessTree, mpz_t s, PublicKey_ABE* publickey)
 {
-    int d = accessTree->value - 1; // dx = kx-1, degree = threshold-1
-
-    Polynom* q = createPolynom(d, s, publickey);
     if(!isLeaf(accessTree))
     {
+        int d = accessTree->value - 1; // dx = kx-1, degree = threshold-1
+        Polynom* q = createPolynom(d, s, publickey);
+
         int i;
         for(i = 0; i < MAX_CHILDREN; i++)
         {
-            if(accessTree->children[i] != NULL)
+            if(accessTree->children[i] && accessTree->children[i] != NULL)
             {
                 mpz_t sum;
                 mpz_init(sum);
@@ -163,6 +166,8 @@ CryptidStatus compute_tree(AccessTree* accessTree, mpz_t s, PublicKey_ABE* publi
                 mpz_clear(sum);
             }
         }
+
+        destroyPolynom(q);
     }
     else
     {
@@ -189,8 +194,11 @@ CryptidStatus compute_tree(AccessTree* accessTree, mpz_t s, PublicKey_ABE* publi
             return status;
         }
 
+        affine_destroy(hashedPoint);
+
         accessTree->Cy = Cy;
         accessTree->CyA = CyA;
+        accessTree->computed = 1;
         // TO DO AffinePoint destroy
     }
 
@@ -263,6 +271,8 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
         prevSet->last = 2;
         strncpy(msg, message + startFrom, n);
     }
+    free(msg);
+    complex_destroy(eggalphas);
     prevSet->Ctilde_set = NULL;
     prevSet->last = 1;
 
@@ -272,6 +282,7 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
         return status;
     }
 
+    mpz_clear(M);
     mpz_clears(pMinusOne, s, NULL);
 
     return CRYPTID_SUCCESS;
@@ -362,11 +373,23 @@ CryptidStatus cryptid_keygen_ABE(MasterKey_ABE* masterkey, char** attributes, Se
 
             secretkey->pubkey = masterkey->pubkey;
 
+            affine_destroy(Hj);
+            affine_destroy(HjRj);
+
             mpz_clear(rj);
+        }
+        else
+        {
+            secretkey->attributes[i] = malloc(sizeof(char));
+            secretkey->attributes[i][0] = '\0';
         }
     }
 
+    mpz_clear(r);
     mpz_clear(beta_inverse);
+
+    affine_destroy(Gr);
+    affine_destroy(Gar);
 
     return CRYPTID_SUCCESS;
 }
@@ -462,9 +485,24 @@ CryptidStatus cryptid_delegate_ABE(SecretKey_ABE* secretkey, char** attributes, 
 
             secretkey_new->pubkey = secretkey->pubkey;
 
+            affine_destroy(Hj);
+            affine_destroy(HjRj);
+            affine_destroy(Dj);
+            affine_destroy(DjA);
+
             mpz_clear(rj);
         }
+        else
+        {
+            secretkey_new->attributes[i] = malloc(sizeof(char));
+            secretkey_new->attributes[i][0] = '\0';
+        }
     }
+
+    mpz_clear(r);
+
+    affine_destroy(Fr);
+    affine_destroy(Gr);
 
     return CRYPTID_SUCCESS;
 }
@@ -492,7 +530,7 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
         int found = -1;
         for(int i = 0; i < MAX_ATTRIBUTES; i++)
         {
-            if(secretkey->attributes[i] && secretkey->attributes[i][0] != '\0')
+            if(secretkey->attributes[i] && secretkey->attributes[i][0] && secretkey->attributes[i][0] != '\0')
             {
                 if(strcmp(secretkey->attributes[i], node->attribute) == 0)
                 {
@@ -525,6 +563,10 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
             }
 
             *result = complex_modMul(pairValue, pairValueA_inverse, secretkey->pubkey->ellipticCurve.fieldOrder);
+
+            complex_destroy(pairValue);
+            complex_destroy(pairValueA);
+            complex_destroy(pairValueA_inverse);
 
             *statusCode = 1;
         }
@@ -578,6 +620,7 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
                 mpz_t resultMpz;
                 mpz_init_set_ui(resultMpz, abs(result));
                 Complex res = complex_modPow(Sx[indexes[i]-1], resultMpz, secretkey->pubkey->ellipticCurve.fieldOrder); // Sx[indexes[c]] ^ result
+                complex_destroy(Sx[indexes[i]-1]);
                 Complex tmp;
                 if(result < 0) {
                     CryptidStatus status = complex_multiplicativeInverse(&tmp, res, secretkey->pubkey->ellipticCurve.fieldOrder);
@@ -585,10 +628,16 @@ CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* se
                     {
                         return status;
                     }
-                } else {
+                    complex_destroy(res);
+                }
+                else
+                {
                     tmp = res;
                 }
-                Fx = complex_modMul(Fx, tmp, secretkey->pubkey->ellipticCurve.fieldOrder);
+                Complex oldFx = Fx;
+                Fx = complex_modMul(oldFx, tmp, secretkey->pubkey->ellipticCurve.fieldOrder);
+                complex_destroy(oldFx);
+                complex_destroy(tmp);
                 mpz_clear(resultMpz);
 
                 //Fx = Fx * Sx[indexes[c]] ^ result
@@ -642,20 +691,35 @@ CryptidStatus cryptid_decrypt_ABE(char **result, EncryptedMessage_ABE* encrypted
         return status;
     }
 
+    complex_destroy(eCD);
+
     Ctilde_set* lastSet = encrypted->Ctilde_set;
     //char* fullNumber = "";
-    char* fullString = "";
+    char* fullString = malloc(strlen("")+1);
+    strcpy(fullString, "");
     while(lastSet->last == 0) {
         Complex Ctilde_A = complex_modMul(lastSet->Ctilde, A, secretkey->pubkey->ellipticCurve.fieldOrder);
 
         Complex decrypted = complex_modMul(Ctilde_A, eCD_inverse, secretkey->pubkey->ellipticCurve.fieldOrder);
+        complex_destroy(Ctilde_A);
 
         size_t resultLength;
         char *tmpResult = mpz_export(NULL, &resultLength, 1, 1, 0, 0, decrypted.real);
-        fullString = concat(fullString, tmpResult);
+
+        char* prevFullString = malloc(strlen(fullString)+1);
+        strcpy(prevFullString, fullString);
+        free(fullString);
+        fullString = concat(prevFullString, tmpResult);
+        free(prevFullString);
+        free(tmpResult);
+
+        complex_destroy(decrypted);
 
         lastSet = lastSet->Ctilde_set;
     }
+
+    complex_destroy(A);
+    complex_destroy(eCD_inverse);
 
     *result = fullString;
 

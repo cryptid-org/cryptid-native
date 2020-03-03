@@ -1,15 +1,13 @@
 #include "attribute-based/AccessTree.h"
 
-int isRoot(AccessTree* accessTree)
-{
-	return (accessTree->parent == NULL) ? 1 : 0;
-}
-
-AccessTree* createTree(int value, AccessTree* children, char* attribute, size_t attributeLength) {
+AccessTree* createTree(int value, char* attribute, size_t attributeLength) {
 	AccessTree* tree = malloc(sizeof(AccessTree));
     tree->value = value;
-    memcpy(tree->children, children, sizeof(tree->children));
-    tree->parent = NULL;
+    tree->computed = 0;
+    for(int i = 0; i < MAX_CHILDREN; i++)
+    {
+    	tree->children[i] = NULL;
+    }
 
     tree->attribute = attribute;
     tree->attributeLength = attributeLength;
@@ -21,18 +19,12 @@ int isLeaf(AccessTree* accessTree) {
 	return (accessTree->children[0] == NULL) ? 1 : 0;
 }
 
-AccessTree* childrenArray() {
-	AccessTree children[MAX_CHILDREN] = {};
-	AccessTree *c_p = children;
-	memset(children, '\0', sizeof(children));
-	return c_p;
-}
-
 char** attributeArray() {
-	char **attributes = malloc(MAX_ATTRIBUTES*sizeof(char*));
+	char **attributes = malloc(MAX_ATTRIBUTES*sizeof(char)*(ATTRIBUTE_LENGTH+1));
 
-	for(size_t i = 0; i < MAX_ATTRIBUTES; i++){
-	   attributes[i] = malloc(ATTRIBUTE_LENGTH*sizeof(char));
+	for(size_t i = 0; i < MAX_ATTRIBUTES; i++)
+	{
+	   //attributes[i] = malloc(ATTRIBUTE_LENGTH*sizeof(char));
 	   attributes[i] = "";
 	}
 
@@ -69,4 +61,21 @@ int satisfyValue(AccessTree* accessTree, char** attributes) {
 		}
 		return 0;
 	}
+}
+
+void destroyTree(AccessTree* tree)
+{
+	for(int i = 0; i < MAX_CHILDREN; i++)
+    {
+        if(tree->children[i] != NULL)
+        {
+        	destroyTree(tree->children[i]);
+        }
+    }
+    if(tree->computed == 1)
+    {
+    	affine_destroy(tree->Cy);
+    	affine_destroy(tree->CyA);
+    }
+    free(tree);
 }

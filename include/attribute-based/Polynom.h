@@ -27,4 +27,6 @@ Polynom* createPolynom(int degree, mpz_t zeroValue, PublicKey_ABE* publickey);
 
 CryptidStatus polynomSum(Polynom* polynom, int x, mpz_t sum);
 
+void destroyPolynom(Polynom* polynom);
+
 #endif

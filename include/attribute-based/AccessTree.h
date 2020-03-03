@@ -8,7 +8,7 @@
 
 typedef struct AccessTree {
     int value;
-    struct AccessTree* parent;
+    int computed;
     struct AccessTree* children[MAX_CHILDREN];
     char* attribute;
     size_t attributeLength;
@@ -16,18 +16,16 @@ typedef struct AccessTree {
     AffinePoint CyA;
 } AccessTree;
 
-int isRoot(AccessTree* accessTree);
-
-AccessTree* createTree(int value, AccessTree* children, char* attribute, const size_t attributeLength);
+AccessTree* createTree(int value, char* attribute, const size_t attributeLength);
 
 int isLeaf(AccessTree* accessTree);
-
-AccessTree* childrenArray();
 
 char** attributeArray();
 
 int hasAttribute(char** attributes, char* val);
 
 int satisfyValue(AccessTree* accessTree, char** attributes);
+
+void destroyTree(AccessTree* tree);
 
 #endif

@@ -15,7 +15,8 @@ CryptidStatus ABE_randomNumber(mpz_t randElement, PublicKey_ABE* publickey)
 
 Polynom* createPolynom(int degree, mpz_t zeroValue, PublicKey_ABE* publickey) {
 	Polynom* polynom = malloc(sizeof(Polynom));
-	polynom->children = malloc(sizeof(PolynomExpression)*degree+1);
+	//PolynomExpression[degree+1] expression_array = {};
+	polynom->children = malloc(sizeof(PolynomExpression)*(degree+1));
 	polynom->children[0] = malloc(sizeof(PolynomExpression));
 	polynom->children[0]->degree = 0;
 	polynom->degree = degree;
@@ -32,11 +33,10 @@ Polynom* createPolynom(int degree, mpz_t zeroValue, PublicKey_ABE* publickey) {
 
 CryptidStatus polynomSum(Polynom* polynom, int x, mpz_t sum)
 {
-	int i;
 	mpz_set_ui(sum, 0);
 	mpz_t t;
 	mpz_init_set_ui(t, 1);
-	for(i = 0; i <= polynom->degree; i++)
+	for(int i = 0; i <= polynom->degree; i++)
 	{
 		mpz_t tmp;
 		mpz_init(tmp);
@@ -51,4 +51,15 @@ CryptidStatus polynomSum(Polynom* polynom, int x, mpz_t sum)
 	mpz_clear(t);
 
 	return CRYPTID_SUCCESS;
+}
+
+void destroyPolynom(Polynom* polynom)
+{
+	for(int i = 0; i <= polynom->degree; i++)
+	{
+		mpz_clear(polynom->children[i]->coeff);
+		free(polynom->children[i]);
+	}
+	free(polynom->children);
+	free(polynom);
 }

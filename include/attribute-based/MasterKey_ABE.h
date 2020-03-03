@@ -18,4 +18,6 @@ typedef struct MasterKey_ABE
 	PublicKey_ABE* pubkey;
 } MasterKey_ABE;
 
+void destroyMasterKey_ABE(MasterKey_ABE* masterkey);
+
 #endif

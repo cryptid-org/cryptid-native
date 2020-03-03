@@ -19,4 +19,6 @@ typedef struct PublicKey_ABE
 	mpz_t q;
 } PublicKey_ABE;
 
+void destroyPublicKey_ABE(PublicKey_ABE* publickey);
+
 #endif

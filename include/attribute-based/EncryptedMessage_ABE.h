@@ -2,6 +2,9 @@
 #define __CRYPTID_CRYPTID_ENCRYPTEDMESSAGE_ABE_H
 
 #include "gmp.h"
+#include "elliptic/AffinePoint.h"
+#include "attribute-based/AccessTree.h"
+#include "complex/Complex.h"
 
 typedef struct Ctilde_set
 {
@@ -16,5 +19,7 @@ typedef struct EncryptedMessage_ABE
 	Ctilde_set* Ctilde_set;
 	AffinePoint C;
 } EncryptedMessage_ABE;
+
+void destroyEncryptedMessage_ABE(EncryptedMessage_ABE* encrypted);
 
 #endif
