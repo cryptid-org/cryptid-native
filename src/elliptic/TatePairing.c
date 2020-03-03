@@ -6,8 +6,7 @@
 //   * [Intro-to-IBE] Luther Martin. 2008. Introduction to Identity-Based Encryption (Information Security and Privacy Series) (1 ed.). Artech House, Inc., Norwood, MA, USA. 
 
 
-CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, const EllipticCurve ellipticCurve,
-                           const mpz_t subgroupOrder, const AffinePoint p, const AffinePoint b)
+CryptidStatus tate_performPairing(Complex *result, const AffinePoint p, const AffinePoint b, const int embeddingDegree, const mpz_t subgroupOrder, const EllipticCurve ellipticCurve)
 {
     // Implementation of Miller's algorithm as it's written on this page:
     // https://crypto.stanford.edu/pbc/notes/ep/miller.html
@@ -39,21 +38,22 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
         mpz_powm(bxi, three, quotient, ellipticCurve.fieldOrder);
 
         mpz_set_ui(one, 1);
-        tmp = complex_initMpz(one, bxi);
-        xi = complex_modMulScalar(tmp, axi, ellipticCurve.fieldOrder);
+        complex_initMpz(&tmp, one, bxi);
+        complex_modMulScalar(&xi, tmp, axi, ellipticCurve.fieldOrder);
 
         // \f$x^{\prime} = x \cdot xi\f$
         // \f$x \in \f$F_p\f$ | \f$xi\f$ \in \f$F_p^2\f$
         //
         // Here we assume, that we have to convert \f$x\f$ to \f$F_p^2\f$ and then perform the multiplication
         // according to the complex multiplication rules.
-        xprime = complex_modMulScalar(xi, b.x, ellipticCurve.fieldOrder);
+        complex_modMulScalar(&xprime, xi, b.x, ellipticCurve.fieldOrder);
 
         mpz_t zero;
         mpz_init_set_ui(zero, 0);
-        Complex bY = complex_initMpz(b.y, zero);
+        Complex bY;
+        complex_initMpz(&bY, b.y, zero);
 
-        q = complexAffine_init(xprime, bY);
+        complexAffine_init(&q, xprime, bY);
 
         complex_destroy(bY);
         mpz_clear(zero);
@@ -65,7 +65,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
     if(complexAffine_isInfinity(q))
     {
         complexAffine_destroy(q);
-        *result = complex_initLong(1, 0);
+        complex_initLong(result, 1, 0);
         return CRYPTID_SUCCESS;
     }
 
@@ -75,8 +75,8 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
     AffinePoint v, doubleV, vPlusP;
 
     // 1. Set \f$f\f$ = 1 and \f$v\f$ = \f$p\f$
-    f = complex_initLong(1, 0);
-    v = affine_init(p.x, p.y);
+    complex_initLong(&f, 1, 0);
+    affine_init(&v, p.x, p.y);
     
     // 2. {@code for i = t - 1 to 0 do:}
     // where \f$t\f$ is the bitcount of the subgroup order.
@@ -94,7 +94,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
             affine_destroy(v);
             return status;
         }
-        status = divisor_evaluateTangent(&gVVQ, ellipticCurve, v, q);
+        status = divisor_evaluateTangent(&gVVQ, v, q, ellipticCurve);
         if(status)
         {
             complexAffine_destroy(q);
@@ -103,7 +103,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
             affine_destroy(doubleV);
             return status;
         }
-        g2VMinus2VQ = divisor_evaluateVertical(ellipticCurve, doubleV, q);
+        divisor_evaluateVertical(&g2VMinus2VQ, doubleV, q, ellipticCurve);
         status = complex_multiplicativeInverse(&g2VMinus2VQInv, g2VMinus2VQ, ellipticCurve.fieldOrder);
         if(status)
         {
@@ -113,15 +113,15 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
             complex_destroyMany(3, f, gVVQ, g2VMinus2VQ);
             return status;
         }
-        frac = complex_modMul(gVVQ, g2VMinus2VQInv, ellipticCurve.fieldOrder);
-        tmpF = complex_modMul(f, f, ellipticCurve.fieldOrder);
+        complex_modMul(&frac, gVVQ, g2VMinus2VQInv, ellipticCurve.fieldOrder);
+        complex_modMul(&tmpF, f, f, ellipticCurve.fieldOrder);
 
         complex_destroy(f);
-        f = complex_modMul(tmpF, frac, ellipticCurve.fieldOrder);
+        complex_modMul(&f, tmpF, frac, ellipticCurve.fieldOrder);
 
         affine_destroy(v);
         // \f$v = 2v\f$
-        v = affine_init(doubleV.x, doubleV.y);
+        affine_init(&v, doubleV.x, doubleV.y);
 
         complex_destroyMany(5, gVVQ, g2VMinus2VQ, g2VMinus2VQInv, frac, tmpF);
         affine_destroy(doubleV);
@@ -139,7 +139,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
                 return status;
             }
 
-            status = divisor_evaluateLine(&gVPQ, ellipticCurve, v, p, q);
+            status = divisor_evaluateLine(&gVPQ, v, p, q, ellipticCurve);
             if(status)
             {
                 complexAffine_destroy(q);
@@ -149,7 +149,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
                 return status;
             }
 
-            gVPlusQ = divisor_evaluateVertical(ellipticCurve, vPlusP, q);
+            divisor_evaluateVertical(&gVPlusQ, vPlusP, q, ellipticCurve);
 
             status = complex_multiplicativeInverse(&gVPlusQInv, gVPlusQ, ellipticCurve.fieldOrder);
             if(status)
@@ -160,15 +160,15 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
                 complex_destroyMany(3, f, gVPQ, gVPlusQ);
                 return status;
             }
-            frac = complex_modMul(gVPQ, gVPlusQInv, ellipticCurve.fieldOrder);
-            tmpF = complex_modMul(f, frac, ellipticCurve.fieldOrder);
+            complex_modMul(&frac, gVPQ, gVPlusQInv, ellipticCurve.fieldOrder);
+            complex_modMul(&tmpF, f, frac, ellipticCurve.fieldOrder);
 
             complex_destroy(f);
-            f = complex_initMpz(tmpF.real, tmpF.imaginary);
+            complex_initMpz(&f, tmpF.real, tmpF.imaginary);
 
             affine_destroy(v);
             // \f$v = v + p\f$
-            v = affine_init(vPlusP.x, vPlusP.y);
+            affine_init(&v, vPlusP.x, vPlusP.y);
 
             complex_destroyMany(5, gVPQ, gVPlusQ, gVPlusQInv, frac, tmpF);
             affine_destroy(vPlusP);
@@ -185,7 +185,7 @@ CryptidStatus tate_performPairing(Complex *result, const int embeddingDegree, co
     mpz_sub_ui(exponentPart, pPow, 1);
     mpz_cdiv_q(exponent, exponentPart, subgroupOrder);
 
-    *result = complex_modPow(f, exponent, ellipticCurve.fieldOrder);
+    complex_modPow(result, f, exponent, ellipticCurve.fieldOrder);
 
     mpz_clears(exponent, pPow, exponentPart, NULL);
     complex_destroy(f);

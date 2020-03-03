@@ -1,12 +1,14 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "SignID.h"
+//TODO remove if cmake is ready
+#define __CRYPTID_HESS_IDENTITY_BASED_SIGNATURE
+#include "identity-based/signature/hess/HessIdentityBasedSignature.h"
 #include "elliptic/TatePairing.h"
 #include "util/Random.h"
 #include "util/RandBytes.h"
 #include "util/Utils.h"
-#include "util/Validation.h"
+#include "util/PrimalityTest.h"
 
 // References
 //  * [HESS-IBS] Florian Hess. 2003. Efficient Identity Based Signature Schemes Based on Pairings.
@@ -19,17 +21,17 @@ static const unsigned int POINT_GENERATION_ATTEMPT_LIMIT = 100;
 static const unsigned int Q_LENGTH_MAPPING[] = { 160, 224, 256, 384, 512 };
 static const unsigned int P_LENGTH_MAPPING[] = { 512, 1024, 1536, 3840, 7680 };
 
-CryptidStatus signid_setup(const SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret)
+CryptidStatus cryptid_ibs_hess_setup(HessIdentityBasedSignatureMasterSecretAsBinary *masterSecretAsBinary, HessIdentityBasedSignaturePublicParametersAsBinary *publicParametersAsBinary, const SecurityLevel securityLevel)
 {
     // Implementation of Algorithm 5.1.2 (BFsetup1) in [RFC-5091].
     // Note, that instead of taking the bitlengts of p and q as arguments, this function takes
     // a security level which is in turn translated to bitlengths using {@code P_LENGTH_MAPPING} and
     // {@code Q_LENGTH_MAPPING}.
 
-    if (!publicParameters)
+    /*if (!publicParameters)
     {
         return CRYPTID_PUBLIC_PARAMETERS_NULL_ERROR;
-    }
+    }*/
 
     // Construct the elliptic curve and its subgroup of interest
     // Select a random n_q-bit Solinas prime q
@@ -55,13 +57,14 @@ CryptidStatus signid_setup(const SecurityLevel securityLevel, PublicParameters* 
         mpz_mul(p, p, q);
         mpz_sub_ui(p, p, 1);
     }
-    while (!validation_isProbablePrime(p));
+    while (!primalityTest_isProbablePrime(p));
 
     mpz_t zero, one;
     mpz_init_set_ui(zero, 0);
     mpz_init_set_ui(one, 1);
 
-    EllipticCurve ec = ellipticCurve_init(zero, one, p);
+    EllipticCurve ec;
+    ellipticCurve_init(&ec, zero, one, p);
 
     mpz_clears(zero, one, NULL);
 
@@ -83,7 +86,7 @@ CryptidStatus signid_setup(const SecurityLevel securityLevel, PublicParameters* 
         mpz_init_set(rMul, r);
         mpz_mul_ui(rMul, rMul, 12);
 
-        status = affine_wNAFMultiply(&pointP, rMul, pointPprime, ec);
+        status = affine_wNAFMultiply(&pointP, pointPprime, rMul, ec);
 
         if (status)
         {
@@ -111,7 +114,7 @@ CryptidStatus signid_setup(const SecurityLevel securityLevel, PublicParameters* 
     // Determine the public parameters
     AffinePoint pointPpublic;
 
-    status = affine_wNAFMultiply(&pointPpublic, s, pointP, ec);
+    status = affine_wNAFMultiply(&pointPpublic, pointP, s, ec);
 
     if (status)
     {
@@ -121,37 +124,45 @@ CryptidStatus signid_setup(const SecurityLevel securityLevel, PublicParameters* 
         return status;
     }
 
-    publicParameters->ellipticCurve = ec;
-    // TODO: Also init to better conform with other functions.
-    mpz_set(publicParameters->q, q);
-    publicParameters->pointP = pointP;
-    publicParameters->pointPpublic = pointPpublic;
-    publicParameters->hashFunction = hashFunction_initForSecurityLevel(securityLevel);
+    HashFunction hashFunction;
+    hashFunction_initForSecurityLevel(&hashFunction, securityLevel);
 
-    mpz_set(masterSecret, s);
+    HessIdentityBasedSignaturePublicParameters publicParameters;
+    hessIdentityBasedSignaturePublicParameters_init(&publicParameters, ec, q, pointP, pointPpublic, hashFunction);
+
+    hessIdentityBasedSignaturePublicParametersAsBinary_fromHessIdentityBasedSignaturePublicParameters(publicParametersAsBinary, publicParameters);
+
+    masterSecretAsBinary->masterSecret = mpz_export(NULL, &masterSecretAsBinary->masterSecretLength, 1, 1 ,0 ,0, s);
 
     mpz_clears(p, q, s, r, NULL);
+    hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+    affine_destroy(pointP);
+    affine_destroy(pointPpublic);
+    ellipticCurve_destroy(ec);
 
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus signid_extract(AffinePoint* result, const char *const identity, const size_t identityLength,
-                    const PublicParameters publicParameters, const mpz_t masterSecret)
+CryptidStatus cryptid_ibs_hess_extract(AffinePointAsBinary *result, const char *const identity, const size_t identityLength, const HessIdentityBasedSignatureMasterSecretAsBinary masterSecretAsBinary, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary)
 {
     // Implementation of Algorithm 5.3.1 (BFextractPriv) in [RFC-5091].
 
-    if (!result)
+    /*if (!result)
     {
         return CRYPTID_RESULT_POINTER_NULL_ERROR;
-    }
+    }*/
 
     if (identityLength == 0)
     {
         return CRYPTID_IDENTITY_LENGTH_ERROR;
     }
 
-    if(!validation_isPublicParametersValid(publicParameters))
+    HessIdentityBasedSignaturePublicParameters publicParameters;
+    hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsBinary);
+
+    if(!hessIdentityBasedSignaturePublicParameters_isValid(publicParameters))
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
 
@@ -159,23 +170,34 @@ CryptidStatus signid_extract(AffinePoint* result, const char *const identity, co
 
     // Let \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$.
     CryptidStatus status =
-        hashToPoint(&qId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
+        hashToPoint(&qId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
 
     if (status) 
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         return status;
     }
 
-    // Let \f$S_{id} = [s]Q_{id}\f$.
-    status = affine_wNAFMultiply(result, masterSecret, qId, publicParameters.ellipticCurve);
+    mpz_t masterSecret;
+    mpz_init(masterSecret);
+    mpz_import(masterSecret, masterSecretAsBinary.masterSecretLength, 1, 1 ,0, 0, masterSecretAsBinary.masterSecret);
 
+    AffinePoint affineResult;
+
+    // Let \f$S_{id} = [s]Q_{id}\f$.
+    status = affine_wNAFMultiply(&affineResult, qId, masterSecret, publicParameters.ellipticCurve);
+
+    affineAsBinary_fromAffine(result, affineResult);
+
+    hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
     affine_destroy(qId);
+    affine_destroy(affineResult);
+    mpz_clear(masterSecret);
 
     return status;
 }
 
-CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const char *const message, const size_t messageLength,
-                    const char *const identity, const size_t identityLength, const PublicParameters publicParameters)
+CryptidStatus cryptid_ibs_hess_sign(HessIdentityBasedSignatureSignatureAsBinary *result, const char *const message, const size_t messageLength, const char *const identity, const size_t identityLength, const AffinePointAsBinary privateKeyAsBinary, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary)
 {
     // Implementation of Scheme 1. Sign in [HESS-IBS].
 
@@ -199,8 +221,12 @@ CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const
         return CRYPTID_IDENTITY_LENGTH_ERROR;
     }
 
-    if(!validation_isPublicParametersValid(publicParameters))
+    HessIdentityBasedSignaturePublicParameters publicParameters;
+    hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsBinary);
+
+    if(!hessIdentityBasedSignaturePublicParameters_isValid(publicParameters))
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
 
@@ -211,14 +237,16 @@ CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const
 
     // Let {@code hashlen} be the length of the output of the cryptographic hash
     // function hashfcn from the public parameters.
-    int hashLen = hashFunction_getHashSize(publicParameters.hashFunction);
+    int hashLen;
+    hashFunction_getHashSize(&hashLen, publicParameters.hashFunction);
 
     // \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$
     // which results in a point of order \f$q\f$ in \f$E(F_p)\f$.
     AffinePoint pointQId;
-    CryptidStatus status = hashToPoint(&pointQId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
+    CryptidStatus status = hashToPoint(&pointQId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         mpz_clear(k);
         return status;
     }
@@ -226,30 +254,33 @@ CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const
     // Let \f$\mathrm{theta} = \mathrm{Pairing}(E, p, q, Q_{id}, P_{pub})\f$, which is an element of
     // the extension field \f$F_p^2\f$ obtained using the modified Tate pairing.
     Complex theta;
-    status = tate_performPairing(&theta, 2, publicParameters.ellipticCurve, publicParameters.q, pointQId, publicParameters.pointP);
+    status = tate_performPairing(&theta, pointQId, publicParameters.pointP, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
         mpz_clear(k);
         affine_destroy(pointQId);
         return status;
     }
 
     // Let \f$\mathrm{r} = \mathrm{theta}^k\f$, which is theta raised to the power of \f$k\f$ in \f$F_p^2\f$.
-    Complex r = complex_modPow(theta, k, publicParameters.ellipticCurve.fieldOrder);
+    Complex r;
+    complex_modPow(&r, theta, k, publicParameters.ellipticCurve.fieldOrder);
 
     // Let \f$z = \mathrm{Canonical}(p, k, 0, \mathrm{r})\f$, a canonical string
     // representation of {@code r}.
     int zLength;
-    unsigned char* z = canonical(&zLength, publicParameters.ellipticCurve.fieldOrder, r, 1);
+    unsigned char* z;
+    canonical(&z, &zLength, r, publicParameters.ellipticCurve.fieldOrder, 1);
 
     // Let \f$w = \mathrm{hashfcn}(z)\f$ using the {@code hashfcn} hashing algorithm, the
     // result of which is a {@code hashlen}-octet string.
     unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, z, zLength, w);
+    hashFunction_hash(w, z, zLength, publicParameters.hashFunction);
 
     // Let \f$t = \mathrm{hashfcn}(message)\f$ using the \f$hashfcn\f$ algorithm.
     unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, (unsigned char*) message, messageLength, t);
+    hashFunction_hash(t, (unsigned char*) message, messageLength, publicParameters.hashFunction);
 
     // Let \f$v = \mathrm{HashToRange}(w || t, q, \mathrm{hashfcn}) using HashToRange
     // on the \f$(2 \cdot \mathrm{hashlen})\f$-octet concatenation of {@code w} and
@@ -270,10 +301,15 @@ CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const
 
     // Let \f$u = v \cdot \mathrm{privateKey} + k \cdot Q_{id}\f$ be a point on the elliptic-curve,
     // part of the signature.
-    AffinePoint u, kMulPointQId, vMulPrivateKey;
-    status = affine_wNAFMultiply(&vMulPrivateKey, v, privateKey, publicParameters.ellipticCurve);
+    AffinePoint privateKey, u, kMulPointQId, vMulPrivateKey;
+
+    affineAsBinary_toAffine(&privateKey, privateKeyAsBinary);
+
+    status = affine_wNAFMultiply(&vMulPrivateKey, privateKey, v, publicParameters.ellipticCurve);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        affine_destroy(privateKey);
         mpz_clears(k, v, NULL);
         affine_destroy(pointQId);
         complex_destroyMany(2, theta, r);
@@ -283,9 +319,11 @@ CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const
         free(concat);
         return status;
     }
-    status = affine_wNAFMultiply(&kMulPointQId, k, pointQId, publicParameters.ellipticCurve);
+    status = affine_wNAFMultiply(&kMulPointQId, pointQId, k, publicParameters.ellipticCurve);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        affine_destroy(privateKey);
         mpz_clears(k, v, NULL);
         affine_destroy(pointQId);
         affine_destroy(vMulPrivateKey);
@@ -299,6 +337,8 @@ CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const
     status = affine_add(&u, vMulPrivateKey, kMulPointQId, publicParameters.ellipticCurve);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        affine_destroy(privateKey);
         mpz_clears(k, v, NULL);
         affine_destroy(pointQId);
         affine_destroy(vMulPrivateKey);
@@ -311,8 +351,14 @@ CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const
         return status;
     }
 
-    *result = signature_init(u, v);
+    HessIdentityBasedSignatureSignature signature;
+    hessIdentityBasedSignatureSignature_init(&signature, u, v);
 
+    hessIdentityBasedSignatureSignatureAsBinary_fromHessIdentityBasedSignatureSignature(result, signature);
+
+    hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+    affine_destroy(privateKey);
+    hessIdentityBasedSignatureSignature_destroy(signature);
     mpz_clears(k, v, NULL);
     affine_destroy(pointQId);
     affine_destroy(vMulPrivateKey);
@@ -327,8 +373,7 @@ CryptidStatus signid_sign(Signature *result, const AffinePoint privateKey, const
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus signid_verify(const char *const message, const size_t messageLength, const Signature signature,
-                    const char *const identity, const size_t identityLength, const PublicParameters publicParameters)
+CryptidStatus cryptid_ibs_hess_verify(const char *const message, const size_t messageLength, const HessIdentityBasedSignatureSignatureAsBinary signatureAsBinary, const char *const identity, const size_t identityLength, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary)
 {
     // Implementation of Scheme 1. Verify in [HESS-IBS].
 
@@ -342,47 +387,65 @@ CryptidStatus signid_verify(const char *const message, const size_t messageLengt
         return CRYPTID_MESSAGE_LENGTH_ERROR;
     }
 
-    if(!validation_isSignatureValid(signature, publicParameters.ellipticCurve.fieldOrder))
+    HessIdentityBasedSignaturePublicParameters publicParameters;
+    hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSignaturePublicParameters(&publicParameters, publicParametersAsBinary);
+
+    if(!hessIdentityBasedSignaturePublicParameters_isValid(publicParameters))
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
+    }
+
+    HessIdentityBasedSignatureSignature signature;
+    hessIdentityBasedSignatureSignatureAsBinary_toHessIdentityBasedSignatureSignature(&signature, signatureAsBinary);
+
+    if(!hessIdentityBasedSignatureSignature_isValid(signature, publicParameters.ellipticCurve))
+    {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        hessIdentityBasedSignatureSignature_destroy(signature);
         return CRYPTID_ILLEGAL_SIGNATURE_ERROR;
     }
 
     if(!identity)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        hessIdentityBasedSignatureSignature_destroy(signature);
         return CRYPTID_IDENTITY_NULL_ERROR;
     }
 
     if(identityLength == 0)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        hessIdentityBasedSignatureSignature_destroy(signature);
         return CRYPTID_IDENTITY_LENGTH_ERROR;
-    }
-
-    if(!validation_isPublicParametersValid(publicParameters))
-    {
-        return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
 
     CryptidStatus status;
 
     // Let {@code hashlen} be the length of the output of the hash function
     // {@code hashfcn} measured in octets.
-    int hashLen = hashFunction_getHashSize(publicParameters.hashFunction);
+    int hashLen;
+    hashFunction_getHashSize(&hashLen, publicParameters.hashFunction);
 
     // Let \f$theta1 = \mathrm{Pairing}(E, p ,q, u, P_{pub})\f$ by applying the modified
     // Tate pairing.
     Complex theta1;
-    status = tate_performPairing(&theta1, 2, publicParameters.ellipticCurve, publicParameters.q, signature.u, publicParameters.pointP);
+    status = tate_performPairing(&theta1, signature.u, publicParameters.pointP, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        hessIdentityBasedSignatureSignature_destroy(signature);
         return status;
     }
 
     // \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$
     // which results in a point of order \f$q\f$ in \f$E(F_p)\f$.
     AffinePoint pointQId;
-    status = hashToPoint(&pointQId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
+    status = hashToPoint(&pointQId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        hessIdentityBasedSignatureSignature_destroy(signature);
         complex_destroy(theta1);
         return status;
     }
@@ -394,14 +457,16 @@ CryptidStatus signid_verify(const char *const message, const size_t messageLengt
     mpz_neg(yNegate, publicParameters.pointPpublic.y);
     mpz_mod(yNegateModP, yNegate, publicParameters.ellipticCurve.fieldOrder);
 
-    negativePointPpublic = affine_init(publicParameters.pointPpublic.x, yNegateModP);
+    affine_init(&negativePointPpublic, publicParameters.pointPpublic.x, yNegateModP);
 
     // Let \f$theta2 = \mathrm{Pairing}(E, p , q, Q_{id}, \f$-P_{pub}\f$)\f$ by applying the modified
     // Tate pairing.
     Complex theta2;
-    status = tate_performPairing(&theta2, 2, publicParameters.ellipticCurve, publicParameters.q, pointQId, negativePointPpublic);
+    status = tate_performPairing(&theta2, pointQId, negativePointPpublic, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        hessIdentityBasedSignatureSignature_destroy(signature);
         complex_destroy(theta1);
         affine_destroy(pointQId);
         affine_destroy(negativePointPpublic);
@@ -410,21 +475,24 @@ CryptidStatus signid_verify(const char *const message, const size_t messageLengt
     }
 
     // Let \f$\mathrm{theta2}^{\prime} = \mathrm{theta2}^v\f$, which is theta raised to the power of \f$v\f$ in \f$F_p^2\f$.
-    Complex theta2Prime = complex_modPow(theta2, signature.v, publicParameters.ellipticCurve.fieldOrder);
+    Complex theta2Prime;
+    complex_modPow(&theta2Prime, theta2, signature.v, publicParameters.ellipticCurve.fieldOrder);
 
     // Let \f$ r = \mathrm{theta1} \cdot \mathrm{theta2}^{\prime} \f$
-    Complex r = complex_modMul(theta1, theta2Prime, publicParameters.ellipticCurve.fieldOrder);
+    Complex r;
+    complex_modMul(&r, theta1, theta2Prime, publicParameters.ellipticCurve.fieldOrder);
 
     // Verify that the signature (@code v) equals with the now computed value.
     // The code is the same as in the sign method.
     int zLength;
-    unsigned char* z = canonical(&zLength, publicParameters.ellipticCurve.fieldOrder, r, 1);
+    unsigned char* z;
+    canonical(&z, &zLength, r, publicParameters.ellipticCurve.fieldOrder, 1);
 
     unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, z, zLength, w);
+    hashFunction_hash(w, z, zLength, publicParameters.hashFunction);
 
     unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, (unsigned char*) message, messageLength, t);
+    hashFunction_hash(t, (unsigned char*) message, messageLength, publicParameters.hashFunction);
 
     unsigned char* concat = (unsigned char*)calloc(2*hashLen + 1, sizeof(unsigned char));
     for(int i = 0; i < hashLen; i++)
@@ -444,6 +512,8 @@ CryptidStatus signid_verify(const char *const message, const size_t messageLengt
     // If the values were the same, the verification returns succes.
     if(mpz_cmp(signature.v, v) == 0)
     {
+        hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+        hessIdentityBasedSignatureSignature_destroy(signature);
         complex_destroyMany(4, theta1, theta2, theta2Prime, r);
         affine_destroy(pointQId);
         affine_destroy(negativePointPpublic);
@@ -456,6 +526,8 @@ CryptidStatus signid_verify(const char *const message, const size_t messageLengt
     }
 
     // Otherwise, failure.
+    hessIdentityBasedSignaturePublicParameters_destroy(publicParameters);
+    hessIdentityBasedSignatureSignature_destroy(signature);
     complex_destroyMany(4, theta1, theta2, theta2Prime, r);
     affine_destroy(pointQId);
     affine_destroy(negativePointPpublic);

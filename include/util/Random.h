@@ -9,17 +9,17 @@
 
 /**
  * Generates a cryptographically secure random unsigned integer of the specified bitlength.
+ * @param randomOutput the generated random unsigned integer
  * @param numberOfBits the bitlength of the result
- * @return a random unsigned integer
  */
-unsigned int random_unsignedIntOfLength(const unsigned int numberOfBits);
+void random_unsignedIntOfLength(unsigned int *randomOutput, const unsigned int numberOfBits);
 
 /**
  * Generates a cryptographically secure random unsigned integer between zero and {@code range} inclusive.
+ * @param randomOutput the generated random unsigned integer
  * @param range the upper limit of the generation
- * @return a random unsigned integer
  */
-unsigned int random_unsignedIntInRange(const unsigned int range);
+void random_unsignedIntInRange(unsigned int *randomOutput, const unsigned int range);
 
 /**
  * Generates a cryptographically secure arbitrary precision integer of the specified bitlength.

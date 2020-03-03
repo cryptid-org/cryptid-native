@@ -1,12 +1,14 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "CryptID.h"
+//TODO remove if cmake is ready
+#define __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryption.h"
 #include "elliptic/TatePairing.h"
 #include "util/Random.h"
 #include "util/RandBytes.h"
 #include "util/Utils.h"
-#include "util/Validation.h"
+#include "util/PrimalityTest.h"
 
 
 // References
@@ -19,17 +21,17 @@ static const unsigned int POINT_GENERATION_ATTEMPT_LIMIT = 100;
 static const unsigned int Q_LENGTH_MAPPING[] = { 160, 224, 256, 384, 512 };
 static const unsigned int P_LENGTH_MAPPING[] = { 512, 1024, 1536, 3840, 7680 };
 
-CryptidStatus cryptid_setup(const SecurityLevel securityLevel, PublicParameters* publicParameters, mpz_t masterSecret)
+CryptidStatus cryptid_ibe_bonehFranklin_setup(BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary *masterSecretAsBinary, BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary* publicParametersAsBinary, const SecurityLevel securityLevel)
 {
     // Implementation of Algorithm 5.1.2 (BFsetup1) in [RFC-5091].
     // Note, that instead of taking the bitlengts of p and q as arguments, this function takes
     // a security level which is in turn translated to bitlengths using {@code P_LENGTH_MAPPING} and
     // {@code Q_LENGTH_MAPPING}.
 
-    if (!publicParameters)
+    /*if (!publicParametersAsBinary)
     {
         return CRYPTID_PUBLIC_PARAMETERS_NULL_ERROR;
-    }
+    }*/
 
     // Construct the elliptic curve and its subgroup of interest
     // Select a random \f$n_q\f$-bit Solinas prime \f$q\f$.
@@ -55,13 +57,14 @@ CryptidStatus cryptid_setup(const SecurityLevel securityLevel, PublicParameters*
         mpz_mul(p, p, q);
         mpz_sub_ui(p, p, 1);
     }
-    while (!validation_isProbablePrime(p));
+    while (!primalityTest_isProbablePrime(p));
 
     mpz_t zero, one;
     mpz_init_set_ui(zero, 0);
     mpz_init_set_ui(one, 1);
 
-    EllipticCurve ec = ellipticCurve_init(zero, one, p);
+    EllipticCurve ec;
+    ellipticCurve_init(&ec, zero, one, p);
 
     mpz_clears(zero, one, NULL);
 
@@ -83,7 +86,7 @@ CryptidStatus cryptid_setup(const SecurityLevel securityLevel, PublicParameters*
         mpz_init_set(rMul, r);
         mpz_mul_ui(rMul, rMul, 12);
 
-        status = AFFINE_MULTIPLY_IMPL(&pointP, rMul, pointPprime, ec);
+        status = affine_wNAFMultiply(&pointP, pointPprime, rMul, ec);
 
         if (status)
         {
@@ -111,7 +114,7 @@ CryptidStatus cryptid_setup(const SecurityLevel securityLevel, PublicParameters*
     // Determine the public parameters.
     AffinePoint pointPpublic;
 
-    status = AFFINE_MULTIPLY_IMPL(&pointPpublic, s, pointP, ec);
+    status = affine_wNAFMultiply(&pointPpublic, pointP, s, ec);
 
     if (status)
     {
@@ -121,37 +124,45 @@ CryptidStatus cryptid_setup(const SecurityLevel securityLevel, PublicParameters*
         return status;
     }
 
-    publicParameters->ellipticCurve = ec;
-    // TODO: Also init to better conform with other functions.
-    mpz_set(publicParameters->q, q);
-    publicParameters->pointP = pointP;
-    publicParameters->pointPpublic = pointPpublic;
-    publicParameters->hashFunction = hashFunction_initForSecurityLevel(securityLevel);
+    HashFunction hashFunction;
+    hashFunction_initForSecurityLevel(&hashFunction, securityLevel);
 
-    mpz_set(masterSecret, s);
+    BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters;
+    bonehFranklinIdentityBasedEncryptionPublicParameters_init(&publicParameters, ec, q, pointP, pointPpublic, hashFunction);
+
+    bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_fromBonehFranklinIdentityBasedEncryptionPublicParameters(publicParametersAsBinary, publicParameters);
+
+    masterSecretAsBinary->masterSecret = mpz_export(NULL, &masterSecretAsBinary->masterSecretLength, 1, 1, 0, 0, s);
 
     mpz_clears(p, q, s, r, NULL);
+    bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
+    affine_destroy(pointP);
+    affine_destroy(pointPpublic);
+    ellipticCurve_destroy(ec);
 
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_extract(AffinePoint* result, const char *const identity, const size_t identityLength, 
-                       const PublicParameters publicParameters, const mpz_t masterSecret)
+CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePointAsBinary *result, const char *const identity, const size_t identityLength, const BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary masterSecretAsBinary, const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary publicParametersAsBinary)
 {
     // Implementation of Algorithm 5.3.1 (BFextractPriv) in [RFC-5091].
 
-    if (!result)
+    /*if (!result)
     {
         return CRYPTID_RESULT_POINTER_NULL_ERROR;
-    }
+    }*/
 
     if (identityLength == 0)
     {
         return CRYPTID_IDENTITY_LENGTH_ERROR;
     }
 
-    if(!validation_isPublicParametersValid(publicParameters))
+    BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters;
+    bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_toBonehFranklinIdentityBasedEncryptionPublicParameters(&publicParameters, publicParametersAsBinary);
+
+    if(!bonehFranklinIdentityBasedEncryptionPublicParameters_isValid(publicParameters))
     {
+        bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
 
@@ -159,23 +170,34 @@ CryptidStatus cryptid_extract(AffinePoint* result, const char *const identity, c
 
     // Let \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$.
     CryptidStatus status =
-        hashToPoint(&qId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
+        hashToPoint(&qId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
 
     if (status) 
     {
+        bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
         return status;
     }
 
-    // Let \f$S_{id} = [s]Q_{id}\f$.
-    status = AFFINE_MULTIPLY_IMPL(result, masterSecret, qId, publicParameters.ellipticCurve);
+    mpz_t masterSecret;
+    mpz_init(masterSecret);
+    mpz_import(masterSecret, masterSecretAsBinary.masterSecretLength, 1, 1, 0, 0, masterSecretAsBinary.masterSecret);
 
+    AffinePoint affineResult;
+
+    // Let \f$S_{id} = [s]Q_{id}\f$.
+    status = affine_wNAFMultiply(&affineResult, qId, masterSecret, publicParameters.ellipticCurve);
+
+    affineAsBinary_fromAffine(result, affineResult);
+
+    bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
     affine_destroy(qId);
+    affine_destroy(affineResult);
+    mpz_clear(masterSecret);
 
     return status;
 }
 
-CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message, const size_t messageLength,
-                       const char *const identity, const size_t identityLength, const PublicParameters publicParameters)
+CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryptionCiphertextAsBinary *result, const char *const message, const size_t messageLength, const char *const identity, const size_t identityLength, const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary publicParametersAsBinary)
 {
     // Implementation of Algorithm 5.4.1 (BFencrypt) in [RFC-5091].
 
@@ -199,8 +221,12 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
         return CRYPTID_IDENTITY_LENGTH_ERROR;
     }
 
-    if(!validation_isPublicParametersValid(publicParameters))
+    BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters;
+    bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_toBonehFranklinIdentityBasedEncryptionPublicParameters(&publicParameters, publicParametersAsBinary);
+
+    if(!bonehFranklinIdentityBasedEncryptionPublicParameters_isValid(publicParameters))
     {
+        bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
 
@@ -209,14 +235,16 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
 
     // Let {@code hashlen} be the length of the output of the cryptographic hash
     // function hashfcn from the public parameters.
-    int hashLen = hashFunction_getHashSize(publicParameters.hashFunction);
+    int hashLen;
+    hashFunction_getHashSize(&hashLen, publicParameters.hashFunction);
 
     // \f$Q_{id} = \mathrm{HashToPoint}(E, p, q, id, \mathrm{hashfcn})\f$
     // which results in a point of order \f$q\f$ in \f$E(F_p)\f$.
     AffinePoint pointQId;
-    CryptidStatus status = hashToPoint(&pointQId, publicParameters.ellipticCurve, publicParameters.ellipticCurve.fieldOrder, publicParameters.q, identity, identityLength, publicParameters.hashFunction);
+    CryptidStatus status = hashToPoint(&pointQId, identity, identityLength, publicParameters.q, publicParameters.ellipticCurve, publicParameters.hashFunction);
     if(status)
     {
+        bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
         mpz_clear(l);
         return status;
     }
@@ -230,7 +258,7 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
     // Let \f$t = \mathrm{hashfcn}(m)\f$, a {@code hashlen}-octet string resulting from applying
     // the {@code hashfcn} algorithm to the input \f$m\f$.
     unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, (unsigned char*) message, messageLength, t);
+    hashFunction_hash(t, (unsigned char*) message, messageLength, publicParameters.hashFunction);
 
     // Let \f$l = \mathrm{HashToRange}(rho || t, q, \mathrm{hashfcn})\f$, an integer in the range
     // \f$0\f$ to \f$q - 1\f$ resulting from applying {@code HashToRange}
@@ -250,9 +278,10 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
 
     // Let \f$U = [l]P\f$, which is a point of order \f$q\f$ in \f$E(F_p)\f$.
     AffinePoint cipherPointU;
-    status = AFFINE_MULTIPLY_IMPL(&cipherPointU, l, publicParameters.pointP, publicParameters.ellipticCurve);
+    status = affine_wNAFMultiply(&cipherPointU, publicParameters.pointP, l, publicParameters.ellipticCurve);
     if(status)
     {
+        bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
         mpz_clear(l);
         affine_destroy(pointQId);
         free(rho);
@@ -264,9 +293,10 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
     // Let \f$\mathrm{theta} = \mathrm{Pairing}(E, p, q, P_{pub}, Q_{id})\f$, which is an element of
     // the extension field \f$F_p^2\f$ obtained using the modified Tate pairing.
     Complex theta;
-    status = tate_performPairing(&theta, 2, publicParameters.ellipticCurve, publicParameters.q, publicParameters.pointPpublic, pointQId);
+    status = tate_performPairing(&theta, publicParameters.pointPpublic, pointQId, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
+        bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
         mpz_clear(l);
         affine_destroy(pointQId);
         free(rho);
@@ -277,17 +307,19 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
     }
 
     //Let \f$\mathrm{theta}^{\prime} = \mathrm{theta}^l\f$, which is theta raised to the power of \f$l\f$ in \f$F_p^2\f$.
-    Complex thetaPrime = complex_modPow(theta, l, publicParameters.ellipticCurve.fieldOrder);
+    Complex thetaPrime;
+    complex_modPow(&thetaPrime, theta, l, publicParameters.ellipticCurve.fieldOrder);
 
     // Let \f$z = \mathrm{Canonical}(p, k, 0, \mathrm{theta}^{\prime})\f$, a canonical string
     // representation of {@code theta'}.
     int zLength;
-    unsigned char* z = canonical(&zLength, publicParameters.ellipticCurve.fieldOrder, thetaPrime, 1);
+    unsigned char* z;
+    canonical(&z, &zLength, thetaPrime, publicParameters.ellipticCurve.fieldOrder, 1);
 
     // Let \f$w = \mathrm{hashfcn}(z)\f$ using the {@code hashfcn} hashing algorithm, the
     // result of which is a {@code hashlen}-octet string.
     unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, z, zLength, w);
+    hashFunction_hash(w, z, zLength, publicParameters.hashFunction);
 
     // Let \f$V = w \oplus rho\f$, which is the {@code hashlen}-octet long bit-wise XOR
     // of \f$w\f$ and {@code rho}.
@@ -302,7 +334,8 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
     // XOR of \f$m\f$ with the first \f$|m|\f$ octets of the pseudo-random bytes
     // produced by {@code HashBytes} with seed {@code rho}.
     unsigned char* cipherW = (unsigned char*)calloc(messageLength + 1, sizeof(unsigned char));
-    unsigned char* hashedBytes = hashBytes(messageLength, rho, hashLen, publicParameters.hashFunction);
+    unsigned char* hashedBytes;
+    hashBytes(&hashedBytes, messageLength, rho, hashLen, publicParameters.hashFunction);
     for(size_t i = 0; i < messageLength; i++) 
     {
         cipherW[i] = hashedBytes[i] ^ message[i];
@@ -310,8 +343,13 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
     cipherW[messageLength] = '\0';
 
     // The ciphertext is the triple \f$(U, V, W)\f$.
-    *result = cipherTextTuple_init(cipherPointU, cipherV, hashLen, cipherW, messageLength);
+    BonehFranklinIdentityBasedEncryptionCiphertext ciphertext;
+    bonehFranklinIdentityBasedEncryptionCiphertext_init(&ciphertext, cipherPointU, cipherV, hashLen, cipherW, messageLength);
 
+    bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_fromBonehFranklinIdentityBasedEncryptionCiphertext(result, ciphertext);
+
+    bonehFranklinIdentityBasedEncryptionCiphertext_destroy(ciphertext);
+    bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
     mpz_clear(l);
     affine_destroy(pointQId);
     affine_destroy(cipherPointU);
@@ -328,24 +366,38 @@ CryptidStatus cryptid_encrypt(CipherTextTuple *result, const char *const message
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_decrypt(char **result, const AffinePoint privateKey, const CipherTextTuple ciphertext, 
-                       const PublicParameters publicParameters)
+CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const BonehFranklinIdentityBasedEncryptionCiphertextAsBinary ciphertextAsBinary, const AffinePointAsBinary privateKeyAsBinary, const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary publicParametersAsBinary)
 {
     // Implementation of Algorithm 5.5.1 (BFdecrypt) in [RFC-5091].
 
-    if(!validation_isPublicParametersValid(publicParameters))
+    BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters;
+    bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_toBonehFranklinIdentityBasedEncryptionPublicParameters(&publicParameters, publicParametersAsBinary);
+
+    if(!bonehFranklinIdentityBasedEncryptionPublicParameters_isValid(publicParameters))
     {
+        bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
         return CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR;
     }
 
-    if(!validation_isAffinePointValid(privateKey, publicParameters.ellipticCurve.fieldOrder))
+    AffinePoint privateKey;
+    affineAsBinary_toAffine(&privateKey, privateKeyAsBinary);
+
+    if(!affine_isValid(privateKey, publicParameters.ellipticCurve))
     {
+        bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
+        affine_destroy(privateKey);
         return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR;
     }
 
-    if(!validation_isCipherTextTupleValid(ciphertext, publicParameters.ellipticCurve.fieldOrder))
+    BonehFranklinIdentityBasedEncryptionCiphertext ciphertext;
+    bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_toBonehFranklinIdentityBasedEncryptionCiphertext(&ciphertext, ciphertextAsBinary);
+
+    if(!bonehFranklinIdentityBasedEncryptionCiphertext_isValid(ciphertext, publicParameters.ellipticCurve))
     {
-        return CRYPTID_ILLEGAL_CIPHERTEXT_TUPLE_ERROR;
+        bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
+        affine_destroy(privateKey);
+        bonehFranklinIdentityBasedEncryptionCiphertext_destroy(ciphertext);
+        return CRYPTID_ILLEGAL_CIPHERTEXT_ERROR;
     }
 
     mpz_t l;
@@ -353,26 +405,31 @@ CryptidStatus cryptid_decrypt(char **result, const AffinePoint privateKey, const
 
     // Let {@code hashlen} be the length of the output of the hash function
     // {@code hashfcn} measured in octets.
-    int hashLen = hashFunction_getHashSize(publicParameters.hashFunction);
+    int hashLen;
+    hashFunction_getHashSize(&hashLen, publicParameters.hashFunction);
 
     // Let \f$theta = \mathrm{Pairing}(E, p ,q, U, S_{id})\f$ by applying the modified
     // Tate pairing.
     Complex theta;
-    CryptidStatus status = tate_performPairing(&theta, 2, publicParameters.ellipticCurve, publicParameters.q, ciphertext.cipherU, privateKey);
+    CryptidStatus status = tate_performPairing(&theta, ciphertext.cipherU, privateKey, 2, publicParameters.q, publicParameters.ellipticCurve);
     if(status)
     {
+        bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
+        affine_destroy(privateKey);
+        bonehFranklinIdentityBasedEncryptionCiphertext_destroy(ciphertext);
         mpz_clear(l);
         return status;
     }
     
     // Let \f$z = \mathrm{Canonical}(p, k, 0, theta)\f$ a canonical string representation of {@code theta}.
     int zLength;
-    unsigned char* z = canonical(&zLength, publicParameters.ellipticCurve.fieldOrder, theta, 1);
+    unsigned char* z;
+    canonical(&z, &zLength, theta, publicParameters.ellipticCurve.fieldOrder, 1);
 
     // Let \f$w = \mathrm{hashfcn}(z)$ using the {@code hashfcn} hashing algorithm, the result
     // of which is a {@code hashlen}-octet string.
     unsigned char* w = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, z, zLength, w);
+    hashFunction_hash(w, z, zLength, publicParameters.hashFunction);
 
     // Let \f$rho = w \oplus V\f$, the bit-wise XOR of \f$w\f$ and \f$V\f$.
     unsigned char* rho = (unsigned char*)calloc(hashLen + 1, sizeof(unsigned char));
@@ -386,7 +443,8 @@ CryptidStatus cryptid_decrypt(char **result, const AffinePoint privateKey, const
     // XOR of \f$m\f$ with the first \f$|W|\f$ octets of the pseudo-random bytes
     // produced by HashBytes with seed {@code rho}.
     char* m = (char*)calloc(ciphertext.cipherWLength + 1, sizeof(char));
-    unsigned char* hashedBytes = hashBytes(ciphertext.cipherWLength, rho, hashLen, publicParameters.hashFunction);
+    unsigned char* hashedBytes;
+    hashBytes(&hashedBytes, ciphertext.cipherWLength, rho, hashLen, publicParameters.hashFunction);
     for(size_t i = 0; i < ciphertext.cipherWLength; i++) 
     {
         m[i] = hashedBytes[i] ^ ciphertext.cipherW[i];
@@ -395,7 +453,7 @@ CryptidStatus cryptid_decrypt(char **result, const AffinePoint privateKey, const
 
     // Let \f$t = \mathrm{hashfcn}(m)\f$ using the \f$hashfcn\f$ algorithm.
     unsigned char* t = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(publicParameters.hashFunction, (unsigned char*) m, ciphertext.cipherWLength, t);
+    hashFunction_hash(t, (unsigned char*) m, ciphertext.cipherWLength, publicParameters.hashFunction);
 
     // Let \f$l = \mathrm{HashToRange}(rho || t, q, \mathrm{hashfcn}) using HashToRange
     // on the \f$(2 * \mathrm{hashlen})\f$-octet concatenation of {@code rho} and
@@ -423,9 +481,12 @@ CryptidStatus cryptid_decrypt(char **result, const AffinePoint privateKey, const
     
     // Verify that \f$U = [l]P\f$.
     AffinePoint testPoint;
-    status = AFFINE_MULTIPLY_IMPL(&testPoint, l, publicParameters.pointP, publicParameters.ellipticCurve);
+    status = affine_wNAFMultiply(&testPoint, publicParameters.pointP, l, publicParameters.ellipticCurve);
     if(status)
     {
+        bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
+        affine_destroy(privateKey);
+        bonehFranklinIdentityBasedEncryptionCiphertext_destroy(ciphertext);
         mpz_clear(l);
         free(m);
         return status;
@@ -434,6 +495,9 @@ CryptidStatus cryptid_decrypt(char **result, const AffinePoint privateKey, const
     // If this is the case, then the decrypted plaintext \f$m\f$ is returned.
     if(affine_isEquals(ciphertext.cipherU, testPoint))
     {
+        bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
+        affine_destroy(privateKey);
+        bonehFranklinIdentityBasedEncryptionCiphertext_destroy(ciphertext);
         affine_destroy(testPoint);
         mpz_clear(l);
         *result = m;
@@ -441,6 +505,9 @@ CryptidStatus cryptid_decrypt(char **result, const AffinePoint privateKey, const
     }
 
     // Otherwise, the ciphertext is rejected and no plaintext is returned.
+    bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(publicParameters);
+    affine_destroy(privateKey);
+    bonehFranklinIdentityBasedEncryptionCiphertext_destroy(ciphertext);
     affine_destroy(testPoint);
     mpz_clear(l);
     free(m);

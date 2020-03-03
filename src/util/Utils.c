@@ -18,7 +18,8 @@ void hashToRange(mpz_t result, const unsigned char *const s, const int sLength, 
     mpz_inits(v, a, twoFiveSix, twoFiveSixPow, vxTwoFiveSixPow, NULL);
 
     // Let {@code hashlen} be the number of octets comprising the output of {@code hashfcn}.
-    int hashLen = hashFunction_getHashSize(hashFunction);
+    int hashLen;
+    hashFunction_getHashSize(&hashLen, hashFunction);
 
     // Let \f$v_{0} = 0\f$.
     mpz_set_ui(v, 0);
@@ -47,7 +48,7 @@ void hashToRange(mpz_t result, const unsigned char *const s, const int sLength, 
 
         // Let \f$h_{i} = \mathrm{hashfcn}(t_i)\f$, which is a {@code hashlen}-octet string
         // resulting from the hash algorithm {@code hashfcn} on the input \f$t_i\f$.
-        hashFunction_hash(hashFunction, t, hashLen + sLength, h);
+        hashFunction_hash(h, t, hashLen + sLength, hashFunction);
 
         // Let \f$a_i = \mathrm{Value}(h_i)\f$ be the integer in the range \f$0\f$ to
         // \f$256^{\mathrm{hashlen}} - 1\f$ denoted by the raw octet string \f$h_i\f$
@@ -81,8 +82,7 @@ void hashToRange(mpz_t result, const unsigned char *const s, const int sLength, 
     mpz_clears(v, a, twoFiveSix, twoFiveSixPow, vxTwoFiveSixPow, NULL);
 }
 
-CryptidStatus hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve, const mpz_t p, const mpz_t q, 
-                   const char *const id, const int idLength, const HashFunction hashFunction)
+CryptidStatus hashToPoint(AffinePoint *result, const char *const id, const int idLength, const mpz_t q, const EllipticCurve ellipticCurve, const HashFunction hashFunction)
 {
     // Implementation of Algorithm 4.4.2 (HashToPoint1) in [RFC-5091].
 
@@ -90,26 +90,27 @@ CryptidStatus hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve
     mpz_inits(y, x, pxTwo, pxTwoSub, pxTwoSubQ3, yPowTwo, yPowTwoSub, pAddOne, pAddOneQq, NULL);
 
     // Let \f$y = \mathrm{HashToRange}(id, p, \mathrm{hashfcn})\f$, using {@code HashToRange}, an element of \f$F_p\f$.
-    hashToRange(y, (unsigned char*) id, idLength, p, hashFunction);
+    hashToRange(y, (unsigned char*) id, idLength, ellipticCurve.fieldOrder, hashFunction);
 
     // Let \f$x = (y^2 - 1)^{\frac{2 \cdot p - 1}{3}} \mod p\f$, an element of \f$F_p\f$.
     mpz_pow_ui(yPowTwo, y, 2);
     mpz_sub_ui(yPowTwo, yPowTwo, 1);
 
-    mpz_mul_ui(pxTwo, p, 2);
+    mpz_mul_ui(pxTwo, ellipticCurve.fieldOrder, 2);
     mpz_sub_ui(pxTwoSub, pxTwo, 1);
     mpz_cdiv_q_ui(pxTwoSubQ3, pxTwoSub, 3);
 
-    mpz_powm(x, yPowTwo, pxTwoSubQ3, p);
+    mpz_powm(x, yPowTwo, pxTwoSubQ3, ellipticCurve.fieldOrder);
 
     // Let \f$Q^{\prime} = (x, y)\f$, a non-zero point in \f$E(F_p)\f$.
-    AffinePoint qPrime = affine_init(x, y);
+    AffinePoint qPrime;
+    affine_init(&qPrime, x, y);
 
-    mpz_add_ui(pAddOne, p, 1);
+    mpz_add_ui(pAddOne, ellipticCurve.fieldOrder, 1);
     mpz_cdiv_q(pAddOneQq, pAddOne, q);
 
     // Let \f$Q = [(p + 1) / q ]Q^{\prime}\f$, a point of order \f$q\f$ in \f$E(F_p)\f$.
-    CryptidStatus status = AFFINE_MULTIPLY_IMPL(result, pAddOneQq, qPrime, ellipticCurve);
+    CryptidStatus status = affine_wNAFMultiply(result, qPrime, pAddOneQq, ellipticCurve);
     if(status)
     {
         mpz_clears(y, x, pxTwo, pxTwoSub, pxTwoSubQ3, yPowTwo, yPowTwoSub, pAddOne, pAddOneQq, NULL);
@@ -122,7 +123,7 @@ CryptidStatus hashToPoint(AffinePoint *result, const EllipticCurve ellipticCurve
     return CRYPTID_SUCCESS;
 }
 
-unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v, const int order)
+void canonical(unsigned char **result, int *const resultLength, const Complex v, const mpz_t p, const int order)
 {
     // Implementation of Algorithm 4.3.2 (Canonical1) in [RFC-5091].
 
@@ -136,7 +137,7 @@ unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v
     char * realPartHexString = mpz_get_str(NULL, 16, v.real);
     char * imagPartHexString = mpz_get_str(NULL, 16, v.imaginary);
 
-    unsigned char* result = (unsigned char*)calloc(outputSize, sizeof(unsigned char));
+    *result = (unsigned char*)calloc(outputSize, sizeof(unsigned char));
     unsigned char* resultHexString = (unsigned char*)calloc(2 * outputSize + 1,sizeof(unsigned char));
     int index = 0;
 
@@ -207,7 +208,7 @@ unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v
     unsigned char* pos = resultHexString;
     for(size_t i = 0; i < outputSize; i++)
     {
-        sscanf((char*) pos, "%2hhx", result + i);
+        sscanf((char*) pos, "%2hhx", *result + i);
         pos += 2;
     }
     
@@ -216,21 +217,21 @@ unsigned char* canonical(int *const resultLength, const mpz_t p, const Complex v
     free(imagPartHexString);
     free(resultHexString);
     *resultLength = outputSize;
-    return result;
 }
 
-unsigned char* hashBytes(const int b, const unsigned char *const p, const int pLength, const HashFunction hashFunction)
+void hashBytes(unsigned char **result, const int b, const unsigned char *const p, const int pLength, const HashFunction hashFunction)
 {
     // Implementation of Algorithm 4.2.1 (HashBytes) in [RFC-5091].
 
-    unsigned char* result = (unsigned char*)calloc(b + 1, sizeof(unsigned char));
+    *result = (unsigned char*)calloc(b + 1, sizeof(unsigned char));
 
     // Let {@code hashlen{} be the number of octets comprising the output of {@code hashfcn}.
-    int hashLen = hashFunction_getHashSize(hashFunction);
+    int hashLen;
+    hashFunction_getHashSize(&hashLen, hashFunction);
 
     // Let \f$k = \mathrm{hashfcn}(p)\f$.
     unsigned char* k = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
-    hashFunction_hash(hashFunction, p, pLength, k);
+    hashFunction_hash(k, p, pLength, hashFunction);
 
     // Let \f$h_0 = 00...00\f$, a string of null octets with a length of {@code hashlen}.
     unsigned char* h = (unsigned char*)calloc(hashLen, sizeof(unsigned char));
@@ -250,7 +251,7 @@ unsigned char* hashBytes(const int b, const unsigned char *const p, const int pL
     for(int i = 1; i <= l && !didGenerateEnough; i++)
     {
         // Let \f$h_i = \mathrm{hashfcn}(h_{i - 1}).
-        hashFunction_hash(hashFunction, h, hashLen, h);
+        hashFunction_hash(h, h, hashLen, hashFunction);
 
         // Let \f$r_i = \mathrm{hashfcn}(h_i || k)\f$, where \f$h_i || k\f$ is the 
         // \f$(2 \cdot \mathrm{hashlen})\f$-octet concatenation of \f$h_i\f$ and \f$k\f$.
@@ -263,7 +264,7 @@ unsigned char* hashBytes(const int b, const unsigned char *const p, const int pL
             concat[hashLen + j] = k[j];
         }
 
-        hashFunction_hash(hashFunction, concat, 2 * hashLen, resultPart);
+        hashFunction_hash(resultPart, concat, 2 * hashLen, hashFunction);
         
         // Let \f$r = \mathrm{LeftmostOctets}(b, r_1 || ... || r_l)\f$, i.e., \f$r\f$ is formed as
         // the concatenation of the \f$r_i\f$, truncated to the desired number of
@@ -272,7 +273,7 @@ unsigned char* hashBytes(const int b, const unsigned char *const p, const int pL
         {
             if(generatedOctets + j < b)
             {
-                result[generatedOctets + j] = resultPart[j];
+                (*result)[generatedOctets + j] = resultPart[j];
             }
             else
             {
@@ -283,11 +284,10 @@ unsigned char* hashBytes(const int b, const unsigned char *const p, const int pL
         generatedOctets += hashLen;
     }
 
-    result[b] = '\0';
+    (*result)[b] = '\0';
 
     free(k);
     free(h);
     free(concat);
     free(resultPart);
-    return result;
 }

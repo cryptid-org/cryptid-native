@@ -49,71 +49,7 @@ The resulting library (`libcryptid.a`) will be placed in the `build` directory.
 
 ## Example
 
-The following short example demonstrates the usage of CryptID.native:
-
-~~~~C
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "gmp.h"
-
-#include "CryptID.h"
-
-
-int main()
-{
-    const char *message = "Ironic.";
-    const char *identity = "darth.plagueis@sith.com";
-
-    PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
-    mpz_t masterSecret;
-    mpz_init(masterSecret);
-    mpz_init(publicParameters->q);
-    if (CRYPTID_SUCCESS != cryptid_setup(LOWEST, publicParameters, masterSecret))
-    {
-        printf("Setup failed\n");
-        return -1;
-    }
-
-    CipherTextTuple* ciphertext = malloc(sizeof (CipherTextTuple));
-    if (CRYPTID_SUCCESS != cryptid_encrypt(ciphertext, message, strlen(message), identity, strlen(identity), *publicParameters))
-    {
-        printf("Encrypt failed\n");
-        return -1;
-    }
-
-    AffinePoint privateKey;
-    if (CRYPTID_SUCCESS != cryptid_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret))
-    {
-        printf("Extract failed\n");
-        return -1;
-    }
-
-    char *plaintext;
-    if (CRYPTID_SUCCESS != cryptid_decrypt(&plaintext, privateKey, *ciphertext, *publicParameters))
-    {
-        printf("Decrypt failed\n");
-        return -1;
-    }
-
-    printf("Plaintext:\n%s\n", plaintext);
-
-    free(plaintext);
-    cipherTextTuple_destroy(*ciphertext);
-    free(ciphertext);
-    affine_destroy(privateKey);
-    mpz_clears(publicParameters->q, masterSecret, NULL);
-    affine_destroy(publicParameters->pointP);
-    affine_destroy(publicParameters->pointPpublic);
-    ellipticCurve_destroy(publicParameters->ellipticCurve);
-    free(publicParameters);
-
-    return 0;
-}
-~~~~
-
-Of course, this example assumes that you have previously built the static library and have GMP installed.
+There will be a working example added, when the second version is finished. If you want to try out the library, check out the first version [CryptID V1](https://github.com/cryptid-org/cryptid-native/tree/release/v1)
 
 ## License
 

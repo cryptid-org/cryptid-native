@@ -7,7 +7,7 @@
 
 
 /**
- * The security level of the encryption. Please refer to Section 9. in [RFC-5091] regarding the meaning
+ * The security level of the protocol. Please refer to Section 9. in [RFC-5091] regarding the meaning
  * of the security levels.
  */
 typedef enum

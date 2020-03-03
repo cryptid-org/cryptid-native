@@ -9,21 +9,16 @@
 //   * [Intro-to-IBE] Luther Martin. 2008. Introduction to Identity-Based Encryption (Information Security and Privacy Series) (1 ed.). Artech House, Inc., Norwood, MA, USA. 
 
 
-ComplexAffinePoint complexAffine_init(const Complex x, const Complex y)
+void complexAffine_init(ComplexAffinePoint *complexAffinePointOutput, const Complex x, const Complex y)
 {
-    ComplexAffinePoint complexAffinePoint;
-    complexAffinePoint.x = complex_initMpz(x.real, x.imaginary);
-    complexAffinePoint.y = complex_initMpz(y.real, y.imaginary);
-    return complexAffinePoint;
+    complex_initMpz(&complexAffinePointOutput->x, x.real, x.imaginary);
+    complex_initMpz(&complexAffinePointOutput->y, y.real, y.imaginary);
 }
 
-ComplexAffinePoint complexAffine_initLong(const long xr, const long xi, const long yr, const long yi)
+void complexAffine_initLong(ComplexAffinePoint *complexAffinePointOutput, const long xr, const long xi, const long yr, const long yi)
 {
-    ComplexAffinePoint complexAffinePoint;
-    complexAffinePoint.x = complex_initLong(xr, xi);
-    complexAffinePoint.y = complex_initLong(yr, yi);
-
-    return complexAffinePoint;
+    complex_initLong(&complexAffinePointOutput->x, xr, xi);
+    complex_initLong(&complexAffinePointOutput->y, yr, yi);
 }
 
 void complexAffine_destroy(ComplexAffinePoint complexAffinePoint)
@@ -33,7 +28,11 @@ void complexAffine_destroy(ComplexAffinePoint complexAffinePoint)
 
 ComplexAffinePoint complexAffine_infinity(void)
 {
-    return complexAffine_initLong(-1, 0, -1, 0);
+    ComplexAffinePoint infinity;
+
+    complexAffine_initLong(&infinity, -1, 0, -1, 0);
+
+    return infinity;
 }
 
 int complexAffine_isEquals(const ComplexAffinePoint complexAffinePoint1, const ComplexAffinePoint complexAffinePoint2)
@@ -62,7 +61,8 @@ CryptidStatus complexAffine_double(ComplexAffinePoint *result, const ComplexAffi
         return CRYPTID_SUCCESS;
     }
 
-    Complex complexZero = complex_initLong(0, 0);
+    Complex complexZero;
+    complex_initLong(&complexZero, 0, 0);
 
     // If the \f$y\f$ coordinate is equal to complex zero, then the result is infinity.
     if(complex_isEquals(complexAffinePoint.y, complexZero))
@@ -80,7 +80,8 @@ CryptidStatus complexAffine_double(ComplexAffinePoint *result, const ComplexAffi
 
     // See Equation 3.4 in [Intro-to-IBE].
     // \f$\frac{3x^{2} + a}{2y}
-    Complex twoTimesAp1y = complex_modMulScalar(complexAffinePoint.y, tmp, ellipticCurve.fieldOrder);
+    Complex twoTimesAp1y;
+    complex_modMulScalar(&twoTimesAp1y, complexAffinePoint.y, tmp, ellipticCurve.fieldOrder);
 
     // If \f$2y\f$ has no multiplicative inverse, the above expression cannot be calculated.
     CryptidStatus status = complex_multiplicativeInverse(&denom, twoTimesAp1y, ellipticCurve.fieldOrder);
@@ -95,35 +96,49 @@ CryptidStatus complexAffine_double(ComplexAffinePoint *result, const ComplexAffi
 
     mpz_set_ui(tmp, 3);
 
-    Complex ap1xSquared = complex_modMul(complexAffinePoint.x, complexAffinePoint.x, ellipticCurve.fieldOrder);
-    Complex threeTimesAp1xSquared = complex_modMulScalar(ap1xSquared, tmp, ellipticCurve.fieldOrder);
-    Complex num = complex_modAddScalar(threeTimesAp1xSquared, ellipticCurve.a, ellipticCurve.fieldOrder);
+    Complex ap1xSquared;
+    complex_modMul(&ap1xSquared, complexAffinePoint.x, complexAffinePoint.x, ellipticCurve.fieldOrder);
+    Complex threeTimesAp1xSquared;
+    complex_modMulScalar(&threeTimesAp1xSquared, ap1xSquared, tmp, ellipticCurve.fieldOrder);
+    Complex num;
+    complex_modAddScalar(&num, threeTimesAp1xSquared, ellipticCurve.a, ellipticCurve.fieldOrder);
 
-    Complex m = complex_modMul(num, denom, ellipticCurve.fieldOrder);
+    Complex m;
+    complex_modMul(&m, num, denom, ellipticCurve.fieldOrder);
 
     complex_destroyMany(4, num, threeTimesAp1xSquared, ap1xSquared, denom);
     mpz_clear(tmp);
 
     // Same as in {@code complexAffine_add}.
     // \f$x_n = m^{2}-2x\f$
-    Complex x2AddInv = complex_additiveInverse(complexAffinePoint.x, ellipticCurve.fieldOrder);
-    Complex mSquared = complex_modMul(m, m, ellipticCurve.fieldOrder);
+    Complex x2AddInv;
+    complex_additiveInverse(&x2AddInv, complexAffinePoint.x, ellipticCurve.fieldOrder);
+    Complex mSquared;
+    complex_modMul(&mSquared, m, m, ellipticCurve.fieldOrder);
 
-    Complex x1AddInv = complex_additiveInverse(complexAffinePoint.x, ellipticCurve.fieldOrder);
+    Complex x1AddInv;
+    complex_additiveInverse(&x1AddInv, complexAffinePoint.x, ellipticCurve.fieldOrder);
 
-    Complex x1AddInvPlusx2AddInv = complex_modAdd(x1AddInv, x2AddInv, ellipticCurve.fieldOrder);
+    Complex x1AddInvPlusx2AddInv;
+    complex_modAdd(&x1AddInvPlusx2AddInv, x1AddInv, x2AddInv, ellipticCurve.fieldOrder);
 
-    Complex xn = complex_modAdd(mSquared, x1AddInvPlusx2AddInv, ellipticCurve.fieldOrder);
+    Complex xn;
+    complex_modAdd(&xn, mSquared, x1AddInvPlusx2AddInv, ellipticCurve.fieldOrder);
 
     // \f$y_n = m(x - x_n) - y\f$
-    Complex xAddInv = complex_additiveInverse(xn, ellipticCurve.fieldOrder);
-    Complex q = complex_modAdd(complexAffinePoint.x, xAddInv, ellipticCurve.fieldOrder);
-    Complex r = complex_modMul(m, q, ellipticCurve.fieldOrder);
+    Complex xAddInv;
+    complex_additiveInverse(&xAddInv, xn, ellipticCurve.fieldOrder);
+    Complex q;
+    complex_modAdd(&q, complexAffinePoint.x, xAddInv, ellipticCurve.fieldOrder);
+    Complex r;
+    complex_modMul(&r, m, q, ellipticCurve.fieldOrder);
 
-    Complex y1AddInv = complex_additiveInverse(complexAffinePoint.y, ellipticCurve.fieldOrder);
-    Complex yn = complex_modAdd(r, y1AddInv, ellipticCurve.fieldOrder);
+    Complex y1AddInv;
+    complex_additiveInverse(&y1AddInv, complexAffinePoint.y, ellipticCurve.fieldOrder);
+    Complex yn;
+    complex_modAdd(&yn, r, y1AddInv, ellipticCurve.fieldOrder);
 
-    *result = complexAffine_init(xn, yn);
+    complexAffine_init(result, xn, yn);
 
 
     complex_destroyMany(11, yn, r, q, xAddInv, xn, x1AddInvPlusx2AddInv, mSquared, x2AddInv, m, x1AddInv, y1AddInv);
@@ -139,13 +154,13 @@ CryptidStatus complexAffine_add(ComplexAffinePoint *result, const ComplexAffineP
     // Adding infinity to a point does not change the point. 
     if(complexAffine_isInfinity(complexAffinePoint1))
     {
-        *result = complexAffine_init(complexAffinePoint2.x, complexAffinePoint2.y);
+        complexAffine_init(result, complexAffinePoint2.x, complexAffinePoint2.y);
         return CRYPTID_SUCCESS;
     }
 
     if(complexAffine_isInfinity(complexAffinePoint2))
     {
-        *result = complexAffine_init(complexAffinePoint1.x, complexAffinePoint1.y);
+        complexAffine_init(result, complexAffinePoint1.x, complexAffinePoint1.y);
         return CRYPTID_SUCCESS;
     }
 
@@ -167,10 +182,12 @@ CryptidStatus complexAffine_add(ComplexAffinePoint *result, const ComplexAffineP
     }
 
 
-    Complex x1AddInv = complex_additiveInverse(complexAffinePoint1.x, ellipticCurve.fieldOrder);
+    Complex x1AddInv;
+    complex_additiveInverse(&x1AddInv, complexAffinePoint1.x, ellipticCurve.fieldOrder);
 
     // \f$\frac{y_2 - y_1}{x_2 - x_1}\f$
-    Complex ap2xPlusx1AddInv = complex_modAdd(complexAffinePoint2.x, x1AddInv, ellipticCurve.fieldOrder);
+    Complex ap2xPlusx1AddInv;
+    complex_modAdd(&ap2xPlusx1AddInv, complexAffinePoint2.x, x1AddInv, ellipticCurve.fieldOrder);
 
     Complex denom;
     CryptidStatus status = complex_multiplicativeInverse(&denom, ap2xPlusx1AddInv, ellipticCurve.fieldOrder);
@@ -182,29 +199,40 @@ CryptidStatus complexAffine_add(ComplexAffinePoint *result, const ComplexAffineP
 
     complex_destroy(ap2xPlusx1AddInv);
 
-    Complex y1AddInv = complex_additiveInverse(complexAffinePoint1.y, ellipticCurve.fieldOrder);
-    Complex num =  complex_modAdd(complexAffinePoint2.y, y1AddInv, ellipticCurve.fieldOrder);
+    Complex y1AddInv;
+    complex_additiveInverse(&y1AddInv, complexAffinePoint1.y, ellipticCurve.fieldOrder);
+    Complex num;
+    complex_modAdd(&num, complexAffinePoint2.y, y1AddInv, ellipticCurve.fieldOrder);
 
-    Complex m = complex_modMul(num, denom, ellipticCurve.fieldOrder);
+    Complex m;
+    complex_modMul(&m, num, denom, ellipticCurve.fieldOrder);
 
     complex_destroyMany(2, denom, num);
 
     // \f$x_n = m^{2}-x_1-x_2\f$
-    Complex x2AddInv = complex_additiveInverse(complexAffinePoint2.x, ellipticCurve.fieldOrder);
-    Complex mSquared = complex_modMul(m, m, ellipticCurve.fieldOrder);
+    Complex x2AddInv;
+    complex_additiveInverse(&x2AddInv, complexAffinePoint2.x, ellipticCurve.fieldOrder);
+    Complex mSquared;
+    complex_modMul(&mSquared, m, m, ellipticCurve.fieldOrder);
 
-    Complex x1AddInvPlusx2AddInv = complex_modAdd(x1AddInv, x2AddInv, ellipticCurve.fieldOrder);
+    Complex x1AddInvPlusx2AddInv;
+    complex_modAdd(&x1AddInvPlusx2AddInv, x1AddInv, x2AddInv, ellipticCurve.fieldOrder);
 
-    Complex xn = complex_modAdd(mSquared, x1AddInvPlusx2AddInv, ellipticCurve.fieldOrder);
+    Complex xn;
+    complex_modAdd(&xn, mSquared, x1AddInvPlusx2AddInv, ellipticCurve.fieldOrder);
 
     // \f$y_n = m(x_1 - x_3) - y_n\f$
-    Complex xAddInv = complex_additiveInverse(xn, ellipticCurve.fieldOrder);
-    Complex q = complex_modAdd(complexAffinePoint1.x, xAddInv, ellipticCurve.fieldOrder);
-    Complex r = complex_modMul(m, q, ellipticCurve.fieldOrder);
+    Complex xAddInv;
+    complex_additiveInverse(&xAddInv, xn, ellipticCurve.fieldOrder);
+    Complex q;
+    complex_modAdd(&q, complexAffinePoint1.x, xAddInv, ellipticCurve.fieldOrder);
+    Complex r;
+    complex_modMul(&r, m, q, ellipticCurve.fieldOrder);
 
-    Complex yn = complex_modAdd(r, y1AddInv, ellipticCurve.fieldOrder);
+    Complex yn;
+    complex_modAdd(&yn, r, y1AddInv, ellipticCurve.fieldOrder);
 
-    *result = complexAffine_init(xn, yn);
+    complexAffine_init(result, xn, yn);
 
 
     complex_destroyMany(11, yn, r, q, xAddInv, xn, x1AddInvPlusx2AddInv, mSquared, x2AddInv, m, x1AddInv, y1AddInv);
@@ -212,7 +240,7 @@ CryptidStatus complexAffine_add(ComplexAffinePoint *result, const ComplexAffineP
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus complexAffine_multiply(ComplexAffinePoint *result, const mpz_t s, const ComplexAffinePoint complexAffinePoint,
+CryptidStatus complexAffine_multiply(ComplexAffinePoint *result, const ComplexAffinePoint complexAffinePoint, const mpz_t s,
                               const EllipticCurve ellipticCurve)
 {
     // Implementation of Algorithm 3.26 in [Guide-to-ECC].
@@ -236,7 +264,8 @@ CryptidStatus complexAffine_multiply(ComplexAffinePoint *result, const mpz_t s, 
         return CRYPTID_SUCCESS;
     }
 
-    ComplexAffinePoint pointN = complexAffine_init(complexAffinePoint.x, complexAffinePoint.y);
+    ComplexAffinePoint pointN;
+    complexAffine_init(&pointN, complexAffinePoint.x, complexAffinePoint.y);
     // \f$Q = \infty\f$
     ComplexAffinePoint pointQ = complexAffine_infinity();
 
@@ -295,20 +324,27 @@ int complexAffine_isOnCurve(ComplexAffinePoint point, EllipticCurve ellipticCurv
     // \f$y^2\f$
     // is equal to
     // \f$x^3 + ax + b\f$.
-    Complex ySquared = complex_modMul(point.y, point.y, ellipticCurve.fieldOrder);
-    Complex xSquared = complex_modMul(point.x, point.x, ellipticCurve.fieldOrder);
-    Complex xCubed = complex_modMul(xSquared, point.x, ellipticCurve.fieldOrder);
+    Complex ySquared;
+    complex_modMul(&ySquared, point.y, point.y, ellipticCurve.fieldOrder);
+    Complex xSquared;
+    complex_modMul(&xSquared, point.x, point.x, ellipticCurve.fieldOrder);
+    Complex xCubed;
+    complex_modMul(&xCubed, xSquared, point.x, ellipticCurve.fieldOrder);
 
-    Complex ax = complex_modMulScalar(point.x, ellipticCurve.a, ellipticCurve.fieldOrder);
+    Complex ax;
+    complex_modMulScalar(&ax, point.x, ellipticCurve.a, ellipticCurve.fieldOrder);
 
-    Complex xCubedPlusAx = complex_modAdd(xCubed, ax, ellipticCurve.fieldOrder);
+    Complex xCubedPlusAx;
+    complex_modAdd(&xCubedPlusAx, xCubed, ax, ellipticCurve.fieldOrder);
 
     mpz_t zero;
     mpz_init_set_ui(zero, 0);
 
-    Complex b = complex_initMpz(ellipticCurve.b, zero);
+    Complex b;
+    complex_initMpz(&b, ellipticCurve.b, zero);
 
-    Complex rhs = complex_modAdd(xCubedPlusAx, b, ellipticCurve.fieldOrder);
+    Complex rhs;
+    complex_modAdd(&rhs, xCubedPlusAx, b, ellipticCurve.fieldOrder);
 
     int result = complex_isEquals(ySquared, rhs);
 

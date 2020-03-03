@@ -50,7 +50,7 @@ function testWithMemoryCheck(dependencies, components, xmlOutput) {
 
         valgrindOptions.push(executable);
 
-        if (component == 'CryptID' || component == 'SignID') {
+        if (component == 'BonehFranklinIdentityBasedEncryption' || component == 'HessIdentityBasedSignature') {
             valgrindOptions.push('--', '--lowest-quick-check');
         }
 
