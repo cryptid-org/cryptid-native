@@ -6,7 +6,6 @@
 #include <string.h>
 #include "gmp.h"
 
-#include "attribute-based/ABE_Utils.h"
 #include "attribute-based/Defines.h"
 #include "util/Random.h"
 #include "util/Status.h"

@@ -12,7 +12,6 @@
 #include "attribute-based/EncryptedMessage_ABE.h"
 #include "util/SecurityLevel.h"
 #include "util/Status.h"
-#include "attribute-based/ABE_Utils.h"
 
 CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE* publickey, MasterKey_ABE* masterkey);
 

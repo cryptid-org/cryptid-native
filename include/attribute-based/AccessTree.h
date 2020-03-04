@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "attribute-based/Defines.h"
-#include "attribute-based/ABE_Utils.h"
 #include "elliptic/AffinePoint.h"
 
 typedef struct AccessTree {
@@ -20,6 +19,10 @@ typedef struct AccessTree {
 AccessTree* createTree(int value, char* attribute, const size_t attributeLength);
 
 int isLeaf(AccessTree* accessTree);
+
+char** attributeArray();
+
+int hasAttribute(char** attributes, char* val);
 
 int satisfyValue(AccessTree* accessTree, char** attributes);
 
