@@ -88,7 +88,7 @@ SUITE(cryptid_abe_suite)
         generateRandomString(&message, messageLength + 1, defaultAlphabet, strlen(defaultAlphabet));
 
         char** attributes = attributeArray();
-        int numChilds = 10;
+        int numChilds = 5;
         AccessTree* accessTree = createTree((i%2)*(numChilds-1)+1, NULL, 0);
         char* randomStr = malloc(20 + 1);
         char* randomStr2 = malloc(20 + 1);
