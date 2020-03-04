@@ -53,9 +53,7 @@ TEST basic_abe_test(SecurityLevel securityLevel, char* message, AccessTree* acce
     }
 
     destroyPublicKey_ABE(publickey);
-    mpz_clear(masterkey->beta);
-    affine_destroy(masterkey->g_alpha);
-    free(masterkey);
+    destroyMasterKey_ABE(masterkey);
     destroyEncryptedMessage_ABE(encrypted);
     destroySecretKey_ABE(secretkey);
     destroySecretKey_ABE(secretkey_new);
