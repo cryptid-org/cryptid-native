@@ -512,18 +512,21 @@ CryptidStatus cryptid_delegate_ABE(SecretKey_ABE* secretkey, char** attributes, 
 
 int Lagrange_coefficient(int xi, int* S, int sLength, int x)
 {
-    int result = 1;
+    double result = 1;
     for(int i = 0; i < sLength; i++)
     {
         if(&S[i] != NULL)
         {
             if(S[i] != xi)
             {
-                result = result*((x-S[i])/(xi-S[i]));
+                double xD = (double) x;
+                double j = (double) S[i];
+                double xiD = (double) xi;
+                result = result*((xD-j)/(xiD-j));
             }
         }
     }
-    return result;
+    return (int) result;
 }
 
 CryptidStatus DecryptNode_ABE(EncryptedMessage_ABE* encrypted, SecretKey_ABE* secretkey, AccessTree* node, Complex* result, int* statusCode)
