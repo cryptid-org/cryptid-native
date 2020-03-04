@@ -1,18 +1,6 @@
 #include "attribute-based/Polynom.h"
 
-CryptidStatus ABE_randomNumber(mpz_t randElement, PublicKey_ABE* publickey)
-{
-	mpz_t pMinusOne;
-    mpz_init(pMinusOne);
-    mpz_sub_ui(pMinusOne, publickey->ellipticCurve.fieldOrder, 1);
-
-    random_mpzInRange(randElement, pMinusOne);
-
-    mpz_clear(pMinusOne);
-
-    return CRYPTID_SUCCESS;
-}
-
+// Returns a specified degree polinom with polynomSum(polynom, 0, sum) resulting in zeroValue (qx(0) for ABE)
 Polynom* createPolynom(int degree, mpz_t zeroValue, PublicKey_ABE* publickey) {
 	Polynom* polynom = malloc(sizeof(Polynom));
 	polynom->children = malloc(sizeof(PolynomExpression)*(degree+1));
@@ -30,6 +18,7 @@ Polynom* createPolynom(int degree, mpz_t zeroValue, PublicKey_ABE* publickey) {
 	return polynom;
 }
 
+// Returns SUM(degree ∈ degrees) coeff*x^degree
 CryptidStatus polynomSum(Polynom* polynom, int x, mpz_t sum)
 {
 	mpz_set_ui(sum, 0);
@@ -52,6 +41,7 @@ CryptidStatus polynomSum(Polynom* polynom, int x, mpz_t sum)
 	return CRYPTID_SUCCESS;
 }
 
+// Used for simply deleting polynom from memory
 void destroyPolynom(Polynom* polynom)
 {
 	for(int i = 0; i <= polynom->degree; i++)

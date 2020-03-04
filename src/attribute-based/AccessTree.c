@@ -1,5 +1,9 @@
 #include "attribute-based/AccessTree.h"
 
+// Creating an access tree as specified in Bethencourt-Sahai-Waters CP-ABE pdf
+// Value is threshold
+//	value = 1 meaning an OR gate
+//	value = [number of childrens] meaning an AND gate
 AccessTree* createTree(int value, char* attribute, size_t attributeLength) {
 	AccessTree* tree = malloc(sizeof(AccessTree));
     tree->value = value;
@@ -15,33 +19,12 @@ AccessTree* createTree(int value, char* attribute, size_t attributeLength) {
     return tree;
 }
 
+// Returning whether a node of a tree is leaf
 int isLeaf(AccessTree* accessTree) {
 	return (accessTree->children[0] == NULL) ? 1 : 0;
 }
 
-char** attributeArray() {
-	char **attributes = malloc(MAX_ATTRIBUTES*sizeof(char)*(ATTRIBUTE_LENGTH+1));
-
-	for(size_t i = 0; i < MAX_ATTRIBUTES; i++)
-	{
-	   attributes[i] = "";
-	}
-
-	return attributes;
-}
-
-int hasAttribute(char** attributes, char* val) {
-	if(val != NULL)
-	{
-	    for(int i = 0; i < MAX_ATTRIBUTES; i++)
-	    {
-	        if(attributes[i] && attributes[i][0] != '\0' && strcmp(attributes[i], val) == 0)
-	            return 1;
-	    }
-	}
-    return 0;
-}
-
+// Returning 1 if attributes satisfy the accessTree, else 0
 int satisfyValue(AccessTree* accessTree, char** attributes) {
 	if(isLeaf(accessTree)) {
 		return hasAttribute(attributes, accessTree->attribute);
@@ -62,6 +45,7 @@ int satisfyValue(AccessTree* accessTree, char** attributes) {
 	}
 }
 
+// Used for deleting the tree and its children from memory
 void destroyTree(AccessTree* tree)
 {
 	for(int i = 0; i < MAX_CHILDREN; i++)
