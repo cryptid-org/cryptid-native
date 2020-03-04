@@ -1,4 +1,4 @@
-#include "attribute-based/ABE_Utils.h"
+#include "attribute-based/bsw/ciphertext-policy/ABE_Utils.h"
 #include <stdlib.h>
 
 int Lagrange_coefficient(int xi, int* S, int sLength, int x)
@@ -29,7 +29,7 @@ char* concat(const char *s1, const char *s2)
 }
 
 // Used for generating random numbers in the elliptic curve's fieldOrder of the publickey 
-CryptidStatus ABE_randomNumber(mpz_t randElement, PublicKey_ABE* publickey)
+void ABE_randomNumber(mpz_t randElement, PublicKey_ABE* publickey)
 {
     mpz_t pMinusOne;
     mpz_init(pMinusOne);
@@ -38,8 +38,6 @@ CryptidStatus ABE_randomNumber(mpz_t randElement, PublicKey_ABE* publickey)
     random_mpzInRange(randElement, pMinusOne);
 
     mpz_clear(pMinusOne);
-
-    return CRYPTID_SUCCESS;
 }
 
 // Simple way of creating an array of attributes (for secretkey)
@@ -61,7 +59,9 @@ int hasAttribute(char** attributes, char* val) {
         for(int i = 0; i < MAX_ATTRIBUTES; i++)
         {
             if(attributes[i] && attributes[i][0] != '\0' && strcmp(attributes[i], val) == 0)
+            {
                 return 1;
+            }
         }
     }
     return 0;

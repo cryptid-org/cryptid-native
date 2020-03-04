@@ -6,7 +6,7 @@
 
 #include "greatest.h"
 
-#include "attribute-based/ABE.h"
+#include "attribute-based/bsw/ciphertext-policy/ABE.h"
 
 TEST basic_abe_test(SecurityLevel securityLevel, char* message, AccessTree* accessTree, char** attributes, int expectedReponse)
 {

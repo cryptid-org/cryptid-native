@@ -1,4 +1,4 @@
-#include "attribute-based/MasterKey_ABE.h"
+#include "attribute-based/bsw/ciphertext-policy/MasterKey_ABE.h"
 #include <stdlib.h>
 
 void destroyMasterKey_ABE(MasterKey_ABE* masterkey)

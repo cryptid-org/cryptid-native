@@ -1,7 +1,8 @@
-#include "attribute-based/SecretKey_ABE.h"
+#include "attribute-based/bsw/ciphertext-policy/SecretKey_ABE.h"
 #include <stdlib.h>
 
-void destroySecretKey_ABE(SecretKey_ABE* secretkey) {
+void destroySecretKey_ABE(SecretKey_ABE* secretkey)
+{
 	for(int i = 0; i < MAX_ATTRIBUTES; i++)
     {
     	if(secretkey->attributes[i] && secretkey->attributes[i][0] != '\0')

@@ -3,7 +3,7 @@
 
 #include "gmp.h"
 #include "elliptic/AffinePoint.h"
-#include "attribute-based/AccessTree.h"
+#include "attribute-based/bsw/ciphertext-policy/AccessTree.h"
 #include "complex/Complex.h"
 
 typedef struct Ctilde_set

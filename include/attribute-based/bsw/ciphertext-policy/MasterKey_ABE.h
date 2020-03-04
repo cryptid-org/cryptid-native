@@ -8,8 +8,8 @@
 #include "util/HashFunction.h"
 #include "elliptic/TatePairing.h"
 
-#include "attribute-based/PublicKey_ABE.h"
-#include "attribute-based/SecretKey_ABE.h"
+#include "attribute-based/bsw/ciphertext-policy/PublicKey_ABE.h"
+#include "attribute-based/bsw/ciphertext-policy/SecretKey_ABE.h"
 
 typedef struct MasterKey_ABE
 {

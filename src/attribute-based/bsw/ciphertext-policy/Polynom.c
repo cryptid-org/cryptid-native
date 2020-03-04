@@ -1,7 +1,8 @@
-#include "attribute-based/Polynom.h"
+#include "attribute-based/bsw/ciphertext-policy/Polynom.h"
 
 // Returns a specified degree polinom with polynomSum(polynom, 0, sum) resulting in zeroValue (qx(0) for ABE)
-Polynom* createPolynom(int degree, mpz_t zeroValue, PublicKey_ABE* publickey) {
+Polynom* createPolynom(int degree, mpz_t zeroValue, PublicKey_ABE* publickey)
+{
 	Polynom* polynom = malloc(sizeof(Polynom));
 	polynom->children = malloc(sizeof(PolynomExpression)*(degree+1));
 	polynom->children[0] = malloc(sizeof(PolynomExpression));
@@ -9,7 +10,8 @@ Polynom* createPolynom(int degree, mpz_t zeroValue, PublicKey_ABE* publickey) {
 	polynom->degree = degree;
 	mpz_init_set(polynom->children[0]->coeff, zeroValue);
 	int i;
-	for(i = 1; i <= degree; i++) {
+	for(i = 1; i <= degree; i++)
+	{
 		polynom->children[i] = malloc(sizeof(PolynomExpression));
 		polynom->children[i]->degree = i;
 		mpz_init(polynom->children[i]->coeff);

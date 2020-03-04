@@ -3,11 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "attribute-based/Defines.h"
-#include "attribute-based/ABE_Utils.h"
+#include "attribute-based/bsw/ciphertext-policy/Defines.h"
+#include "attribute-based/bsw/ciphertext-policy/ABE_Utils.h"
 #include "elliptic/AffinePoint.h"
 
-typedef struct AccessTree {
+typedef struct AccessTree
+{
     int value;
     int computed;
     struct AccessTree* children[MAX_CHILDREN];
