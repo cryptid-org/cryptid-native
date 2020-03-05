@@ -8,7 +8,7 @@
 
 #include "attribute-based/bsw/ciphertext-policy/ABE.h"
 
-TEST basic_abe_test(SecurityLevel securityLevel, char* message, AccessTree* accessTree, char** attributes, int expectedReponse)
+TEST basic_abe_test(SecurityLevel securityLevel, char* message, AccessTree* accessTree, char** attributes, int num_attributes, int expectedReponse)
 {
     PublicKey_ABE* publickey = malloc(sizeof (PublicKey_ABE));
     MasterKey_ABE* masterkey = malloc(sizeof (MasterKey_ABE));
@@ -22,12 +22,12 @@ TEST basic_abe_test(SecurityLevel securityLevel, char* message, AccessTree* acce
 
     SecretKey_ABE* secretkey = malloc(sizeof (SecretKey_ABE));
 
-    status = cryptid_keygen_ABE(masterkey, attributes, secretkey);
+    status = cryptid_keygen_ABE(masterkey, attributes, num_attributes, secretkey);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     SecretKey_ABE* secretkey_new = malloc(sizeof (SecretKey_ABE));
 
-    status = cryptid_delegate_ABE(secretkey, attributes, secretkey_new);
+    status = cryptid_delegate_ABE(secretkey, attributes, num_attributes, secretkey_new);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     char* result_new;
@@ -85,9 +85,10 @@ SUITE(cryptid_abe_suite)
         char* message = malloc(messageLength + 1);
         generateRandomString(&message, messageLength + 1, defaultAlphabet, strlen(defaultAlphabet));
 
-        char** attributes = attributeArray();
         int numChilds = 5;
-        AccessTree* accessTree = createTree((i%2)*(numChilds-1)+1, NULL, 0);
+        int num_attributes = 5;
+        char** attributes = malloc(num_attributes*(20+1));
+        AccessTree* accessTree = createTree((i%2)*(numChilds-1)+1, NULL, 0, numChilds);
         char* randomStr = malloc(20 + 1);
         char* randomStr2 = malloc(20 + 1);
         int expectedReponse = 1;
@@ -106,12 +107,12 @@ SUITE(cryptid_abe_suite)
             {
                 strcpy(randomStr2, randomStr);
             }
-            AccessTree* child = createTree(1, randomStr2, strlen(randomStr2));
+            AccessTree* child = createTree(1, randomStr2, strlen(randomStr2), 0);
             accessTree->children[a] = child;
             attributes[a] = randomStr;
         }
 
-        RUN_TESTp(basic_abe_test, LOWEST, message, accessTree, attributes, expectedReponse);
+        RUN_TESTp(basic_abe_test, LOWEST, message, accessTree, attributes, num_attributes, expectedReponse);
 
         free(message);
         destroyTree(accessTree);

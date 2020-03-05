@@ -11,18 +11,19 @@ typedef struct AccessTree
 {
     int value;
     int computed;
-    struct AccessTree* children[MAX_CHILDREN];
+    struct AccessTree** children;
     char* attribute;
+    int num_children;
     size_t attributeLength;
     AffinePoint Cy;
     AffinePoint CyA;
 } AccessTree;
 
-AccessTree* createTree(int value, char* attribute, const size_t attributeLength);
+AccessTree* createTree(const int value, char* attribute, const size_t attributeLength, const int num_children);
 
-int isLeaf(AccessTree* accessTree);
+int isLeaf(const AccessTree* accessTree);
 
-int satisfyValue(AccessTree* accessTree, char** attributes);
+int satisfyValue(const AccessTree* accessTree, char** attributes, const int num_attributes);
 
 void destroyTree(AccessTree* tree);
 

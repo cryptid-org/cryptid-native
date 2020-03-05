@@ -1,7 +1,7 @@
 #include "attribute-based/bsw/ciphertext-policy/ABE_Utils.h"
 #include <stdlib.h>
 
-int Lagrange_coefficient(int xi, int* S, int sLength, int x)
+int Lagrange_coefficient(const int xi, const int* S, const int sLength, const int x)
 {
     double result = 1;
     for(int i = 0; i < sLength; i++)
@@ -29,7 +29,7 @@ char* concat(const char *s1, const char *s2)
 }
 
 // Used for generating random numbers in the elliptic curve's fieldOrder of the publickey 
-void ABE_randomNumber(mpz_t randElement, PublicKey_ABE* publickey)
+void ABE_randomNumber(mpz_t randElement, const PublicKey_ABE* publickey)
 {
     mpz_t pMinusOne;
     mpz_init(pMinusOne);
@@ -40,23 +40,11 @@ void ABE_randomNumber(mpz_t randElement, PublicKey_ABE* publickey)
     mpz_clear(pMinusOne);
 }
 
-// Simple way of creating an array of attributes (for secretkey)
-char** attributeArray() {
-    char **attributes = malloc(MAX_ATTRIBUTES*sizeof(char)*(ATTRIBUTE_LENGTH+1));
-
-    for(size_t i = 0; i < MAX_ATTRIBUTES; i++)
-    {
-       attributes[i] = "";
-    }
-
-    return attributes;
-}
-
 // Returning whether an array of attributes contains a specific attribute
-int hasAttribute(char** attributes, char* val) {
+int hasAttribute(char** attributes, const int num_attributes, const char* val) {
     if(val != NULL)
     {
-        for(int i = 0; i < MAX_ATTRIBUTES; i++)
+        for(int i = 0; i < num_attributes; i++)
         {
             if(attributes[i] && attributes[i][0] != '\0' && strcmp(attributes[i], val) == 0)
             {

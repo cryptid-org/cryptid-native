@@ -24,9 +24,9 @@ typedef struct PolynomExpression
 	mpz_t coeff;
 } PolynomExpression;
 
-Polynom* createPolynom(int degree, mpz_t zeroValue, PublicKey_ABE* publickey);
+Polynom* createPolynom(const int degree, const mpz_t zeroValue, const PublicKey_ABE* publickey);
 
-CryptidStatus polynomSum(Polynom* polynom, int x, mpz_t sum);
+CryptidStatus polynomSum(const Polynom* polynom, const int x, mpz_t sum);
 
 void destroyPolynom(Polynom* polynom);
 

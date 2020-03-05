@@ -4,15 +4,16 @@
 // Value is threshold
 //	value = 1 meaning an OR gate
 //	value = [number of childrens] meaning an AND gate
-AccessTree* createTree(int value, char* attribute, size_t attributeLength)
+AccessTree* createTree(const int value, char* attribute, const size_t attributeLength, const int num_children)
 {
 	AccessTree* tree = malloc(sizeof(AccessTree));
     tree->value = value;
     tree->computed = 0;
-    for(int i = 0; i < MAX_CHILDREN; i++)
+    if(num_children > 0)
     {
-    	tree->children[i] = NULL;
+        tree->children = malloc(sizeof(AccessTree*) * num_children);
     }
+    tree->num_children = num_children;
 
     tree->attribute = attribute;
     tree->attributeLength = attributeLength;
@@ -21,54 +22,50 @@ AccessTree* createTree(int value, char* attribute, size_t attributeLength)
 }
 
 // Returning whether a node of a tree is leaf
-int isLeaf(AccessTree* accessTree)
+int isLeaf(const AccessTree* accessTree)
 {
-	return (accessTree->children[0] == NULL) ? 1 : 0;
+	return (accessTree->num_children == 0) ? 1 : 0;
 }
 
 // Returning 1 if attributes satisfy the accessTree, else 0
-int satisfyValue(AccessTree* accessTree, char** attributes)
+int satisfyValue(const AccessTree* accessTree, char** attributes, const int num_attributes)
 {
 	if(isLeaf(accessTree))
     {
-		return hasAttribute(attributes, accessTree->attribute);
+		return hasAttribute(attributes, num_attributes, accessTree->attribute);
 	}
-    else
+    
+	int i;
+	int counter = 0;
+	for(i = 0; i < accessTree->num_children; i++)
     {
-		int i;
-		int counter = 0;
-		for(i = 0; i < MAX_CHILDREN; i++)
+		if(satisfyValue(accessTree->children[i], attributes, num_attributes))
         {
-			if(accessTree->children[i] != NULL)
+			counter++;
+			if(counter >= accessTree->value)
             {
-				if(satisfyValue(accessTree->children[i], attributes))
-                {
-					counter++;
-					if(counter >= accessTree->value)
-                    {
-						return 1;
-					}
-				}
+				return 1;
 			}
 		}
-		return 0;
 	}
+	return 0;
 }
 
 // Used for deleting the tree and its children from memory
 void destroyTree(AccessTree* tree)
 {
-	for(int i = 0; i < MAX_CHILDREN; i++)
+	for(int i = 0; i < tree->num_children; i++)
     {
-        if(tree->children[i] != NULL)
-        {
-        	destroyTree(tree->children[i]);
-        }
+        destroyTree(tree->children[i]);
     }
     if(tree->computed)
     {
     	affine_destroy(tree->Cy);
     	affine_destroy(tree->CyA);
+    }
+    if(tree->num_children > 0)
+    {
+        free(tree->children);
     }
     free(tree);
 }
