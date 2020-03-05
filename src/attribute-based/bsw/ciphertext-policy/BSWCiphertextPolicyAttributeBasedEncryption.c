@@ -1,7 +1,8 @@
+
 #include <string.h>
 #include <stdlib.h>
 
-#include "attribute-based/bsw/ciphertext-policy/ABE.h"
+#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryption.h"
 #include "elliptic/TatePairing.h"
 #include "util/RandBytes.h"
 #include "util/Utils.h"
@@ -14,7 +15,7 @@ static const unsigned int Q_LENGTH_MAPPING[] = { 160, 224, 256, 384, 512 };
 static const unsigned int P_LENGTH_MAPPING[] = { 512, 1024, 1536, 3840, 7680 };
 
 // Returns a publickey and a masterkey with the specified securityLevel
-CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE* publickey, MasterKey_ABE* masterkey)
+CryptidStatus cryptid_abe_bsw_setup(const SecurityLevel securityLevel, BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey, BSWCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey)
 {
     // Construct the elliptic curve and its subgroup of interest
     // Select a random \f$n_q\f$-bit Solinas prime \f$q\f$.
@@ -153,67 +154,10 @@ CryptidStatus cryptid_setup_ABE(const SecurityLevel securityLevel, PublicKey_ABE
     return CRYPTID_SUCCESS;
 }
 
-// Calculates Cy and Cy' (CyA) values for accessTree and its children recursively (y ∈ leaf nodes)
-CryptidStatus compute_tree(AccessTree* accessTree, const mpz_t s, const PublicKey_ABE* publickey)
-{
-    if(!isLeaf(accessTree))
-    {
-        int d = accessTree->value - 1; // dx = kx-1, degree = threshold-1
-        Polynom* q = createPolynom(d, s, publickey);
-
-        int i;
-        for(i = 0; i < accessTree->num_children; i++)
-        {
-            mpz_t sum;
-            mpz_init(sum);
-            polynomSum(q, i+1, sum);
-            compute_tree(accessTree->children[i], sum, publickey);
-            mpz_clear(sum);
-        }
-
-        destroyPolynom(q);
-    }
-    else
-    {
-        AffinePoint Cy;
-        CryptidStatus status = affine_wNAFMultiply(&Cy, publickey->g, s, publickey->ellipticCurve);
-        if(status)
-        {
-            affine_destroy(Cy);
-            return status;
-        }
-
-        // H(att(x))
-        AffinePoint hashedPoint;
-
-        status = hashToPoint(&hashedPoint, accessTree->attribute, accessTree->attributeLength, publickey->q, publickey->ellipticCurve, publickey->hashFunction);
-
-        if (status) 
-        {
-            return status;
-        }
-
-        AffinePoint CyA;
-        status = affine_wNAFMultiply(&CyA, hashedPoint, s, publickey->ellipticCurve);
-        if(status)
-        {
-            return status;
-        }
-
-        affine_destroy(hashedPoint);
-
-        accessTree->Cy = Cy;
-        accessTree->CyA = CyA;
-        accessTree->computed = 1;
-    }
-
-    return CRYPTID_SUCCESS;
-}
-
 // Encrypts message with the specified accessTree and publicKey to encrypted
-CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
+CryptidStatus cryptid_abe_bsw_encrypt(BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted,
                                   const char *const message, const size_t messageLength,
-                                  const PublicKey_ABE* publickey, AccessTree* accessTree)
+                                  const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey, BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree)
 {
     if(!message)
     {
@@ -240,7 +184,7 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
     mpz_t s;
     mpz_init(s);
     random_mpzInRange(s, pMinusOne);
-    compute_tree(accessTree, s, publickey);
+    BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(accessTree, s, publickey);
 
     encrypted->tree = accessTree;
     Complex eggalphas;
@@ -252,12 +196,12 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
     size_t startFrom = 0;
     char* msg = malloc(sizeof(char) * messageLength);
     strncpy(msg, message, messageLength);
-    Ctilde_set* prevSet = (Ctilde_set*) malloc(sizeof(Ctilde_set));
+    BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* prevSet = (BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet*) malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet));
     encrypted->Ctilde_set = prevSet;
     prevSet->last = ABE_CTILDE_SET_NOT_COMPUTED;
 
     // Splitting message to parts if M >= ellipticCurve.fieldOrder
-    // Splitted parts of the message is stored in a set (Ctilde_set)
+    // Splitted parts of the message is stored in a set (BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet)
     while(n > 0)
     {
         while(prevSet->last == ABE_CTILDE_SET_NOT_COMPUTED || mpz_cmp(M, publickey->ellipticCurve.fieldOrder) >= 0)
@@ -277,7 +221,7 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
         prevSet->Ctilde = Ctilde;
         startFrom += n;
         n = messageLength-startFrom;
-        prevSet->Ctilde_set = (Ctilde_set*) malloc(sizeof(Ctilde_set));
+        prevSet->Ctilde_set = (BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet*) malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet));
         prevSet = prevSet->Ctilde_set;
         prevSet->last = ABE_CTILDE_SET_NOT_COMPUTED;
         strncpy(msg, message + startFrom, n);
@@ -303,15 +247,15 @@ CryptidStatus cryptid_encrypt_ABE(EncryptedMessage_ABE* encrypted,
 }
 
 // Generates a secretkey with the specified attributes using masterkey
-CryptidStatus cryptid_keygen_ABE(const MasterKey_ABE* masterkey, char** attributes, const int num_attributes, SecretKey_ABE* secretkey)
+CryptidStatus cryptid_abe_bsw_keygen(const BSWCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey, char** attributes, const int num_attributes, BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey)
 {
-    PublicKey_ABE* publickey = masterkey->pubkey;
+    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = masterkey->pubkey;
 
     AffinePoint Gr;
 
     mpz_t r;
     mpz_init(r);
-    ABE_randomNumber(r, publickey);
+    BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(r, publickey);
 
     CryptidStatus status = affine_wNAFMultiply(&Gr, publickey->g, r, publickey->ellipticCurve);
     if(status)
@@ -356,7 +300,7 @@ CryptidStatus cryptid_keygen_ABE(const MasterKey_ABE* masterkey, char** attribut
 
         mpz_t rj;
         mpz_init(rj);
-        ABE_randomNumber(rj, publickey);
+        BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(rj, publickey);
 
         // H(j)
         AffinePoint Hj;
@@ -413,16 +357,16 @@ CryptidStatus cryptid_keygen_ABE(const MasterKey_ABE* masterkey, char** attribut
 }
 
 // Delegates to another secretkey_new from secretkey with attributes being a subset of attributes(secretkey)
-CryptidStatus cryptid_delegate_ABE(const SecretKey_ABE* secretkey, char** attributes, const int num_attributes, SecretKey_ABE* secretkey_new)
+CryptidStatus cryptid_abe_bsw_delegate(const BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey, char** attributes, const int num_attributes, BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey_new)
 {
-    PublicKey_ABE* publickey = secretkey->pubkey;
+    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = secretkey->pubkey;
 
     AffinePoint Fr;
     AffinePoint Gr;
 
     mpz_t r;
     mpz_init(r);
-    ABE_randomNumber(r, publickey);
+    BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(r, publickey);
 
     CryptidStatus status = affine_wNAFMultiply(&Fr, publickey->f, r, publickey->ellipticCurve);
     if(status)
@@ -464,7 +408,7 @@ CryptidStatus cryptid_delegate_ABE(const SecretKey_ABE* secretkey, char** attrib
 
         mpz_t rj;
         mpz_init(rj);
-        ABE_randomNumber(rj, publickey);
+        BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(rj, publickey);
 
         // H(j)
         AffinePoint Hj;
@@ -527,9 +471,9 @@ CryptidStatus cryptid_delegate_ABE(const SecretKey_ABE* secretkey, char** attrib
 }
 
 // Subfunction of decrypt, calculating A value (result) of encrypted and accessTree (node)
-CryptidStatus DecryptNode_ABE(const EncryptedMessage_ABE* encrypted, const SecretKey_ABE* secretkey, const AccessTree* node, Complex* result, int* statusCode)
+CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(const BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted, const BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey, const BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* node, Complex* result, int* statusCode)
 {
-    if(isLeaf(node))
+    if(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(node))
     {
         int found = -1;
         for(int i = 0; i < secretkey->num_attributes; i++)
@@ -583,7 +527,7 @@ CryptidStatus DecryptNode_ABE(const EncryptedMessage_ABE* encrypted, const Secre
             {
                 Complex F;
                 int code = 0;
-                CryptidStatus status = DecryptNode_ABE(encrypted, secretkey, node->children[i], &F, &code);
+                CryptidStatus status = BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(encrypted, secretkey, node->children[i], &F, &code);
                 if(status)
                 {
                     return status;
@@ -659,21 +603,21 @@ CryptidStatus DecryptNode_ABE(const EncryptedMessage_ABE* encrypted, const Secre
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_decrypt_ABE(char **result, const EncryptedMessage_ABE* encrypted, const SecretKey_ABE* secretkey)
+CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted, const BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey)
 {
     if (!result)
     {
         return CRYPTID_RESULT_POINTER_NULL_ERROR;
     }
     // Check whether the attributes satisfy the accessTree
-    int satisfy = satisfyValue(encrypted->tree, secretkey->attributes, secretkey->num_attributes);
+    int satisfy = BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(encrypted->tree, secretkey->attributes, secretkey->num_attributes);
     if(satisfy == 0)
     {
         return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR;
     }
     Complex A;
     int code = 0;
-    CryptidStatus status = DecryptNode_ABE(encrypted, secretkey, encrypted->tree, &A, &code);
+    CryptidStatus status = BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(encrypted, secretkey, encrypted->tree, &A, &code);
     if(status)
     {
         return status;
@@ -699,7 +643,7 @@ CryptidStatus cryptid_decrypt_ABE(char **result, const EncryptedMessage_ABE* enc
 
     complex_destroy(eCD);
 
-    Ctilde_set* lastSet = encrypted->Ctilde_set;
+    BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* lastSet = encrypted->Ctilde_set;
     char* fullString = malloc(1);
     fullString[0] = '\0';
     // Iterating over sets of encrypted (splitted) messages

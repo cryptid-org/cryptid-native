@@ -1,4 +1,4 @@
-#include "attribute-based/bsw/ciphertext-policy/ABE_Utils.h"
+#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryptionUtils.h"
 #include <stdlib.h>
 
 int Lagrange_coefficient(const int xi, const int* S, const int sLength, const int x)
@@ -29,7 +29,7 @@ char* concat(const char *s1, const char *s2)
 }
 
 // Used for generating random numbers in the elliptic curve's fieldOrder of the publickey 
-void ABE_randomNumber(mpz_t randElement, const PublicKey_ABE* publickey)
+void BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(mpz_t randElement, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey)
 {
     mpz_t pMinusOne;
     mpz_init(pMinusOne);
@@ -41,7 +41,7 @@ void ABE_randomNumber(mpz_t randElement, const PublicKey_ABE* publickey)
 }
 
 // Returning whether an array of attributes contains a specific attribute
-int hasAttribute(char** attributes, const int num_attributes, const char* val) {
+int BSWCiphertextPolicyAttributeBasedEncryptionHasAttribute(char** attributes, const int num_attributes, const char* val) {
     if(val != NULL)
     {
         for(int i = 0; i < num_attributes; i++)

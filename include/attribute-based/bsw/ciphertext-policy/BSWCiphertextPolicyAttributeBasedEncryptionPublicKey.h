@@ -8,7 +8,7 @@
 #include "util/HashFunction.h"
 #include "elliptic/TatePairing.h"
 
-typedef struct PublicKey_ABE
+typedef struct BSWCiphertextPolicyAttributeBasedEncryptionPublicKey
 {
 	EllipticCurve ellipticCurve; // G0
 	AffinePoint g; // generator of cyclic group
@@ -17,8 +17,8 @@ typedef struct PublicKey_ABE
 	Complex eggalpha; // e(g, g)^alpha
 	HashFunction hashFunction;
 	mpz_t q;
-} PublicKey_ABE;
+} BSWCiphertextPolicyAttributeBasedEncryptionPublicKey;
 
-void destroyPublicKey_ABE(PublicKey_ABE* publickey);
+void BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey);
 
 #endif

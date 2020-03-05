@@ -6,35 +6,35 @@
 
 #include "greatest.h"
 
-#include "attribute-based/bsw/ciphertext-policy/ABE.h"
+#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryption.h"
 
-TEST basic_abe_test(SecurityLevel securityLevel, char* message, AccessTree* accessTree, char** attributes, int num_attributes, int expectedReponse)
+TEST basic_abe_test(SecurityLevel securityLevel, char* message, BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, char** attributes, int num_attributes, int expectedReponse)
 {
-    PublicKey_ABE* publickey = malloc(sizeof (PublicKey_ABE));
-    MasterKey_ABE* masterkey = malloc(sizeof (MasterKey_ABE));
-    CryptidStatus status = cryptid_setup_ABE(securityLevel, publickey, masterkey);
+    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionPublicKey));
+    BSWCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionMasterKey));
+    CryptidStatus status = cryptid_abe_bsw_setup(securityLevel, publickey, masterkey);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
 
-    EncryptedMessage_ABE* encrypted = malloc(sizeof (EncryptedMessage_ABE));
-    status = cryptid_encrypt_ABE(encrypted, message, strlen(message), publickey, accessTree);
+    BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage));
+    status = cryptid_abe_bsw_encrypt(encrypted, message, strlen(message), publickey, accessTree);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    SecretKey_ABE* secretkey = malloc(sizeof (SecretKey_ABE));
+    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionSecretKey));
 
-    status = cryptid_keygen_ABE(masterkey, attributes, num_attributes, secretkey);
+    status = cryptid_abe_bsw_keygen(masterkey, attributes, num_attributes, secretkey);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    SecretKey_ABE* secretkey_new = malloc(sizeof (SecretKey_ABE));
+    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey_new = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionSecretKey));
 
-    status = cryptid_delegate_ABE(secretkey, attributes, num_attributes, secretkey_new);
+    status = cryptid_abe_bsw_delegate(secretkey, attributes, num_attributes, secretkey_new);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     char* result_new;
-    CryptidStatus status_new = cryptid_decrypt_ABE(&result_new, encrypted, secretkey_new);
+    CryptidStatus status_new = cryptid_abe_bsw_decrypt(&result_new, encrypted, secretkey_new);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
     char* result;
-    status = cryptid_decrypt_ABE(&result, encrypted, secretkey);
+    status = cryptid_abe_bsw_decrypt(&result, encrypted, secretkey);
 
     if(expectedReponse == 1)
     {
@@ -52,11 +52,11 @@ TEST basic_abe_test(SecurityLevel securityLevel, char* message, AccessTree* acce
         ASSERT_EQ(status, CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR);
     }
 
-    destroyPublicKey_ABE(publickey);
-    destroyMasterKey_ABE(masterkey);
-    destroyEncryptedMessage_ABE(encrypted);
-    destroySecretKey_ABE(secretkey);
-    destroySecretKey_ABE(secretkey_new);
+    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(publickey);
+    BSWCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(masterkey);
+    BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(encrypted);
+    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
+    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey_new);
 
     PASS();
 }
@@ -88,7 +88,7 @@ SUITE(cryptid_abe_suite)
         int numChilds = 5;
         int num_attributes = 5;
         char** attributes = malloc(num_attributes*(20+1));
-        AccessTree* accessTree = createTree((i%2)*(numChilds-1)+1, NULL, 0, numChilds);
+        BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree = BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_init((i%2)*(numChilds-1)+1, NULL, 0, numChilds);
         char* randomStr = malloc(20 + 1);
         char* randomStr2 = malloc(20 + 1);
         int expectedReponse = 1;
@@ -107,7 +107,7 @@ SUITE(cryptid_abe_suite)
             {
                 strcpy(randomStr2, randomStr);
             }
-            AccessTree* child = createTree(1, randomStr2, strlen(randomStr2), 0);
+            BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* child = BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_init(1, randomStr2, strlen(randomStr2), 0);
             accessTree->children[a] = child;
             attributes[a] = randomStr;
         }
@@ -115,7 +115,7 @@ SUITE(cryptid_abe_suite)
         RUN_TESTp(basic_abe_test, LOWEST, message, accessTree, attributes, num_attributes, expectedReponse);
 
         free(message);
-        destroyTree(accessTree);
+        BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(accessTree);
         free(attributes);
 
         free(randomStr);
