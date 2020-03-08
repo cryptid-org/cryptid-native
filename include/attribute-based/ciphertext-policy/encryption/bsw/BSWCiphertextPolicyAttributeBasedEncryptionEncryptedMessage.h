@@ -11,7 +11,7 @@ typedef struct BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet
 {
 	Complex cTilde;
 	struct BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* cTildeSet;
-	int last;
+	CtildeSetState last;
 } BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet;
 
 typedef struct BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage
