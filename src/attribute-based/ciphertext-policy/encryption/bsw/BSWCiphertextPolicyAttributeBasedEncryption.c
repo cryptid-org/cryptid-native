@@ -107,14 +107,14 @@ CryptidStatus cryptid_abe_bsw_setup(const SecurityLevel securityLevel, BSWCipher
         return status;
     }
 
-    mpz_t beta_inverse;
-    mpz_init(beta_inverse);
-    mpz_invert(beta_inverse, beta, q);
+    mpz_t betaInverse;
+    mpz_init(betaInverse);
+    mpz_invert(betaInverse, beta, q);
 
-    status = affine_wNAFMultiply(&publickey->f, publickey->g, beta_inverse, publickey->ellipticCurve);
+    status = affine_wNAFMultiply(&publickey->f, publickey->g, betaInverse, publickey->ellipticCurve);
     if(status)
     {
-        mpz_clears(p, q, r, pMinusOne, alpha, beta, beta_inverse, NULL);
+        mpz_clears(p, q, r, pMinusOne, alpha, beta, betaInverse, NULL);
         return status;
     }
 
@@ -124,7 +124,7 @@ CryptidStatus cryptid_abe_bsw_setup(const SecurityLevel securityLevel, BSWCipher
     status = affine_wNAFMultiply(&masterkey->g_alpha, publickey->g, alpha, publickey->ellipticCurve);
     if(status)
     {
-        mpz_clears(p, q, r, pMinusOne, alpha, beta, beta_inverse, NULL);
+        mpz_clears(p, q, r, pMinusOne, alpha, beta, betaInverse, NULL);
         return status;
     }
 
@@ -149,7 +149,7 @@ CryptidStatus cryptid_abe_bsw_setup(const SecurityLevel securityLevel, BSWCipher
     masterkey->publickey = publickey;
 
     mpz_clears(zero, one, NULL);
-    mpz_clears(p, q, r, pMinusOne, alpha, beta, beta_inverse, NULL);
+    mpz_clears(p, q, r, pMinusOne, alpha, beta, betaInverse, NULL);
 
     return CRYPTID_SUCCESS;
 }
@@ -197,7 +197,7 @@ CryptidStatus cryptid_abe_bsw_encrypt(BSWCiphertextPolicyAttributeBasedEncryptio
     char* msg = malloc(sizeof(char) * messageLength);
     strncpy(msg, message, messageLength);
     BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* prevSet = (BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet*) malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet));
-    encrypted->Ctilde_set = prevSet;
+    encrypted->cTildeSet = prevSet;
     prevSet->last = ABE_CTILDE_SET_NOT_COMPUTED;
 
     // Splitting message to parts if M >= ellipticCurve.fieldOrder
@@ -216,27 +216,27 @@ CryptidStatus cryptid_abe_bsw_encrypt(BSWCiphertextPolicyAttributeBasedEncryptio
             mpz_import (M, n+1, 1, 1, 0, 0, msgPart);
             free(msgPart);
         }
-        Complex Ctilde;
-        complex_modMulScalar(&Ctilde, eggalphas, M, publickey->ellipticCurve.fieldOrder);
-        prevSet->Ctilde = Ctilde;
+        Complex cTilde;
+        complex_modMulScalar(&cTilde, eggalphas, M, publickey->ellipticCurve.fieldOrder);
+        prevSet->cTilde = cTilde;
         startFrom += n;
         n = messageLength-startFrom;
-        prevSet->Ctilde_set = (BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet*) malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet));
-        prevSet = prevSet->Ctilde_set;
+        prevSet->cTildeSet = (BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet*) malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet));
+        prevSet = prevSet->cTildeSet;
         prevSet->last = ABE_CTILDE_SET_NOT_COMPUTED;
         strncpy(msg, message + startFrom, n);
     }
     free(msg);
     complex_destroy(eggalphas);
-    prevSet->Ctilde_set = NULL;
+    prevSet->cTildeSet = NULL;
     prevSet->last = ABE_CTILDE_SET_LAST;
 
-    CryptidStatus status = affine_wNAFMultiply(&encrypted->C, publickey->h, s, publickey->ellipticCurve);
+    CryptidStatus status = affine_wNAFMultiply(&encrypted->c, publickey->h, s, publickey->ellipticCurve);
     if(status)
     {
         mpz_clear(M);
         mpz_clears(pMinusOne, s, NULL);
-        affine_destroy(encrypted->C);
+        affine_destroy(encrypted->c);
         return status;
     }
 
@@ -247,54 +247,54 @@ CryptidStatus cryptid_abe_bsw_encrypt(BSWCiphertextPolicyAttributeBasedEncryptio
 }
 
 // Generates a secretkey with the specified attributes using masterkey
-CryptidStatus cryptid_abe_bsw_keygen(const BSWCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey, char** attributes, const int num_attributes, BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey)
+CryptidStatus cryptid_abe_bsw_keygen(const BSWCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey, char** attributes, const int numAttributes, BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey)
 {
     BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = masterkey->publickey;
 
-    AffinePoint Gr;
+    AffinePoint gR;
 
     mpz_t r;
     mpz_init(r);
     BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(r, publickey);
 
-    CryptidStatus status = affine_wNAFMultiply(&Gr, publickey->g, r, publickey->ellipticCurve);
+    CryptidStatus status = affine_wNAFMultiply(&gR, publickey->g, r, publickey->ellipticCurve);
     if(status)
     {
         return status;
     }
 
     // Equivalent to g^(a+r)
-    AffinePoint Gar;
-    affine_add(&Gar, masterkey->g_alpha, Gr, publickey->ellipticCurve);
+    AffinePoint gar;
+    affine_add(&gar, masterkey->g_alpha, gR, publickey->ellipticCurve);
 
-    AffinePoint GarBi;
+    AffinePoint garBi;
 
-    mpz_t beta_inverse;
-    mpz_init(beta_inverse);
-    mpz_invert(beta_inverse, masterkey->beta, publickey->q);
+    mpz_t betaInverse;
+    mpz_init(betaInverse);
+    mpz_invert(betaInverse, masterkey->beta, publickey->q);
 
     // Equivalent to g^((a+r)/beta)
-    status = affine_wNAFMultiply(&GarBi, Gar, beta_inverse, publickey->ellipticCurve);
+    status = affine_wNAFMultiply(&garBi, gar, betaInverse, publickey->ellipticCurve);
     if(status)
     {
-        affine_destroy(GarBi);
+        affine_destroy(garBi);
         mpz_clear(r);
-        mpz_clear(beta_inverse);
+        mpz_clear(betaInverse);
 
-        affine_destroy(Gr);
-        affine_destroy(Gar);
+        affine_destroy(gR);
+        affine_destroy(gar);
         return status;
     }
 
-    secretkey->num_attributes = num_attributes;
+    secretkey->numAttributes = numAttributes;
 
-    secretkey->D = GarBi;
+    secretkey->d = garBi;
 
-    secretkey->attributes = malloc(sizeof(char*) * num_attributes);
-    secretkey->Dj = malloc(sizeof(AffinePoint) * num_attributes);
-    secretkey->DjA = malloc(sizeof(AffinePoint) * num_attributes);
+    secretkey->attributes = malloc(sizeof(char*) * numAttributes);
+    secretkey->dJ = malloc(sizeof(AffinePoint) * numAttributes);
+    secretkey->dJa = malloc(sizeof(AffinePoint) * numAttributes);
 
-    for(int i = 0; i < num_attributes; i++)
+    for(int i = 0; i < numAttributes; i++)
     {
         int attributeLength = strlen(attributes[i]);
 
@@ -323,18 +323,18 @@ CryptidStatus cryptid_abe_bsw_keygen(const BSWCiphertextPolicyAttributeBasedEncr
         }
 
         // (H(j)^rj)*(g^r) in CPABE publication
-        AffinePoint Dj;
-        affine_add(&Dj, HjRj, Gr, publickey->ellipticCurve);
-        secretkey->Dj[i] = Dj;
+        AffinePoint dJ;
+        affine_add(&dJ, HjRj, gR, publickey->ellipticCurve);
+        secretkey->dJ[i] = dJ;
 
         // g^(rj) in CPABE publication
-        AffinePoint DjA;
-        status = affine_wNAFMultiply(&DjA, publickey->g, rj, publickey->ellipticCurve);
+        AffinePoint dJa;
+        status = affine_wNAFMultiply(&dJa, publickey->g, rj, publickey->ellipticCurve);
         if(status)
         {
             return status;
         }
-        secretkey->DjA[i] = DjA;
+        secretkey->dJa[i] = dJa;
 
         secretkey->attributes[i] = malloc(strlen(attributes[i]) + 1);
         strcpy(secretkey->attributes[i], attributes[i]);
@@ -348,52 +348,52 @@ CryptidStatus cryptid_abe_bsw_keygen(const BSWCiphertextPolicyAttributeBasedEncr
     }
 
     mpz_clear(r);
-    mpz_clear(beta_inverse);
+    mpz_clear(betaInverse);
 
-    affine_destroy(Gr);
-    affine_destroy(Gar);
+    affine_destroy(gR);
+    affine_destroy(gar);
 
     return CRYPTID_SUCCESS;
 }
 
-// Delegates to another secretkey_new from secretkey with attributes being a subset of attributes(secretkey)
-CryptidStatus cryptid_abe_bsw_delegate(const BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey, char** attributes, const int num_attributes, BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey_new)
+// Delegates to another secretkeyNew from secretkey with attributes being a subset of attributes(secretkey)
+CryptidStatus cryptid_abe_bsw_delegate(const BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey, char** attributes, const int numAttributes, BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkeyNew)
 {
     BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = secretkey->publickey;
 
-    AffinePoint Fr;
-    AffinePoint Gr;
+    AffinePoint fR;
+    AffinePoint gR;
 
     mpz_t r;
     mpz_init(r);
     BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(r, publickey);
 
-    CryptidStatus status = affine_wNAFMultiply(&Fr, publickey->f, r, publickey->ellipticCurve);
+    CryptidStatus status = affine_wNAFMultiply(&fR, publickey->f, r, publickey->ellipticCurve);
     if(status)
     {
         return status;
     }
 
-    status = affine_wNAFMultiply(&Gr, publickey->g, r, publickey->ellipticCurve);
+    status = affine_wNAFMultiply(&gR, publickey->g, r, publickey->ellipticCurve);
     if(status)
     {
         return status;
     }
 
-    secretkey_new->num_attributes = num_attributes;
+    secretkeyNew->numAttributes = numAttributes;
 
-    affine_add(&secretkey_new->D, secretkey->D, Fr, publickey->ellipticCurve);
+    affine_add(&secretkeyNew->d, secretkey->d, fR, publickey->ellipticCurve);
 
-    secretkey_new->attributes = malloc(sizeof(char*) * num_attributes);
-    secretkey_new->Dj = malloc(sizeof(AffinePoint) * num_attributes);
-    secretkey_new->DjA = malloc(sizeof(AffinePoint) * num_attributes);
+    secretkeyNew->attributes = malloc(sizeof(char*) * numAttributes);
+    secretkeyNew->dJ = malloc(sizeof(AffinePoint) * numAttributes);
+    secretkeyNew->dJa = malloc(sizeof(AffinePoint) * numAttributes);
 
-    for(int i = 0; i < num_attributes; i++)
+    for(int i = 0; i < numAttributes; i++)
     {
         int attributeLength = strlen(attributes[i]);
 
         int otherID = -1;
-        for(int o = 0; o < secretkey->num_attributes; o++)
+        for(int o = 0; o < secretkey->numAttributes; o++)
         {
             if(strcmp(secretkey->attributes[o], attributes[i]) == 0)
             {
@@ -430,42 +430,42 @@ CryptidStatus cryptid_abe_bsw_delegate(const BSWCiphertextPolicyAttributeBasedEn
             return status;
         }
 
-        // (H(j)^rj)*Dj in CPABE publication
-        AffinePoint Dj;
-        affine_add(&Dj, HjRj, Gr, publickey->ellipticCurve);
+        // (H(j)^rj)*dJ in CPABE publication
+        AffinePoint dJ;
+        affine_add(&dJ, HjRj, gR, publickey->ellipticCurve);
 
-        AffinePoint DjDk;
-        affine_add(&DjDk, Dj, secretkey->Dj[otherID], publickey->ellipticCurve);
-        secretkey_new->Dj[i] = DjDk;
+        AffinePoint dJDk;
+        affine_add(&dJDk, dJ, secretkey->dJ[otherID], publickey->ellipticCurve);
+        secretkeyNew->dJ[i] = dJDk;
 
-        AffinePoint DjA;
-        status = affine_wNAFMultiply(&DjA, publickey->g, rj, publickey->ellipticCurve);
+        AffinePoint dJa;
+        status = affine_wNAFMultiply(&dJa, publickey->g, rj, publickey->ellipticCurve);
         if(status)
         {
             return status;
         }
 
-        AffinePoint DjADjK;
-        affine_add(&DjADjK, DjA, secretkey->DjA[otherID], publickey->ellipticCurve);
-        secretkey_new->DjA[i] = DjADjK;
+        AffinePoint dJadJK;
+        affine_add(&dJadJK, dJa, secretkey->dJa[otherID], publickey->ellipticCurve);
+        secretkeyNew->dJa[i] = dJadJK;
 
-        secretkey_new->attributes[i] = malloc(strlen(attributes[i]) + 1);
-        strcpy(secretkey_new->attributes[i], attributes[i]);
+        secretkeyNew->attributes[i] = malloc(strlen(attributes[i]) + 1);
+        strcpy(secretkeyNew->attributes[i], attributes[i]);
 
-        secretkey_new->publickey = secretkey->publickey;
+        secretkeyNew->publickey = secretkey->publickey;
 
         affine_destroy(Hj);
         affine_destroy(HjRj);
-        affine_destroy(Dj);
-        affine_destroy(DjA);
+        affine_destroy(dJ);
+        affine_destroy(dJa);
 
         mpz_clear(rj);
     }
 
     mpz_clear(r);
 
-    affine_destroy(Fr);
-    affine_destroy(Gr);
+    affine_destroy(fR);
+    affine_destroy(gR);
 
     return CRYPTID_SUCCESS;
 }
@@ -476,7 +476,7 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(const BSWCi
     if(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(node))
     {
         int found = -1;
-        for(int i = 0; i < secretkey->num_attributes; i++)
+        for(int i = 0; i < secretkey->numAttributes; i++)
         {
             if(strcmp(secretkey->attributes[i], node->attribute) == 0)
             {
@@ -487,41 +487,41 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(const BSWCi
         if(found >= 0)
         {
             Complex pairValue;
-            CryptidStatus status = tate_performPairing(&pairValue, secretkey->Dj[found], node->Cy, 2, secretkey->publickey->q, secretkey->publickey->ellipticCurve);
+            CryptidStatus status = tate_performPairing(&pairValue, secretkey->dJ[found], node->cY, 2, secretkey->publickey->q, secretkey->publickey->ellipticCurve);
             if(status)
             {
                 return status;
             }
 
             Complex pairValueA;
-            status = tate_performPairing(&pairValueA, secretkey->DjA[found], node->CyA, 2, secretkey->publickey->q, secretkey->publickey->ellipticCurve);
+            status = tate_performPairing(&pairValueA, secretkey->dJa[found], node->cYa, 2, secretkey->publickey->q, secretkey->publickey->ellipticCurve);
             if(status)
             {
                 return status;
             }
 
-            Complex pairValueA_inverse;
-            status = complex_multiplicativeInverse(&pairValueA_inverse, pairValueA, secretkey->publickey->ellipticCurve.fieldOrder);
+            Complex pairValueAinverse;
+            status = complex_multiplicativeInverse(&pairValueAinverse, pairValueA, secretkey->publickey->ellipticCurve.fieldOrder);
             if(status)
             {
                 return status;
             }
 
-            complex_modMul(result, pairValue, pairValueA_inverse, secretkey->publickey->ellipticCurve.fieldOrder);
+            complex_modMul(result, pairValue, pairValueAinverse, secretkey->publickey->ellipticCurve.fieldOrder);
 
             complex_destroy(pairValue);
             complex_destroy(pairValueA);
-            complex_destroy(pairValueA_inverse);
+            complex_destroy(pairValueAinverse);
 
             *statusCode = 1;
         }
     }
     else
     {
-        Complex Sx[node->num_children];
-        int Codes[node->num_children];
+        Complex Sx[node->numChildren];
+        int Codes[node->numChildren];
         int num = 0;
-        for(int i = 0; i < node->num_children; i++)
+        for(int i = 0; i < node->numChildren; i++)
         {
             if(node->children[i] && node->children[i] != NULL)
             {
@@ -553,7 +553,7 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(const BSWCi
         {
             int indexes[num];
             int c = 0;
-            for(int i = 0; i < node->num_children; i++)
+            for(int i = 0; i < node->numChildren; i++)
             {
                 if(Codes[i] == 1)
                 {
@@ -562,8 +562,8 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(const BSWCi
                 }
             }
 
-            Complex Fx;
-            complex_initLong(&Fx, 1, 0);
+            Complex fX;
+            complex_initLong(&fX, 1, 0);
             for(int i = 0; i < num; i++)
             {
                 int result = Lagrange_coefficient(indexes[i], indexes, num, 0);
@@ -587,15 +587,15 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(const BSWCi
                     tmp = res;
                 }
 
-                Complex oldFx = Fx;
-                // Fx = Fx * (Sx[indexes[c]] ^ result)
-                complex_modMul(&Fx, oldFx, tmp, secretkey->publickey->ellipticCurve.fieldOrder);
+                Complex oldfX = fX;
+                // fX = fX * (Sx[indexes[c]] ^ result)
+                complex_modMul(&fX, oldfX, tmp, secretkey->publickey->ellipticCurve.fieldOrder);
 
-                complex_destroy(oldFx);
+                complex_destroy(oldfX);
                 complex_destroy(tmp);
                 mpz_clear(resultMpz);
             }
-            *result = Fx;
+            *result = fX;
             *statusCode = 1;
         }
     }
@@ -610,7 +610,7 @@ CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAt
         return CRYPTID_RESULT_POINTER_NULL_ERROR;
     }
     // Check whether the attributes satisfy the accessTree
-    int satisfy = BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(encrypted->tree, secretkey->attributes, secretkey->num_attributes);
+    int satisfy = BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(encrypted->tree, secretkey->attributes, secretkey->numAttributes);
     if(satisfy == 0)
     {
         return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR;
@@ -628,14 +628,14 @@ CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAt
     }
 
     Complex eCD;
-    status = tate_performPairing(&eCD, encrypted->C, secretkey->D, 2, secretkey->publickey->q, secretkey->publickey->ellipticCurve);
+    status = tate_performPairing(&eCD, encrypted->c, secretkey->d, 2, secretkey->publickey->q, secretkey->publickey->ellipticCurve);
     if(status)
     {
         return status;
     }
 
-    Complex eCD_inverse;
-    status = complex_multiplicativeInverse(&eCD_inverse, eCD, secretkey->publickey->ellipticCurve.fieldOrder);
+    Complex eCDinverse;
+    status = complex_multiplicativeInverse(&eCDinverse, eCD, secretkey->publickey->ellipticCurve.fieldOrder);
     if(status)
     {
         return status;
@@ -643,18 +643,18 @@ CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAt
 
     complex_destroy(eCD);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* lastSet = encrypted->Ctilde_set;
+    BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* lastSet = encrypted->cTildeSet;
     char* fullString = malloc(1);
     fullString[0] = '\0';
     // Iterating over sets of encrypted (splitted) messages
     while(lastSet->last == ABE_CTILDE_SET_NOT_LAST) {
-        Complex Ctilde_A;
-        complex_modMul(&Ctilde_A, lastSet->Ctilde, A, secretkey->publickey->ellipticCurve.fieldOrder);
+        Complex cTildeA;
+        complex_modMul(&cTildeA, lastSet->cTilde, A, secretkey->publickey->ellipticCurve.fieldOrder);
 
-        // Finally equivalent to Ctilde/(e(C, D)/A) = M
+        // Finally equivalent to cTilde/(e(C, D)/A) = M
         Complex decrypted;
-        complex_modMul(&decrypted, Ctilde_A, eCD_inverse, secretkey->publickey->ellipticCurve.fieldOrder);
-        complex_destroy(Ctilde_A);
+        complex_modMul(&decrypted, cTildeA, eCDinverse, secretkey->publickey->ellipticCurve.fieldOrder);
+        complex_destroy(cTildeA);
 
         size_t resultLength;
         char *tmpResult = mpz_export(NULL, &resultLength, 1, 1, 0, 0, decrypted.real);
@@ -670,11 +670,11 @@ CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAt
 
         complex_destroy(decrypted);
 
-        lastSet = lastSet->Ctilde_set;
+        lastSet = lastSet->cTildeSet;
     }
 
     complex_destroy(A);
-    complex_destroy(eCD_inverse);
+    complex_destroy(eCDinverse);
 
     *result = fullString;
 

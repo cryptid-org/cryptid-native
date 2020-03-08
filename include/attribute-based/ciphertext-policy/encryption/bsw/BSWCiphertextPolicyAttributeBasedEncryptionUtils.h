@@ -12,12 +12,12 @@
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPublicKey.h"
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionMasterKey.h"
 
-int Lagrange_coefficient(const int xi, const int* S, const int sLength, const int x);
+int Lagrange_coefficient(const int xi, const int* s, const int sLength, const int x);
 
 char* concat(const char *s1, const char *s2);
 
 void BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(mpz_t randElement, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey);
 
-int BSWCiphertextPolicyAttributeBasedEncryptionHasAttribute(char** attributes, const int num_attributes, const char* val);
+int BSWCiphertextPolicyAttributeBasedEncryptionHasAttribute(char** attributes, const int numAttributes, const char* val);
 
 #endif

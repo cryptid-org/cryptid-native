@@ -22,10 +22,10 @@ CryptidStatus cryptid_abe_bsw_encrypt(BSWCiphertextPolicyAttributeBasedEncryptio
                                       const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey, BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree);
 
 CryptidStatus cryptid_abe_bsw_keygen(const BSWCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey,
-									 char** attributes, const int num_attributes, BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey);
+									 char** attributes, const int numAttributes, BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey);
 
 CryptidStatus cryptid_abe_bsw_delegate(const BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey,
-									   char** attributes, const int num_attributes, BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey_new);
+									   char** attributes, const int numAttributes, BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkeyNew);
 
 CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted,
 									  const BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey);

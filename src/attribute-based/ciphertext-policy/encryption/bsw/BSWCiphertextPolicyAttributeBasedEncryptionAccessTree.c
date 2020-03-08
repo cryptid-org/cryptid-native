@@ -4,16 +4,16 @@
 // Value is threshold
 //	value = 1 meaning an OR gate
 //	value = [number of childrens] meaning an AND gate
-BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_init(const int value, char* attribute, const size_t attributeLength, const int num_children)
+BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_init(const int value, char* attribute, const size_t attributeLength, const int numChildren)
 {
 	BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* tree = malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree));
     tree->value = value;
     tree->computed = 0;
-    if(num_children > 0)
+    if(numChildren > 0)
     {
-        tree->children = malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree*) * num_children);
+        tree->children = malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree*) * numChildren);
     }
-    tree->num_children = num_children;
+    tree->numChildren = numChildren;
 
     tree->attribute = attribute;
     tree->attributeLength = attributeLength;
@@ -24,22 +24,22 @@ BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* BSWCiphertextPolicyAttrib
 // Returning whether a node of a tree is leaf
 int BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(const BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree)
 {
-	return (accessTree->num_children == 0) ? 1 : 0;
+	return (accessTree->numChildren == 0) ? 1 : 0;
 }
 
 // Returning 1 if attributes satisfy the accessTree, else 0
-int BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(const BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, char** attributes, const int num_attributes)
+int BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(const BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, char** attributes, const int numAttributes)
 {
 	if(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(accessTree))
     {
-		return BSWCiphertextPolicyAttributeBasedEncryptionHasAttribute(attributes, num_attributes, accessTree->attribute);
+		return BSWCiphertextPolicyAttributeBasedEncryptionHasAttribute(attributes, numAttributes, accessTree->attribute);
 	}
     
 	int i;
 	int counter = 0;
-	for(i = 0; i < accessTree->num_children; i++)
+	for(i = 0; i < accessTree->numChildren; i++)
     {
-		if(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(accessTree->children[i], attributes, num_attributes))
+		if(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(accessTree->children[i], attributes, numAttributes))
         {
 			counter++;
 			if(counter >= accessTree->value)
@@ -51,7 +51,7 @@ int BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(const BSW
 	return 0;
 }
 
-// Calculates Cy and Cy' (CyA) values for accessTree and its children recursively (y ∈ leaf nodes)
+// Calculates cY and cY' (cYa) values for accessTree and its children recursively (y ∈ leaf nodes)
 CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, const mpz_t s, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey)
 {
     if(!BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(accessTree))
@@ -60,7 +60,7 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(BSWCi
         BSWCiphertextPolicyAttributeBasedEncryptionPolynom* q = BSWCiphertextPolicyAttributeBasedEncryptionPolynom_init(d, s, publickey);
 
         int i;
-        for(i = 0; i < accessTree->num_children; i++)
+        for(i = 0; i < accessTree->numChildren; i++)
         {
             mpz_t sum;
             mpz_init(sum);
@@ -73,11 +73,11 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(BSWCi
     }
     else
     {
-        AffinePoint Cy;
-        CryptidStatus status = affine_wNAFMultiply(&Cy, publickey->g, s, publickey->ellipticCurve);
+        AffinePoint cY;
+        CryptidStatus status = affine_wNAFMultiply(&cY, publickey->g, s, publickey->ellipticCurve);
         if(status)
         {
-            affine_destroy(Cy);
+            affine_destroy(cY);
             return status;
         }
 
@@ -91,8 +91,8 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(BSWCi
             return status;
         }
 
-        AffinePoint CyA;
-        status = affine_wNAFMultiply(&CyA, hashedPoint, s, publickey->ellipticCurve);
+        AffinePoint cYa;
+        status = affine_wNAFMultiply(&cYa, hashedPoint, s, publickey->ellipticCurve);
         if(status)
         {
             return status;
@@ -100,8 +100,8 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(BSWCi
 
         affine_destroy(hashedPoint);
 
-        accessTree->Cy = Cy;
-        accessTree->CyA = CyA;
+        accessTree->cY = cY;
+        accessTree->cYa = cYa;
         accessTree->computed = 1;
     }
 
@@ -111,16 +111,16 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(BSWCi
 // Used for deleting the tree and its children from memory
 void BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* tree)
 {
-	for(int i = 0; i < tree->num_children; i++)
+	for(int i = 0; i < tree->numChildren; i++)
     {
         BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(tree->children[i]);
     }
     if(tree->computed)
     {
-    	affine_destroy(tree->Cy);
-    	affine_destroy(tree->CyA);
+    	affine_destroy(tree->cY);
+    	affine_destroy(tree->cYa);
     }
-    if(tree->num_children > 0)
+    if(tree->numChildren > 0)
     {
         free(tree->children);
     }

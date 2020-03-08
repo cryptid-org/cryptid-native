@@ -7,11 +7,11 @@
 
 typedef struct BSWCiphertextPolicyAttributeBasedEncryptionSecretKey
 {
-	AffinePoint D;
-	AffinePoint* Dj;
-	AffinePoint* DjA;
+	AffinePoint d;
+	AffinePoint* dJ;
+	AffinePoint* dJa;
 	char **attributes;
-	int num_attributes;
+	int numAttributes;
 	BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey;
 } BSWCiphertextPolicyAttributeBasedEncryptionSecretKey;
 

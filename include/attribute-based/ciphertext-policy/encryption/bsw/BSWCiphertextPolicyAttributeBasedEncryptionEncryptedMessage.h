@@ -9,16 +9,16 @@
 
 typedef struct BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet
 {
-	Complex Ctilde;
-	struct BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* Ctilde_set;
+	Complex cTilde;
+	struct BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* cTildeSet;
 	int last;
 } BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet;
 
 typedef struct BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage
 {
 	BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* tree;
-	BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* Ctilde_set;
-	AffinePoint C;
+	BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* cTildeSet;
+	AffinePoint c;
 } BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage;
 
 void BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted);

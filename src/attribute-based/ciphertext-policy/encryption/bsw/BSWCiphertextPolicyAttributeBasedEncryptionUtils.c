@@ -1,17 +1,17 @@
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionUtils.h"
 #include <stdlib.h>
 
-int Lagrange_coefficient(const int xi, const int* S, const int sLength, const int x)
+int Lagrange_coefficient(const int xi, const int* s, const int sLength, const int x)
 {
     double result = 1;
     for(int i = 0; i < sLength; i++)
     {
-        if(&S[i] != NULL)
+        if(&s[i] != NULL)
         {
-            if(S[i] != xi)
+            if(s[i] != xi)
             {
                 double xD = (double) x;
-                double j = (double) S[i];
+                double j = (double) s[i];
                 double xiD = (double) xi;
                 result = result*((xD-j)/(xiD-j));
             }
@@ -41,10 +41,10 @@ void BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(mpz_t randElement, 
 }
 
 // Returning whether an array of attributes contains a specific attribute
-int BSWCiphertextPolicyAttributeBasedEncryptionHasAttribute(char** attributes, const int num_attributes, const char* val) {
+int BSWCiphertextPolicyAttributeBasedEncryptionHasAttribute(char** attributes, const int numAttributes, const char* val) {
     if(val != NULL)
     {
-        for(int i = 0; i < num_attributes; i++)
+        for(int i = 0; i < numAttributes; i++)
         {
             if(attributes[i] && attributes[i][0] != '\0' && strcmp(attributes[i], val) == 0)
             {

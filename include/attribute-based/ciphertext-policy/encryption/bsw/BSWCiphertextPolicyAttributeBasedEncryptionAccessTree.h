@@ -15,17 +15,17 @@ typedef struct BSWCiphertextPolicyAttributeBasedEncryptionAccessTree
     int computed;
     struct BSWCiphertextPolicyAttributeBasedEncryptionAccessTree** children;
     char* attribute;
-    int num_children;
+    int numChildren;
     size_t attributeLength;
-    AffinePoint Cy;
-    AffinePoint CyA;
+    AffinePoint cY;
+    AffinePoint cYa;
 } BSWCiphertextPolicyAttributeBasedEncryptionAccessTree;
 
-BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_init(const int value, char* attribute, const size_t attributeLength, const int num_children);
+BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_init(const int value, char* attribute, const size_t attributeLength, const int numChildren);
 
 int BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(const BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree);
 
-int BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(const BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, char** attributes, const int num_attributes);
+int BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(const BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, char** attributes, const int numAttributes);
 
 CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, const mpz_t s, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey);
 
