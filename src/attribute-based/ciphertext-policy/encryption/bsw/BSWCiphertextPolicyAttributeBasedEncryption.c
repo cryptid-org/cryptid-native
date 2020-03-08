@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryption.h"
+#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryption.h"
 #include "elliptic/TatePairing.h"
 #include "util/RandBytes.h"
 #include "util/Utils.h"
@@ -146,7 +146,7 @@ CryptidStatus cryptid_abe_bsw_setup(const SecurityLevel securityLevel, BSWCipher
     publickey->eggalpha = eggalpha;
     complex_destroy(pairValue);
 
-    masterkey->pubkey = publickey;
+    masterkey->publickey = publickey;
 
     mpz_clears(zero, one, NULL);
     mpz_clears(p, q, r, pMinusOne, alpha, beta, beta_inverse, NULL);
@@ -249,7 +249,7 @@ CryptidStatus cryptid_abe_bsw_encrypt(BSWCiphertextPolicyAttributeBasedEncryptio
 // Generates a secretkey with the specified attributes using masterkey
 CryptidStatus cryptid_abe_bsw_keygen(const BSWCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey, char** attributes, const int num_attributes, BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey)
 {
-    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = masterkey->pubkey;
+    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = masterkey->publickey;
 
     AffinePoint Gr;
 
@@ -339,7 +339,7 @@ CryptidStatus cryptid_abe_bsw_keygen(const BSWCiphertextPolicyAttributeBasedEncr
         secretkey->attributes[i] = malloc(strlen(attributes[i]) + 1);
         strcpy(secretkey->attributes[i], attributes[i]);
 
-        secretkey->pubkey = masterkey->pubkey;
+        secretkey->publickey = masterkey->publickey;
 
         affine_destroy(Hj);
         affine_destroy(HjRj);
@@ -359,7 +359,7 @@ CryptidStatus cryptid_abe_bsw_keygen(const BSWCiphertextPolicyAttributeBasedEncr
 // Delegates to another secretkey_new from secretkey with attributes being a subset of attributes(secretkey)
 CryptidStatus cryptid_abe_bsw_delegate(const BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey, char** attributes, const int num_attributes, BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey_new)
 {
-    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = secretkey->pubkey;
+    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = secretkey->publickey;
 
     AffinePoint Fr;
     AffinePoint Gr;
@@ -452,7 +452,7 @@ CryptidStatus cryptid_abe_bsw_delegate(const BSWCiphertextPolicyAttributeBasedEn
         secretkey_new->attributes[i] = malloc(strlen(attributes[i]) + 1);
         strcpy(secretkey_new->attributes[i], attributes[i]);
 
-        secretkey_new->pubkey = secretkey->pubkey;
+        secretkey_new->publickey = secretkey->publickey;
 
         affine_destroy(Hj);
         affine_destroy(HjRj);
@@ -487,27 +487,27 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(const BSWCi
         if(found >= 0)
         {
             Complex pairValue;
-            CryptidStatus status = tate_performPairing(&pairValue, secretkey->Dj[found], node->Cy, 2, secretkey->pubkey->q, secretkey->pubkey->ellipticCurve);
+            CryptidStatus status = tate_performPairing(&pairValue, secretkey->Dj[found], node->Cy, 2, secretkey->publickey->q, secretkey->publickey->ellipticCurve);
             if(status)
             {
                 return status;
             }
 
             Complex pairValueA;
-            status = tate_performPairing(&pairValueA, secretkey->DjA[found], node->CyA, 2, secretkey->pubkey->q, secretkey->pubkey->ellipticCurve);
+            status = tate_performPairing(&pairValueA, secretkey->DjA[found], node->CyA, 2, secretkey->publickey->q, secretkey->publickey->ellipticCurve);
             if(status)
             {
                 return status;
             }
 
             Complex pairValueA_inverse;
-            status = complex_multiplicativeInverse(&pairValueA_inverse, pairValueA, secretkey->pubkey->ellipticCurve.fieldOrder);
+            status = complex_multiplicativeInverse(&pairValueA_inverse, pairValueA, secretkey->publickey->ellipticCurve.fieldOrder);
             if(status)
             {
                 return status;
             }
 
-            complex_modMul(result, pairValue, pairValueA_inverse, secretkey->pubkey->ellipticCurve.fieldOrder);
+            complex_modMul(result, pairValue, pairValueA_inverse, secretkey->publickey->ellipticCurve.fieldOrder);
 
             complex_destroy(pairValue);
             complex_destroy(pairValueA);
@@ -570,12 +570,12 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(const BSWCi
                 mpz_t resultMpz;
                 mpz_init_set_ui(resultMpz, abs(result));
                 Complex res;
-                complex_modPow(&res, Sx[indexes[i]-1], resultMpz, secretkey->pubkey->ellipticCurve.fieldOrder); // Sx[indexes[c]] ^ result
+                complex_modPow(&res, Sx[indexes[i]-1], resultMpz, secretkey->publickey->ellipticCurve.fieldOrder); // Sx[indexes[c]] ^ result
                 complex_destroy(Sx[indexes[i]-1]);
                 Complex tmp;
                 if(result < 0) {
                     // Workaround for a^(-b) = 1/(a^b)
-                    CryptidStatus status = complex_multiplicativeInverse(&tmp, res, secretkey->pubkey->ellipticCurve.fieldOrder);
+                    CryptidStatus status = complex_multiplicativeInverse(&tmp, res, secretkey->publickey->ellipticCurve.fieldOrder);
                     if(status)
                     {
                         return status;
@@ -589,7 +589,7 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(const BSWCi
 
                 Complex oldFx = Fx;
                 // Fx = Fx * (Sx[indexes[c]] ^ result)
-                complex_modMul(&Fx, oldFx, tmp, secretkey->pubkey->ellipticCurve.fieldOrder);
+                complex_modMul(&Fx, oldFx, tmp, secretkey->publickey->ellipticCurve.fieldOrder);
 
                 complex_destroy(oldFx);
                 complex_destroy(tmp);
@@ -628,14 +628,14 @@ CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAt
     }
 
     Complex eCD;
-    status = tate_performPairing(&eCD, encrypted->C, secretkey->D, 2, secretkey->pubkey->q, secretkey->pubkey->ellipticCurve);
+    status = tate_performPairing(&eCD, encrypted->C, secretkey->D, 2, secretkey->publickey->q, secretkey->publickey->ellipticCurve);
     if(status)
     {
         return status;
     }
 
     Complex eCD_inverse;
-    status = complex_multiplicativeInverse(&eCD_inverse, eCD, secretkey->pubkey->ellipticCurve.fieldOrder);
+    status = complex_multiplicativeInverse(&eCD_inverse, eCD, secretkey->publickey->ellipticCurve.fieldOrder);
     if(status)
     {
         return status;
@@ -649,11 +649,11 @@ CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAt
     // Iterating over sets of encrypted (splitted) messages
     while(lastSet->last == ABE_CTILDE_SET_NOT_LAST) {
         Complex Ctilde_A;
-        complex_modMul(&Ctilde_A, lastSet->Ctilde, A, secretkey->pubkey->ellipticCurve.fieldOrder);
+        complex_modMul(&Ctilde_A, lastSet->Ctilde, A, secretkey->publickey->ellipticCurve.fieldOrder);
 
         // Finally equivalent to Ctilde/(e(C, D)/A) = M
         Complex decrypted;
-        complex_modMul(&decrypted, Ctilde_A, eCD_inverse, secretkey->pubkey->ellipticCurve.fieldOrder);
+        complex_modMul(&decrypted, Ctilde_A, eCD_inverse, secretkey->publickey->ellipticCurve.fieldOrder);
         complex_destroy(Ctilde_A);
 
         size_t resultLength;

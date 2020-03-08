@@ -8,14 +8,14 @@
 #include "util/HashFunction.h"
 #include "elliptic/TatePairing.h"
 
-#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryptionPublicKey.h"
-#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryptionSecretKey.h"
+#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPublicKey.h"
+#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionSecretKey.h"
 
 typedef struct BSWCiphertextPolicyAttributeBasedEncryptionMasterKey
 {
 	mpz_t beta;
 	AffinePoint g_alpha;
-	BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* pubkey;
+	BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey;
 } BSWCiphertextPolicyAttributeBasedEncryptionMasterKey;
 
 void BSWCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(BSWCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey);

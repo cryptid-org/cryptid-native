@@ -1,8 +1,8 @@
 #ifndef __CRYPTID_CRYPTID_SECRETKEY_ABE_H
 #define __CRYPTID_CRYPTID_SECRETKEY_ABE_H
 #include "gmp.h"
-#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryptionDefines.h"
-#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryptionPublicKey.h"
+#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionDefines.h"
+#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPublicKey.h"
 #include "elliptic/AffinePoint.h"
 
 typedef struct BSWCiphertextPolicyAttributeBasedEncryptionSecretKey
@@ -12,7 +12,7 @@ typedef struct BSWCiphertextPolicyAttributeBasedEncryptionSecretKey
 	AffinePoint* DjA;
 	char **attributes;
 	int num_attributes;
-	BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* pubkey;
+	BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey;
 } BSWCiphertextPolicyAttributeBasedEncryptionSecretKey;
 
 void BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey);

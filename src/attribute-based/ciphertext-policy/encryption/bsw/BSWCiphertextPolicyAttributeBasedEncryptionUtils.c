@@ -1,4 +1,4 @@
-#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryptionUtils.h"
+#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionUtils.h"
 #include <stdlib.h>
 
 int Lagrange_coefficient(const int xi, const int* S, const int sLength, const int x)

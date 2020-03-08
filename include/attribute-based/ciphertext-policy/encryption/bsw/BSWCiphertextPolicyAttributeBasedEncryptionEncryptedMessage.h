@@ -4,7 +4,7 @@
 
 #include "gmp.h"
 #include "elliptic/AffinePoint.h"
-#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryptionAccessTree.h"
+#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionAccessTree.h"
 #include "complex/Complex.h"
 
 typedef struct BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet

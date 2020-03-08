@@ -1,4 +1,4 @@
-#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryptionPolynom.h"
+#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPolynom.h"
 
 // Returns a specified degree polinom with polynomSum(polynom, 0, sum) resulting in zeroValue (qx(0) for ABE)
 BSWCiphertextPolicyAttributeBasedEncryptionPolynom* BSWCiphertextPolicyAttributeBasedEncryptionPolynom_init(const int degree, const mpz_t zeroValue, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey)

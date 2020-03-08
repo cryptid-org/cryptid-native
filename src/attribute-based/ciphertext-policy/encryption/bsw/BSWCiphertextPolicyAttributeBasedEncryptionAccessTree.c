@@ -1,4 +1,4 @@
-#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryptionAccessTree.h"
+#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionAccessTree.h"
 
 // Creating an access tree as specified in Bethencourt-Sahai-Waters CP-ABE pdf
 // Value is threshold

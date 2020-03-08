@@ -6,23 +6,23 @@
 #include <string.h>
 #include "gmp.h"
 
-#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryptionUtils.h"
-#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryptionDefines.h"
+#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionUtils.h"
+#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionDefines.h"
 #include "util/Random.h"
 #include "util/Status.h"
-#include "attribute-based/bsw/ciphertext-policy/BSWCiphertextPolicyAttributeBasedEncryptionMasterKey.h"
-
-typedef struct BSWCiphertextPolicyAttributeBasedEncryptionPolynom
-{
-	int degree;
-	struct BSWCiphertextPolicyAttributeBasedEncryptionPolynomExpression** children;
-} BSWCiphertextPolicyAttributeBasedEncryptionPolynom;
+#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionMasterKey.h"
 
 typedef struct BSWCiphertextPolicyAttributeBasedEncryptionPolynomExpression
 {
 	int degree;
 	mpz_t coeff;
 } BSWCiphertextPolicyAttributeBasedEncryptionPolynomExpression;
+
+typedef struct BSWCiphertextPolicyAttributeBasedEncryptionPolynom
+{
+	int degree;
+	BSWCiphertextPolicyAttributeBasedEncryptionPolynomExpression** children;
+} BSWCiphertextPolicyAttributeBasedEncryptionPolynom;
 
 BSWCiphertextPolicyAttributeBasedEncryptionPolynom* BSWCiphertextPolicyAttributeBasedEncryptionPolynom_init(const int degree, const mpz_t zeroValue, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey);
 
