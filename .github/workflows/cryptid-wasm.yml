@@ -28,7 +28,7 @@ jobs:
       run: |
         git clone https://github.com/cryptid-org/warm.git
         cd warm/
-        ./make.sh clang "--sysroot=/home/runner/work/críptid-native/cryptid-native/wasi-libc/sysroot -O2 -flto" llvm-a
+        ./make.sh clang "--sysroot=/home/runner/work/cryptid-native/cryptid-native/wasi-libc/sysroot -O2 -flto" llvm-a
     - name: building cryptid.wasm
       run: |
         git clone https://github.com/cryptid-org/cryptid-native.git
