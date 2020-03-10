@@ -22,13 +22,12 @@ jobs:
       run: |
         git clone https://github.com/WebAssembly/wasi-libc.git
         cd wasi-libc
-        pwd
         make WASM_CC=/usr/bin/clang WASM_AR=/usr/bin/llvm-ar WASM_NM=/usr/bin/llvm-nm
     - name: building warm
       run: |
         git clone https://github.com/cryptid-org/warm.git
         cd warm/
-        ./make.sh clang "--sysroot=/home/runner/work/cryptid-native/cryptid-native/wasi-libc/sysroot -O2 -flto" llvm-a
+        ./make.sh clang "--sysroot=/home/runner/work/cryptid-native/cryptid-native/wasi-libc/sysroot -O2 -flto" llvm-ar
     - name: building cryptid.wasm
       run: |
         git clone https://github.com/cryptid-org/cryptid-native.git
