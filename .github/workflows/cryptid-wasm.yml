@@ -1,0 +1,52 @@
+name: Bulding cryptid.wasm
+
+on: push
+
+jobs:
+  build:
+    name: build wasm
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: install clang
+      run: sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+    - name: creating symlinks
+      run: |
+        sudo ln -svf /usr/bin/clang-9 /usr/bin/clang
+        sudo ln -svf /usr/bin/wasm-ld-9 /usr/bin/wasm-ld
+        sudo ln -svf /usr/bin/llc-9 /usr/bin/llc
+        sudo ln -svf /usr/bin/llvm-nm-9 /usr/bin/llvm-nm
+        sudo ln -svf /usr/bin/llvm-ar-9 /usr/bin/llvm-ar
+    - name: build wasi-libc
+      run: |
+        git clone https://github.com/WebAssembly/wasi-libc.git
+        cd wasi-libc
+        make WASM_CC=/usr/bin/clang WASM_AR=/usr/bin/llvm-ar WASM_NM=/usr/bin/llvm-nm
+    - name: building warm
+      run: |
+        git clone https://github.com/cryptid-org/warm.git
+        cd warm/
+        ./make.sh clang "--sysroot=/home/runner/work/críptid-native/cryptid-native/wasi-libc/sysroot -O2 -flto" llvm-a
+    - name: building cryptid.warm
+      run: |
+        git clone https://github.com/cryptid-org/cryptid-native.git
+        cd cryptid-native/
+        clang \
+          -O2 -flto -Wl,--lto-O2,--no-entry,--export=cryptid_ibe_bonehFranklin_setup,--export=cryptid_ibe_bonehFranklin_extract,--export=cryptid_ibe_bonehFranklin_encrypt,--export=cryptid_ibe_bonehFranklin_decrypt,--strip-all \
+          --target=wasm32-unknown-wasi \
+          --sysroot=/home/runner/work/cryptid-native/cryptid-native/wasi-libc/sysroot \
+          -o cryptid.wasm \
+          -Wl,--initial-memory=131072000 \
+          -I./include \
+          -I./dependencies/sha/include \
+          -I../warm \
+          ../warm/*.o \
+          ../warm/mpn/*.o \
+          ../warm/mpz/*.o \
+          ./src/complex/*.c \
+          ./src/elliptic/*.c \
+          ./src/util/*.c \
+          ./src/identity-based/encryption/boneh-franklin/*.c \
+          ./src/identity-based/signature/hess/*.c \
+          ./dependencies/sha/src/*.c
