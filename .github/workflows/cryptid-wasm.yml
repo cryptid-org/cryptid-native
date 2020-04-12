@@ -32,7 +32,7 @@ jobs:
           cd warm/
           ./make.sh clang "--sysroot=/home/runner/work/cryptid-native/cryptid-native/wasi-libc/sysroot -O2 -flto" llvm-ar
       - name: cloning cryptid.native
-        uses: actions/checkout@2
+        uses: actions/checkout@v2
       - name: building cryptid.wasm
         run: |
           cd cryptid-native/
