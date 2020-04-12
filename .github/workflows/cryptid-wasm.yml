@@ -30,6 +30,7 @@ jobs:
         run: |
           git clone https://github.com/cryptid-org/warm.git
           cd warm/
+          pwd
           ./make.sh clang "--sysroot=/home/runner/work/cryptid-native/cryptid-native/wasi-libc/sysroot -O2 -flto" llvm-ar
       - name: cloning cryptid.native
         uses: actions/checkout@v2
