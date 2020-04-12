@@ -30,7 +30,6 @@ jobs:
         run: |
           git clone https://github.com/cryptid-org/warm.git
           cd warm/
-          pwd
           ./make.sh clang "--sysroot=/home/runner/work/cryptid-native/cryptid-native/wasi-libc/sysroot -O2 -flto" llvm-ar
       - name: cloning cryptid.native
         uses: actions/checkout@v2
@@ -42,10 +41,10 @@ jobs:
             --sysroot=/home/runner/work/cryptid-native/cryptid-native/wasi-libc/sysroot \
             -o cryptid.wasm \
             -Wl,--initial-memory=131072000 \
-            -L../warm -lwarm \
+            -L./warm -lwarm \
             -I./include \
             -I./dependencies/sha/include \
-            -I../warm \
+            -I./warm \
             ./src/complex/*.c \
             ./src/elliptic/*.c \
             ./src/util/*.c \
