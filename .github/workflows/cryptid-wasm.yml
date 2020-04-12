@@ -35,8 +35,8 @@ jobs:
         uses: actions/checkout@v2
       - name: building cryptid.wasm
         run: |
-          cd cryptid-native/
           pwd
+          cd cryptid-native/
           clang \
             -O2 -flto -Wl,--lto-O2,--no-entry,--export=cryptid_ibe_bonehFranklin_setup,--export=cryptid_ibe_bonehFranklin_extract,--export=cryptid_ibe_bonehFranklin_encrypt,--export=cryptid_ibe_bonehFranklin_decrypt,--strip-all \
             --target=wasm32-unknown-wasi \
