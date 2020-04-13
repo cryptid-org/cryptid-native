@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - name: cloning cryptid.native
+        uses: actions/checkout@v2
       - name: install clang
         run: sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
       - name: creating symlinks
@@ -31,8 +33,6 @@ jobs:
           git clone https://github.com/cryptid-org/warm.git
           cd warm/
           ./make.sh clang "--sysroot=/home/runner/work/cryptid-native/cryptid-native/wasi-libc/sysroot -O2 -flto" llvm-ar
-      - name: cloning cryptid.native
-        uses: actions/checkout@v2
       - name: building cryptid.wasm
         run: |
           clang \
