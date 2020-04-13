@@ -25,9 +25,9 @@ jobs:
           git clone https://github.com/WebAssembly/wasi-libc.git
           cd wasi-libc
           make WASM_CC=/usr/bin/clang WASM_AR=/usr/bin/llvm-ar WASM_NM=/usr/bin/llvm-nm
-          wget https://github.com/jedisct1/libclang_rt.builtins-wasm32.a/blob/master/precompiled/libclang_rt.builtins-wasm32.a
           sudo mkdir /usr/lib/llvm-9/lib/clang/9.0.0/lib/wasi/
-          sudo mv libclang_rt.builtins-wasm32.a /usr/lib/llvm-9/lib/clang/9.0.0/lib/wasi/
+          cd ..
+          sudo cp dependencies/wasi-libc/libclang_rt.builtins-wasm32.a /usr/lib/llvm-9/lib/clang/9.0.0/lib/wasi/
       - name: building warm
         run: |
           git clone https://github.com/cryptid-org/warm.git
