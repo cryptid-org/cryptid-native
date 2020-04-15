@@ -674,6 +674,12 @@ CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAt
     int satisfy = BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(encrypted->tree, secretkey->attributes, secretkey->numAttributes);
     if(satisfy == 0)
     {
+        BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(secretkey->publickey);
+
+        BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
+
+        BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(encrypted->tree);
+        BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(encrypted);
         return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR;
     }
     Complex A;
@@ -685,6 +691,12 @@ CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAt
     }
     if(code == 0)
     {
+        BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(secretkey->publickey);
+
+        BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
+
+        BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(encrypted->tree);
+        BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(encrypted);
         return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR;
     }
 

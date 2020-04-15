@@ -31,14 +31,13 @@ TEST basic_abe_test(SecurityLevel securityLevel, char* message, BSWCiphertextPol
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     char* resultNew;
-    CryptidStatus status_new = cryptid_abe_bsw_decrypt(&resultNew, encrypted, secretkeyAsBinaryNew);
-    ASSERT_EQ(status, CRYPTID_SUCCESS);
+    CryptidStatus statusNew = cryptid_abe_bsw_decrypt(&resultNew, encrypted, secretkeyAsBinaryNew);
     char* result;
     status = cryptid_abe_bsw_decrypt(&result, encrypted, secretkeyAsBinary);
 
     if(expectedReponse == 1)
     {
-        ASSERT_EQ(status_new, CRYPTID_SUCCESS);
+        ASSERT_EQ(statusNew, CRYPTID_SUCCESS);
         ASSERT_EQ(status, CRYPTID_SUCCESS);
         ASSERT_EQ(strcmp(result, message), 0);
         ASSERT_EQ(strcmp(resultNew, message), 0);
@@ -48,7 +47,7 @@ TEST basic_abe_test(SecurityLevel securityLevel, char* message, BSWCiphertextPol
     }
     else
     {
-        ASSERT_EQ(status_new, CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR);
+        ASSERT_EQ(statusNew, CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR);
         ASSERT_EQ(status, CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR);
     }
 
@@ -79,7 +78,7 @@ SUITE(cryptid_abe_suite)
 {
     char* defaultAlphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    for(int i = 0; i < 1; i++)
+    for(int i = 0; i < 2; i++)
     {
         int messageLength = rand() % (1000 - 1) + 1;
         char* message = malloc(messageLength + 1);
@@ -109,18 +108,60 @@ SUITE(cryptid_abe_suite)
             }
             BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary* child = BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_init(1, randomStr2, strlen(randomStr2), 0);
             accessTreeAsBinary->children[a] = child;
-            attributes[a] = randomStr;
+            attributes[a] = malloc(strlen(randomStr)+1);
+            strcpy(attributes[a], randomStr);
         }
 
         RUN_TESTp(basic_abe_test, LOWEST, message, accessTreeAsBinary, attributes, numAttributes, expectedReponse);
 
         free(message);
         bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_destroy(accessTreeAsBinary);
+        for(int a = 0; a < numChilds; a++)
+        {
+            free(attributes[a]);
+        }
         free(attributes);
 
         free(randomStr);
         free(randomStr2);
     }
+
+    // targeted test
+
+    char* message = "It works!";
+
+    BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary* accessTreeAsBinary = BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_init(2, NULL, 0, 2); // AND
+    
+    BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary* child0 = BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_init(1, NULL, 0, 2); // OR
+    accessTreeAsBinary->children[0] = child0;
+
+    char* attribute0 = "developer";
+    BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary* child0_0 = BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_init(1, attribute0, strlen(attribute0), 0);
+    child0->children[0] = child0_0;
+
+    char* attribute1 = "reviewer";
+    BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary* child0_1 = BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_init(1, attribute1, strlen(attribute1), 0);
+    child0->children[1] = child0_1;
+
+    char* attribute2 = "CryptID";
+    BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary* child1 = BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_init(1, attribute2, strlen(attribute2), 0);
+    accessTreeAsBinary->children[1] = child1;
+
+    int numAttributes = 2;
+    char** attributesGood = malloc(sizeof(char*) * numAttributes);
+    attributesGood[0] = attribute0;
+    attributesGood[1] = attribute2;
+
+    char** attributesBad = malloc(sizeof(char*) * numAttributes);
+    attributesBad[0] = "guest";
+    attributesBad[1] = attribute2;
+
+    RUN_TESTp(basic_abe_test, LOWEST, message, accessTreeAsBinary, attributesGood, numAttributes, 1);
+    RUN_TESTp(basic_abe_test, LOWEST, message, accessTreeAsBinary, attributesBad, numAttributes, 0);
+
+    free(attributesGood);
+    free(attributesBad);
+    bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_destroy(accessTreeAsBinary);
 }
 
 GREATEST_MAIN_DEFS();
