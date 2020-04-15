@@ -124,5 +124,9 @@ void BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(BSWCiphertext
     {
         free(tree->children);
     }
+    else
+    {
+        free(tree->attribute);
+    }
     free(tree);
 }

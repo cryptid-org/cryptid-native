@@ -11,30 +11,30 @@
 TEST basic_abe_test(SecurityLevel securityLevel, char* message, BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary* accessTreeAsBinary, char** attributes, int num_attributes, int expectedReponse)
 {
     BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary* publickey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary));
-    BSWCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionMasterKey));
+    BSWCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary* masterkey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary));
+
     CryptidStatus status = cryptid_abe_bsw_setup(securityLevel, publickey, masterkey);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-
-    BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage));
+    BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary* encrypted = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary));
     status = cryptid_abe_bsw_encrypt(encrypted, message, strlen(message), publickey, accessTreeAsBinary);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionSecretKey));
+    BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary));
 
-    status = cryptid_abe_bsw_keygen(masterkey, attributes, num_attributes, secretkey);
+    status = cryptid_abe_bsw_keygen(masterkey, attributes, num_attributes, secretkeyAsBinary);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey_new = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionSecretKey));
+    BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary_new = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary));
 
-    status = cryptid_abe_bsw_delegate(secretkey, attributes, num_attributes, secretkey_new);
+    status = cryptid_abe_bsw_delegate(secretkeyAsBinary, attributes, num_attributes, secretkeyAsBinary_new);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     char* result_new;
-    CryptidStatus status_new = cryptid_abe_bsw_decrypt(&result_new, encrypted, secretkey_new);
+    CryptidStatus status_new = cryptid_abe_bsw_decrypt(&result_new, encrypted, secretkeyAsBinary_new);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
     char* result;
-    status = cryptid_abe_bsw_decrypt(&result, encrypted, secretkey);
+    status = cryptid_abe_bsw_decrypt(&result, encrypted, secretkeyAsBinary);
 
     if(expectedReponse == 1)
     {
@@ -53,10 +53,10 @@ TEST basic_abe_test(SecurityLevel securityLevel, char* message, BSWCiphertextPol
     }
 
     BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_destroy(publickey);
-    BSWCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(masterkey);
-    BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(encrypted);
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey_new);
+    BSWCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary_destroy(masterkey);
+    BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary_destroy(encrypted);
+    BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_destroy(secretkeyAsBinary);
+    BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_destroy(secretkeyAsBinary_new);
 
     PASS();
 }
@@ -79,7 +79,7 @@ SUITE(cryptid_abe_suite)
 {
     char* defaultAlphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    for(int i = 0; i < 6; i++)
+    for(int i = 0; i < 1; i++)
     {
         int messageLength = rand() % (1000 - 1) + 1;
         char* message = malloc(messageLength + 1);

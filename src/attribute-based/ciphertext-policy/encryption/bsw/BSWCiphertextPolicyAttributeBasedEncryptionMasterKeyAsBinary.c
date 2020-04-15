@@ -4,6 +4,7 @@ void BSWCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary_destroy(BSWCip
 {
 	free(masterkey->beta);
 	affineAsBinary_destroy(masterkey->g_alpha);
+	BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_destroy(masterkey->publickey);
 	free(masterkey);
 }
 

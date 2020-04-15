@@ -156,7 +156,8 @@ CryptidStatus cryptid_abe_bsw_setup(const SecurityLevel securityLevel, BSWCipher
 
     bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionPublicKey(publickeyAsBinary, publickey);
     bswChiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionMasterKey(masterkeyAsBinary, masterkey);
-    //BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(publickey);
+    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(publickey);
+    BSWCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(masterkey);
 
     return CRYPTID_SUCCESS;
 }
@@ -258,9 +259,10 @@ CryptidStatus cryptid_abe_bsw_encrypt(BSWCiphertextPolicyAttributeBasedEncryptio
     mpz_clear(M);
     mpz_clears(pMinusOne, s, NULL);
     
-    //BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(publickey);
+    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(publickey);
     bswChiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionEncryptedMessage(encryptedAsBinary, encrypted);
 
+    BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(encrypted->tree);
     BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(encrypted);
 
     return CRYPTID_SUCCESS;
@@ -308,6 +310,9 @@ CryptidStatus cryptid_abe_bsw_keygen(const BSWCiphertextPolicyAttributeBasedEncr
 
         affine_destroy(gR);
         affine_destroy(gar);
+        BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(masterkey->publickey);
+        BSWCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(masterkey);
+        BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
         return status;
     }
 
@@ -378,9 +383,11 @@ CryptidStatus cryptid_abe_bsw_keygen(const BSWCiphertextPolicyAttributeBasedEncr
     affine_destroy(gR);
     affine_destroy(gar);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(masterkey);
-
     bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionSecretKey(secretkeyAsBinary, secretkey);
+
+    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(masterkey->publickey);
+
+    BSWCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(masterkey);
 
     BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
 
@@ -503,9 +510,11 @@ CryptidStatus cryptid_abe_bsw_delegate(const BSWCiphertextPolicyAttributeBasedEn
     affine_destroy(fR);
     affine_destroy(gR);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
-
     bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionSecretKey(secretkeyAsBinaryNew, secretkeyNew);
+
+    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(secretkey->publickey);
+
+    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
 
     BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkeyNew);
 
@@ -724,8 +733,11 @@ CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAt
 
     *result = fullString;
 
+    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(secretkey->publickey);
+
     BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
 
+    BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(encrypted->tree);
     BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(encrypted);
 
     return CRYPTID_SUCCESS;

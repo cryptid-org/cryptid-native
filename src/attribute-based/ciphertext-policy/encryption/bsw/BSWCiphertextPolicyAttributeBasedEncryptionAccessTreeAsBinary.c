@@ -38,8 +38,17 @@ void bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_destroy(BSWC
 	{
 		bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_destroy(accessTreeAsBinary->children[i]);
 	}
+	if(numChildren > 0)
+	{
+		free(accessTreeAsBinary->children);
+	}
 
-	free(accessTreeAsBinary->attribute);
+	if(accessTreeAsBinary->attributeLength > 0)
+	{
+		free(accessTreeAsBinary->attribute);
+	}
+
+	free(accessTreeAsBinary);
 }
 
 void bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionAccessTree(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree *accessTree, const BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary *accessTreeAsBinary)

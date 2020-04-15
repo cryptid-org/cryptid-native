@@ -8,6 +8,7 @@ void BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_destroy(BSWCip
 	affineAsBinary_destroy(publickey->f);
 	complexAsBinary_destroy(publickey->eggalpha);
 	free(publickey->q);
+	free(publickey);
 }
 
 void bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionPublicKey(BSWCiphertextPolicyAttributeBasedEncryptionPublicKey *publickey, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary *publickeyAsBinary)

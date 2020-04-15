@@ -7,11 +7,14 @@ void BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_destroy(BSWCip
     {
     	affineAsBinary_destroy(secretkey->dJ[i]);
     	affineAsBinary_destroy(secretkey->dJa[i]);
+        free(secretkey->attributes[i]);
     }
     free(secretkey->attributes);
     free(secretkey->dJ);
     free(secretkey->dJa);
     free(secretkey->attributeLengths);
+    BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_destroy(secretkey->publickey);
+    free(secretkey);
 }
 
 void bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionSecretKey(BSWCiphertextPolicyAttributeBasedEncryptionSecretKey *secretKey, const BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary *secretKeyAsBinary)

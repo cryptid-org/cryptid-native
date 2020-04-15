@@ -12,6 +12,7 @@ void BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary_destroy
 	}
 	free(lastSet);
 	affineAsBinary_destroy(encryptedAsBinary->c);
+	bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_destroy(encryptedAsBinary->tree);
 	free(encryptedAsBinary);
 }
 
