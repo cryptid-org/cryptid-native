@@ -8,30 +8,30 @@
 
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryption.h"
 
-TEST basic_abe_test(SecurityLevel securityLevel, char* message, BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary* accessTreeAsBinary, char** attributes, int num_attributes, int expectedReponse)
+TEST basic_abe_test(SecurityLevel securityLevel, char* message, BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary* accessTreeAsBinary, char** attributes, int numAttributes, int expectedReponse)
 {
     BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary* publickey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary));
     BSWCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary* masterkey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary));
 
-    CryptidStatus status = cryptid_abe_bsw_setup(securityLevel, publickey, masterkey);
+    CryptidStatus status = cryptid_abe_bsw_setup(publickey, masterkey, securityLevel);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary* encrypted = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary));
-    status = cryptid_abe_bsw_encrypt(encrypted, message, strlen(message), publickey, accessTreeAsBinary);
+    status = cryptid_abe_bsw_encrypt(encrypted, accessTreeAsBinary, message, strlen(message), publickey);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
     BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary));
 
-    status = cryptid_abe_bsw_keygen(masterkey, attributes, num_attributes, secretkeyAsBinary);
+    status = cryptid_abe_bsw_keygen(secretkeyAsBinary, masterkey, attributes, numAttributes);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary_new = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary));
+    BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinaryNew = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary));
 
-    status = cryptid_abe_bsw_delegate(secretkeyAsBinary, attributes, num_attributes, secretkeyAsBinary_new);
+    status = cryptid_abe_bsw_delegate(secretkeyAsBinaryNew, secretkeyAsBinary, attributes, numAttributes);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-    char* result_new;
-    CryptidStatus status_new = cryptid_abe_bsw_decrypt(&result_new, encrypted, secretkeyAsBinary_new);
+    char* resultNew;
+    CryptidStatus status_new = cryptid_abe_bsw_decrypt(&resultNew, encrypted, secretkeyAsBinaryNew);
     ASSERT_EQ(status, CRYPTID_SUCCESS);
     char* result;
     status = cryptid_abe_bsw_decrypt(&result, encrypted, secretkeyAsBinary);
@@ -41,10 +41,10 @@ TEST basic_abe_test(SecurityLevel securityLevel, char* message, BSWCiphertextPol
         ASSERT_EQ(status_new, CRYPTID_SUCCESS);
         ASSERT_EQ(status, CRYPTID_SUCCESS);
         ASSERT_EQ(strcmp(result, message), 0);
-        ASSERT_EQ(strcmp(result_new, message), 0);
+        ASSERT_EQ(strcmp(resultNew, message), 0);
 
         free(result);
-        free(result_new);
+        free(resultNew);
     }
     else
     {
@@ -56,7 +56,7 @@ TEST basic_abe_test(SecurityLevel securityLevel, char* message, BSWCiphertextPol
     BSWCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary_destroy(masterkey);
     BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary_destroy(encrypted);
     BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_destroy(secretkeyAsBinary);
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_destroy(secretkeyAsBinary_new);
+    BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_destroy(secretkeyAsBinaryNew);
 
     PASS();
 }
@@ -86,8 +86,8 @@ SUITE(cryptid_abe_suite)
         generateRandomString(&message, messageLength + 1, defaultAlphabet, strlen(defaultAlphabet));
 
         int numChilds = 5;
-        int num_attributes = 5;
-        char** attributes = malloc(num_attributes*(20+1));
+        int numAttributes = 5;
+        char** attributes = malloc(numAttributes*(20+1));
         BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary* accessTreeAsBinary = BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_init((i%2)*(numChilds-1)+1, NULL, 0, numChilds);
         char* randomStr = malloc(20 + 1);
         char* randomStr2 = malloc(20 + 1);
@@ -112,7 +112,7 @@ SUITE(cryptid_abe_suite)
             attributes[a] = randomStr;
         }
 
-        RUN_TESTp(basic_abe_test, LOWEST, message, accessTreeAsBinary, attributes, num_attributes, expectedReponse);
+        RUN_TESTp(basic_abe_test, LOWEST, message, accessTreeAsBinary, attributes, numAttributes, expectedReponse);
 
         free(message);
         bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_destroy(accessTreeAsBinary);
