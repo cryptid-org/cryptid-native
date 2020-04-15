@@ -8,26 +8,26 @@
 #include "elliptic/AffinePoint.h"
 #include "util/Utils.h"
 
-typedef struct BSWCiphertextPolicyAttributeBasedEncryptionAccessTree
+typedef struct bswCiphertextPolicyAttributeBasedEncryptionAccessTree
 {
     int value;
     int computed;
-    struct BSWCiphertextPolicyAttributeBasedEncryptionAccessTree** children;
+    struct bswCiphertextPolicyAttributeBasedEncryptionAccessTree** children;
     int numChildren;
     char* attribute;
     size_t attributeLength;
     AffinePoint cY;
     AffinePoint cYa;
-} BSWCiphertextPolicyAttributeBasedEncryptionAccessTree;
+} bswCiphertextPolicyAttributeBasedEncryptionAccessTree;
 
-BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_init(const int value, char* attribute, const size_t attributeLength, const int numChildren);
+bswCiphertextPolicyAttributeBasedEncryptionAccessTree* bswCiphertextPolicyAttributeBasedEncryptionAccessTree_init(const int value, char* attribute, const size_t attributeLength, const int numChildren);
 
-int BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(const BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree);
+int bswCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(const bswCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree);
 
-int BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(const BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, char** attributes, const int numAttributes);
+int bswCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(const bswCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, char** attributes, const int numAttributes);
 
-CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, const mpz_t s, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey);
+CryptidStatus bswCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(bswCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, const mpz_t s, const bswCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey);
 
-void BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* tree);
+void bswCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(bswCiphertextPolicyAttributeBasedEncryptionAccessTree* tree);
 
 #endif

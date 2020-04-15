@@ -16,8 +16,8 @@ int Lagrange_coefficient(const int xi, const int* s, const int sLength, const in
 
 char* concat(const char *s1, const char *s2);
 
-void BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(mpz_t randElement, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey);
+void bswCiphertextPolicyAttributeBasedEncryptionRandomNumber(mpz_t randElement, const bswCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey);
 
-int BSWCiphertextPolicyAttributeBasedEncryptionHasAttribute(char** attributes, const int numAttributes, const char* val);
+int bswCiphertextPolicyAttributeBasedEncryptionHasAttribute(char** attributes, const int numAttributes, const char* val);
 
 #endif

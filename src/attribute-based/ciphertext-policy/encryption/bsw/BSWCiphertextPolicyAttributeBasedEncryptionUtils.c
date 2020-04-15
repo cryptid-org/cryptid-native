@@ -29,7 +29,7 @@ char* concat(const char *s1, const char *s2)
 }
 
 // Used for generating random numbers in the elliptic curve's fieldOrder of the publickey 
-void BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(mpz_t randElement, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey)
+void bswCiphertextPolicyAttributeBasedEncryptionRandomNumber(mpz_t randElement, const bswCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey)
 {
     mpz_t pMinusOne;
     mpz_init(pMinusOne);
@@ -41,7 +41,7 @@ void BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(mpz_t randElement, 
 }
 
 // Returning whether an array of attributes contains a specific attribute
-int BSWCiphertextPolicyAttributeBasedEncryptionHasAttribute(char** attributes, const int numAttributes, const char* val) {
+int bswCiphertextPolicyAttributeBasedEncryptionHasAttribute(char** attributes, const int numAttributes, const char* val) {
     if(val != NULL)
     {
         for(int i = 0; i < numAttributes; i++)

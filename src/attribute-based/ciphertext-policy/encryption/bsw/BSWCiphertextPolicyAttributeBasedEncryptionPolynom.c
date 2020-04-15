@@ -1,27 +1,27 @@
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPolynom.h"
 
 // Returns a specified degree polinom with polynomSum(polynom, 0, sum) resulting in zeroValue (qx(0) for ABE)
-BSWCiphertextPolicyAttributeBasedEncryptionPolynom* BSWCiphertextPolicyAttributeBasedEncryptionPolynom_init(const int degree, const mpz_t zeroValue, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey)
+bswCiphertextPolicyAttributeBasedEncryptionPolynom* bswCiphertextPolicyAttributeBasedEncryptionPolynom_init(const int degree, const mpz_t zeroValue, const bswCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey)
 {
-	BSWCiphertextPolicyAttributeBasedEncryptionPolynom* polynom = malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionPolynom));
-	polynom->children = malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionPolynomExpression)*(degree+1));
-	polynom->children[0] = malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionPolynomExpression));
+	bswCiphertextPolicyAttributeBasedEncryptionPolynom* polynom = malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionPolynom));
+	polynom->children = malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionPolynomExpression)*(degree+1));
+	polynom->children[0] = malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionPolynomExpression));
 	polynom->children[0]->degree = 0;
 	polynom->degree = degree;
 	mpz_init_set(polynom->children[0]->coeff, zeroValue);
 	int i;
 	for(i = 1; i <= degree; i++)
 	{
-		polynom->children[i] = malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionPolynomExpression));
+		polynom->children[i] = malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionPolynomExpression));
 		polynom->children[i]->degree = i;
 		mpz_init(polynom->children[i]->coeff);
-		BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(polynom->children[i]->coeff, publickey);
+		bswCiphertextPolicyAttributeBasedEncryptionRandomNumber(polynom->children[i]->coeff, publickey);
 	}
 	return polynom;
 }
 
 // Returns SUM(degree ∈ degrees) coeff*x^degree
-CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionPolynomSum(const BSWCiphertextPolicyAttributeBasedEncryptionPolynom* polynom, const int x, mpz_t sum)
+CryptidStatus bswCiphertextPolicyAttributeBasedEncryptionPolynomSum(const bswCiphertextPolicyAttributeBasedEncryptionPolynom* polynom, const int x, mpz_t sum)
 {
 	mpz_set_ui(sum, 0);
 	mpz_t t;
@@ -44,7 +44,7 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionPolynomSum(const BSWCip
 }
 
 // Used for simply deleting polynom from memory
-void BSWCiphertextPolicyAttributeBasedEncryptionPolynom_destroy(BSWCiphertextPolicyAttributeBasedEncryptionPolynom* polynom)
+void bswCiphertextPolicyAttributeBasedEncryptionPolynom_destroy(bswCiphertextPolicyAttributeBasedEncryptionPolynom* polynom)
 {
 	for(int i = 0; i <= polynom->degree; i++)
 	{

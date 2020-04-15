@@ -1,6 +1,6 @@
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary.h"
 
-void BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_destroy(BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary* publickey)
+void bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_destroy(bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary* publickey)
 {
 	ellipticCurveAsBinary_destroy(publickey->ellipticCurve);
 	affineAsBinary_destroy(publickey->g);
@@ -11,7 +11,7 @@ void BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_destroy(BSWCip
 	free(publickey);
 }
 
-void bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionPublicKey(BSWCiphertextPolicyAttributeBasedEncryptionPublicKey *publickey, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary *publickeyAsBinary)
+void bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionPublicKey(bswCiphertextPolicyAttributeBasedEncryptionPublicKey *publickey, const bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary *publickeyAsBinary)
 {
 	publickey->hashFunction = publickeyAsBinary->hashFunction;
 	mpz_init(publickey->q);
@@ -23,7 +23,7 @@ void bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_toBswChiphert
 	ellipticCurveAsBinary_toEllipticCurve(&(publickey->ellipticCurve), publickeyAsBinary->ellipticCurve);
 }
 
-void bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionPublicKey(BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary *publickeyAsBinary, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey *publickey)
+void bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionPublicKey(bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary *publickeyAsBinary, const bswCiphertextPolicyAttributeBasedEncryptionPublicKey *publickey)
 {
 	publickeyAsBinary->hashFunction = publickey->hashFunction;
 	publickeyAsBinary->q = mpz_export(NULL, &publickeyAsBinary->qLength, 1, 1, 0, 0, publickey->q);

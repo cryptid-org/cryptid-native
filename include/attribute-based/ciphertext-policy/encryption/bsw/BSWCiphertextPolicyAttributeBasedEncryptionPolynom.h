@@ -12,22 +12,22 @@
 #include "util/Status.h"
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionMasterKey.h"
 
-typedef struct BSWCiphertextPolicyAttributeBasedEncryptionPolynomExpression
+typedef struct bswCiphertextPolicyAttributeBasedEncryptionPolynomExpression
 {
 	int degree;
 	mpz_t coeff;
-} BSWCiphertextPolicyAttributeBasedEncryptionPolynomExpression;
+} bswCiphertextPolicyAttributeBasedEncryptionPolynomExpression;
 
-typedef struct BSWCiphertextPolicyAttributeBasedEncryptionPolynom
+typedef struct bswCiphertextPolicyAttributeBasedEncryptionPolynom
 {
 	int degree;
-	BSWCiphertextPolicyAttributeBasedEncryptionPolynomExpression** children;
-} BSWCiphertextPolicyAttributeBasedEncryptionPolynom;
+	bswCiphertextPolicyAttributeBasedEncryptionPolynomExpression** children;
+} bswCiphertextPolicyAttributeBasedEncryptionPolynom;
 
-BSWCiphertextPolicyAttributeBasedEncryptionPolynom* BSWCiphertextPolicyAttributeBasedEncryptionPolynom_init(const int degree, const mpz_t zeroValue, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey);
+bswCiphertextPolicyAttributeBasedEncryptionPolynom* bswCiphertextPolicyAttributeBasedEncryptionPolynom_init(const int degree, const mpz_t zeroValue, const bswCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey);
 
-CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionPolynomSum(const BSWCiphertextPolicyAttributeBasedEncryptionPolynom* polynom, const int x, mpz_t sum);
+CryptidStatus bswCiphertextPolicyAttributeBasedEncryptionPolynomSum(const bswCiphertextPolicyAttributeBasedEncryptionPolynom* polynom, const int x, mpz_t sum);
 
-void BSWCiphertextPolicyAttributeBasedEncryptionPolynom_destroy(BSWCiphertextPolicyAttributeBasedEncryptionPolynom* polynom);
+void bswCiphertextPolicyAttributeBasedEncryptionPolynom_destroy(bswCiphertextPolicyAttributeBasedEncryptionPolynom* polynom);
 
 #endif

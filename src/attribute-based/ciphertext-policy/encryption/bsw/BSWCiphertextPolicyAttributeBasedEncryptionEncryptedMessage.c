@@ -1,12 +1,12 @@
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage.h"
 #include <stdlib.h>
 
-void BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted)
+void bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted)
 {
-	BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* lastSet = encrypted->cTildeSet;
+	bswCiphertextPolicyAttributeBasedEncryptionCtildeSet* lastSet = encrypted->cTildeSet;
 	while(lastSet->last == ABE_CTILDE_SET_NOT_LAST)
 	{
-		BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* prev = lastSet;
+		bswCiphertextPolicyAttributeBasedEncryptionCtildeSet* prev = lastSet;
 		complex_destroy(lastSet->cTilde);
 		lastSet = lastSet->cTildeSet;
 		free(prev);

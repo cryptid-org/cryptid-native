@@ -5,16 +5,16 @@
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPublicKey.h"
 #include "elliptic/AffinePoint.h"
 
-typedef struct BSWCiphertextPolicyAttributeBasedEncryptionSecretKey
+typedef struct bswCiphertextPolicyAttributeBasedEncryptionSecretKey
 {
 	AffinePoint d;
 	AffinePoint* dJ;
 	AffinePoint* dJa;
 	char **attributes;
 	int numAttributes;
-	BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey;
-} BSWCiphertextPolicyAttributeBasedEncryptionSecretKey;
+	bswCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey;
+} bswCiphertextPolicyAttributeBasedEncryptionSecretKey;
 
-void BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey);
+void bswCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(bswCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey);
 
 #endif

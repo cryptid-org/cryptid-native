@@ -1,7 +1,7 @@
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPublicKey.h"
 #include <stdlib.h>
 
-void BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey)
+void bswCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(bswCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey)
 {
 	ellipticCurve_destroy(publickey->ellipticCurve);
     affine_destroy(publickey->g);

@@ -7,20 +7,20 @@
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionAccessTree.h"
 #include "complex/Complex.h"
 
-typedef struct BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet
+typedef struct bswCiphertextPolicyAttributeBasedEncryptionCtildeSet
 {
 	Complex cTilde;
-	struct BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* cTildeSet;
+	struct bswCiphertextPolicyAttributeBasedEncryptionCtildeSet* cTildeSet;
 	CtildeSetState last;
-} BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet;
+} bswCiphertextPolicyAttributeBasedEncryptionCtildeSet;
 
-typedef struct BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage
+typedef struct bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage
 {
-	BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* tree;
-	BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* cTildeSet;
+	bswCiphertextPolicyAttributeBasedEncryptionAccessTree* tree;
+	bswCiphertextPolicyAttributeBasedEncryptionCtildeSet* cTildeSet;
 	AffinePoint c;
-} BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage;
+} bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage;
 
-void BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted);
+void bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted);
 
 #endif

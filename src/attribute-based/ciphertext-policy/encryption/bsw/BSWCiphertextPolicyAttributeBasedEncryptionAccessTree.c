@@ -4,14 +4,14 @@
 // Value is threshold
 //	value = 1 meaning an OR gate
 //	value = [number of childrens] meaning an AND gate
-BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_init(const int value, char* attribute, const size_t attributeLength, const int numChildren)
+bswCiphertextPolicyAttributeBasedEncryptionAccessTree* bswCiphertextPolicyAttributeBasedEncryptionAccessTree_init(const int value, char* attribute, const size_t attributeLength, const int numChildren)
 {
-	BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* tree = malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree));
+	bswCiphertextPolicyAttributeBasedEncryptionAccessTree* tree = malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTree));
     tree->value = value;
     tree->computed = 0;
     if(numChildren > 0)
     {
-        tree->children = malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree*) * numChildren);
+        tree->children = malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTree*) * numChildren);
     }
     tree->numChildren = numChildren;
 
@@ -22,24 +22,24 @@ BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* BSWCiphertextPolicyAttrib
 }
 
 // Returning whether a node of a tree is leaf
-int BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(const BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree)
+int bswCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(const bswCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree)
 {
 	return (accessTree->numChildren == 0) ? 1 : 0;
 }
 
 // Returning 1 if attributes satisfy the accessTree, else 0
-int BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(const BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, char** attributes, const int numAttributes)
+int bswCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(const bswCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, char** attributes, const int numAttributes)
 {
-	if(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(accessTree))
+	if(bswCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(accessTree))
     {
-		return BSWCiphertextPolicyAttributeBasedEncryptionHasAttribute(attributes, numAttributes, accessTree->attribute);
+		return bswCiphertextPolicyAttributeBasedEncryptionHasAttribute(attributes, numAttributes, accessTree->attribute);
 	}
     
 	int i;
 	int counter = 0;
 	for(i = 0; i < accessTree->numChildren; i++)
     {
-		if(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(accessTree->children[i], attributes, numAttributes))
+		if(bswCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(accessTree->children[i], attributes, numAttributes))
         {
 			counter++;
 			if(counter >= accessTree->value)
@@ -52,24 +52,24 @@ int BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(const BSW
 }
 
 // Calculates cY and cY' (cYa) values for accessTree and its children recursively (y ∈ leaf nodes)
-CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, const mpz_t s, const BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey)
+CryptidStatus bswCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(bswCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree, const mpz_t s, const bswCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey)
 {
-    if(!BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(accessTree))
+    if(!bswCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(accessTree))
     {
         int d = accessTree->value - 1; // dx = kx-1, degree = threshold-1
-        BSWCiphertextPolicyAttributeBasedEncryptionPolynom* q = BSWCiphertextPolicyAttributeBasedEncryptionPolynom_init(d, s, publickey);
+        bswCiphertextPolicyAttributeBasedEncryptionPolynom* q = bswCiphertextPolicyAttributeBasedEncryptionPolynom_init(d, s, publickey);
 
         int i;
         for(i = 0; i < accessTree->numChildren; i++)
         {
             mpz_t sum;
             mpz_init(sum);
-            BSWCiphertextPolicyAttributeBasedEncryptionPolynomSum(q, i+1, sum);
-            BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(accessTree->children[i], sum, publickey);
+            bswCiphertextPolicyAttributeBasedEncryptionPolynomSum(q, i+1, sum);
+            bswCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(accessTree->children[i], sum, publickey);
             mpz_clear(sum);
         }
 
-        BSWCiphertextPolicyAttributeBasedEncryptionPolynom_destroy(q);
+        bswCiphertextPolicyAttributeBasedEncryptionPolynom_destroy(q);
     }
     else
     {
@@ -109,11 +109,11 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(BSWCi
 }
 
 // Used for deleting the tree and its children from memory
-void BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* tree)
+void bswCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(bswCiphertextPolicyAttributeBasedEncryptionAccessTree* tree)
 {
 	for(int i = 0; i < tree->numChildren; i++)
     {
-        BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(tree->children[i]);
+        bswCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(tree->children[i]);
     }
     if(tree->computed)
     {

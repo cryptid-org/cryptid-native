@@ -1,6 +1,6 @@
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary.h"
 
-void BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_destroy(BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkey)
+void bswCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_destroy(bswCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkey)
 {
 	affineAsBinary_destroy(secretkey->d);
 	for(int i = 0; i < secretkey->numAttributes; i++)
@@ -13,11 +13,11 @@ void BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_destroy(BSWCip
     free(secretkey->dJ);
     free(secretkey->dJa);
     free(secretkey->attributeLengths);
-    BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_destroy(secretkey->publickey);
+    bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_destroy(secretkey->publickey);
     free(secretkey);
 }
 
-void bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionSecretKey(BSWCiphertextPolicyAttributeBasedEncryptionSecretKey *secretKey, const BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary *secretKeyAsBinary)
+void bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionSecretKey(bswCiphertextPolicyAttributeBasedEncryptionSecretKey *secretKey, const bswCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary *secretKeyAsBinary)
 {
 	affineAsBinary_toAffine(&(secretKey->d), secretKeyAsBinary->d);
 	secretKey->numAttributes = secretKeyAsBinary->numAttributes;
@@ -31,11 +31,11 @@ void bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_toBswChiphert
         secretKey->attributes[i] = malloc(secretKeyAsBinary->attributeLengths[i] + 1);
         strcpy(secretKey->attributes[i], secretKeyAsBinary->attributes[i]);
     }
-    secretKey->publickey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionPublicKey));
+    secretKey->publickey = malloc(sizeof (bswCiphertextPolicyAttributeBasedEncryptionPublicKey));
 	bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionPublicKey(secretKey->publickey, secretKeyAsBinary->publickey);
 }
 
-void bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionSecretKey(BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary *secretKeyAsBinary, const BSWCiphertextPolicyAttributeBasedEncryptionSecretKey *secretKey)
+void bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionSecretKey(bswCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary *secretKeyAsBinary, const bswCiphertextPolicyAttributeBasedEncryptionSecretKey *secretKey)
 {
 	affineAsBinary_fromAffine(&(secretKeyAsBinary->d), secretKey->d);
 	secretKeyAsBinary->numAttributes = secretKey->numAttributes;
@@ -51,6 +51,6 @@ void bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_fromBswChiphe
         secretKeyAsBinary->attributes[i] = malloc(strlen(secretKey->attributes[i]) + 1);
         strcpy(secretKeyAsBinary->attributes[i], secretKey->attributes[i]);
     }
-    secretKeyAsBinary->publickey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary));
+    secretKeyAsBinary->publickey = malloc(sizeof (bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary));
 	bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionPublicKey(secretKeyAsBinary->publickey, secretKey->publickey);
 }

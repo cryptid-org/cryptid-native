@@ -15,9 +15,9 @@ static const unsigned int Q_LENGTH_MAPPING[] = { 160, 224, 256, 384, 512 };
 static const unsigned int P_LENGTH_MAPPING[] = { 512, 1024, 1536, 3840, 7680 };
 
 // Returns a publickey and a masterkey with the specified securityLevel
-CryptidStatus cryptid_abe_bsw_setup(BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary* publickeyAsBinary, BSWCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary* masterkeyAsBinary, const SecurityLevel securityLevel)
+CryptidStatus cryptid_abe_bsw_setup(bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary* publickeyAsBinary, bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary* masterkeyAsBinary, const SecurityLevel securityLevel)
 {
-    BSWCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionMasterKey));
+    bswCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey = malloc(sizeof (bswCiphertextPolicyAttributeBasedEncryptionMasterKey));
     // Construct the elliptic curve and its subgroup of interest
     // Select a random \f$n_q\f$-bit Solinas prime \f$q\f$.
     mpz_t q;
@@ -97,7 +97,7 @@ CryptidStatus cryptid_abe_bsw_setup(BSWCiphertextPolicyAttributeBasedEncryptionP
     mpz_init(beta);
     random_mpzInRange(beta, pMinusOne);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionPublicKey));
+    bswCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = malloc(sizeof (bswCiphertextPolicyAttributeBasedEncryptionPublicKey));
 
     publickey->ellipticCurve = ec;
     publickey->g = pointP;
@@ -156,19 +156,19 @@ CryptidStatus cryptid_abe_bsw_setup(BSWCiphertextPolicyAttributeBasedEncryptionP
 
     bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionPublicKey(publickeyAsBinary, publickey);
     bswChiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionMasterKey(masterkeyAsBinary, masterkey);
-    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(publickey);
-    BSWCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(masterkey);
+    bswCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(publickey);
+    bswCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(masterkey);
 
     return CRYPTID_SUCCESS;
 }
 
 // Encrypts message with the specified accessTree and publicKey to encrypted
-CryptidStatus cryptid_abe_bsw_encrypt(BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary* encryptedAsBinary,
-                                      BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary* accessTreeAsBinary,
+CryptidStatus cryptid_abe_bsw_encrypt(bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary* encryptedAsBinary,
+                                      bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary* accessTreeAsBinary,
                                       const char *const message, const size_t messageLength,
-                                      const BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary* publickeyAsBinary)
+                                      const bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary* publickeyAsBinary)
 {
-    BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage));
+    bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted = malloc(sizeof (bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage));
 
     if(!message)
     {
@@ -188,10 +188,10 @@ CryptidStatus cryptid_abe_bsw_encrypt(BSWCiphertextPolicyAttributeBasedEncryptio
         return CRYPTID_MESSAGE_NULL_ERROR;
     }
 
-    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionPublicKey));
+    bswCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = malloc(sizeof (bswCiphertextPolicyAttributeBasedEncryptionPublicKey));
     bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionPublicKey(publickey, publickeyAsBinary);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree = malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree));
+    bswCiphertextPolicyAttributeBasedEncryptionAccessTree* accessTree = malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTree));
     bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionAccessTree(accessTree, accessTreeAsBinary);
 
     mpz_t pMinusOne;
@@ -201,7 +201,7 @@ CryptidStatus cryptid_abe_bsw_encrypt(BSWCiphertextPolicyAttributeBasedEncryptio
     mpz_t s;
     mpz_init(s);
     random_mpzInRange(s, pMinusOne);
-    BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(accessTree, s, publickey);
+    bswCiphertextPolicyAttributeBasedEncryptionAccessTreeCompute(accessTree, s, publickey);
 
     encrypted->tree = accessTree;
     Complex eggalphas;
@@ -213,12 +213,12 @@ CryptidStatus cryptid_abe_bsw_encrypt(BSWCiphertextPolicyAttributeBasedEncryptio
     size_t startFrom = 0;
     char* msg = malloc(sizeof(char) * messageLength);
     strncpy(msg, message, messageLength);
-    BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* prevSet = (BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet*) malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet));
+    bswCiphertextPolicyAttributeBasedEncryptionCtildeSet* prevSet = (bswCiphertextPolicyAttributeBasedEncryptionCtildeSet*) malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionCtildeSet));
     encrypted->cTildeSet = prevSet;
     prevSet->last = ABE_CTILDE_SET_NOT_COMPUTED;
 
     // Splitting message to parts if M >= ellipticCurve.fieldOrder
-    // Splitted parts of the message is stored in a set (BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet)
+    // Splitted parts of the message is stored in a set (bswCiphertextPolicyAttributeBasedEncryptionCtildeSet)
     while(n > 0)
     {
         while(prevSet->last == ABE_CTILDE_SET_NOT_COMPUTED || mpz_cmp(M, publickey->ellipticCurve.fieldOrder) >= 0)
@@ -238,7 +238,7 @@ CryptidStatus cryptid_abe_bsw_encrypt(BSWCiphertextPolicyAttributeBasedEncryptio
         prevSet->cTilde = cTilde;
         startFrom += n;
         n = messageLength-startFrom;
-        prevSet->cTildeSet = (BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet*) malloc(sizeof(BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet));
+        prevSet->cTildeSet = (bswCiphertextPolicyAttributeBasedEncryptionCtildeSet*) malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionCtildeSet));
         prevSet = prevSet->cTildeSet;
         prevSet->last = ABE_CTILDE_SET_NOT_COMPUTED;
         strncpy(msg, message + startFrom, n);
@@ -260,32 +260,32 @@ CryptidStatus cryptid_abe_bsw_encrypt(BSWCiphertextPolicyAttributeBasedEncryptio
     mpz_clear(M);
     mpz_clears(pMinusOne, s, NULL);
     
-    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(publickey);
+    bswCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(publickey);
     bswChiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionEncryptedMessage(encryptedAsBinary, encrypted);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(encrypted->tree);
-    BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(encrypted);
+    bswCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(encrypted->tree);
+    bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(encrypted);
 
     return CRYPTID_SUCCESS;
 }
 
 // Generates a secretkey with the specified attributes using masterkey
-CryptidStatus cryptid_abe_bsw_keygen(BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary,
-                                     const BSWCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary* masterkeyAsBinary,
+CryptidStatus cryptid_abe_bsw_keygen(bswCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary,
+                                     const bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary* masterkeyAsBinary,
                                      char** attributes, const int numAttributes)
 {
-    BSWCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionMasterKey));
+    bswCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey = malloc(sizeof (bswCiphertextPolicyAttributeBasedEncryptionMasterKey));
     bswChiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionMasterKey(masterkey, masterkeyAsBinary);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionSecretKey));
+    bswCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey = malloc(sizeof (bswCiphertextPolicyAttributeBasedEncryptionSecretKey));
 
-    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = masterkey->publickey;
+    bswCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = masterkey->publickey;
 
     AffinePoint gR;
 
     mpz_t r;
     mpz_init(r);
-    BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(r, publickey);
+    bswCiphertextPolicyAttributeBasedEncryptionRandomNumber(r, publickey);
 
     CryptidStatus status = affine_wNAFMultiply(&gR, publickey->g, r, publickey->ellipticCurve);
     if(status)
@@ -313,9 +313,9 @@ CryptidStatus cryptid_abe_bsw_keygen(BSWCiphertextPolicyAttributeBasedEncryption
 
         affine_destroy(gR);
         affine_destroy(gar);
-        BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(masterkey->publickey);
-        BSWCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(masterkey);
-        BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
+        bswCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(masterkey->publickey);
+        bswCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(masterkey);
+        bswCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
         return status;
     }
 
@@ -333,7 +333,7 @@ CryptidStatus cryptid_abe_bsw_keygen(BSWCiphertextPolicyAttributeBasedEncryption
 
         mpz_t rj;
         mpz_init(rj);
-        BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(rj, publickey);
+        bswCiphertextPolicyAttributeBasedEncryptionRandomNumber(rj, publickey);
 
         // H(j)
         AffinePoint Hj;
@@ -388,33 +388,33 @@ CryptidStatus cryptid_abe_bsw_keygen(BSWCiphertextPolicyAttributeBasedEncryption
 
     bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionSecretKey(secretkeyAsBinary, secretkey);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(masterkey->publickey);
+    bswCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(masterkey->publickey);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(masterkey);
+    bswCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(masterkey);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
+    bswCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
 
     return CRYPTID_SUCCESS;
 }
 
 // Delegates to another secretkeyNew from secretkey with attributes being a subset of attributes(secretkey)
-CryptidStatus cryptid_abe_bsw_delegate(BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinaryNew,
-                                       const BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary,
+CryptidStatus cryptid_abe_bsw_delegate(bswCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinaryNew,
+                                       const bswCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary,
                                        char** attributes, const int numAttributes)
 {
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionSecretKey));
+    bswCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey = malloc(sizeof (bswCiphertextPolicyAttributeBasedEncryptionSecretKey));
     bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionSecretKey(secretkey, secretkeyAsBinary);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkeyNew = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionSecretKey));
+    bswCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkeyNew = malloc(sizeof (bswCiphertextPolicyAttributeBasedEncryptionSecretKey));
 
-    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = secretkey->publickey;
+    bswCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey = secretkey->publickey;
 
     AffinePoint fR;
     AffinePoint gR;
 
     mpz_t r;
     mpz_init(r);
-    BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(r, publickey);
+    bswCiphertextPolicyAttributeBasedEncryptionRandomNumber(r, publickey);
 
     CryptidStatus status = affine_wNAFMultiply(&fR, publickey->f, r, publickey->ellipticCurve);
     if(status)
@@ -456,7 +456,7 @@ CryptidStatus cryptid_abe_bsw_delegate(BSWCiphertextPolicyAttributeBasedEncrypti
 
         mpz_t rj;
         mpz_init(rj);
-        BSWCiphertextPolicyAttributeBasedEncryptionRandomNumber(rj, publickey);
+        bswCiphertextPolicyAttributeBasedEncryptionRandomNumber(rj, publickey);
 
         // H(j)
         AffinePoint Hj;
@@ -517,19 +517,19 @@ CryptidStatus cryptid_abe_bsw_delegate(BSWCiphertextPolicyAttributeBasedEncrypti
 
     bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionSecretKey(secretkeyAsBinaryNew, secretkeyNew);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(secretkey->publickey);
+    bswCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(secretkey->publickey);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
+    bswCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkeyNew);
+    bswCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkeyNew);
 
     return CRYPTID_SUCCESS;
 }
 
 // Subfunction of decrypt, calculating A value (result) of encrypted and accessTree (node)
-CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(Complex* result, int* statusCode, const BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted, const BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey, const BSWCiphertextPolicyAttributeBasedEncryptionAccessTree* node)
+CryptidStatus bswCiphertextPolicyAttributeBasedEncryptionDecryptNode(Complex* result, int* statusCode, const bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted, const bswCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey, const bswCiphertextPolicyAttributeBasedEncryptionAccessTree* node)
 {
-    if(BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(node))
+    if(bswCiphertextPolicyAttributeBasedEncryptionAccessTree_isLeaf(node))
     {
         int found = -1;
         for(int i = 0; i < secretkey->numAttributes; i++)
@@ -583,7 +583,7 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(Complex* re
             {
                 Complex F;
                 int code = 0;
-                CryptidStatus status = BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(&F, &code, encrypted, secretkey, node->children[i]);
+                CryptidStatus status = bswCiphertextPolicyAttributeBasedEncryptionDecryptNode(&F, &code, encrypted, secretkey, node->children[i]);
                 if(status)
                 {
                     return status;
@@ -659,44 +659,44 @@ CryptidStatus BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(Complex* re
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary* encryptedAsBinary,
-                                      const BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary)
+CryptidStatus cryptid_abe_bsw_decrypt(char **result, const bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary* encryptedAsBinary,
+                                      const bswCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary)
 {
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionSecretKey));
+    bswCiphertextPolicyAttributeBasedEncryptionSecretKey* secretkey = malloc(sizeof (bswCiphertextPolicyAttributeBasedEncryptionSecretKey));
     bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionSecretKey(secretkey, secretkeyAsBinary);
-    BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted = malloc(sizeof (BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage));
+    bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage* encrypted = malloc(sizeof (bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage));
     bswChiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionEncryptedMessage(encrypted, encryptedAsBinary);
     if (!result)
     {
         return CRYPTID_RESULT_POINTER_NULL_ERROR;
     }
     // Check whether the attributes satisfy the accessTree
-    int satisfy = BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(encrypted->tree, secretkey->attributes, secretkey->numAttributes);
+    int satisfy = bswCiphertextPolicyAttributeBasedEncryptionAccessTree_satisfyValue(encrypted->tree, secretkey->attributes, secretkey->numAttributes);
     if(satisfy == 0)
     {
-        BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(secretkey->publickey);
+        bswCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(secretkey->publickey);
 
-        BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
+        bswCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
 
-        BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(encrypted->tree);
-        BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(encrypted);
+        bswCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(encrypted->tree);
+        bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(encrypted);
         return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR;
     }
     Complex A;
     int code = 0;
-    CryptidStatus status = BSWCiphertextPolicyAttributeBasedEncryptionDecryptNode(&A, &code, encrypted, secretkey, encrypted->tree);
+    CryptidStatus status = bswCiphertextPolicyAttributeBasedEncryptionDecryptNode(&A, &code, encrypted, secretkey, encrypted->tree);
     if(status)
     {
         return status;
     }
     if(code == 0)
     {
-        BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(secretkey->publickey);
+        bswCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(secretkey->publickey);
 
-        BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
+        bswCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
 
-        BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(encrypted->tree);
-        BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(encrypted);
+        bswCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(encrypted->tree);
+        bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(encrypted);
         return CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR;
     }
 
@@ -716,7 +716,7 @@ CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAt
 
     complex_destroy(eCD);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionCtildeSet* lastSet = encrypted->cTildeSet;
+    bswCiphertextPolicyAttributeBasedEncryptionCtildeSet* lastSet = encrypted->cTildeSet;
     char* fullString = malloc(1);
     fullString[0] = '\0';
     // Iterating over sets of encrypted (splitted) messages
@@ -751,12 +751,12 @@ CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAt
 
     *result = fullString;
 
-    BSWCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(secretkey->publickey);
+    bswCiphertextPolicyAttributeBasedEncryptionPublicKey_destroy(secretkey->publickey);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
+    bswCiphertextPolicyAttributeBasedEncryptionSecretKey_destroy(secretkey);
 
-    BSWCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(encrypted->tree);
-    BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(encrypted);
+    bswCiphertextPolicyAttributeBasedEncryptionAccessTree_destroy(encrypted->tree);
+    bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage_destroy(encrypted);
 
     return CRYPTID_SUCCESS;
 }

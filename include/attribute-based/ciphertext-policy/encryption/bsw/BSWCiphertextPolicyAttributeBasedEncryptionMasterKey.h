@@ -11,13 +11,13 @@
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPublicKey.h"
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionSecretKey.h"
 
-typedef struct BSWCiphertextPolicyAttributeBasedEncryptionMasterKey
+typedef struct bswCiphertextPolicyAttributeBasedEncryptionMasterKey
 {
 	mpz_t beta;
 	AffinePoint g_alpha;
-	BSWCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey;
-} BSWCiphertextPolicyAttributeBasedEncryptionMasterKey;
+	bswCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey;
+} bswCiphertextPolicyAttributeBasedEncryptionMasterKey;
 
-void BSWCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(BSWCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey);
+void bswCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(bswCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey);
 
 #endif

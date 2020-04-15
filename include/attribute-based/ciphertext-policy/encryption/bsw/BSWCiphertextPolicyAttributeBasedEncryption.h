@@ -17,24 +17,24 @@
 #include "util/Status.h"
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionUtils.h"
 
-CryptidStatus cryptid_abe_bsw_setup(BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary* publickeyAsBinary,
-									BSWCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary* masterkeyAsBinary,
+CryptidStatus cryptid_abe_bsw_setup(bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary* publickeyAsBinary,
+									bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary* masterkeyAsBinary,
 									const SecurityLevel securityLevel);
 
-CryptidStatus cryptid_abe_bsw_encrypt(BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary* encryptedAsBinary,
-									  BSWCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary* accessTreeAsBinary,
+CryptidStatus cryptid_abe_bsw_encrypt(bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary* encryptedAsBinary,
+									  bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary* accessTreeAsBinary,
                                   	  const char *const message, const size_t messageLength,
-                                      const BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary* publickeyAsBinary);
+                                      const bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary* publickeyAsBinary);
 
-CryptidStatus cryptid_abe_bsw_keygen(BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary,
-									 const BSWCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary* masterkeyAsBinary,
+CryptidStatus cryptid_abe_bsw_keygen(bswCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary,
+									 const bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary* masterkeyAsBinary,
 									 char** attributes, const int numAttributes);
 
-CryptidStatus cryptid_abe_bsw_delegate(BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinaryNew,
-									   const BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary,
+CryptidStatus cryptid_abe_bsw_delegate(bswCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinaryNew,
+									   const bswCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary,
 									   char** attributes, const int numAttributes);
 
-CryptidStatus cryptid_abe_bsw_decrypt(char **result, const BSWCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary* encryptedAsBinary,
-									  const BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary);
+CryptidStatus cryptid_abe_bsw_decrypt(char **result, const bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary* encryptedAsBinary,
+									  const bswCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkeyAsBinary);
 
 #endif
