@@ -1,9 +1,8 @@
-#ifndef __CRYPTID_CRYPTID_ACCESSTREE_H
-#define __CRYPTID_CRYPTID_ACCESSTREE_H
+#ifndef __CRYPTID_BSW_CIPHERTEXT_POLICY_ATTRIBUTE_BASED_ENCRYPTION_ACCESS_TREE_H
+#define __CRYPTID_BSW_CIPHERTEXT_POLICY_ATTRIBUTE_BASED_ENCRYPTION_ACCESS_TREE_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionDefines.h"
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionUtils.h"
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPolynom.h"
 #include "elliptic/AffinePoint.h"
@@ -14,8 +13,8 @@ typedef struct BSWCiphertextPolicyAttributeBasedEncryptionAccessTree
     int value;
     int computed;
     struct BSWCiphertextPolicyAttributeBasedEncryptionAccessTree** children;
-    char* attribute;
     int numChildren;
+    char* attribute;
     size_t attributeLength;
     AffinePoint cY;
     AffinePoint cYa;

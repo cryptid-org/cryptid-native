@@ -1,0 +1,25 @@
+#ifndef __CRYPTID_CRYPTID_SECRETKEY_AS_BINARY_ABE_H
+#define __CRYPTID_CRYPTID_SECRETKEY_AS_BINARY_ABE_H
+#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionSecretKey.h"
+#include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary.h"
+#include "elliptic/AffinePointAsBinary.h"
+#include <string.h>
+
+typedef struct BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary
+{
+	AffinePointAsBinary d;
+	AffinePointAsBinary* dJ;
+	AffinePointAsBinary* dJa;
+	void **attributes;
+	int *attributeLengths;
+	int numAttributes;
+	BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary* publickey;
+} BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary;
+
+void BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_destroy(BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary* secretkey);
+
+void bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionSecretKey(BSWCiphertextPolicyAttributeBasedEncryptionSecretKey *secretKey, const BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary *secretKeyAsBinary);
+
+void bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionSecretKey(BSWCiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary *secretKeyAsBinary, const BSWCiphertextPolicyAttributeBasedEncryptionSecretKey *secretKey);
+
+#endif
