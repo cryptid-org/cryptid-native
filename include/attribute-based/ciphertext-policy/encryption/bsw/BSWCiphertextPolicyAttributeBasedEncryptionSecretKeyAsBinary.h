@@ -1,5 +1,5 @@
-#ifndef __CRYPTID_CRYPTID_SECRETKEY_AS_BINARY_ABE_H
-#define __CRYPTID_CRYPTID_SECRETKEY_AS_BINARY_ABE_H
+#ifndef __CRYPTID_BSW_CIPHERTEXT_POLICY_ATTRIBUTE_BASED_ENCRYPTION_SECRETKEY_AS_BINARY_ABE_H
+#define __CRYPTID_BSW_CIPHERTEXT_POLICY_ATTRIBUTE_BASED_ENCRYPTION_SECRETKEY_AS_BINARY_ABE_H
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionSecretKey.h"
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary.h"
 #include "elliptic/AffinePointAsBinary.h"

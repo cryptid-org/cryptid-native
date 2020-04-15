@@ -1,5 +1,5 @@
-#ifndef __CRYPTID_CRYPTID_SECRETKEY_ABE_H
-#define __CRYPTID_CRYPTID_SECRETKEY_ABE_H
+#ifndef __CRYPTID_BSW_CIPHERTEXT_POLICY_ATTRIBUTE_BASED_ENCRYPTION_SECRETKEY_ABE_H
+#define __CRYPTID_BSW_CIPHERTEXT_POLICY_ATTRIBUTE_BASED_ENCRYPTION_SECRETKEY_ABE_H
 #include "gmp.h"
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionDefines.h"
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPublicKey.h"

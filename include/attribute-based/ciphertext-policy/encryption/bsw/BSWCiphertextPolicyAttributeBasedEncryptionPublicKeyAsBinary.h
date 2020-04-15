@@ -1,5 +1,5 @@
-#ifndef __CRYPTID_CRYPTID_PUBLICKEY_AS_BINARY_ABE_H
-#define __CRYPTID_CRYPTID_PUBLICKEY_AS_BINARY_ABE_H
+#ifndef __CRYPTID_BSW_CIPHERTEXT_POLICY_ATTRIBUTE_BASED_ENCRYPTION_PUBLICKEY_AS_BINARY_ABE_H
+#define __CRYPTID_BSW_CIPHERTEXT_POLICY_ATTRIBUTE_BASED_ENCRYPTION_PUBLICKEY_AS_BINARY_ABE_H
 
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPublicKey.h"
 #include "elliptic/AffinePointAsBinary.h"
