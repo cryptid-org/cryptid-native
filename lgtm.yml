@@ -1,0 +1,8 @@
+extraction:
+    cpp:
+       prepare:
+          packages: 
+            - libgmp-dev
+       index:
+        build_command:
+          - ./task.sh build
