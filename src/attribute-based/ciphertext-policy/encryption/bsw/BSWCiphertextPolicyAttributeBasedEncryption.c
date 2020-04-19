@@ -622,14 +622,14 @@ CryptidStatus bswCiphertextPolicyAttributeBasedEncryptionDecryptNode(Complex* re
             complex_initLong(&fX, 1, 0);
             for(int i = 0; i < num; i++)
             {
-                int result = Lagrange_coefficient(indexes[i], indexes, num, 0);
+                int resultLagrange = Lagrange_coefficient(indexes[i], indexes, num, 0);
                 mpz_t resultMpz;
-                mpz_init_set_ui(resultMpz, abs(result));
+                mpz_init_set_ui(resultMpz, abs(resultLagrange));
                 Complex res;
-                complex_modPow(&res, Sx[indexes[i]-1], resultMpz, secretkey->publickey->ellipticCurve.fieldOrder); // Sx[indexes[c]] ^ result
+                complex_modPow(&res, Sx[indexes[i]-1], resultMpz, secretkey->publickey->ellipticCurve.fieldOrder); // Sx[indexes[c]] ^ resultLagrange
                 complex_destroy(Sx[indexes[i]-1]);
                 Complex tmp;
-                if(result < 0) {
+                if(resultLagrange < 0) {
                     // Workaround for a^(-b) = 1/(a^b)
                     CryptidStatus status = complex_multiplicativeInverse(&tmp, res, secretkey->publickey->ellipticCurve.fieldOrder);
                     if(status)
@@ -644,7 +644,7 @@ CryptidStatus bswCiphertextPolicyAttributeBasedEncryptionDecryptNode(Complex* re
                 }
 
                 Complex oldfX = fX;
-                // fX = fX * (Sx[indexes[c]] ^ result)
+                // fX = fX * (Sx[indexes[c]] ^ resultLagrange)
                 complex_modMul(&fX, oldfX, tmp, secretkey->publickey->ellipticCurve.fieldOrder);
 
                 complex_destroy(oldfX);
