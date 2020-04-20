@@ -20,7 +20,7 @@ Cross-platform Identity-based Encryption solution.
 
 # CryptID.native
 
-Cross-platform C implementation of the Boneh-Franklin Identity-based Encryption system as described in [RFC 5091](https://tools.ietf.org/html/rfc5091).
+Cross-platform C implementation of the Boneh-Franklin Identity-based Encryption system as described in [RFC 5091](https://tools.ietf.org/html/rfc5091), the Hess Identity-based Signature protocol described in [Hess-IBS](https://doi.org/10.1007/3-540-36492-7_20) and the BSW Ciphertext-Policy Attribute-based Encryption described in [BSW CP-ABE](https://doi.org/10.1109/SP.2007.11).
 
 CryptID.native provides the foundation of CryptID.js which is a WebAssembly library mainly targeting browsers.
 
