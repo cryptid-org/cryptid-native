@@ -64,8 +64,9 @@ Licenses of dependencies:
 
 ## Acknowledgements
 
-This work is supported by the construction EFOP-3.6.3-VEKOP-16-2017-00002. The project is supported by the European Union, co-financed by the European Social Fund.
+This work is partially supported by the construction EFOP-3.6.3-VEKOP-16-2017-00002. The project is supported by the European Union, co-financed by the European Social Fund and by the 2018-1.2.1-NKP-2018-00004 Security Enhancing Technologies for the Internet of Things project.
 
-<p align="right">
-  <img alt="CryptID" src="docs/img/szechenyi-logo.jpg" width="350">
+<p>
+  <img align="left" alt="CryptID" src="docs/img/NKFIA_project_logo.jpg" width="350">
+  <img align="right" alt="CryptID" src="docs/img/szechenyi-logo.jpg" width="350">
 </p>
