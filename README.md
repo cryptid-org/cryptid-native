@@ -13,7 +13,7 @@
 </div>
 
 <div align="center">
-Cross-platform Identity-based Encryption solution.
+Cross-platform Identity-based Cryptography and Attribute-based Cryptography solution.
 </div>
 
 ---
@@ -49,7 +49,7 @@ The resulting library (`libcryptid.a`) will be placed in the `build` directory.
 
 ## Example
 
-There will be a working example added, when the second version is finished. If you want to try out the library, check out the first version [CryptID V1](https://github.com/cryptid-org/cryptid-native/tree/release/v1)
+The example codes for every feature of the library is located in the `examples` directory.
 
 ## License
 
@@ -64,8 +64,9 @@ Licenses of dependencies:
 
 ## Acknowledgements
 
-This work is supported by the construction EFOP-3.6.3-VEKOP-16-2017-00002. The project is supported by the European Union, co-financed by the European Social Fund.
+This work is partially supported by the construction EFOP-3.6.3-VEKOP-16-2017-00002. The project is supported by the European Union, co-financed by the European Social Fund and by the 2018-1.2.1-NKP-2018-00004 Security Enhancing Technologies for the Internet of Things project.
 
-<p align="right">
-  <img alt="CryptID" src="docs/img/szechenyi-logo.jpg" width="350">
+<p>
+  <img align="left" alt="CryptID" src="docs/img/NKFIA_project_logo.jpg" width="350">
+  <img align="right" alt="CryptID" src="docs/img/szechenyi-logo.jpg" width="350">
 </p>
