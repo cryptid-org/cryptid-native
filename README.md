@@ -13,7 +13,7 @@
 </div>
 
 <div align="center">
-Cross-platform Identity-based Encryption solution.
+Cross-platform Identity-based Cryptography and Attribute-based Cryptography solution.
 </div>
 
 ---
@@ -49,7 +49,7 @@ The resulting library (`libcryptid.a`) will be placed in the `build` directory.
 
 ## Example
 
-There will be a working example added, when the second version is finished. If you want to try out the library, check out the first version [CryptID V1](https://github.com/cryptid-org/cryptid-native/tree/release/v1)
+The example codes for every feature of the library is located in the `examples` directory.
 
 ## License
 
