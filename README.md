@@ -8,6 +8,8 @@
 
 [![Build Status](https://dev.azure.com/cryptid-org/cryptid-native/_apis/build/status/cryptid-org.cryptid-native?branchName=master)](https://dev.azure.com/cryptid-org/cryptid-native/_build/latest?definitionId=3&branchName=master)
 [![Coverage Status](https://coveralls.io/repos/github/cryptid-org/cryptid-native/badge.svg?branch=master)](https://coveralls.io/github/cryptid-org/cryptid-native?branch=master)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/cryptid-org/cryptid-native.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cryptid-org/cryptid-native/alerts/)
+[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/cryptid-org/cryptid-native.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cryptid-org/cryptid-native/context:cpp)
 [![License](https://img.shields.io/github/license/cryptid-org/cryptid-native.svg)](LICENSE)
 
 </div>
