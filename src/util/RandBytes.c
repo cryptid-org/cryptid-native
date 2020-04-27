@@ -3,11 +3,16 @@
 
 #if defined(_WIN32)
 
-CryptidStatus cryptid_randomBytes(unsigned char *buf, int num)
+#include <windows.h>
+#include <bcrypt.h>
+
+CryptidStatus cryptid_randomBytes(unsigned char *buf, const int num)
 {
-    // TODO Implement Windows secure random generation.
-    //      Issue with good-first-issue tag?
-    return CRYPTID_RANDOM_GENERATION_ERROR;
+    const NT_STATUS status = BCryptGenRandom(NULL, buf, num, BCRYPT_USE_SYSTEM_PREFERRED_RNG);
+
+    return status == STATUS_SUCCESS
+        ? CRYPTID_SUCCESS
+        : CRYPTID_RANDOM_GENERATION_ERROR;
 }
 
 #elif defined(__CRYPTID_EXTERN_RANDOM)
