@@ -40,6 +40,7 @@
  *  Define the SHA1 circular left shift macro
  */
 #include "sha.h"
+#include <stdlib.h>
 
 #define SHA1_ROTL(bits,word) \
                 (((word) << (bits)) | ((word) >> (32-(bits))))
@@ -2285,73 +2286,78 @@ const char *USHAHashName(enum SHAversion whichSha)
   }
 }
 
-unsigned char *SHA1_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c)
+SHAResult SHA1_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult)
 {
-    static unsigned char m[SHA1HashSize];
-    if (c == NULL)
-        c = m;
+    if(hashResult == NULL)
+    {
+      return shaNull;
+    }
 
     SHA1Context context;
     SHA1Reset(&context);
     SHA1Input(&context, message, messageLength);
-    SHA1Result(&context, c);
+    SHA1Result(&context, hashResult);
 
-    return c;
+    return shaSuccess;
 }
 
-unsigned char *SHA224_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c)
+SHAResult SHA224_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult)
 {
-    static unsigned char m[SHA224HashSize];
-    if (c == NULL)
-        c = m;
+    if(hashResult == NULL)
+    {
+      return shaNull;
+    }
 
     SHA224Context context;
     SHA224Reset(&context);
     SHA224Input(&context, message, messageLength);
-    SHA224Result(&context, c);
+    SHA224Result(&context, hashResult);
 
-  return c;
+  return shaSuccess;
 }
 #include <stdio.h>
 
-unsigned char *SHA256_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c)
+SHAResult SHA256_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult)
 {
-    static unsigned char m[SHA256HashSize];
-    if (c == NULL)
-        c = m;
+    if(hashResult == NULL)
+    {
+      return shaNull;
+    }
 
     SHA256Context context;
     SHA256Reset(&context);
     SHA256Input(&context, message, messageLength);
-    SHA256Result(&context, c);
+    SHA256Result(&context, hashResult);
 
-  return c;
+  return shaSuccess;
 }
 
-unsigned char *SHA384_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c)
+SHAResult SHA384_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult)
 {
-    static unsigned char m[SHA384HashSize];
-    if (c == NULL)
-        c = m;
+    if(hashResult == NULL)
+    {
+      return shaNull;
+    }
 
     SHA384Context context;
     SHA384Reset(&context);
     SHA384Input(&context, message, messageLength);
-    SHA384Result(&context, c);
+    SHA384Result(&context, hashResult);
 
-  return c;
+  return shaSuccess;
 }
 
-unsigned char *SHA512_OneCall(const unsigned char* message, size_t messageLength, unsigned char* c)
+SHAResult SHA512_OneCall(const unsigned char* message, size_t messageLength, unsigned char* hashResult)
 {
-    static unsigned char m[SHA512HashSize];
-    if (c == NULL)
-        c = m;
+    if(hashResult == NULL)
+    {
+      return shaNull;
+    }
 
     SHA512Context context;
     SHA512Reset(&context);
     SHA512Input(&context, message, messageLength);
-    SHA512Result(&context, c);
+    SHA512Result(&context, hashResult);
 
-  return c;
+  return shaSuccess;
 }

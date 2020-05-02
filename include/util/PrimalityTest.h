@@ -1,5 +1,14 @@
+#ifndef __CRYPTID_PRIMALITY_TEST_H
+#define __CRYPTID_PRIMALITY_TEST_H
+
 #include "gmp.h"
+#include "util/Validation.h"
 
-int millerrabin_mpz(mpz_srcptr n, int reps);
+/**
+ * Check whether \f$p\f$ is a probable prime.
+ * @param p the number to check
+ * @result CRYPTID_VALIDATION_SUCCESS if \f$p\f$ is a probable prime
+ */
+CryptidValidationResult primalityTest_isProbablePrime(const mpz_t p);
 
-int millerrabin(mpz_srcptr n, mpz_srcptr nm1, mpz_ptr x, mpz_ptr y, mpz_srcptr q, unsigned long int k);
+#endif

@@ -51,6 +51,15 @@ const paths = (function setupPaths() {
         return path.join(build.outputDirectory, `libcryptid.a`);
     };
 
+    const memcheckRoot = path.join(root, 'memcheck');
+    const memcheck = {
+        root: memcheckRoot
+    };
+
+    memcheck.componentMemcheckFile = function componentMemcheckFile(componentName) {
+        return path.join(memcheck.root, `${componentName}.memcheck.xml`);
+    };
+
     return {
         root,
         version,
@@ -58,7 +67,8 @@ const paths = (function setupPaths() {
         dependencies,
         test,
         coverage,
-        build
+        build,
+        memcheck
     };
 })();
 

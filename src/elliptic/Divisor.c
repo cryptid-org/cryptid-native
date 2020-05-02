@@ -7,18 +7,17 @@
 //  * [RFC-5091] Xavier Boyen, Luther Martin. 2007. RFC 5091. Identity-Based Cryptography Standard (IBCS) #1: Supersingular Curve Implementations of the BF and BB1 Cryptosystems
 
 
-Complex divisor_evaluateVertical(const EllipticCurve ec, const AffinePoint a, const ComplexAffinePoint b)
+void divisor_evaluateVertical(Complex *result, const AffinePoint a, const ComplexAffinePoint b, const EllipticCurve ec)
 {
     // Implementation of Algorithm 3.4.1 in [RFC-5091].
 
     // Let \f$r\f$ denote the result of the operation:
     // \f$r = x_B - x_A\f$
-    Complex result;
 
     if(affine_isInfinity(a))
     {
-        result = complex_initLong(1, 0);
-        return result;
+        complex_initLong(result, 1, 0);
+        return;
     }
 
     mpz_t axAddInv;
@@ -26,14 +25,12 @@ Complex divisor_evaluateVertical(const EllipticCurve ec, const AffinePoint a, co
     mpz_neg(axAddInv, a.x);
     mpz_mod(axAddInv, axAddInv, ec.fieldOrder);
 
-    result = complex_modAddScalar(b.x, axAddInv, ec.fieldOrder);
+    complex_modAddScalar(result, b.x, axAddInv, ec.fieldOrder);
 
     mpz_clear(axAddInv);
-
-    return result;
 }
 
-CryptidStatus divisor_evaluateTangent(Complex* result, const EllipticCurve ec, const AffinePoint a, const ComplexAffinePoint b)
+CryptidStatus divisor_evaluateTangent(Complex* result, const AffinePoint a, const ComplexAffinePoint b, const EllipticCurve ec)
 {
     // Implementation of Algorithm 3.4.2 in [RFC-5091].
 
@@ -46,13 +43,13 @@ CryptidStatus divisor_evaluateTangent(Complex* result, const EllipticCurve ec, c
     // Special cases
     if(affine_isInfinity(a))
     {
-        *result = complex_initLong(1, 0);
+        complex_initLong(result, 1, 0);
         return CRYPTID_SUCCESS;
     }
 
     if(!mpz_cmp_ui(a.y, 0))
     {
-        *result = divisor_evaluateVertical(ec, a, b);
+        divisor_evaluateVertical(result, a, b, ec);
         return CRYPTID_SUCCESS;
     }
 
@@ -87,18 +84,18 @@ CryptidStatus divisor_evaluateTangent(Complex* result, const EllipticCurve ec, c
     // Evaluation at \f$B\f$
     // Let \f$r\f$ denote the result:
     // \f$r = a^{\prime} \cdot x_B + b^{\prime} \cdot y_B + c\f$
-    axB = complex_modMulScalar(b.x, aprime, ec.fieldOrder);
-    byB = complex_modMulScalar(b.y, bprime, ec.fieldOrder);
-    resultPart = complex_modAdd(axB, byB, ec.fieldOrder);
-    *result = complex_modAddScalar(resultPart, c, ec.fieldOrder);
+    complex_modMulScalar(&axB, b.x, aprime, ec.fieldOrder);
+    complex_modMulScalar(&byB, b.y, bprime, ec.fieldOrder);
+    complex_modAdd(&resultPart, axB, byB, ec.fieldOrder);
+    complex_modAddScalar(result, resultPart, c, ec.fieldOrder);
 
     complex_destroyMany(3, axB, byB, resultPart);
     mpz_clears(threeAddInv, minusThree, xasquared, aprime, bprime, bAddInv, bAddInvyA, axA, axAaddInv, c, NULL);
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus divisor_evaluateLine(Complex* result, const EllipticCurve ec, const AffinePoint a, const AffinePoint aprime, 
-                            const ComplexAffinePoint b)
+CryptidStatus divisor_evaluateLine(Complex* result, const AffinePoint a, const AffinePoint aprime, 
+                            const ComplexAffinePoint b, const EllipticCurve ec)
 {
     // Implementation of Algorithm 3.4.3 in [RFC-5091].
 
@@ -111,7 +108,7 @@ CryptidStatus divisor_evaluateLine(Complex* result, const EllipticCurve ec, cons
     // Special cases
     if(affine_isInfinity(a))
     {
-        *result = divisor_evaluateVertical(ec, aprime, b);
+        divisor_evaluateVertical(result, aprime, b, ec);
         return CRYPTID_SUCCESS;
     }
 
@@ -124,7 +121,7 @@ CryptidStatus divisor_evaluateLine(Complex* result, const EllipticCurve ec, cons
 
     if(affine_isInfinity(aprime) || affine_isInfinity(aPlusAPrime))
     {
-        *result = divisor_evaluateVertical(ec, a, b);
+        divisor_evaluateVertical(result, a, b, ec);
         affine_destroy(aPlusAPrime);
         return CRYPTID_SUCCESS;
     }
@@ -132,7 +129,7 @@ CryptidStatus divisor_evaluateLine(Complex* result, const EllipticCurve ec, cons
 
     if(affine_isEquals(a, aprime))
     {
-        return divisor_evaluateTangent(result, ec, a, b);
+        return divisor_evaluateTangent(result, a, b, ec);
     }
 
     mpz_t linea, lineb, linebaddinv, q, t, taddinv, linec;
@@ -163,10 +160,10 @@ CryptidStatus divisor_evaluateLine(Complex* result, const EllipticCurve ec, cons
     // Evaluation at B
     // Let \f$r\f$ denote the result:
     // \f$r = a \cdot x_B + b \cdot y_B + c\f$
-    axb = complex_modMulScalar(b.x, linea, ec.fieldOrder);
-    byb = complex_modMulScalar(b.y, lineb, ec.fieldOrder);
-    resultPart = complex_modAddScalar(byb, linec, ec.fieldOrder);
-    *result = complex_modAdd(axb, resultPart, ec.fieldOrder);
+    complex_modMulScalar(&axb, b.x, linea, ec.fieldOrder);
+    complex_modMulScalar(&byb, b.y, lineb, ec.fieldOrder);
+    complex_modAddScalar(&resultPart, byb, linec, ec.fieldOrder);
+    complex_modAdd(result, axb, resultPart, ec.fieldOrder);
 
     mpz_clears(linea, lineb, linebaddinv, q, t, taddinv, linec, NULL);
     complex_destroyMany(3, axb, byb, resultPart);

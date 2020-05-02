@@ -3,61 +3,41 @@
 #include "complex/Complex.h"
 
 
-Complex complex_init(void)
+void complex_init(Complex *complexOutput)
 {
-    Complex complex;
-
-    mpz_inits(complex.real, complex.imaginary, NULL);
-
-    return complex;
+    mpz_inits(complexOutput->real, complexOutput->imaginary, NULL);
 } 
 
-Complex complex_initMpz(const mpz_t real, const mpz_t imaginary)
+void complex_initMpz(Complex *complexOutput, const mpz_t real, const mpz_t imaginary)
 {
-    Complex complex;
+    mpz_inits(complexOutput->real, complexOutput->imaginary, NULL);
 
-    mpz_inits(complex.real, complex.imaginary, NULL);
-
-    mpz_set(complex.real, real);
-    mpz_set(complex.imaginary, imaginary);
-
-    return complex;
+    mpz_set(complexOutput->real, real);
+    mpz_set(complexOutput->imaginary, imaginary);
 }
 
-Complex complex_initLong(const long real, const long imaginary)
+void complex_initLong(Complex *complexOutput, const long real, const long imaginary)
 {
-    Complex complex;
+    mpz_inits(complexOutput->real, complexOutput->imaginary, NULL);
 
-    mpz_inits(complex.real, complex.imaginary, NULL);
-
-    mpz_set_si(complex.real, real);
-    mpz_set_si(complex.imaginary, imaginary);
-
-    return complex;
+    mpz_set_si(complexOutput->real, real);
+    mpz_set_si(complexOutput->imaginary, imaginary);
 }
 
-Complex complex_initMpzLong(const mpz_t real, const long imaginary)
+void complex_initMpzLong(Complex *complexOutput, const mpz_t real, const long imaginary)
 {
-    Complex complex;
+    mpz_inits(complexOutput->real, complexOutput->imaginary, NULL);
 
-    mpz_inits(complex.real, complex.imaginary, NULL);
-
-    mpz_set(complex.real, real);
-    mpz_set_si(complex.imaginary, imaginary);
-
-    return complex;
+    mpz_set(complexOutput->real, real);
+    mpz_set_si(complexOutput->imaginary, imaginary);
 }
 
-Complex complex_initLongMpz(const long real, const mpz_t imaginary)
+void complex_initLongMpz(Complex *complexOutput, const long real, const mpz_t imaginary)
 {
-    Complex complex;
+    mpz_inits(complexOutput->real, complexOutput->imaginary, NULL);
 
-    mpz_inits(complex.real, complex.imaginary, NULL);
-
-    mpz_set_si(complex.real, real);
-    mpz_set(complex.imaginary, imaginary);
-
-    return complex;
+    mpz_set_si(complexOutput->real, real);
+    mpz_set(complexOutput->imaginary, imaginary);
 }
 
 int complex_isEquals(const Complex complex1, const Complex complex2)
@@ -89,11 +69,10 @@ void complex_destroyMany(const size_t argumentCount, ...)
     va_end(args);
 }
 
-Complex complex_modAdd(const Complex complex1, const Complex complex2, const mpz_t p)
+void complex_modAdd(Complex *result, const Complex complex1, const Complex complex2, const mpz_t p)
 {
     // Calculated as
     // \f$(r_1 + r_2 \mod p, c_1 + c_2 \mod p)\f$.
-    Complex result;
     mpz_t newReal, newImaginary;
     mpz_inits(newReal, newImaginary, NULL);
 
@@ -103,16 +82,14 @@ Complex complex_modAdd(const Complex complex1, const Complex complex2, const mpz
     mpz_add(newImaginary, complex1.imaginary, complex2.imaginary);
     mpz_mod(newImaginary, newImaginary, p);
 
-    result = complex_initMpz(newReal, newImaginary);
+    complex_initMpz(result, newReal, newImaginary);
     mpz_clears(newReal, newImaginary, NULL);
-    return result;
 }
 
-Complex complex_additiveInverse(const Complex complex, const mpz_t p)
+void complex_additiveInverse(Complex *result, const Complex complex, const mpz_t p)
 {
     // Calculated as
     // \f$(-r \mod p, -i \mod p)\f$.
-    Complex result;
     mpz_t newReal, newImaginary;
     mpz_inits(newReal, newImaginary, NULL);
 
@@ -122,32 +99,28 @@ Complex complex_additiveInverse(const Complex complex, const mpz_t p)
     mpz_neg(newImaginary, complex.imaginary);
     mpz_mod(newImaginary, newImaginary, p);
 
-    result = complex_initMpz(newReal, newImaginary);
+    complex_initMpz(result, newReal, newImaginary);
     mpz_clears(newReal, newImaginary, NULL);
-    return result;
 }
 
-Complex complex_modAddScalar(const Complex complex, const mpz_t s, const mpz_t p)
+void complex_modAddScalar(Complex *result, const Complex complex, const mpz_t s, const mpz_t p)
 {
     // Calculated as
     // \f$(r + s \mod p, i)\f$.
-    Complex result;
     mpz_t newReal;
     mpz_init(newReal);
 
     mpz_add(newReal, complex.real, s);
     mpz_mod(newReal, newReal, p);
 
-    result = complex_initMpz(newReal, complex.imaginary);
+    complex_initMpz(result, newReal, complex.imaginary);
     mpz_clear(newReal);
-    return result;
 }
 
-Complex complex_modMul(const Complex complex1, const Complex complex2, const mpz_t p)
+void complex_modMul(Complex *result, const Complex complex1, const Complex complex2, const mpz_t p)
 {
     // Calculated as
     // \f$((r_1 \cdot r_2 - i_1 \cdot i_2) \mod p, (i_1 \cdot r_2 + r_1 \cdot i_2) \mod p)\f$.
-    Complex result;
     mpz_t r, i, leftPart, rightPart;
     mpz_inits(r, i, leftPart, rightPart, NULL);
 
@@ -161,22 +134,22 @@ Complex complex_modMul(const Complex complex1, const Complex complex2, const mpz
     mpz_add(i, leftPart, rightPart);
     mpz_mod(i, i, p);
 
-    result = complex_initMpz(r, i);
+    complex_initMpz(result, r, i);
     mpz_clears(r, i, leftPart, rightPart, NULL);
-    return result;
 }
 
-Complex complex_modPow(const Complex complex, const mpz_t exp, const mpz_t p)
+void complex_modPow(Complex *result, const Complex complex, const mpz_t exp, const mpz_t p)
 {
     if(!mpz_cmp_ui(p, 1))
     {
-        return complex_initLong(0, 0);
+        complex_initLong(result, 0, 0);
+        return;
     }
 
     mpz_t baseRealCopy, baseImaginaryCopy, expCopy, expMod;
     mpz_inits(baseRealCopy, baseImaginaryCopy, expCopy, expMod, NULL);
 
-    Complex result = complex_initLong(1, 0);
+    complex_initLong(result, 1, 0);
 
     mpz_set(baseRealCopy, complex.real);
     mpz_mod(baseRealCopy, baseRealCopy, p);
@@ -184,7 +157,8 @@ Complex complex_modPow(const Complex complex, const mpz_t exp, const mpz_t p)
     mpz_set(baseImaginaryCopy, complex.imaginary);
     mpz_mod(baseImaginaryCopy, baseImaginaryCopy, p);
 
-    Complex baseCopy = complex_initMpz(baseRealCopy, baseImaginaryCopy);
+    Complex baseCopy;
+    complex_initMpz(&baseCopy, baseRealCopy, baseImaginaryCopy);
 
     mpz_set(expCopy, exp);
 
@@ -193,29 +167,28 @@ Complex complex_modPow(const Complex complex, const mpz_t exp, const mpz_t p)
         mpz_mod_ui(expMod, expCopy, 2);
         if(!mpz_cmp_ui(expMod, 1))
         {
-            Complex tmp = complex_modMul(baseCopy, result, p);
-            complex_destroy(result);
-            result = tmp;
+            Complex tmp;
+            complex_modMul(&tmp, baseCopy, *result, p);
+            complex_destroy(*result);
+            *result = tmp;
         }
 
         mpz_fdiv_q_2exp(expCopy, expCopy, 1);
 
-        Complex tmp = complex_modMul(baseCopy, baseCopy, p);
+        Complex tmp;
+        complex_modMul(&tmp, baseCopy, baseCopy, p);
         complex_destroy(baseCopy);
         baseCopy = tmp;
     }
 
     complex_destroy(baseCopy);
     mpz_clears(baseRealCopy, baseImaginaryCopy, expCopy, expMod, NULL);
-
-    return result;
 }
 
-Complex complex_modMulScalar(const Complex complex, const mpz_t s, const mpz_t p)
+void complex_modMulScalar(Complex *result, const Complex complex, const mpz_t s, const mpz_t p)
 {
     // Calculated as
     // \f$(r \cdot s \mod p, i \cdot s \mod p)\f$.
-    Complex result;
     mpz_t r, imag;
     mpz_inits(r, imag, NULL);
 
@@ -225,9 +198,8 @@ Complex complex_modMulScalar(const Complex complex, const mpz_t s, const mpz_t p
     mpz_mul(imag, s, complex.imaginary);
     mpz_mod(imag, imag, p);
 
-    result = complex_initMpz(r, imag);
+    complex_initMpz(result, r, imag);
     mpz_clears(r, imag, NULL);
-    return result;
 }
 
 // The inverse of z is z^{-1} = \frac{1}{z} = \frac{r}{r^2+i^2}-\frac{i}{r^2+i^2}
@@ -248,7 +220,7 @@ CryptidStatus complex_multiplicativeInverse(Complex *result, const Complex compl
     if(!mpz_cmp_ui(complex.imaginary, 0))
     {
         mpz_invert(real, complex.real, p);
-        *result = complex_initMpzLong(real, 0);
+        complex_initMpzLong(result, real, 0);
         
         mpz_clears(real, imaginary, denom, realSquare, imagSquare, denomInv, negImag, NULL);
         return CRYPTID_SUCCESS;
@@ -261,7 +233,7 @@ CryptidStatus complex_multiplicativeInverse(Complex *result, const Complex compl
         mpz_invert(imaginary, complex.imaginary, p);
         mpz_neg(imaginary, imaginary);
         mpz_mod(imaginary, imaginary, p);
-        *result = complex_initLongMpz(0, imaginary);
+        complex_initLongMpz(result, 0, imaginary);
 
         mpz_clears(real, imaginary, denom, realSquare, imagSquare, denomInv, negImag, NULL);
         return CRYPTID_SUCCESS;
@@ -283,7 +255,7 @@ CryptidStatus complex_multiplicativeInverse(Complex *result, const Complex compl
     mpz_mul(imaginary, negImag, denomInv);
     mpz_mod(imaginary, imaginary, p);
 
-    *result = complex_initMpz(real, imaginary);
+    complex_initMpz(result, real, imaginary);
     mpz_clears(real, imaginary, denom, realSquare, imagSquare, denomInv, negImag, NULL);
     return CRYPTID_SUCCESS;
 }

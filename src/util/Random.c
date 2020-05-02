@@ -1,25 +1,37 @@
 #include "util/Random.h"
 #include "util/RandBytes.h"
-#include "util/Validation.h"
+#include "util/PrimalityTest.h"
+#include <math.h>
+#include <stdio.h>
 
 
 static const unsigned int MOST_SIGNIFICANT_WORD_FIRST = 1;
 static const unsigned int NATIVE_ENDIANNESS  = 0;
 static const unsigned int NO_SKIP = 0;
 
-unsigned int random_unsignedIntInRange(const unsigned int range)
+void random_unsignedIntOfLength(unsigned int *randomOutput, const unsigned int numberOfBits)
 {
-    unsigned int x, r;
+    unsigned int numberOfBytes = (numberOfBits + 7) / 8;
+
+    unsigned char buffer[sizeof(unsigned int)] = {0};
+
+    cryptid_randomBytes((unsigned char*) &buffer, numberOfBytes);
+
+    unsigned int unneededBits = 8 * numberOfBytes - numberOfBits;
+    buffer[numberOfBytes - 1] &= (1 << (8 - unneededBits)) - 1;
+
+    *randomOutput = *((unsigned int*)&buffer);
+}
+
+//Using the method suggested by Johannes A. Buchmann in Introduction to Cryptography Second Edition Section 4.6
+void random_unsignedIntInRange(unsigned int *randomOutput, const unsigned int range)
+{
+    unsigned int rangeBitLength = (int)log2(range)+1;
 
     do
     {
-        cryptid_randomBytes((unsigned char*) &x, sizeof (x));
-
-        r = x % range;
-    }
-    while (x - r > (-range));
-
-    return r;
+        random_unsignedIntOfLength(randomOutput, rangeBitLength);
+    }while(*randomOutput > range);
 }
 
 void random_mpzOfLength(mpz_t result, const unsigned int numberOfBits)
@@ -38,30 +50,17 @@ void random_mpzOfLength(mpz_t result, const unsigned int numberOfBits)
 
 void random_mpzInRange(mpz_t result, const mpz_t range)
 {
-    mpz_t x, r, xMinusR, negativeRange;
-    mpz_inits(x, r, xMinusR, negativeRange, NULL);
-
-    mpz_ui_pow_ui(negativeRange, 2, mpz_sizeinbase(range, 2));
-    mpz_sub(negativeRange, negativeRange, range);
-
+    unsigned int rangeBitLength = mpz_sizeinbase(range, 2);
+    
     do
     {
-        random_mpzOfLength(x, mpz_sizeinbase(range, 2));
-
-        mpz_mod(r, x, range);
-
-        mpz_sub(xMinusR, x, r);
-    }
-    while (mpz_cmp(xMinusR, negativeRange) > 0);
-
-    mpz_set(result, r);
-
-    mpz_clears(x, r, xMinusR, negativeRange, NULL);
+        random_mpzOfLength(result, rangeBitLength);
+    }while(mpz_cmp(result, range) > 0);
 }
 
 CryptidStatus random_solinasPrime(mpz_t result, const unsigned int numberOfBits, const unsigned int attemptLimit)
 {
-    unsigned int random = 1, lastrandom;
+    unsigned int random = 0, lastrandom;
     unsigned int isPrimeGenerated = 0;
     unsigned int attempts = 0;
 
@@ -69,9 +68,9 @@ CryptidStatus random_solinasPrime(mpz_t result, const unsigned int numberOfBits,
     {
         lastrandom = random;
 
-        random = random_unsignedIntInRange(numberOfBits - lastrandom) + lastrandom;
-
-        for (unsigned int i = random; i >= lastrandom; i--)
+        random_unsignedIntInRange(&random, numberOfBits - (lastrandom + 1));
+        random += lastrandom;
+        for (unsigned int i = random; i > lastrandom; i--)
         {
             mpz_ui_pow_ui(result, 2, numberOfBits);
             mpz_t twoOnI;
@@ -84,7 +83,7 @@ CryptidStatus random_solinasPrime(mpz_t result, const unsigned int numberOfBits,
 
             mpz_sub_ui(result, result, 1);
 
-            if (validation_isProbablePrime(result))
+            if (primalityTest_isProbablePrime(result))
             {
                 isPrimeGenerated = 1;
                 break;
@@ -120,7 +119,8 @@ static AffinePoint mod3PointGenerationStrategy(const EllipticCurve ellipticCurve
 
     mpz_powm(x, base, exp, ellipticCurve.fieldOrder);
 
-    AffinePoint result = affine_init(x, y);
+    AffinePoint result;
+    affine_init(&result, x, y);
 
     mpz_clears(y, bAddInv, exp, ySquared, base, x, NULL);
 

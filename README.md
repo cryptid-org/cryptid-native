@@ -8,19 +8,21 @@
 
 [![Build Status](https://dev.azure.com/cryptid-org/cryptid-native/_apis/build/status/cryptid-org.cryptid-native?branchName=master)](https://dev.azure.com/cryptid-org/cryptid-native/_build/latest?definitionId=3&branchName=master)
 [![Coverage Status](https://coveralls.io/repos/github/cryptid-org/cryptid-native/badge.svg?branch=master)](https://coveralls.io/github/cryptid-org/cryptid-native?branch=master)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/cryptid-org/cryptid-native.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cryptid-org/cryptid-native/alerts/)
+[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/cryptid-org/cryptid-native.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cryptid-org/cryptid-native/context:cpp)
 [![License](https://img.shields.io/github/license/cryptid-org/cryptid-native.svg)](LICENSE)
 
 </div>
 
 <div align="center">
-Cross-platform Identity-based Encryption solution.
+Cross-platform Identity-based Cryptography and Attribute-based Cryptography solution.
 </div>
 
 ---
 
 # CryptID.native
 
-Cross-platform C implementation of the Boneh-Franklin Identity-based Encryption system as described in [RFC 5091](https://tools.ietf.org/html/rfc5091).
+Cross-platform C implementation of the Boneh-Franklin Identity-based Encryption system as described in [RFC 5091](https://tools.ietf.org/html/rfc5091), the Hess Identity-based Signature protocol described in [Hess-IBS](https://doi.org/10.1007/3-540-36492-7_20) and the BSW Ciphertext-Policy Attribute-based Encryption described in [BSW CP-ABE](https://doi.org/10.1109/SP.2007.11).
 
 CryptID.native provides the foundation of CryptID.js which is a WebAssembly library mainly targeting browsers.
 
@@ -49,71 +51,7 @@ The resulting library (`libcryptid.a`) will be placed in the `build` directory.
 
 ## Example
 
-The following short example demonstrates the usage of CryptID.native:
-
-~~~~C
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "gmp.h"
-
-#include "CryptID.h"
-
-
-int main()
-{
-    const char *message = "Ironic.";
-    const char *identity = "darth.plagueis@sith.com";
-
-    PublicParameters* publicParameters = malloc(sizeof (PublicParameters));
-    mpz_t masterSecret;
-    mpz_init(masterSecret);
-    mpz_init(publicParameters->q);
-    if (CRYPTID_SUCCESS != cryptid_setup(LOWEST, publicParameters, masterSecret))
-    {
-        printf("Setup failed\n");
-        return -1;
-    }
-
-    CipherTextTuple* ciphertext = malloc(sizeof (CipherTextTuple));
-    if (CRYPTID_SUCCESS != cryptid_encrypt(ciphertext, message, strlen(message), identity, strlen(identity), *publicParameters))
-    {
-        printf("Encrypt failed\n");
-        return -1;
-    }
-
-    AffinePoint privateKey;
-    if (CRYPTID_SUCCESS != cryptid_extract(&privateKey, identity, strlen(identity), *publicParameters, masterSecret))
-    {
-        printf("Extract failed\n");
-        return -1;
-    }
-
-    char *plaintext;
-    if (CRYPTID_SUCCESS != cryptid_decrypt(&plaintext, privateKey, *ciphertext, *publicParameters))
-    {
-        printf("Decrypt failed\n");
-        return -1;
-    }
-
-    printf("Plaintext:\n%s\n", plaintext);
-
-    free(plaintext);
-    cipherTextTuple_destroy(*ciphertext);
-    free(ciphertext);
-    affine_destroy(privateKey);
-    mpz_clears(publicParameters->q, masterSecret, NULL);
-    affine_destroy(publicParameters->pointP);
-    affine_destroy(publicParameters->pointPpublic);
-    ellipticCurve_destroy(publicParameters->ellipticCurve);
-    free(publicParameters);
-
-    return 0;
-}
-~~~~
-
-Of course, this example assumes that you have previously built the static library and have GMP installed.
+The example codes for every feature of the library is located in the `examples` directory.
 
 ## License
 
@@ -128,8 +66,9 @@ Licenses of dependencies:
 
 ## Acknowledgements
 
-This work is supported by the construction EFOP-3.6.3-VEKOP-16-2017-00002. The project is supported by the European Union, co-financed by the European Social Fund.
+This work is partially supported by the construction EFOP-3.6.3-VEKOP-16-2017-00002. The project is supported by the European Union, co-financed by the European Social Fund and by the 2018-1.2.1-NKP-2018-00004 Security Enhancing Technologies for the Internet of Things project.
 
-<p align="right">
-  <img alt="CryptID" src="docs/img/szechenyi-logo.jpg" width="350">
+<p>
+  <img align="left" alt="CryptID" src="docs/img/NKFIA_project_logo.jpg" width="350">
+  <img align="right" alt="CryptID" src="docs/img/szechenyi-logo.jpg" width="350">
 </p>

@@ -1,0 +1,3 @@
+#ifndef __CRYPTID_UTILITY_MODULE
+#define __CRYPTID_UTILITY_MODULE
+#endif

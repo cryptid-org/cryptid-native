@@ -25,22 +25,22 @@ typedef struct ComplexAffinePoint
 } ComplexAffinePoint;
 
 /**
- * Returns a new ComplexAffinePoint initialized with the specified coordinates.
+ * Initializes a new ComplexAffinePoint with the specified coordinates.
+ * @param complexAffinePointOutput the ComplexAffinePoint to be initialized
  * @param x the \f$x\f$ coordinate
  * @param y the \f$y\f$ coordinate
- * @return a new ComplexAffinePoint
  */
-ComplexAffinePoint complexAffine_init(const Complex x, const Complex y);
+void complexAffine_init(ComplexAffinePoint *complexAffinePointOutput, const Complex x, const Complex y);
 
 /**
- * Returns a new ComplexAffinePoint initialized with the specified long values.
+ * Initializes a new ComplexAffinePoint initialized with the specified long values.
+ * @param complexAffinePointOutput the ComplexAffinePoint to be initialized
  * @param xr the real part of the \f$x\f$ coordinate
  * @param xi the imaginary part of the \f$x\f$ coordinate
  * @param yr the real part of the \f$y\f$ coordinate
  * @param yi the imaginary part of the \f$y\f$ coordinate
- * @return a new ComplexAffinePoint
  */
-ComplexAffinePoint complexAffine_initLong(const long xr, const long xi, const long yr, const long yi);
+void complexAffine_initLong(ComplexAffinePoint *complexAffinePointOutput, const long xr, const long xi, const long yr, const long yi);
 
 /**
  * Frees a ComplexAffinePoint. After calling this function on a ComplexAffinePoint instance, 
@@ -94,12 +94,12 @@ CryptidStatus complexAffine_add(ComplexAffinePoint *result, const ComplexAffineP
 /**
  * Multiplies a ComplexAffinePoint with a scalar.
  * @param result The result of the multiplication. On CRYPTID_SUCCESS, this should be destroyed by the caller.
- * @param s the scalar to multiply with
  * @param complexAffinePoint the point to multiply
+ * @param s the scalar to multiply with
  * @param ec the elliptic curve to operate over
  * @return CRYPTID_SUCCESS if everything went right, error otherwise
  */
-CryptidStatus complexAffine_multiply(ComplexAffinePoint *result, const mpz_t s, const ComplexAffinePoint complexAffinePoint,
+CryptidStatus complexAffine_multiply(ComplexAffinePoint *result, const ComplexAffinePoint complexAffinePoint, const mpz_t s,
                               const EllipticCurve ellipticCurve);
 
 /**

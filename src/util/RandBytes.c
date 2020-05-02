@@ -24,6 +24,17 @@ CryptidStatus cryptid_randomBytes(unsigned char *buf, const int num)
     return CRYPTID_RANDOM_GENERATION_ERROR;
 }
 
+#elif defined(__wasi__)
+
+#include <unistd.h>
+
+CryptidStatus cryptid_randomBytes(unsigned char *buf, const int num)
+{
+    const unsigned int result = getentropy(buf, (size_t) num);
+
+    return result ? CRYPTID_RANDOM_GENERATION_ERROR : CRYPTID_SUCCESS;
+}
+
 #else
 
 #include <stdio.h>

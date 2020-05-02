@@ -51,9 +51,9 @@ typedef enum
     CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR,
 
     /*
-     * The given ciphertext tuple is incorrect.
+     * The given ciphertext is incorrect.
      */
-    CRYPTID_ILLEGAL_CIPHERTEXT_TUPLE_ERROR,
+    CRYPTID_ILLEGAL_CIPHERTEXT_ERROR,
     
     /*
      * Failed to decrypt the ciphertext, the input arguments might be incorrect.
@@ -88,7 +88,17 @@ typedef enum
     /*
      * The given signature is incorrect.
      */
-    CRYPTID_ILLEGAL_SIGNATURE_ERROR
+    CRYPTID_ILLEGAL_SIGNATURE_ERROR,
+
+    /*
+     * The given output parameter is NULL.
+     */
+    CRYPTID_HASH_NULLPOINTER_OUTPUT_PARAM_ERROR,
+
+    /*
+     * The given hash type is invalid.
+     */
+    CRPYTID_UNKNOWN_HASH_TYPE_ERROR
 } CryptidStatus;
 
 #endif

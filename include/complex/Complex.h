@@ -25,42 +25,42 @@ typedef struct Complex
 } Complex;
 
 /**
- * Returns a new Complex number initialized to (0, 0).
- * @return (0,0)
+ * Initializes a new Complex number to (0, 0).
+ * @param complexOutput the Complex number to be initialized
  */
-Complex complex_init(void);
+void complex_init(Complex *complexOutput);
 
 /**
- * Returns a new Complex initialized with the specified arbitrary precision values.
+ * Initializes a new Complex with the specified arbitrary precision values.
+ * @param complexOutput the Complex number to be initialized
  * @param real the real part
  * @param imaginary the imaginary part
- * @return a new complex
  */
-Complex complex_initMpz(const mpz_t real, const mpz_t imaginary);
+void complex_initMpz(Complex *complexOutput, const mpz_t real, const mpz_t imaginary);
 
 /**
- * Returns a new Complex initialized with the specified long values.
+ * Initializes a new Complex with the specified long values.
+ * @param complexOutput the Complex number to be initialized
  * @param real the real part
  * @param imaginary the imaginary part
- * @return a new complex
  */
-Complex complex_initLong(const long real, const long imaginary);
+void complex_initLong(Complex *complexOutput, const long real, const long imaginary);
 
 /**
- * Returns a new Complex initialized with an arbitrary precision real part and a long imaginary part.
+ * Initializes a new Complex with an arbitrary precision real part and a long imaginary part.
+ * @param complexOutput the Complex number to be initialized
  * @param real the real part
  * @param imaginary the imaginary part
- * @return a new complex.
  */
-Complex complex_initMpzLong(const mpz_t real, const long imaginary);
+void complex_initMpzLong(Complex *complexOutput, const mpz_t real, const long imaginary);
 
 /**
- * Returns a new Complex initialized with a long real part and ann arbitrary precision imaginary part.
+ * Initializes a new Complex with a long real part and ann arbitrary precision imaginary part.
+ * @param complexOutput the Complex number to be initialized
  * @param real the real part
  * @param imaginary the imaginary part
- * @return a new complex.
  */
-Complex complex_initLongMpz(const long real, const mpz_t imaginary);
+void complex_initLongMpz(Complex *complexOutput, const long real, const mpz_t imaginary);
 
 /**
  * Checks if two Complex instances hold the same values.
@@ -86,56 +86,56 @@ void complex_destroyMany(const size_t argumentCount, ...);
 
 /**
  * Adds two Complex valus with respect to the specified modulus.
+ * @param result the result of the addition
  * @param complex1 a value to add
  * @param complex2 a value to add
  * @param p the modulus
- * @return the result of the addition
  */
-Complex complex_modAdd(const Complex complex1, const Complex complex2, const mpz_t p);
+void complex_modAdd(Complex *result, const Complex complex1, const Complex complex2, const mpz_t p);
 
 /**
  * Calculates the additive inverse of the specified Complex with respect to the specified modulus.
+ * @param result the additive inverse
  * @param complex the Complex to invert
  * @param p the modulus
- * @return the additive inverse
  */
-Complex complex_additiveInverse(const Complex complex, const mpz_t p);
+void complex_additiveInverse(Complex *result, const Complex complex, const mpz_t p);
 
 /**
  * Adds a Complex and an integer with respect to the specified modulus.
+ * @param result the result of the addition
  * @param complex a Complex
  * @param s a scalar
  * @param p the modulus
- * @return the result of the addition
  */
-Complex complex_modAddScalar(const Complex complex, const  mpz_t s, const mpz_t p);
+void complex_modAddScalar(Complex *result, const Complex complex, const  mpz_t s, const mpz_t p);
 
 /**
  * Multiplies two Complex values with respect to the specified modulus.
+ * @param result the result of the multiplication.
  * @param complex1 a Complex to multiply
  * @param complex2 a Complex to multiply
  * @param p the modulus.
- * @return the result of the multiplication.
  */
-Complex complex_modMul(const Complex complex1, const Complex complex2, const mpz_t p);
+void complex_modMul(Complex *result, const Complex complex1, const Complex complex2, const mpz_t p);
 
 /**
  * Raised a Complex value to the specified exponent modulo p.
+ * @param result the result of the exponentiation
  * @param complex the base
  * @param exp the exponent
  * @param p the modulus
- * @return the result of the exponentiation
  */
-Complex complex_modPow(const Complex complex, const mpz_t exp, const mpz_t p);
+void complex_modPow(Complex *result, const Complex complex, const mpz_t exp, const mpz_t p);
 
 /**
  * Multiplies a Complex value with an integer.
+ * @param result the result of the multiplication.
  * @param complex a Complex
  * @param s the scalar.
  * @param p the modulus.
- * @return the result of the multiplication.
  */
-Complex complex_modMulScalar(const Complex complex, const mpz_t s, const mpz_t p);
+void complex_modMulScalar(Complex *result, const Complex complex, const mpz_t s, const mpz_t p);
 
 /**
  * Calculates the multiplicate inverse of a Complex with respect to p.
