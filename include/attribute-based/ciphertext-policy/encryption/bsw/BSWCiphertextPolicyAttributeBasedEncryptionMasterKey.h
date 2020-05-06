@@ -5,19 +5,19 @@
 
 #include "elliptic/AffinePoint.h"
 #include "elliptic/EllipticCurve.h"
-#include "util/HashFunction.h"
 #include "elliptic/TatePairing.h"
+#include "util/HashFunction.h"
 
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionPublicKey.h"
 #include "attribute-based/ciphertext-policy/encryption/bsw/BSWCiphertextPolicyAttributeBasedEncryptionSecretKey.h"
 
-typedef struct bswCiphertextPolicyAttributeBasedEncryptionMasterKey
-{
-	mpz_t beta;
-	AffinePoint g_alpha;
-	bswCiphertextPolicyAttributeBasedEncryptionPublicKey* publickey;
+typedef struct bswCiphertextPolicyAttributeBasedEncryptionMasterKey {
+  mpz_t beta;
+  AffinePoint g_alpha;
+  bswCiphertextPolicyAttributeBasedEncryptionPublicKey *publickey;
 } bswCiphertextPolicyAttributeBasedEncryptionMasterKey;
 
-void bswCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(bswCiphertextPolicyAttributeBasedEncryptionMasterKey* masterkey);
+void bswCiphertextPolicyAttributeBasedEncryptionMasterKey_destroy(
+    bswCiphertextPolicyAttributeBasedEncryptionMasterKey *masterkey);
 
 #endif

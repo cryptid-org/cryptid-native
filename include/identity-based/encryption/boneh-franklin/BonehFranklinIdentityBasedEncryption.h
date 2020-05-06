@@ -5,32 +5,46 @@
 
 #include "gmp.h"
 
-#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary.h"
-#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h"
-#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h"
 #include "elliptic/AffinePoint.h"
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h"
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary.h"
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h"
 #include "util/SecurityLevel.h"
 #include "util/Status.h"
 
 /**
  * ## Description
  *
- * Establishes a master secret and public parameters for a given security level. The master secret (as its name suggests) should be kept secret, while the public parameters can be distributed among the clients.
+ * Establishes a master secret and public parameters for a given security level.
+ * The master secret (as its name suggests) should be kept secret, while the
+ * public parameters can be distributed among the clients.
  *
  * ## Parameters
  *
  *   * masterSecretAsBinary
- *     * Out parameter which will hold the master secret. If the return value is CRYPTID_SUCCESS, then it will point to a [BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary.h#BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary) instance, that must be destroyed by the caller. Initialization is done by this function.
+ *     * Out parameter which will hold the master secret. If the return value is
+ * CRYPTID_SUCCESS, then it will point to a
+ * [BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary.h#BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary)
+ * instance, that must be destroyed by the caller. Initialization is done by
+ * this function.
  *   * publicParametersAsBinary
- *     * Pointer in which the public parameters will be stored. If the return value is CRYPTID_SUCCESS, then it will point to correctly filled [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary) instance.
+ *     * Pointer in which the public parameters will be stored. If the return
+ * value is CRYPTID_SUCCESS, then it will point to correctly filled
+ * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary)
+ * instance.
  *   * securityLevel
  *     * The desired security level.
  *
  * ## Return Value
- * 
+ *
  * CRYPTID_SUCCESS if everything went right.
  */
-CryptidStatus cryptid_ibe_bonehFranklin_setup(BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary *masterSecretAsBinary, BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary* publicParametersAsBinary, const SecurityLevel securityLevel);
+CryptidStatus cryptid_ibe_bonehFranklin_setup(
+    BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary
+        *masterSecretAsBinary,
+    BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary
+        *publicParametersAsBinary,
+    const SecurityLevel securityLevel);
 
 /**
  * ## Description
@@ -40,7 +54,11 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(BonehFranklinIdentityBasedEncrypti
  * ## Parameters
  *
  *   * result
- *     * Out parameter holding the private key. If the return value is CRYPTID_SUCCESS, then it will point to an [AffinePointAsBinary](elliptic/AffinePointAsBinary.h#AffinePointAsBinary) instance, that must be destroyed by the caller. Initialization is done by this function.
+ *     * Out parameter holding the private key. If the return value is
+ * CRYPTID_SUCCESS, then it will point to an
+ * [AffinePointAsBinary](elliptic/AffinePointAsBinary.h#AffinePointAsBinary)
+ * instance, that must be destroyed by the caller. Initialization is done by
+ * this function.
  *   * identity
  *     * The identity string we're extracting the private key for.
  *   * identityLength
@@ -54,7 +72,13 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(BonehFranklinIdentityBasedEncrypti
  *
  * CRYPTID_SUCCESS if everything went right.
  */
-CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePointAsBinary *result, const char *const identity, const size_t identityLength, const BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary masterSecretAsBinary, const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary publicParametersAsBinary);
+CryptidStatus cryptid_ibe_bonehFranklin_extract(
+    AffinePointAsBinary *result, const char *const identity,
+    const size_t identityLength,
+    const BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary
+        masterSecretAsBinary,
+    const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary
+        publicParametersAsBinary);
 
 /**
  * ## Description
@@ -64,7 +88,11 @@ CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePointAsBinary *result, con
  * ## Parameters
  *
  *   * result
- *     * Out parameter storing the ciphertext. If the return value is CRYPTID_SUCCESS, then it will point to a [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary) instance, that must be destroyed by the caller. Initialization is done by this function.
+ *     * Out parameter storing the ciphertext. If the return value is
+ * CRYPTID_SUCCESS, then it will point to a
+ * [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary)
+ * instance, that must be destroyed by the caller. Initialization is done by
+ * this function.
  *   * message
  *     * The string to encrypt.
  *   * messageLength
@@ -80,7 +108,12 @@ CryptidStatus cryptid_ibe_bonehFranklin_extract(AffinePointAsBinary *result, con
  *
  * CRYPTID_SUCCESS if everything went right.
  */
-CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryptionCiphertextAsBinary *result, const char *const message, const size_t messageLength, const char *const identity, const size_t identityLength, const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary publicParametersAsBinary);
+CryptidStatus cryptid_ibe_bonehFranklin_encrypt(
+    BonehFranklinIdentityBasedEncryptionCiphertextAsBinary *result,
+    const char *const message, const size_t messageLength,
+    const char *const identity, const size_t identityLength,
+    const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary
+        publicParametersAsBinary);
 
 /**
  * ## Description
@@ -90,7 +123,9 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
  * ## Parameters
  *
  *   * result
- *     * Out parameter holding the message in plaintext. If the return value is CRYPTID_SUCCESS, then it will point to a zero-terminated string, that must be destroyed by the caller. Initialization is done by this function.
+ *     * Out parameter holding the message in plaintext. If the return value is
+ * CRYPTID_SUCCESS, then it will point to a zero-terminated string, that must be
+ * destroyed by the caller. Initialization is done by this function.
  *   * ciphertextAsBinary
  *     * The ciphertext to decrypt.
  *   * privateKeyAsBinary
@@ -102,7 +137,13 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(BonehFranklinIdentityBasedEncryp
  *
  * CRYPTID_SUCCESS if everything went right.
  */
-CryptidStatus cryptid_ibe_bonehFranklin_decrypt(char **result, const BonehFranklinIdentityBasedEncryptionCiphertextAsBinary ciphertextAsBinary, const AffinePointAsBinary privateKeyAsBinary, const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary publicParametersAsBinary);
+CryptidStatus cryptid_ibe_bonehFranklin_decrypt(
+    char **result,
+    const BonehFranklinIdentityBasedEncryptionCiphertextAsBinary
+        ciphertextAsBinary,
+    const AffinePointAsBinary privateKeyAsBinary,
+    const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary
+        publicParametersAsBinary);
 
 #endif
 

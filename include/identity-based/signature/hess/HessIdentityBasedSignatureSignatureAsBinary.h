@@ -4,22 +4,27 @@
 #include "elliptic/AffinePointAsBinary.h"
 #include "identity-based/signature/hess/HessIdentityBasedSignatureSignature.h"
 
+typedef struct HessIdentityBasedSignatureSignatureAsBinary {
+  AffinePointAsBinary u;
 
-typedef struct HessIdentityBasedSignatureSignatureAsBinary
-{
-    AffinePointAsBinary u;
+  void *v;
 
-    void *v;
-
-    size_t vLength;
+  size_t vLength;
 } HessIdentityBasedSignatureSignatureAsBinary;
 
-void hessIdentityBasedSignatureSignatureAsBinary_init(HessIdentityBasedSignatureSignatureAsBinary *signatureAsBinaryOutput, const AffinePointAsBinary u, const void *const v, const size_t vLength);
+void hessIdentityBasedSignatureSignatureAsBinary_init(
+    HessIdentityBasedSignatureSignatureAsBinary *signatureAsBinaryOutput,
+    const AffinePointAsBinary u, const void *const v, const size_t vLength);
 
-void hessIdentityBasedSignatureSignatureAsBinary_destroy(HessIdentityBasedSignatureSignatureAsBinary signatureAsBinary);
+void hessIdentityBasedSignatureSignatureAsBinary_destroy(
+    HessIdentityBasedSignatureSignatureAsBinary signatureAsBinary);
 
-void hessIdentityBasedSignatureSignatureAsBinary_toHessIdentityBasedSignatureSignature(HessIdentityBasedSignatureSignature *signatureOutput, const HessIdentityBasedSignatureSignatureAsBinary signatureAsBinary);
+void hessIdentityBasedSignatureSignatureAsBinary_toHessIdentityBasedSignatureSignature(
+    HessIdentityBasedSignatureSignature *signatureOutput,
+    const HessIdentityBasedSignatureSignatureAsBinary signatureAsBinary);
 
-void hessIdentityBasedSignatureSignatureAsBinary_fromHessIdentityBasedSignatureSignature(HessIdentityBasedSignatureSignatureAsBinary *signatureAsBinaryOutput, const HessIdentityBasedSignatureSignature signature);
+void hessIdentityBasedSignatureSignatureAsBinary_fromHessIdentityBasedSignatureSignature(
+    HessIdentityBasedSignatureSignatureAsBinary *signatureAsBinaryOutput,
+    const HessIdentityBasedSignatureSignature signature);
 
 #endif

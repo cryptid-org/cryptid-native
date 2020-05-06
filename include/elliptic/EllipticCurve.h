@@ -7,11 +7,10 @@
 /**
  * A finite field on an elliptic curve of form \f$y^2 = x^3 + ax + b\f$.
  */
-typedef struct EllipticCurve
-{
-    mpz_t a;
-    mpz_t b;
-    mpz_t fieldOrder;
+typedef struct EllipticCurve {
+  mpz_t a;
+  mpz_t b;
+  mpz_t fieldOrder;
 } EllipticCurve;
 
 /**
@@ -21,7 +20,8 @@ typedef struct EllipticCurve
  * @param b coefficient \f$b\f$
  * @param fieldOrder the order of the finite field
  */
-void ellipticCurve_init(EllipticCurve *ellipticCurveOutput, const mpz_t a, const mpz_t b, const mpz_t fieldOrder);
+void ellipticCurve_init(EllipticCurve *ellipticCurveOutput, const mpz_t a,
+                        const mpz_t b, const mpz_t fieldOrder);
 
 /**
  * Initializes a new EllipticCurve instance with longs.
@@ -30,7 +30,8 @@ void ellipticCurve_init(EllipticCurve *ellipticCurveOutput, const mpz_t a, const
  * @param b coefficient \f$b\f$
  * @param fieldOrder the order of the finite field
  */
-void ellipticCurve_initLong(EllipticCurve *ellipticCurveOutput, const long a, const long b, const long fieldOrder);
+void ellipticCurve_initLong(EllipticCurve *ellipticCurveOutput, const long a,
+                            const long b, const long fieldOrder);
 
 /**
  * Frees an EllipticCurve.
@@ -39,10 +40,12 @@ void ellipticCurve_initLong(EllipticCurve *ellipticCurveOutput, const long a, co
 void ellipticCurve_destroy(EllipticCurve ellipticCurve);
 
 /**
- * Validates that the specified EllipticCurve instance is a Type-1 elliptic curve.
+ * Validates that the specified EllipticCurve instance is a Type-1 elliptic
+ * curve.
  * @param ellipticCurve the struct to check
  * @return CRYPTID_VALIDATION_SUCCESS if the struct is valid
  */
-CryptidValidationResult ellipticCurve_isTypeOne(const EllipticCurve ellipticCurve);
+CryptidValidationResult
+ellipticCurve_isTypeOne(const EllipticCurve ellipticCurve);
 
 #endif

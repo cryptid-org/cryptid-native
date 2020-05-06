@@ -6,18 +6,24 @@
 #include "elliptic/AffinePointAsBinary.h"
 #include <stdio.h>
 
-typedef struct bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary
-{
-	void *beta;
-	size_t betaLength;
-	AffinePointAsBinary g_alpha;
-	bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary* publickey;
+typedef struct bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary {
+  void *beta;
+  size_t betaLength;
+  AffinePointAsBinary g_alpha;
+  bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary *publickey;
 } bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary;
 
-void bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary_destroy(bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary* masterkey);
+void bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary_destroy(
+    bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary *masterkey);
 
-void bswChiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionMasterKey(bswCiphertextPolicyAttributeBasedEncryptionMasterKey *masterKey, const bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary *masterKeyAsBinary);
+void bswChiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionMasterKey(
+    bswCiphertextPolicyAttributeBasedEncryptionMasterKey *masterKey,
+    const bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary
+        *masterKeyAsBinary);
 
-void bswChiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionMasterKey(bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary *masterKeyAsBinary, const bswCiphertextPolicyAttributeBasedEncryptionMasterKey *masterKey);
+void bswChiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionMasterKey(
+    bswCiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary
+        *masterKeyAsBinary,
+    const bswCiphertextPolicyAttributeBasedEncryptionMasterKey *masterKey);
 
 #endif

@@ -11,104 +11,152 @@
  *
  * Struct holding the ciphertext data in binary form for easier serialization.
  */
-typedef struct BonehFranklinIdentityBasedEncryptionCiphertextAsBinary
-{
-    /**
-     * ## Description
-     *
-     * A binary representation of a point in \f$E(F_p)\f$ representing a part of the cipher.
-     */
-    AffinePointAsBinary cipherU;
+typedef struct BonehFranklinIdentityBasedEncryptionCiphertextAsBinary {
+  /**
+   * ## Description
+   *
+   * A binary representation of a point in \f$E(F_p)\f$ representing a part of
+   * the cipher.
+   */
+  AffinePointAsBinary cipherU;
 
-    /**
-     * ## Description
-     *
-     * A binary string representing a part of the cipher.
-     */
-    void *cipherV;
+  /**
+   * ## Description
+   *
+   * A binary string representing a part of the cipher.
+   */
+  void *cipherV;
 
-    /**
-     * ## Description
-     *
-     * The length of [cipherV](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherV).
-     */
-    size_t cipherVLength;
+  /**
+   * ## Description
+   *
+   * The length of
+   * [cipherV](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherV).
+   */
+  size_t cipherVLength;
 
-    /**
-     * ## Description
-     *
-     * A binary string representing a part of the cipher.
-     */
-    void *cipherW;
+  /**
+   * ## Description
+   *
+   * A binary string representing a part of the cipher.
+   */
+  void *cipherW;
 
-    /**
-     * ## Description
-     *
-     * The length of [cipherW](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherW).
-     */
-    size_t cipherWLength;
+  /**
+   * ## Description
+   *
+   * The length of
+   * [cipherW](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherW).
+   */
+  size_t cipherWLength;
 } BonehFranklinIdentityBasedEncryptionCiphertextAsBinary;
 
 /**
  * ## Description
  *
- * Initializes a new [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary) with the specified values. Note, that [cipherV](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherV) and [cipherW](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherW) will be copied.
- * 
+ * Initializes a new
+ * [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary)
+ * with the specified values. Note, that
+ * [cipherV](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherV)
+ * and
+ * [cipherW](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherW)
+ * will be copied.
+ *
  * ## Parameters
  *
  *   * ciphertextAsBinaryOutput
- *     * The [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary) to be initialized.
+ *     * The
+ * [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary)
+ * to be initialized.
  *   * cipherU
- *     * An [AffinePointAsBinary](elliptic/AffinePointAsBinary.h#AffinePointAsBinary) representing a part of the cipher.
+ *     * An
+ * [AffinePointAsBinary](elliptic/AffinePointAsBinary.h#AffinePointAsBinary)
+ * representing a part of the cipher.
  *   * cipherV
  *     * A binary string representing a part of the cipher.
  *   * cipherVLength
- *     * The length of [cipherV](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherV).
+ *     * The length of
+ * [cipherV](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherV).
  *   * cipherW
  *     * A binary string representing a part of the cipher.
  *   * cipherWLength
- *     * The length of [cipherW](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherW).
+ *     * The length of
+ * [cipherW](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherW).
  */
-void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_init(BonehFranklinIdentityBasedEncryptionCiphertextAsBinary *ciphertextAsBinaryOutput, const AffinePointAsBinary cipherU, const void *const cipherV, const size_t cipherVLength, const void *const cipherW, const size_t cipherWLength);
+void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_init(
+    BonehFranklinIdentityBasedEncryptionCiphertextAsBinary
+        *ciphertextAsBinaryOutput,
+    const AffinePointAsBinary cipherU, const void *const cipherV,
+    const size_t cipherVLength, const void *const cipherW,
+    const size_t cipherWLength);
 
 /**
  * ## Description
  *
- * Frees a [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary).
+ * Frees a
+ * [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary).
  *
  * ## Parameters
  *
  *   * bonehFranklinIdentityBasedEncryptionCiphertextAsBinary
- *     * The [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary) to be destroyed.
+ *     * The
+ * [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary)
+ * to be destroyed.
  */
-void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_destroy(BonehFranklinIdentityBasedEncryptionCiphertextAsBinary bonehFranklinIdentityBasedEncryptionCiphertextAsBinary);
+void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_destroy(
+    BonehFranklinIdentityBasedEncryptionCiphertextAsBinary
+        bonehFranklinIdentityBasedEncryptionCiphertextAsBinary);
 
 /**
  * ## Description
  *
- * Converts a [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary) to [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext).
+ * Converts a
+ * [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary)
+ * to
+ * [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext).
  *
  * ## Parameters
  *
  *   * ciphertextOutput
- *     * The [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext) to be initialized based on a [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary).
+ *     * The
+ * [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext)
+ * to be initialized based on a
+ * [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary).
  *   * ciphertextAsBinary
- *     * The [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary), which needs to be converted to [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext).
+ *     * The
+ * [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary),
+ * which needs to be converted to
+ * [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext).
  */
-void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_toBonehFranklinIdentityBasedEncryptionCiphertext(BonehFranklinIdentityBasedEncryptionCiphertext *ciphertextOutput, const BonehFranklinIdentityBasedEncryptionCiphertextAsBinary ciphertextAsBinary);
+void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_toBonehFranklinIdentityBasedEncryptionCiphertext(
+    BonehFranklinIdentityBasedEncryptionCiphertext *ciphertextOutput,
+    const BonehFranklinIdentityBasedEncryptionCiphertextAsBinary
+        ciphertextAsBinary);
 
 /**
  * ## Description
  *
- * Converts a [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext) to [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary).
+ * Converts a
+ * [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext)
+ * to
+ * [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary).
  *
  * ## Parameters
  *
  *   * ciphertextAsBinaryOutput
- *     * The [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary) to be initialized based on a [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext).
+ *     * The
+ * [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary)
+ * to be initialized based on a
+ * [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext).
  *   * ciphertext
- *     * The [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext), which needs to be converted to [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary).
+ *     * The
+ * [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext),
+ * which needs to be converted to
+ * [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary).
  */
-void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_fromBonehFranklinIdentityBasedEncryptionCiphertext(BonehFranklinIdentityBasedEncryptionCiphertextAsBinary *ciphertextAsBinaryOutput, const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext);
+void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_fromBonehFranklinIdentityBasedEncryptionCiphertext(
+    BonehFranklinIdentityBasedEncryptionCiphertextAsBinary
+        *ciphertextAsBinaryOutput,
+    const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext);
 
 #endif
