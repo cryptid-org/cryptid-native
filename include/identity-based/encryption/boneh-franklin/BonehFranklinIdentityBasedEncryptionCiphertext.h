@@ -6,12 +6,10 @@
 #include "elliptic/AffinePoint.h"
 #include "util/Validation.h"
 
-// References
-//  * [RFC-5091] Xavier Boyen, Luther Martin. 2007. RFC 5091. Identity-Based Cryptography Standard (IBCS) #1: Supersingular Curve Implementations of the BF and BB1 Cryptosystems
-
-
 /**
- * Struct holding the ciphertext data. Refer to {@code BFCiphertextBlock} in [RFC-5091].
+ * ## Description
+ *
+ * Struct holding the ciphertext data. Refer to [BFCiphertextBlock](https://tools.ietf.org/html/rfc5091#page-56) in [RFC-5091](https://tools.ietf.org/html/rfc5091).
  */
 typedef struct BonehFranklinIdentityBasedEncryptionCiphertext
 {
@@ -33,31 +31,56 @@ typedef struct BonehFranklinIdentityBasedEncryptionCiphertext
     size_t cipherWLength;
 } BonehFranklinIdentityBasedEncryptionCiphertext;
 
-
 /**
- * Initializes a new BonehFranklinIdentityBasedEncryptionCiphertext with the specified values. Note, that {@code cipherV} and {@code cipherw}
- * will be copied.
- * @param ciphertextOutput the BonehFranklinIdentityBasedEncryptionCiphertext to be initialized
- * @param cipherU an AffinePoint
- * @param cipherV binary string
- * @param cipherVLength the size of {@code cipherV}
- * @param cipherW binary string
- * @param cipherWLength the size of {@code cipherW}
+ * ## Description
+ *
+ * Initializes a new [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext) with the specified values. Note, that [cipherV](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#cipherV) and [cipherW](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#cipherW) will be copied.
+ *
+ * ## Parameters
+ *
+ *   * ciphertextOutput
+ *     * The [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext) to be initialized.
+ *   * cipherU
+ *     * An [AffinePoint](elliptic/AffinePoint.h#AffinePoint) representing a part of the cipher.
+ *   * cipherV
+ *     * A binary string representing a part of the cipher.
+ *   * cipherVLength
+ *     * The length of [cipherV](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#cipherV).
+ *   * cipherW
+ *     * A binary string representing a part of the cipher.
+ *   * cipherWLength
+ *     * The length of [cipherW](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#cipherW).
  */
 void bonehFranklinIdentityBasedEncryptionCiphertext_init(BonehFranklinIdentityBasedEncryptionCiphertext *ciphertextOutput, const AffinePoint cipherU, const unsigned char *const cipherV, const int cipherVLength,
                                      const unsigned char *const cipherW, const int cipherWLength);
 
 /**
+ * ## Description
+ *
  * Frees a BonehFranklinIdentityBasedEncryptionCiphertext.
- * @param bonehFranklinIdentityBasedEncryptionCiphertext the BonehFranklinIdentityBasedEncryptionCiphertext to be destroyed
+ *
+ * ## Parameters
+ *
+ *   * bonehFranklinIdentityBasedEncryptionCiphertext
+ *     * The [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext) to be destroyed.
  */
 void bonehFranklinIdentityBasedEncryptionCiphertext_destroy(BonehFranklinIdentityBasedEncryptionCiphertext ciphertext);
 
 /**
+ * ## Description
+ *
  * Validates that the specified ciphertext is correct.
- * @param ciphertext the ciphertext to check
- * @param ellipticCurve the elliptic curve field, we operating over
- * @return CRYPTID_VALIDATION_SUCCESS if the ciphertext is valid
+ *
+ * ## Parameters
+ *
+ *   * ciphertext
+ *     * The [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext) to check.
+ *   * ellipticCurve
+ *     * The elliptic curve, we are operating over.
+ *
+ * ## Return Value
+ *
+ * CRYPTID_VALIDATION_SUCCESS if the ciphertext is valid.
  */
 CryptidValidationResult bonehFranklinIdentityBasedEncryptionCiphertext_isValid(const BonehFranklinIdentityBasedEncryptionCiphertext ciphertext, const EllipticCurve ellipticCurve);
 
