@@ -1,10 +1,3 @@
-/**
- * # CryptID Identity-based Encryption
- *
- * ## Excerpt
- *
- * Routines implementing the Boneh-Franklin Identity-based Encryption scheme.
- */
 #ifndef __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION_H
 #define __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION_H
 
