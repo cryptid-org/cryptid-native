@@ -69,8 +69,7 @@ typedef struct BonehFranklinIdentityBasedEncryptionCiphertext
  *   * cipherWLength
  *     * The length of [cipherW](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#cipherW).
  */
-void bonehFranklinIdentityBasedEncryptionCiphertext_init(BonehFranklinIdentityBasedEncryptionCiphertext *ciphertextOutput, const AffinePoint cipherU, const unsigned char *const cipherV, const int cipherVLength,
-                                     const unsigned char *const cipherW, const int cipherWLength);
+void bonehFranklinIdentityBasedEncryptionCiphertext_init(BonehFranklinIdentityBasedEncryptionCiphertext *ciphertextOutput, const AffinePoint cipherU, const unsigned char *const cipherV, const int cipherVLength, const unsigned char *const cipherW, const int cipherWLength);
 
 /**
  * ## Description
