@@ -9,7 +9,7 @@
 /**
  * ## Description
  *
- * Struct holding the ciphertext data in binary form for easier serialization. Refer to [BFCiphertextBlock](https://tools.ietf.org/html/rfc5091#page-56) in [RFC-5091](https://tools.ietf.org/html/rfc5091).
+ * Struct holding the ciphertext data in binary form for easier serialization.
  */
 typedef struct BonehFranklinIdentityBasedEncryptionCiphertextAsBinary
 {
@@ -27,6 +27,11 @@ typedef struct BonehFranklinIdentityBasedEncryptionCiphertextAsBinary
      */
     void *cipherV;
 
+    /**
+     * ## Description
+     *
+     * The length of [cipherV](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherV).
+     */
     size_t cipherVLength;
 
     /**
@@ -36,6 +41,11 @@ typedef struct BonehFranklinIdentityBasedEncryptionCiphertextAsBinary
      */
     void *cipherW;
 
+    /**
+     * ## Description
+     *
+     * The length of [cipherW](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherW).
+     */
     size_t cipherWLength;
 } BonehFranklinIdentityBasedEncryptionCiphertextAsBinary;
 

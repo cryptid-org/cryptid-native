@@ -26,6 +26,12 @@ typedef struct BonehFranklinIdentityBasedEncryptionCiphertext
      * A binary string representing a part of the cipher.
      */
     unsigned char* cipherV;
+
+    /**
+     * ## Description
+     *
+     * The length of [cipherV](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherV).
+     */
     size_t cipherVLength;
 
     /**
@@ -34,6 +40,12 @@ typedef struct BonehFranklinIdentityBasedEncryptionCiphertext
      * A binary string representing a part of the cipher.
      */
     unsigned char* cipherW;
+
+    /**
+     * ## Description
+     *
+     * The length of [cipherW](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherW).
+     */
     size_t cipherWLength;
 } BonehFranklinIdentityBasedEncryptionCiphertext;
 
