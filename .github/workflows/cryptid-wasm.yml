@@ -45,6 +45,8 @@ jobs:
             -I./include \
             -I./dependencies/sha/include \
             -I./warm \
+            -DWARM_COMPILE_TIME_SET_ALLOCATOR \
+            -DWARM_USE_DEFAULT_ALLOCATOR \
             ./src/complex/*.c \
             ./src/elliptic/*.c \
             ./src/util/*.c \
