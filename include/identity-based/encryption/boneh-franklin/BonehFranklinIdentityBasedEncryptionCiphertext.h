@@ -14,18 +14,24 @@
 typedef struct BonehFranklinIdentityBasedEncryptionCiphertext
 {
     /**
-     * A point in \f$E(F_p)\f$.
+     * ## Description
+     *
+     * A point in \f$E(F_p)\f$ representing a part of the cipher.
      */
     AffinePoint cipherU;
 
     /**
-     * A binary string.
+     * ## Description
+     *
+     * A binary string representing a part of the cipher.
      */
     unsigned char* cipherV;
     size_t cipherVLength;
 
     /**
-     * A binary string.
+     * ## Description
+     *
+     * A binary string representing a part of the cipher.
      */
     unsigned char* cipherW;
     size_t cipherWLength;
@@ -57,7 +63,7 @@ void bonehFranklinIdentityBasedEncryptionCiphertext_init(BonehFranklinIdentityBa
 /**
  * ## Description
  *
- * Frees a BonehFranklinIdentityBasedEncryptionCiphertext.
+ * Frees a [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext).
  *
  * ## Parameters
  *
