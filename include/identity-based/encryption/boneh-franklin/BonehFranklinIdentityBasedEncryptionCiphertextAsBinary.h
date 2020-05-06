@@ -86,7 +86,7 @@ void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_destroy(BonehFrankli
 /**
  * ## Description
  *
- * Converts an [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary) to [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext).
+ * Converts a [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary) to [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext).
  *
  * ## Parameters
  *
@@ -100,7 +100,7 @@ void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_toBonehFranklinIdent
 /**
  * ## Description
  *
- * Converts an [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext) to [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary).
+ * Converts a [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext) to [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary).
  *
  * ## Parameters
  *

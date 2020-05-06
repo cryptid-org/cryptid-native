@@ -32,14 +32,14 @@ typedef struct BonehFranklinIdentityBasedEncryptionPublicParameters
     /**
      * ## Description
      *
-     * A point in \f$E(F_p)\f$.
+     * A generator point of group order [q](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#q) on [ellipticCurve](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#ellipticCurve).
      */
     AffinePoint pointP;
 
     /**
      * ## Description
      *
-     * A point in \f$E(F_p)\f$.
+     * A point on [ellipticCurve](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#ellipticCurve) which is [pointP](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#pointP) multiplied with the master secret.
      */
     AffinePoint pointPpublic;
 
@@ -65,7 +65,7 @@ typedef struct BonehFranklinIdentityBasedEncryptionPublicParameters
  *   * q
  *     * The field order of the subgroup, the system operates on.
  *   * pointP
- *     * A generator point of group order q on [ellipticCurve](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#ellipticCurve).
+ *     * A generator point of group order [q](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#q) on [ellipticCurve](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#ellipticCurve).
  *   * pointPpublic
  *     * A point on [ellipticCurve](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#ellipticCurve) which is [pointP](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#pointP) multiplied with the master secret.
  *   * hashFunction
