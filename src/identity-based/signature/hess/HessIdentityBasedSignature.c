@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// TODO remove if cmake is ready
-#define __CRYPTID_HESS_IDENTITY_BASED_SIGNATURE
 #include "elliptic/TatePairing.h"
 #include "identity-based/signature/hess/HessIdentityBasedSignature.h"
 #include "util/PrimalityTest.h"

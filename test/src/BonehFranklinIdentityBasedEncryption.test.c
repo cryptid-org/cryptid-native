@@ -5,8 +5,6 @@
 
 #include "greatest.h"
 
-// TODO remove if cmake is ready
-#define __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION
 #include "complex/Complex.h"
 #include "elliptic/AffinePoint.h"
 #include "elliptic/EllipticCurve.h"

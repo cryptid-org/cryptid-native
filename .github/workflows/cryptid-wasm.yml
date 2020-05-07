@@ -47,6 +47,9 @@ jobs:
             -I./warm \
             -DWARM_COMPILE_TIME_SET_ALLOCATOR \
             -DWARM_USE_DEFAULT_ALLOCATOR \
+            -D__CRYPTID_GMP \
+            -D__CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION \
+            -D__CRYPTID_HESS_IDENTITY_BASED_SIGNATURE \
             ./src/complex/*.c \
             ./src/elliptic/*.c \
             ./src/util/*.c \
