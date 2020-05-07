@@ -1,4 +1,4 @@
-//How to build: ./task.sh build && gcc examples/BonehFranklinIdentityBasedEncryptionExample.c build/libcryptid.a -I/mnt/c/Users/vecsi/Documents/CryptID/cryptid-native/include -std=c99 -Wall -Wextra -Werror -lgmp -lm
+//How to build: ./task.sh build && gcc examples/BonehFranklinIdentityBasedEncryptionExample.c build/libcryptid.a -I/mnt/c/Users/vecsi/Documents/CryptID/cryptid-native/include -D__CRYPTID_GMP -D__CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION -std=c99 -Wall -Wextra -Werror -lgmp -lm
 
 #include <stdio.h>
 #include <stdlib.h>

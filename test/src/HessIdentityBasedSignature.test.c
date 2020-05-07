@@ -4,8 +4,6 @@
 
 #include "greatest.h"
 
-// TODO remove if cmake is ready
-#define __CRYPTID_HESS_IDENTITY_BASED_SIGNATURE
 #include "complex/Complex.h"
 #include "elliptic/AffinePoint.h"
 #include "elliptic/EllipticCurve.h"
