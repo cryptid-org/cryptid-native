@@ -23,15 +23,15 @@ jobs:
             node-version: '12'
         - name: Parse Codebase
           run: |
-            npx mvnx https://maven.pkg.github.com/underdocs/underdocs/underdocs:underdocs parse -I include -o codebase.json
+            pwd
+            npx mvnx --ignore-local https://maven.pkg.github.com/underdocs/underdocs/underdocs:underdocs parse -I include -o codebase.json
             ls
           env:
             MVNX_REMOTE_USERNAME: ${{ secrets.PACKAGES_USERNAME }}
             MVNX_REMOTE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         - name: Render Documentation
           run: |
-            pwd
-            npx mvnx https://maven.pkg.github.com/underdocs/underdocs/underdocs:underdocs render -i codebase.json -o public
+            npx mvnx --ignore-local https://maven.pkg.github.com/underdocs/underdocs/underdocs:underdocs render -i codebase.json -o public
             ls
           env:
             MVNX_REMOTE_USERNAME: ${{ secrets.PACKAGES_USERNAME }}
