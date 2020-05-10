@@ -30,6 +30,7 @@ jobs:
             MVNX_REMOTE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         - name: Render Documentation
           run: |
+            pwd
             npx mvnx https://maven.pkg.github.com/underdocs/underdocs/underdocs:underdocs render -i codebase.json -o public
             ls
           env:
