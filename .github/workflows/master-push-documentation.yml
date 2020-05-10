@@ -1,0 +1,30 @@
+name: Build Master Documentation
+
+on: push
+
+jobs:
+    build:
+      name: Build WASI
+  
+      runs-on: ubuntu-latest
+      
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+        - name: Setup Java
+          uses: actions/setup-java@v1
+          with:
+            java-version: '11'
+            java-package: jdk 
+            architecture: x64
+        - name: Setup Node
+          uses: actions/setup-node@v1
+          with:
+            node-version: '12'
+        - name: Parse Codebase
+          run: |
+            npx mvnx https://maven.pkg.github.com/underdocs/underdocs/underdocs:underdocs \
+                parse -I ./include -o ./codebase.json
+          env:
+            MVNX_REMOTE_USERNAME: ${{ secrets.PACKAGES_USERNAME }}
+            MVNX_REMOTE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
