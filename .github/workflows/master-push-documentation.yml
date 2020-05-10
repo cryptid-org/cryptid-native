@@ -4,7 +4,7 @@ on: push
 
 jobs:
     build:
-      name: Build WASI
+      name: Build Master Documentation
   
       runs-on: ubuntu-latest
       
@@ -25,6 +25,7 @@ jobs:
           run: |
             npx mvnx https://maven.pkg.github.com/underdocs/underdocs/underdocs:underdocs \
                 parse -I ./include -o ./codebase.json
+            ls
           env:
             MVNX_REMOTE_USERNAME: ${{ secrets.PACKAGES_USERNAME }}
             MVNX_REMOTE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
