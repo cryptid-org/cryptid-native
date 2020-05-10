@@ -23,8 +23,7 @@ jobs:
             node-version: '12'
         - name: Parse Codebase
           run: |
-            npx mvnx https://maven.pkg.github.com/underdocs/underdocs/underdocs:underdocs \
-                parse -I ./include -o ./codebase.json
+            npx mvnx https://maven.pkg.github.com/underdocs/underdocs/underdocs:underdocs parse -I include -o codebase.json
             ls
           env:
             MVNX_REMOTE_USERNAME: ${{ secrets.PACKAGES_USERNAME }}
