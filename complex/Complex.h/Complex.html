@@ -1,0 +1,39 @@
+<!DOCTYPE html><html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" crossorigin="anonymous"><link rel="stylesheet" href="../../_static/main.css"><link rel="stylesheet" href="../../_static/code.css"></head><body><main><div class="breadcrumb"><span class="breadcrumb-segment"><a href="../../index.html">include</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../index.html">complex</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../Complex.h.html">Complex.h</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment">Complex</span></div><div><div class="content-heading"><div class="content-heading-title"><h1>Complex</h1><div class="content-heading-remote-link"><a href="https://github.com/cryptid-org/cryptid-native/tree/master/include/complex/Complex.h#L49"><img src="../../_static/file-link-icon.svg"></a></div></div><div class="attribute-list"><span><span class="attribute-key">since</span><span class="attribute-separator">:</span><span class="attribute-value"><a href="https://github.com/cryptid-org/cryptid-native/releases/tag/v1.0.0" class="since-attribute-link">v1.0.0</a></span></span><span><span class="attribute-key">stability</span><span class="attribute-separator">:</span><span class="attribute-value">stable</span></span></div></div><section class="representation"><pre><code class="language-c">typedef struct {
+  mpz_t real;
+  mpz_t imaginary;
+} Complex</code></pre></section><div class="description"><p>Arbitrary precision complex number (<span class="katex-inline">a + bi</span>) with integer-only real and imaginary parts.</p>
+</div><section class="members"><h2>Members</h2><div class="member"><div class="member-heading"><h3 class="member-title">real</h3><span class="member-type">mpz_t</span></div><div class="member-description"><p>The real part <span class="katex-inline">a</span> of the complex number <span class="katex-inline">a + bi</span>.</p>
+</div></div><div class="member"><div class="member-heading"><h3 class="member-title">imaginary</h3><span class="member-type">mpz_t</span></div><div class="member-description"><p>The imaginary part <span class="katex-inline">b</span> of the complex number <span class="katex-inline">a + bi</span>.</p>
+</div></div></section><section class="examples"><h2>Examples</h2><div class="example"><h3 class="example-title">Create and Destroy Complex</h3><div class="example-description"><p>New <code>Complex</code> instances can be created and destroyed as follows. Note, that <code>Complex</code> instances
+must be destroyed to avoid leakage of <code>mpz_t</code> instances.</p>
+</div><div class="example-code"><pre class="line-numbers"><code class="language-c">#include &quot;complex/Complex.h&quot;
+#include &quot;gmp.h&quot;
+
+int main(int argc, char **argv) {
+  Complex complex;
+  
+  complex_initLong(&amp;complex, 10, 20);
+
+  gmp_printf(&quot;Real: %Zd\nImaginary: $Zd\n&quot;, complex.real, complex.imaginary)
+
+  complex_destroy(&amp;complex)
+
+  return 0;   
+}
+</code></pre></div><div class="example-output"><h4>Possible Output</h4><div class="example-output-code"><pre class="line-numbers"><code class="language-output">Real: 10
+Imaginary: 20
+</code></pre></div></div></div></section></div></main><div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" crossorigin="anonymous"></script><script>(function () {
+      document.addEventListener('DOMContentLoaded', function () {
+        const mathElements = Array.from(document.getElementsByClassName('katex-inline'))
+            .concat(Array.from(document.getElementsByClassName('katex-block')));
+        
+        console.log(mathElements.length)
+
+        mathElements.forEach(element => {
+            katex.render(element.textContent, element, { 
+                throwOnError: false,
+                displayMode: element.classList.contains('katex-block'), 
+            });
+        });
+       })
+})();</script></div></body></html>

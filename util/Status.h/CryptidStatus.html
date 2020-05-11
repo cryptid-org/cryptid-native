@@ -1,0 +1,36 @@
+<!DOCTYPE html><html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" crossorigin="anonymous"><link rel="stylesheet" href="../../_static/main.css"><link rel="stylesheet" href="../../_static/code.css"></head><body><main><div class="breadcrumb"><span class="breadcrumb-segment"><a href="../../index.html">include</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../index.html">util</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../Status.h.html">Status.h</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment">CryptidStatus</span></div><div><div class="content-heading"><div class="content-heading-title"><h1>CryptidStatus</h1><div class="content-heading-remote-link"><a href="https://github.com/cryptid-org/cryptid-native/tree/master/include/util/Status.h#L4"><img src="../../_static/file-link-icon.svg"></a></div></div></div><section class="representation"><pre><code class="language-c">typedef enum {
+  CRYPTID_SUCCESS,
+  CRYPTID_HAS_NO_MUL_INV_ERROR,
+  CRYPTID_DIVISOR_OF_LINE_INFINITY_ERROR,
+  CRYPTID_DIVISOR_OF_TANGENT_INFINITY_ERROR,
+  CRYPTID_MESSAGE_NULL_ERROR,
+  CRYPTID_MESSAGE_LENGTH_ERROR,
+  CRYPTID_IDENTITY_NULL_ERROR,
+  CRYPTID_IDENTITY_LENGTH_ERROR,
+  CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR,
+  CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR,
+  CRYPTID_ILLEGAL_CIPHERTEXT_ERROR,
+  CRYPTID_DECRYPTION_FAILED_ERROR,
+  CRYPTID_ATTEMPT_LIMIT_REACHED_ERROR,
+  CRYPTID_PUBLIC_PARAMETERS_NULL_ERROR,
+  CRYPTID_RESULT_POINTER_NULL_ERROR,
+  CRYPTID_RANDOM_GENERATION_ERROR,
+  CRYPTID_VERIFICATION_FAILED_ERROR,
+  CRYPTID_ILLEGAL_SIGNATURE_ERROR,
+  CRYPTID_HASH_NULLPOINTER_OUTPUT_PARAM_ERROR,
+  CRPYTID_UNKNOWN_HASH_TYPE_ERROR
+} CryptidStatus</code></pre></section><section class="members"><h2>Members</h2><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_SUCCESS</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_HAS_NO_MUL_INV_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_DIVISOR_OF_LINE_INFINITY_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_DIVISOR_OF_TANGENT_INFINITY_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_MESSAGE_NULL_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_MESSAGE_LENGTH_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_IDENTITY_NULL_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_IDENTITY_LENGTH_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_ILLEGAL_PUBLIC_PARAMETERS_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_ILLEGAL_PRIVATE_KEY_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_ILLEGAL_CIPHERTEXT_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_DECRYPTION_FAILED_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_ATTEMPT_LIMIT_REACHED_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_PUBLIC_PARAMETERS_NULL_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_RESULT_POINTER_NULL_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_RANDOM_GENERATION_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_VERIFICATION_FAILED_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_ILLEGAL_SIGNATURE_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRYPTID_HASH_NULLPOINTER_OUTPUT_PARAM_ERROR</h3></div><div class="member-description"></div></div><div class="member"><div class="member-heading"><h3 class="member-title">CRPYTID_UNKNOWN_HASH_TYPE_ERROR</h3></div><div class="member-description"></div></div></section></div></main><div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" crossorigin="anonymous"></script><script>(function () {
+      document.addEventListener('DOMContentLoaded', function () {
+        const mathElements = Array.from(document.getElementsByClassName('katex-inline'))
+            .concat(Array.from(document.getElementsByClassName('katex-block')));
+        
+        console.log(mathElements.length)
+
+        mathElements.forEach(element => {
+            katex.render(element.textContent, element, { 
+                throwOnError: false,
+                displayMode: element.classList.contains('katex-block'), 
+            });
+        });
+       })
+})();</script></div></body></html>

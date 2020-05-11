@@ -1,0 +1,302 @@
+@import url('https://fonts.googleapis.com/css2?family=Overpass+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap');
+
+:root {
+    --background-color: #ffffff;
+
+    --text-font: 'IBM Plex Sans', sans-serif;
+    --text-color: black;
+
+    --code-font: 'Overpass Mono', monospace;
+
+    --header-border-color: #aaaaaa;
+    --header-border: 1px solid var(--header-border-color);
+
+    --table-border-color: #cccccc;
+    --table-border: 1px solid var(--table-border-color);
+    --table-link-color: #0645ad;
+    --table-link-visited-color: #0b0080;
+
+    --breadcrumb-link-color: #0645ad;
+    --breadcrumb-link-visited-color: #0b0080;
+
+    --attribute-key-color: #005900;
+    --attribute-value-color: #008000;
+
+    --member-type-color: #008000;
+
+    --parameter-type-color: #008000;
+
+    --main-width: 80ch;
+}
+
+html {
+    font-size: 1.1rem;
+    line-height: 1.5;
+
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    font-family: var(--text-font);
+}
+
+main {
+    display: grid;
+    grid-template-columns: minmax(1.2rem, 1fr) minmax(0, var(--main-width)) minmax(1.2rem, 1fr);
+    padding-bottom: 1rem;
+}
+
+main > div > section:not(:last-of-type) {
+    padding-bottom: 0.5rem;
+}
+
+main > * {
+    grid-column: 2;
+}
+
+h1 {
+    margin-top: 0;
+    margin-bottom: 0.1em;
+
+    padding-top: 0;
+    padding-bottom: 0;
+
+    font-size: 2rem;
+
+    border-bottom: var(--header-border);
+}
+
+.content-heading-title {
+    position: relative;
+}
+
+.content-heading-tile > h1 {
+    display: inline-block;
+    width: 100%;
+}
+
+.content-heading-remote-link {
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    left: -1.5rem;
+}
+
+.content-heading-remote-link img {
+    width: 0.75rem;
+}
+
+.attribute-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+
+    font-size: 0.8rem;
+}
+
+.attribute-list > * {
+    padding: 5px;
+}
+
+.attribute-list .attribute-key {
+    color: var(--attribute-key-color);
+}
+
+.attribute-list .attribute-separator {
+    color: var(--attribute-key-color);
+    padding-right: 0.2rem;
+}
+
+.attribute-list .attribute-value {
+    color: var(--attribute-value-color);
+}
+
+.attribute-list .attribute-value .since-attribute-link {
+    text-decoration: none;
+    color: var(--attribute-value-color);
+    font-weight: bolder;
+}
+
+.attribute-list .attribute-value .since-attribute-link:hover {
+    color: var(--attribute-key-color);
+}
+
+p {
+    margin: 0.4em 0 0.5em 0;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 0.1em;
+
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.katex-inline {
+    font-size: 1rem;
+}
+
+.katex-block {
+    font-size: 1rem;
+}
+
+.breadcrumb {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    font-size: 0.8rem;
+}
+
+.breadcrumb > .breadcrumb-segment > a {
+    color: var(--breadcrumb-link-color);
+    text-decoration: none;
+}
+
+.breadcrumb > .breadcrumb-segment > a:visited {
+    color: var(--breadcrumb-link-visited-color);
+}
+
+.breadcrumb > .breadcrumb-separator {
+    font-weight: bold;
+}
+
+.breadcrumb > :not(:last-child) {
+    padding-right: 0.5em;
+}
+
+.representation {
+    border-bottom: var(--header-border);
+}
+
+.members > .member .member-title {
+    display: inline-block;
+
+    margin-top: 0;
+    padding-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.members > .member .member-type {
+    padding-left: 0.5rem;
+
+    font-size: 0.85rem;
+    color: var(--member-type-color)
+}
+
+.parameters > .parameter .parameter-title {
+    display: inline-block;
+
+    margin-top: 0;
+    padding-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.parameters > .parameter .parameter-type {
+    padding-left: 0.5rem;
+
+    font-size: 0.85rem;
+    color: var(--parameter-type-color)
+}
+
+.parameters > .parameter:not(:last-of-type) {
+    padding-bottom: 1rem;
+}
+
+.example > .example-title,
+.example > .example-output > h4 {
+    margin-top: 0;
+    padding-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.examples > .example:not(:last-of-type) {
+    padding-bottom: 1rem;
+}
+
+.example-code,
+.example-output-code {
+    width: calc(100% + 2.5em);
+    margin-left: -2.5em;
+}
+
+.elements .element-group:not(:last-of-type) {
+    padding-bottom: 1rem;
+}
+
+.elements .element-group h3 {
+    margin-top: 0;
+    margin-bottom: 0.1em;
+
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.submodules-table,
+.subheaders-table,
+.elements-table {
+    border-spacing: 0;
+    width: 75%;
+    max-width: 75%;
+}
+
+.submodules-table .submodule-name-cell, 
+.submodules-table .submodule-excerpt-cell,
+.subheaders-table .subheader-name-cell, 
+.subheaders-table .subheader-excerpt-cell,
+.elements-table .element-name-cell, 
+.elements-table .element-excerpt-cell {
+    border-top: var(--table-border);
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+}
+
+.submodules-table .submodule-name-cell,
+.subheaders-table .subheader-name-cell,
+.elements-table .element-name-cell {
+    padding-left: 0.33rem;
+    width: 0;
+    white-space: nowrap;
+}
+
+.submodules-table .submodule-name-cell > a,
+.subheaders-table .subheader-name-cell > a,
+.elements-table .element-name-cell > a {
+    color: var(--table-link-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.submodules-table .submodule-name-cell > a:visited,
+.subheaders-table .subheader-name-cell > a:visited,
+.elements-table .element-name-cell > a:visited {
+    color: var(--table-link-visited-color);
+}
+
+.submodules-table .submodule-excerpt-cell,
+.subheaders-table .subheader-excerpt-cell,
+.elements-table .element-excerpt-cell {
+    padding-left: 1rem;
+}
+
+.submodules-table .submodule-excerpt-cell p,
+.subheaders-table .subheader-excerpt-cell p,
+.elements-table .element-excerpt-cell p {
+    display: inline;
+    padding: 0;
+    margin: 0;
+}
+
+.elements-table .element-excerpt-cell .element-excerpt-type {
+    color: var(--attribute-value-color);
+    font-size: 0.8rem;
+}
