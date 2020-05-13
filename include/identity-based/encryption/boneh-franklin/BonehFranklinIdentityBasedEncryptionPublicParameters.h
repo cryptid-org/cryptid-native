@@ -22,7 +22,7 @@ typedef struct BonehFranklinIdentityBasedEncryptionPublicParameters {
    * The Type-1 elliptic curve we're operating over. Note, that the p field of
    * [BFPublicParameters](https://tools.ietf.org/html/rfc5091#page-55)
    * corresponds to
-   * [ellipticCurve.fieldOrder](elliptic/EllipticCurve.h#fieldOrder).
+   * [fieldOrder](codebase://elliptic/EllipticCurve.h#EllipticCurve.fieldOrder).
    */
   EllipticCurve ellipticCurve;
 
@@ -37,9 +37,9 @@ typedef struct BonehFranklinIdentityBasedEncryptionPublicParameters {
    * ## Description
    *
    * A generator point of group order
-   * [q](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#q)
+   * [q](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.q)
    * on
-   * [ellipticCurve](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#ellipticCurve).
+   * [ellipticCurve](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.ellipticCurve).
    */
   AffinePoint pointP;
 
@@ -47,9 +47,9 @@ typedef struct BonehFranklinIdentityBasedEncryptionPublicParameters {
    * ## Description
    *
    * A point on
-   * [ellipticCurve](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#ellipticCurve)
+   * [ellipticCurve](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.ellipticCurve)
    * which is
-   * [pointP](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#pointP)
+   * [pointP](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.pointP)
    * multiplied with the master secret.
    */
   AffinePoint pointPpublic;
@@ -66,30 +66,30 @@ typedef struct BonehFranklinIdentityBasedEncryptionPublicParameters {
  * ## Description
  *
  * Initializes a new
- * [BonehFranklinIdentityBasedEncryptionPublicParameters](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters)
+ * [BonehFranklinIdentityBasedEncryptionPublicParameters](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters)
  * with the specified values.
  *
  * ## Parameters
  *
  *   * publicParametersOutput
  *     * The
- * [BonehFranklinIdentityBasedEncryptionPublicParameters](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters)
+ * [BonehFranklinIdentityBasedEncryptionPublicParameters](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters)
  * to be initialized.
  *   * ellipticCurve
- *     * The [EllipticCurve](elliptic/EllipticCurve.h#EllipticCurve), the system
- * operates on.
+ *     * The [EllipticCurve](codebase://elliptic/EllipticCurve.h#EllipticCurve),
+ * the system operates on.
  *   * q
  *     * The field order of the subgroup, the system operates on.
  *   * pointP
  *     * A generator point of group order
- * [q](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#q)
+ * [q](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.q)
  * on
- * [ellipticCurve](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#ellipticCurve).
+ * [ellipticCurve](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.ellipticCurve).
  *   * pointPpublic
  *     * A point on
- * [ellipticCurve](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#ellipticCurve)
+ * [ellipticCurve](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.ellipticCurve)
  * which is
- * [pointP](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#pointP)
+ * [pointP](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.pointP)
  * multiplied with the master secret.
  *   * hashFunction
  *     * The hash function, the system operates with.
@@ -104,13 +104,13 @@ void bonehFranklinIdentityBasedEncryptionPublicParameters_init(
  * ## Description
  *
  * Frees a
- * [BonehFranklinIdentityBasedEncryptionPublicParameters](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters).
+ * [BonehFranklinIdentityBasedEncryptionPublicParameters](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters).
  *
  * ## Parameters
  *
  *   * publicParameters
  *     * The
- * [BonehFranklinIdentityBasedEncryptionPublicParameters](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters)
+ * [BonehFranklinIdentityBasedEncryptionPublicParameters](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters)
  * to be destroyed.
  */
 void bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(
@@ -125,7 +125,7 @@ void bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(
  *
  *   * publicParameters
  *     * The
- * [BonehFranklinIdentityBasedEncryptionPublicParameters](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters)
+ * [BonehFranklinIdentityBasedEncryptionPublicParameters](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters)
  * to check.
  *
  * ## Return Value

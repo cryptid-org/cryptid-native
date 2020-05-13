@@ -1,5 +1,5 @@
 /**
- * # CryptID Identity-based Encryption
+ * # CryptID Boneh-Franklin Identity-based Encryption
  *
  * ## Excerpt
  *

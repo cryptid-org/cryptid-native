@@ -10,7 +10,7 @@ typedef struct BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary {
   /**
    * ## Description
    *
-   * A binary string representing a part of the cipher.
+   * The master secret.
    */
   void *masterSecret;
 
@@ -18,7 +18,7 @@ typedef struct BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary {
    * ## Description
    *
    * The length of
-   * [masterSecret](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary.h#masterSecret).
+   * [masterSecret](codebase://identity-based/signature/hess/BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary.h#BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary.masterSecret).
    */
   size_t masterSecretLength;
 } BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary;

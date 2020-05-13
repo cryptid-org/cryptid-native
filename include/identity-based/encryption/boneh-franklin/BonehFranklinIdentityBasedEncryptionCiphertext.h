@@ -9,7 +9,7 @@
 /**
  * ## Description
  *
- * Struct holding the ciphertext data. Refer to
+ * Struct holding the BF-IBE ciphertext. Refer to
  * [BFCiphertextBlock](https://tools.ietf.org/html/rfc5091#page-56) in
  * [RFC-5091](https://tools.ietf.org/html/rfc5091).
  */
@@ -32,7 +32,7 @@ typedef struct BonehFranklinIdentityBasedEncryptionCiphertext {
    * ## Description
    *
    * The length of
-   * [cipherV](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherV).
+   * [cipherV](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext.cipherV).
    */
   size_t cipherVLength;
 
@@ -47,7 +47,7 @@ typedef struct BonehFranklinIdentityBasedEncryptionCiphertext {
    * ## Description
    *
    * The length of
-   * [cipherW](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#cipherW).
+   * [cipherW](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext.cipherW).
    */
   size_t cipherWLength;
 } BonehFranklinIdentityBasedEncryptionCiphertext;
@@ -56,32 +56,31 @@ typedef struct BonehFranklinIdentityBasedEncryptionCiphertext {
  * ## Description
  *
  * Initializes a new
- * [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext)
+ * [BonehFranklinIdentityBasedEncryptionCiphertext](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext)
  * with the specified values. Note, that
- * [cipherV](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#cipherV)
+ * [cipherV](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext.cipherV)
  * and
- * [cipherW](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#cipherW)
+ * [cipherW](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext.cipherW)
  * will be copied.
  *
  * ## Parameters
  *
  *   * ciphertextOutput
  *     * The
- * [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext)
+ * [BonehFranklinIdentityBasedEncryptionCiphertext](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext)
  * to be initialized.
  *   * cipherU
- *     * An [AffinePoint](elliptic/AffinePoint.h#AffinePoint) representing a
- * part of the cipher.
+ *     * A point in \f$E(F_p)\f$ representing a part of the signature.
  *   * cipherV
  *     * A binary string representing a part of the cipher.
  *   * cipherVLength
  *     * The length of
- * [cipherV](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#cipherV).
+ * [cipherV](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext.cipherV).
  *   * cipherW
  *     * A binary string representing a part of the cipher.
  *   * cipherWLength
  *     * The length of
- * [cipherW](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#cipherW).
+ * [cipherW](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext.cipherW).
  */
 void bonehFranklinIdentityBasedEncryptionCiphertext_init(
     BonehFranklinIdentityBasedEncryptionCiphertext *ciphertextOutput,
@@ -93,13 +92,13 @@ void bonehFranklinIdentityBasedEncryptionCiphertext_init(
  * ## Description
  *
  * Frees a
- * [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext).
+ * [BonehFranklinIdentityBasedEncryptionCiphertext](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext).
  *
  * ## Parameters
  *
  *   * bonehFranklinIdentityBasedEncryptionCiphertext
  *     * The
- * [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext)
+ * [BonehFranklinIdentityBasedEncryptionCiphertext](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext)
  * to be destroyed.
  */
 void bonehFranklinIdentityBasedEncryptionCiphertext_destroy(
@@ -114,7 +113,7 @@ void bonehFranklinIdentityBasedEncryptionCiphertext_destroy(
  *
  *   * ciphertext
  *     * The
- * [BonehFranklinIdentityBasedEncryptionCiphertext](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext)
+ * [BonehFranklinIdentityBasedEncryptionCiphertext](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertext.h#BonehFranklinIdentityBasedEncryptionCiphertext)
  * to check.
  *   * ellipticCurve
  *     * The elliptic curve, we are operating over.

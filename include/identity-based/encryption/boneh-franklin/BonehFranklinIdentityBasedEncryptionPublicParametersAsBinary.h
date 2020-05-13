@@ -32,23 +32,23 @@ typedef struct BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary {
    * ## Description
    *
    * The length of
-   * [q](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#q).
+   * [q](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.q).
    */
   size_t qLength;
 
   /**
    * The binary representation of a generator point of group order
-   * [q](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#q)
+   * [q](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.q)
    * on
-   * [ellipticCurve](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#ellipticCurve).
+   * [ellipticCurve](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.ellipticCurve).
    */
   AffinePointAsBinary pointP;
 
   /**
    * The binary representation of a point on
-   * [ellipticCurve](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#ellipticCurve)
+   * [ellipticCurve](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.ellipticCurve)
    * which is
-   * [pointP](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#pointP)
+   * [pointP](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.pointP)
    * multiplied with the master secret.
    */
   AffinePointAsBinary pointPpublic;
@@ -63,34 +63,34 @@ typedef struct BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary {
  * ## Description
  *
  * Initializes a new
- * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary)
+ * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary)
  * with the specified values.
  *
  * ## Parameters
  *
  *   * publicParametersAsBinaryOutput
  *     * The
- * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary)
+ * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary)
  * to be initialized.
  *   * ellipticCurve
- *     * The [EllipticCurve](elliptic/EllipticCurve.h#EllipticCurve), the system
- * operates on, but in binary representation.
+ *     * The [EllipticCurve](codebase://elliptic/EllipticCurve.h#EllipticCurve),
+ * the system operates on, but in binary representation.
  *   * q
  *     * The binary representation pf the field order of the subgroup, the
  * system operates on.
  *   * qLength
  *     * The length of
- * [q](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#q).
+ * [q](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.q).
  *   * pointP
  *     * The binary representation of a generator point of group order
- * [q](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#q)
+ * [q](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.q)
  * on
- * [ellipticCurve](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#ellipticCurve).
+ * [ellipticCurve](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.ellipticCurve).
  *   * pointPpublic
  *     * The binary representation of a point on
- * [ellipticCurve](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#ellipticCurve)
+ * [ellipticCurve](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.ellipticCurve)
  * which is
- * [pointP](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#pointP)
+ * [pointP](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters.pointP)
  * multiplied with the master secret.
  *   * hashFunction
  *     * The hash function, used by the system.
@@ -106,13 +106,13 @@ void bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_init(
  * ## Description
  *
  * Frees a
- * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary).
+ * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary).
  *
  * ## Parameters
  *
  *   * publicParametersAsBinary
  *     * The
- * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary)
+ * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary)
  * to be destroyed.
  */
 void bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_destroy(
@@ -123,22 +123,22 @@ void bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_destroy(
  * ## Description
  *
  * Converts a
- * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary)
+ * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary)
  * to
- * [BonehFranklinIdentityBasedEncryptionPublicParameters](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters).
+ * [BonehFranklinIdentityBasedEncryptionPublicParameters](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters).
  *
  * ## Parameters
  *
  *   * publicParametersOutput
  *     * The
- * [BonehFranklinIdentityBasedEncryptionPublicParameters](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters)
+ * [BonehFranklinIdentityBasedEncryptionPublicParameters](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters)
  * to be initialized based on a
- * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary).
+ * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary).
  *   * publicParametersAsBinary
  *     * The
- * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary),
+ * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary),
  * which needs to be converted to
- * [BonehFranklinIdentityBasedEncryptionPublicParameters](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters).
+ * [BonehFranklinIdentityBasedEncryptionPublicParameters](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters).
  */
 void bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_toBonehFranklinIdentityBasedEncryptionPublicParameters(
     BonehFranklinIdentityBasedEncryptionPublicParameters
@@ -150,22 +150,22 @@ void bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_toBonehFrankli
  * ## Description
  *
  * Converts a
- * [BonehFranklinIdentityBasedEncryptionPublicParameters](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters)
+ * [BonehFranklinIdentityBasedEncryptionPublicParameters](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters)
  * to
- * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary).
+ * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary).
  *
  * ## Parameters
  *
  *   * publicParametersAsBinaryOutput
  *     * The
- * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary)
+ * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary)
  * to be initialized based on a
- * [BonehFranklinIdentityBasedEncryptionPublicParameters](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters).
+ * [BonehFranklinIdentityBasedEncryptionPublicParameters](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters).
  *   * publicParameters
  *     * The
- * [BonehFranklinIdentityBasedEncryptionPublicParameters](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters),
+ * [BonehFranklinIdentityBasedEncryptionPublicParameters](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h#BonehFranklinIdentityBasedEncryptionPublicParameters),
  * which needs to be converted to
- * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary).
+ * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary).
  */
 void bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_fromBonehFranklinIdentityBasedEncryptionPublicParameters(
     BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary

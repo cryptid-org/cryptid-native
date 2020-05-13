@@ -24,13 +24,13 @@
  *   * masterSecretAsBinary
  *     * Out parameter which will hold the master secret. If the return value is
  * CRYPTID_SUCCESS, then it will point to a
- * [BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary.h#BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary)
+ * [BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary.h#BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary)
  * instance, that must be destroyed by the caller. Initialization is done by
  * this function.
  *   * publicParametersAsBinary
  *     * Pointer in which the public parameters will be stored. If the return
  * value is CRYPTID_SUCCESS, then it will point to correctly filled
- * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary)
+ * [BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h#BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary)
  * instance.
  *   * securityLevel
  *     * The desired security level.
@@ -54,9 +54,9 @@ CryptidStatus cryptid_ibe_bonehFranklin_setup(
  * ## Parameters
  *
  *   * result
- *     * Out parameter holding the private key. If the return value is
- * CRYPTID_SUCCESS, then it will point to an
- * [AffinePointAsBinary](elliptic/AffinePointAsBinary.h#AffinePointAsBinary)
+ *     * Out parameter holding the private key in binary format. If the return
+ * value is CRYPTID_SUCCESS, then it will point to an
+ * [AffinePointAsBinary](codebase://elliptic/AffinePointAsBinary.h#AffinePointAsBinary)
  * instance, that must be destroyed by the caller. Initialization is done by
  * this function.
  *   * identity
@@ -90,7 +90,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_extract(
  *   * result
  *     * Out parameter storing the ciphertext. If the return value is
  * CRYPTID_SUCCESS, then it will point to a
- * [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary)
+ * [BonehFranklinIdentityBasedEncryptionCiphertextAsBinary](codebase://identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionCiphertextAsBinary.h#BonehFranklinIdentityBasedEncryptionCiphertextAsBinary)
  * instance, that must be destroyed by the caller. Initialization is done by
  * this function.
  *   * message
