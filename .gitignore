@@ -65,3 +65,6 @@ test-results/
 
 # Memcheck output directory
 memcheck/
+
+# CLion
+.idea
