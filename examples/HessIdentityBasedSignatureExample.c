@@ -1,4 +1,4 @@
-// How to build: ./task.sh build && gcc examples/HessIdentityBasedSignatureExample.c build/libcryptid.a -I/mnt/c/Users/vecsi/Documents/CryptID/cryptid-native/include -std=c99 -Wall -Wextra -Werror -lgmp -lm
+//How to build: ./task.sh build && gcc examples/HessIdentityBasedSignatureExample.c build/libcryptid.a -I/mnt/c/Users/vecsi/Documents/CryptID/cryptid-native/include -D__CRYPTID_GMP -D__CRYPTID_HESS_IDENTITY_BASED_SIGNATURE -std=c99 -Wall -Wextra -Werror -lgmp -lm
 
 #include <stdio.h>
 #include <stdlib.h>
