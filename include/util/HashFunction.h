@@ -37,11 +37,13 @@ typedef enum HashFunction {
  *   * hashSizeOutput
  *     * The length of the hash in bytes.
  *   * hashFunction
- *     * The hash function to which the caller wants to know the result's length.
+ *     * The hash function to which the caller wants to know the result's
+ * length.
  *
  * ## Return Value
  *
- * CRYPTID_SUCCESS if the function is called to existing hashFunction, CRPYTID_UNKNOWN_HASH_TYPE_ERROR otherwise.
+ * CRYPTID_SUCCESS if the function is called to existing hashFunction,
+ * CRPYTID_UNKNOWN_HASH_TYPE_ERROR otherwise.
  */
 CryptidStatus hashFunction_getHashSize(int *hashSizeOutput,
                                        const HashFunction hashFunction);

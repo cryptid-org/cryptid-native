@@ -73,7 +73,8 @@ void random_mpzInRange(mpz_t result, const mpz_t range);
  * ## Description
  *
  * enerates a cryptographically secure random Solinas prime having the
- * specified bitlength. A Solinas prime is a prime of the form \f$2^a \pm 2^b \pm 1\f$, where \f$a > b\f$.
+ * specified bitlength. A Solinas prime is a prime of the form \f$2^a \pm 2^b
+ * \pm 1\f$, where \f$a > b\f$.
  *
  * ## Parameters
  *

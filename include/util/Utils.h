@@ -17,7 +17,8 @@
  * ## Parameters
  *
  *   * result
- *     * Out parameter storing an integer in the range \f$0\f$ to \f$p-1\f$. Must be mpz_init'd and mpz_clear'd by the caller.
+ *     * Out parameter storing an integer in the range \f$0\f$ to \f$p-1\f$.
+ * Must be mpz_init'd and mpz_clear'd by the caller.
  *   * s
  *     * The string to hash.
  *   * sLength
@@ -38,7 +39,8 @@ void hashToRange(mpz_t result, const unsigned char *const s, const int sLength,
  * ## Parameters
  *
  *   * result
- *     * Out parameter storing a point of order \f$q\f$ in \f$E(F_p)\f$. On CRYPTID_SUCCESS, it must be destroyed by the caller.
+ *     * Out parameter storing a point of order \f$q\f$ in \f$E(F_p)\f$. On
+ * CRYPTID_SUCCESS, it must be destroyed by the caller.
  *   * id
  *     * A string.
  *   * idLength
@@ -67,7 +69,8 @@ CryptidStatus hashToPoint(AffinePoint *result, const char *const id,
  * ## Parameters
  *
  *   * result
- *     * Out parameter storing the resulting string of size \f$2 \cdot \mathrm{Ceiling}(\frac{\log(p)}{8})\f$ octets. SHOULD NOT BE INITIALIZED.
+ *     * Out parameter storing the resulting string of size \f$2 \cdot
+ * \mathrm{Ceiling}(\frac{\log(p)}{8})\f$ octets. SHOULD NOT BE INITIALIZED.
  *   * resultLength
  *     * Out parameter storing the length of the resulting string.
  *   * v
@@ -90,7 +93,8 @@ void canonical(unsigned char **result, int *const resultLength, const Complex v,
  *   * result
  *     * Out parameter stroring a {@code b}-octet pseudo-random string.
  *   * b
- *     * The length of the result. Must be less than or equal to the number of bytes in the output of the hash function.
+ *     * The length of the result. Must be less than or equal to the number of
+ * bytes in the output of the hash function.
  *   * p
  *     * A string that will key the generator.
  *   * pLength

@@ -4,7 +4,8 @@
 /**
  * ## Description
  *
- * Enumeration of the possible results of a validation process. Flipped values to match boolean semantics better.
+ * Enumeration of the possible results of a validation process. Flipped values
+ * to match boolean semantics better.
  */
 typedef enum {
   CRYPTID_VALIDATION_SUCCESS = 1,
