@@ -41,7 +41,8 @@ typedef struct AffinePointAsBinary {
 /**
  * ## Description
  *
- * Initializes a new AffinePointAsBinary with the binary representation of specified arbitrary precision coordinates.
+ * Initializes a new AffinePointAsBinary with the binary representation of
+ * specified arbitrary precision coordinates.
  *
  * ## Parameters
  *
@@ -63,7 +64,8 @@ void affineAsBinary_init(AffinePointAsBinary *affinePointAsBinaryOutput,
 /**
  * ## Description
  *
- * Frees an AffinePointAsBinary. After calling this function on an AffinePointAsBinary instance, that instance should not be used anymore.
+ * Frees an AffinePointAsBinary. After calling this function on an
+ * AffinePointAsBinary instance, that instance should not be used anymore.
  *
  * ## Parameters
  *

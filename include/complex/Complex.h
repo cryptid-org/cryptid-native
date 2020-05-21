@@ -78,7 +78,8 @@ void complex_initLong(Complex *complexOutput, const long real,
 /**
  * ## Description
  *
- * Initializes a new Complex with an arbitrary precision real part and a long imaginary part.
+ * Initializes a new Complex with an arbitrary precision real part and a long
+ * imaginary part.
  *
  * ## Parameters
  *
@@ -95,7 +96,8 @@ void complex_initMpzLong(Complex *complexOutput, const mpz_t real,
 /**
  * ## Description
  *
- * Initializes a new Complex with a long real part and ann arbitrary precision imaginary part.
+ * Initializes a new Complex with a long real part and ann arbitrary precision
+ * imaginary part.
  *
  * ## Parameters
  *
@@ -130,7 +132,8 @@ int complex_isEquals(const Complex complex1, const Complex complex2);
 /**
  * ## Description
  *
- * Frees a Complex instance. After calling this function on a Complex instance, that instance should not be used anymore.
+ * Frees a Complex instance. After calling this function on a Complex instance,
+ * that instance should not be used anymore.
  *
  * ## Parameters
  *
@@ -142,7 +145,8 @@ void complex_destroy(const Complex complex);
 /**
  * ## Description
  *
- * Frees multiple Complex instances. After calling this function on a Complex instance, that instance should not be used anymore.
+ * Frees multiple Complex instances. After calling this function on a Complex
+ * instance, that instance should not be used anymore.
  *
  * ## Parameters
  *
@@ -173,7 +177,8 @@ void complex_modAdd(Complex *result, const Complex complex1,
 /**
  * ## Description
  *
- * Calculates the additive inverse of the specified Complex with respect to the specified modulus.
+ * Calculates the additive inverse of the specified Complex with respect to the
+ * specified modulus.
  *
  * ## Parameters
  *
@@ -271,7 +276,8 @@ void complex_modMulScalar(Complex *result, const Complex complex, const mpz_t s,
  * ## Parameters
  *
  *   * result
- *     * Out parameter to the multiplicative inverse. On CRYPTID_SUCCESS, this should be destroyed by the caller.
+ *     * Out parameter to the multiplicative inverse. On CRYPTID_SUCCESS, this
+ * should be destroyed by the caller.
  *   * complex
  *     * A Complex.
  *   * p
@@ -279,7 +285,8 @@ void complex_modMulScalar(Complex *result, const Complex complex, const mpz_t s,
  *
  * ## Return Value
  *
- * CRYPTID_SUCCESS if complex has a multiplicative inverse, HAS_NO_MUL_INV error otherwise.
+ * CRYPTID_SUCCESS if complex has a multiplicative inverse, HAS_NO_MUL_INV error
+ * otherwise.
  */
 CryptidStatus complex_multiplicativeInverse(Complex *result,
                                             const Complex complex,

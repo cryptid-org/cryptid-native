@@ -17,7 +17,8 @@
  * ## Parameters
  *
  *   * result
- *     * Out parameter to the resulting Complex value. On CRYPTID_SUCCESS, this should be destroyed by the caller.
+ *     * Out parameter to the resulting Complex value. On CRYPTID_SUCCESS, this
+ * should be destroyed by the caller.
  *   * p
  *     * A point of \f$E[r]\f$.
  *   * b

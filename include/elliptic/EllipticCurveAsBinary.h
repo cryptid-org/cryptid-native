@@ -13,7 +13,8 @@ typedef struct EllipticCurveAsBinary {
   /**
    * ## Description
    *
-   * The binary representation of the coefficient a from the elliptic curve equation \f$y^2 = x^3 + ax + b\f$.
+   * The binary representation of the coefficient a from the elliptic curve
+   * equation \f$y^2 = x^3 + ax + b\f$.
    */
   void *a;
 
@@ -27,7 +28,8 @@ typedef struct EllipticCurveAsBinary {
   /**
    * ## Description
    *
-   * The binary representation of the coefficient b from the elliptic curve equation \f$y^2 = x^3 + ax + b\f$.
+   * The binary representation of the coefficient b from the elliptic curve
+   * equation \f$y^2 = x^3 + ax + b\f$.
    */
   void *b;
 
@@ -56,7 +58,8 @@ typedef struct EllipticCurveAsBinary {
 /**
  * ## Description
  *
- * Initializes a new EllipticCurve instance with the binary representation of arbitrary precision integers.
+ * Initializes a new EllipticCurve instance with the binary representation of
+ * arbitrary precision integers.
  *
  * ## Parameters
  *
@@ -102,7 +105,8 @@ void ellipticCurveAsBinary_destroy(EllipticCurveAsBinary ellipticCurveAsBinary);
  *   * ellipticCurveOutput
  *     * The EllipticCurve to be initialized based on an EllipticCurveAsBinary.
  *   * ellipticCurveAsBinary
- *     * The EllipticCurveAsBinary, which needs to be converted to EllipticCurve.
+ *     * The EllipticCurveAsBinary, which needs to be converted to
+ * EllipticCurve.
  */
 void ellipticCurveAsBinary_toEllipticCurve(
     EllipticCurve *ellipticCurveOutput,
@@ -118,7 +122,8 @@ void ellipticCurveAsBinary_toEllipticCurve(
  *   * ellipticCurveAsBinaryOutput
  *     * The EllipticCurveAsBinary to be initialized based on an EllipticCurve.
  *   * ellipticCurve
- *     * The EllipticCurve, which needs to be converted to EllipticCurveAsBinary.
+ *     * The EllipticCurve, which needs to be converted to
+ * EllipticCurveAsBinary.
  */
 void ellipticCurveAsBinary_fromEllipticCurve(
     EllipticCurveAsBinary *ellipticCurveAsBinaryOutput,

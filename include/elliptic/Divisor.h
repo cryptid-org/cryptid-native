@@ -15,7 +15,8 @@
  * ## Parameters
  *
  *   * result
- *     * The resulting element of \f$F_p^2\f$ that is the divisor of the vertical line going through \f$A\f$ evaluated at \f$B\f$.
+ *     * The resulting element of \f$F_p^2\f$ that is the divisor of the
+ * vertical line going through \f$A\f$ evaluated at \f$B\f$.
  *   * a
  *     * A point in \f$E(F_p)\f$.
  *   * b
@@ -35,7 +36,9 @@ void divisor_evaluateVertical(Complex *result, const AffinePoint a,
  * ## Parameters
  *
  *   * result
- *     * Out parameter: an element of \f$F_p^2\f$ that is the divisor of the line tangent to \f$A\f$ evaluated at \f$B\f$. On CRYPTID_SUCCESS, this should be destroyed by the caller.
+ *     * Out parameter: an element of \f$F_p^2\f$ that is the divisor of the
+ * line tangent to \f$A\f$ evaluated at \f$B\f$. On CRYPTID_SUCCESS, this should
+ * be destroyed by the caller.
  *   * a
  *     * A point in \f$E(F_p)\f$.
  *   * b
@@ -59,7 +62,9 @@ CryptidStatus divisor_evaluateTangent(Complex *result, const AffinePoint a,
  * ## Parameters
  *
  *   * result
- *     * Out parameter: an element of \f$F_p^2\f$ that is the divisor of the line going through \f$A^{\prime}\f$ and \f$A^{\prime\prime}\f$ evaluated at \f$B\f$. On CRYPTID_SUCCESS, this should be destroyed by the caller.
+ *     * Out parameter: an element of \f$F_p^2\f$ that is the divisor of the
+ * line going through \f$A^{\prime}\f$ and \f$A^{\prime\prime}\f$ evaluated at
+ * \f$B\f$. On CRYPTID_SUCCESS, this should be destroyed by the caller.
  *   * a
  *     * A point in \f$E(F_p)\f$.
  *   * aprime

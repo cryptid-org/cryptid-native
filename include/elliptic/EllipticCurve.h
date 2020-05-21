@@ -13,14 +13,16 @@ typedef struct EllipticCurve {
   /**
    * ## Description
    *
-   * The coefficient a from the elliptic curve equation \f$y^2 = x^3 + ax + b\f$.
+   * The coefficient a from the elliptic curve equation \f$y^2 = x^3 + ax +
+   * b\f$.
    */
   mpz_t a;
 
   /**
    * ## Description
    *
-   * The coefficient b from the elliptic curve equation \f$y^2 = x^3 + ax + b\f$.
+   * The coefficient b from the elliptic curve equation \f$y^2 = x^3 + ax +
+   * b\f$.
    */
   mpz_t b;
 
@@ -85,7 +87,8 @@ void ellipticCurve_destroy(EllipticCurve ellipticCurve);
 /**
  * ## Description
  *
- * Validates that the specified EllipticCurve instance is a Type-1 elliptic curve.
+ * Validates that the specified EllipticCurve instance is a Type-1 elliptic
+ * curve.
  *
  * ## Parameters
  *

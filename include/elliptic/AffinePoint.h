@@ -65,17 +65,13 @@ void affine_initLong(AffinePoint *affinePointOutput, const long x,
 /**
  * ## Description
  *
- * 
+ * Frees an AffinePoint. After calling this function on an AffinePoint instance,
+ * that instance should not be used anymore.
  *
  * ## Parameters
  *
- *   * 
- *     * 
- */
-/**
- * Frees an AffinePoint. After calling this function on an AffinePoint instance,
- * that instance should not be used anymore.
- * @param affinePoint the AffinePoint to be destroyed
+ *   *affinePoint
+ *     * The AffinePoint to be destroyed.
  */
 void affine_destroy(AffinePoint affinePoint);
 
@@ -133,7 +129,8 @@ int affine_isInfinity(const AffinePoint affinePoint);
  * ## Parameters
  *
  *   * result
- *     * The result of the operation. On CRYPTID_SUCCESS, this should be destroyed by the caller.
+ *     * The result of the operation. On CRYPTID_SUCCESS, this should be
+ * destroyed by the caller.
  *   * affinePoint
  *     * The point to double.
  *   * ellipticCurve
@@ -155,7 +152,8 @@ CryptidStatus affine_double(AffinePoint *result, const AffinePoint affinePoint,
  * ## Parameters
  *
  *   * result
- *     * The result of the addition. On CRYPTID_SUCCESS, this should be destroyed by the caller.
+ *     * The result of the addition. On CRYPTID_SUCCESS, this should be
+ * destroyed by the caller.
  *   * affinePoint1
  *     * An AffinePoint.
  *   * affinePoint2
@@ -180,7 +178,8 @@ CryptidStatus affine_add(AffinePoint *result, const AffinePoint affinePoint1,
  * ## Parameters
  *
  *   * result
- *     * The result of the multiplication. On CRYPTID_SUCCESS, this should be destroyed by the caller.
+ *     * The result of the multiplication. On CRYPTID_SUCCESS, this should be
+ * destroyed by the caller.
  *   * affinePoint
  *     * The point to multiply.
  *   * s
@@ -199,7 +198,8 @@ CryptidStatus affine_wNAFMultiply(AffinePoint *result,
 /**
  * ## Description
  *
- * Checks if the specified point is on the passed curve (satisfies the curve equation).
+ * Checks if the specified point is on the passed curve (satisfies the curve
+ * equation).
  *
  * ## Parameters
  *
@@ -229,7 +229,8 @@ int affine_isOnCurve(const AffinePoint point,
  *
  * ## Return Value
  *
- * CRYPTID_VALIDATION_SUCCESS if the point is valid, CRYPTID_VALIDATION_FAILURE otherwise.
+ * CRYPTID_VALIDATION_SUCCESS if the point is valid, CRYPTID_VALIDATION_FAILURE
+ * otherwise.
  */
 CryptidValidationResult affine_isValid(const AffinePoint affinePoint,
                                        const EllipticCurve ellipticCurve);

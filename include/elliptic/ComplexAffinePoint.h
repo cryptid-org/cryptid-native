@@ -48,7 +48,8 @@ void complexAffine_init(ComplexAffinePoint *complexAffinePointOutput,
 /**
  * ## Description
  *
- * Initializes a new ComplexAffinePoint initialized with the specified long values.
+ * Initializes a new ComplexAffinePoint initialized with the specified long
+ * values.
  *
  * ## Parameters
  *
@@ -70,7 +71,8 @@ void complexAffine_initLong(ComplexAffinePoint *complexAffinePointOutput,
 /**
  * ## Description
  *
- * Frees a ComplexAffinePoint. After calling this function on a ComplexAffinePoint instance, that instance should not be used anymore.
+ * Frees a ComplexAffinePoint. After calling this function on a
+ * ComplexAffinePoint instance, that instance should not be used anymore.
  *
  * ## Parameters
  *
@@ -133,7 +135,8 @@ int complexAffine_isInfinity(const ComplexAffinePoint complexAffinePoint);
  * ## Parameters
  *
  *   * result
- *     * The result of the operation. On CRYPTID_SUCCESS, this should be destroyed by the caller.
+ *     * The result of the operation. On CRYPTID_SUCCESS, this should be
+ * destroyed by the caller.
  *   * complexAffinePoint
  *     * The point to double.
  *   * ellipticCurve
@@ -155,7 +158,8 @@ CryptidStatus complexAffine_double(ComplexAffinePoint *result,
  * ## Parameters
  *
  *   * result
- *     * The result of the addition. On CRYPTID_SUCCESS, this should be destroyed by the caller.
+ *     * The result of the addition. On CRYPTID_SUCCESS, this should be
+ * destroyed by the caller.
  *   * complexAffinePoint1
  *     * A ComplexAffinePoint.
  *   * complexAffinePoint2
@@ -180,7 +184,8 @@ CryptidStatus complexAffine_add(ComplexAffinePoint *result,
  * ## Parameters
  *
  *   * result
- *     * The result of the multiplication. On CRYPTID_SUCCESS, this should be destroyed by the caller.
+ *     * The result of the multiplication. On CRYPTID_SUCCESS, this should be
+ * destroyed by the caller.
  *   * complexAffinePoint
  *     * The point to multiply.
  *   * s
@@ -200,7 +205,8 @@ complexAffine_multiply(ComplexAffinePoint *result,
 /**
  * ## Description
  *
- * Checks if the specified point is on the passed curve (satisfies the curve equation).
+ * Checks if the specified point is on the passed curve (satisfies the curve
+ * equation).
  *
  * ## Parameters
  *
