@@ -70,7 +70,7 @@ void affine_initLong(AffinePoint *affinePointOutput, const long x,
  *
  * ## Parameters
  *
- *   *affinePoint
+ *   * affinePoint
  *     * The AffinePoint to be destroyed.
  */
 void affine_destroy(AffinePoint affinePoint);
