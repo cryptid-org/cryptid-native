@@ -5,9 +5,18 @@
 #include "util/Validation.h"
 
 /**
+ * ## Description
+ *
  * Check whether \f$p\f$ is a probable prime.
- * @param p the number to check
- * @result CRYPTID_VALIDATION_SUCCESS if \f$p\f$ is a probable prime
+ *
+ * ## Parameters
+ *
+ *   * p
+ *     * The number to check.
+ *
+ * ## Return Value
+ *
+ * CRYPTID_VALIDATION_SUCCESS if \f$p\f$ is a probable prime.
  */
 CryptidValidationResult primalityTest_isProbablePrime(const mpz_t p);
 

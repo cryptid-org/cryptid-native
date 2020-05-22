@@ -3,16 +3,24 @@
 
 #include "util/Status.h"
 
-
 /**
+ * ## Description
+ *
  * Fills the passed buffer from a cryptographically secure source.
- * 
  * If {@code (__CRYPTID_EXTERN_RANDOM} is defined, then this function will
- * call the {@code int __cryptid_cryptoRandom(void *buf, const int num)} function
- * internally.
- * @param buf the buffer to fill
- * @param num the size of the buffer
- * @return CRYPTID_SUCCESS if everything went right
+ * call the {@code int __cryptid_cryptoRandom(void *buf, const int num)}
+ * function internally.
+ *
+ * ## Parameters
+ *
+ *   * buf
+ *     * The buffer to fill.
+ *   * num
+ *     * The size of the buffer.
+ *
+ * ## Return Value
+ *
+ * CRYPTID_SUCCESS if everything went right.
  */
 CryptidStatus cryptid_randomBytes(unsigned char *buf, const int num);
 

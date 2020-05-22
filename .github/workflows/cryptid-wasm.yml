@@ -32,7 +32,7 @@ jobs:
         run: |
           git clone https://github.com/cryptid-org/warm.git
           cd warm/
-          ./make.sh clang "--sysroot=/home/runner/work/cryptid-native/cryptid-native/wasi-libc/sysroot -O2 -flto" llvm-ar
+          ./make.sh clang "--sysroot=/home/runner/work/cryptid-native/cryptid-native/wasi-libc/sysroot -O2 -flto -DWARM_COMPILE_TIME_SET_ALLOCATOR -DWARM_USE_DEFAULT_ALLOCATOR" llvm-ar
       - name: Create CryptID.native WASI module
         run: |
           clang \
@@ -45,6 +45,11 @@ jobs:
             -I./include \
             -I./dependencies/sha/include \
             -I./warm \
+            -DWARM_COMPILE_TIME_SET_ALLOCATOR \
+            -DWARM_USE_DEFAULT_ALLOCATOR \
+            -D__CRYPTID_GMP \
+            -D__CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION \
+            -D__CRYPTID_HESS_IDENTITY_BASED_SIGNATURE \
             ./src/complex/*.c \
             ./src/elliptic/*.c \
             ./src/util/*.c \

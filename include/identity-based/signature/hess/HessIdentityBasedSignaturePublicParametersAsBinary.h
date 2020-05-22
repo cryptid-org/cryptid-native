@@ -3,52 +3,172 @@
 
 #include "elliptic/AffinePointAsBinary.h"
 #include "elliptic/EllipticCurveAsBinary.h"
-#include "util/HashFunction.h"
 #include "identity-based/signature/hess/HessIdentityBasedSignaturePublicParameters.h"
-
+#include "util/HashFunction.h"
 
 /**
- * Struct storing the Hess-IBS Public Parameters as binaries.
+ * ## Description
+ *
+ * Struct storing the Hess-IBS public parameters in binary form for easier
+ * serialization.
  */
-typedef struct HessIdentityBasedSignaturePublicParametersAsBinary
-{
-    /**
-     * The Type-1 elliptic curve we're operating over represented by string values.
-     */
-    EllipticCurveAsBinary ellipticCurve;
+typedef struct HessIdentityBasedSignaturePublicParametersAsBinary {
+  /**
+   * ## Description
+   *
+   * The Type-1 elliptic curve we're operating over represented by binary
+   * values.
+   */
+  EllipticCurveAsBinary ellipticCurve;
 
-    /**
-     * Subgroup order represented as a binary.
-     */
-    void *q;
+  /**
+   * ## Description
+   *
+   * Subgroup order represented as a binary.
+   */
+  void *q;
 
-    /**
-     * The length of the Subgroup order's binary representation.
-     */
-    size_t qLength;
+  /**
+   * ## Description
+   *
+   * The length of
+   * [q](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary.q).
+   */
+  size_t qLength;
 
-    /**
-     * The string representation of a point in \f$E(F_p)\f$.
-     */
-    AffinePointAsBinary pointP;
+  /**
+   * The binary representation of a generator point of group order
+   * [q](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParameters.h#HessIdentityBasedSignaturePublicParameters.q)
+   * on
+   * [ellipticCurve](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParameters.h#HessIdentityBasedSignaturePublicParameters.ellipticCurve).
+   */
+  AffinePointAsBinary pointP;
 
-    /**
-     * The string representation of a point in \f$E(F_p)\f$.
-     */
-    AffinePointAsBinary pointPpublic;
+  /**
+   * The binary representation of a point on
+   * [ellipticCurve](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParameters.h#HessIdentityBasedSignaturePublicParameters.ellipticCurve)
+   * which is
+   * [pointP](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParameters.h#HessIdentityBasedSignaturePublicParameters.pointP)
+   * multiplied with the master secret.
+   */
+  AffinePointAsBinary pointPpublic;
 
-    /**
-     * The used hash function.
-     */
-    HashFunction hashFunction;
+  /**
+   * The hash function, used by the system.
+   */
+  HashFunction hashFunction;
 } HessIdentityBasedSignaturePublicParametersAsBinary;
 
-void hessIdentityBasedSignaturePublicParametersAsBinary_init(HessIdentityBasedSignaturePublicParametersAsBinary *publicParametersAsBinaryOutput, const EllipticCurveAsBinary ellipticCurve, const void *const q, const size_t qLength, const AffinePointAsBinary pointP, const AffinePointAsBinary pointPpublic, const HashFunction hashFunction);
+/**
+ * ## Description
+ *
+ * Initializes a new
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary)
+ * with the specified values.
+ *
+ * ## Parameters
+ *
+ *   * publicParametersAsBinaryOutput
+ *     * The
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary)
+ * to be initialized.
+ *   * ellipticCurve
+ *     * The [EllipticCurve](codebase://elliptic/EllipticCurve.h#EllipticCurve),
+ * the system operates on, but in binary representation.
+ *   * q
+ *     * The binary representation pf the field order of the subgroup, the
+ * system operates on.
+ *   * qLength
+ *     * The length of
+ * [q](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary.q).
+ *   * pointP
+ *     * The binary representation of a generator point of group order
+ * [q](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParameters.h#HessIdentityBasedSignaturePublicParameters.q)
+ * on
+ * [ellipticCurve](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParameters.h#HessIdentityBasedSignaturePublicParameters.ellipticCurve).
+ *   * pointPpublic
+ *     * The binary representation of a point on
+ * [ellipticCurve](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParameters.h#HessIdentityBasedSignaturePublicParameters.ellipticCurve)
+ * which is
+ * [pointP](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParameters.h#HessIdentityBasedSignaturePublicParameters.pointP)
+ * multiplied with the master secret.
+ *   * hashFunction
+ *     * The hash function, used by the system.
+ */
+void hessIdentityBasedSignaturePublicParametersAsBinary_init(
+    HessIdentityBasedSignaturePublicParametersAsBinary
+        *publicParametersAsBinaryOutput,
+    const EllipticCurveAsBinary ellipticCurve, const void *const q,
+    const size_t qLength, const AffinePointAsBinary pointP,
+    const AffinePointAsBinary pointPpublic, const HashFunction hashFunction);
 
-void hessIdentityBasedSignaturePublicParametersAsBinary_destroy(HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary);
+/**
+ * ## Description
+ *
+ * Frees a
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary).
+ *
+ * ## Parameters
+ *
+ *   * publicParametersAsBinary
+ *     * The
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary)
+ * to be destroyed.
+ */
+void hessIdentityBasedSignaturePublicParametersAsBinary_destroy(
+    HessIdentityBasedSignaturePublicParametersAsBinary
+        publicParametersAsBinary);
 
-void hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSignaturePublicParameters(HessIdentityBasedSignaturePublicParameters *publicParametersOutput, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary);
+/**
+ * ## Description
+ *
+ * Converts a
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary)
+ * to
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary).
+ *
+ * ## Parameters
+ *
+ *   * publicParametersOutput
+ *     * The
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary)
+ * to be initialized based on a
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary).
+ *   * publicParametersAsBinary
+ *     * The
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary),
+ * which needs to be converted to
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary).
+ */
+void hessIdentityBasedSignaturePublicParametersAsBinary_toHessIdentityBasedSignaturePublicParameters(
+    HessIdentityBasedSignaturePublicParameters *publicParametersOutput,
+    const HessIdentityBasedSignaturePublicParametersAsBinary
+        publicParametersAsBinary);
 
-void hessIdentityBasedSignaturePublicParametersAsBinary_fromHessIdentityBasedSignaturePublicParameters(HessIdentityBasedSignaturePublicParametersAsBinary *publicParametersAsBinaryOutput, const HessIdentityBasedSignaturePublicParameters publicParameters);
+/**
+ * ## Description
+ *
+ * Converts a
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary)
+ * to
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary).
+ *
+ * ## Parameters
+ *
+ *   * publicParametersAsBinaryOutput
+ *     * The
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary)
+ * to be initialized based on a
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary).
+ *   * publicParameters
+ *     * The
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary),
+ * which needs to be converted to
+ * [HessIdentityBasedSignaturePublicParametersAsBinary](codebase://identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h#HessIdentityBasedSignaturePublicParametersAsBinary).
+ */
+void hessIdentityBasedSignaturePublicParametersAsBinary_fromHessIdentityBasedSignaturePublicParameters(
+    HessIdentityBasedSignaturePublicParametersAsBinary
+        *publicParametersAsBinaryOutput,
+    const HessIdentityBasedSignaturePublicParameters publicParameters);
 
 #endif
