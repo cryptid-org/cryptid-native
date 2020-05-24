@@ -251,7 +251,7 @@ CryptidStatus cryptid_abe_bsw_encrypt(
     }
     Complex cTilde;
     complex_modMulInteger(&cTilde, M, eggalphas,
-                         publickey->ellipticCurve.fieldOrder);
+                          publickey->ellipticCurve.fieldOrder);
     prevSet->cTilde = cTilde;
     startFrom += n;
     n = messageLength - startFrom;

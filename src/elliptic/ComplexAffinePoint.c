@@ -83,7 +83,7 @@ CryptidStatus complexAffine_double(ComplexAffinePoint *result,
   // \f$\frac{3x^{2} + a}{2y}
   Complex twoTimesAp1y;
   complex_modMulInteger(&twoTimesAp1y, tmp, complexAffinePoint.y,
-                       ellipticCurve.fieldOrder);
+                        ellipticCurve.fieldOrder);
 
   // If \f$2y\f$ has no multiplicative inverse, the above expression cannot be
   // calculated.
@@ -104,10 +104,10 @@ CryptidStatus complexAffine_double(ComplexAffinePoint *result,
                  ellipticCurve.fieldOrder);
   Complex threeTimesAp1xSquared;
   complex_modMulInteger(&threeTimesAp1xSquared, tmp, ap1xSquared,
-                       ellipticCurve.fieldOrder);
+                        ellipticCurve.fieldOrder);
   Complex num;
   complex_modAddInteger(&num, threeTimesAp1xSquared, ellipticCurve.a,
-                       ellipticCurve.fieldOrder);
+                        ellipticCurve.fieldOrder);
 
   Complex m;
   complex_modMul(&m, num, denom, ellipticCurve.fieldOrder);
@@ -339,7 +339,8 @@ int complexAffine_isOnCurve(ComplexAffinePoint point,
   complex_modMul(&xCubed, xSquared, point.x, ellipticCurve.fieldOrder);
 
   Complex ax;
-  complex_modMulInteger(&ax, ellipticCurve.a, point.x, ellipticCurve.fieldOrder);
+  complex_modMulInteger(&ax, ellipticCurve.a, point.x,
+                        ellipticCurve.fieldOrder);
 
   Complex xCubedPlusAx;
   complex_modAdd(&xCubedPlusAx, xCubed, ax, ellipticCurve.fieldOrder);

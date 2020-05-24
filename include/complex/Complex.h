@@ -5,8 +5,8 @@
 
 #include "gmp.h"
 
-#include "util/Status.h"
 #include "util/Equality.h"
+#include "util/Status.h"
 
 /**
  * ## Description
@@ -126,9 +126,11 @@ void complex_initLongMpz(Complex *complexOutput, const long real,
  *
  * ## Return Value
  *
- * CRYPTID_EQUAL if the two Complex instances are equal, CRYPTID_UNEQUAL otherwise.
+ * CRYPTID_EQUAL if the two Complex instances are equal, CRYPTID_UNEQUAL
+ * otherwise.
  */
-CryptidEqualityResult complex_isEquals(const Complex complex1, const Complex complex2);
+CryptidEqualityResult complex_isEquals(const Complex complex1,
+                                       const Complex complex2);
 
 /**
  * ## Description
@@ -172,8 +174,8 @@ void complex_destroyMany(const size_t argumentCount, ...);
  *   * modulus
  *     * The modulus.
  */
-void complex_modAdd(Complex *sum, const Complex augend,
-                    const Complex addend, const mpz_t modulus);
+void complex_modAdd(Complex *sum, const Complex augend, const Complex addend,
+                    const mpz_t modulus);
 
 /**
  * ## Description
@@ -209,8 +211,8 @@ void complex_additiveInverse(Complex *inverse, const Complex operand,
  *   * modulus
  *     * The modulus.
  */
-void complex_modAddInteger(Complex *sum, const Complex augend, const mpz_t addend,
-                          const mpz_t modulus);
+void complex_modAddInteger(Complex *sum, const Complex augend,
+                           const mpz_t addend, const mpz_t modulus);
 
 /**
  * ## Description
@@ -266,8 +268,8 @@ void complex_modPow(Complex *power, const Complex base, const mpz_t exponent,
  *   * modulus
  *     * The modulus.
  */
-void complex_modMulInteger(Complex *product, const mpz_t multiplier, const Complex multiplicand, 
-                          const mpz_t modulus);
+void complex_modMulInteger(Complex *product, const mpz_t multiplier,
+                           const Complex multiplicand, const mpz_t modulus);
 
 /**
  * ## Description
