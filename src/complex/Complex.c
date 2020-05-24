@@ -8,7 +8,7 @@ void complex_init(Complex *complexOutput) {
 
 void complex_initMpz(Complex *complexOutput, const mpz_t real,
                      const mpz_t imaginary) {
-  mpz_inits(complexOutput->real, complexOutput->imaginary, NULL);
+  complex_init(complexOutput);
 
   mpz_set(complexOutput->real, real);
   mpz_set(complexOutput->imaginary, imaginary);
@@ -16,7 +16,7 @@ void complex_initMpz(Complex *complexOutput, const mpz_t real,
 
 void complex_initLong(Complex *complexOutput, const long real,
                       const long imaginary) {
-  mpz_inits(complexOutput->real, complexOutput->imaginary, NULL);
+  complex_init(complexOutput);
 
   mpz_set_si(complexOutput->real, real);
   mpz_set_si(complexOutput->imaginary, imaginary);
@@ -24,7 +24,7 @@ void complex_initLong(Complex *complexOutput, const long real,
 
 void complex_initMpzLong(Complex *complexOutput, const mpz_t real,
                          const long imaginary) {
-  mpz_inits(complexOutput->real, complexOutput->imaginary, NULL);
+  complex_init(complexOutput);
 
   mpz_set(complexOutput->real, real);
   mpz_set_si(complexOutput->imaginary, imaginary);
@@ -32,7 +32,7 @@ void complex_initMpzLong(Complex *complexOutput, const mpz_t real,
 
 void complex_initLongMpz(Complex *complexOutput, const long real,
                          const mpz_t imaginary) {
-  mpz_inits(complexOutput->real, complexOutput->imaginary, NULL);
+  complex_init(complexOutput);
 
   mpz_set_si(complexOutput->real, real);
   mpz_set(complexOutput->imaginary, imaginary);
