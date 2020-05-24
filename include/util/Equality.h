@@ -8,7 +8,7 @@
  */
 typedef enum {
   CRYPTID_EQUAL = 1,
-  CRYPTID_NOT_EQUAL = 0
+  CRYPTID_UNEQUAL = 0
 } CryptidEqualityResult;
 
 #endif

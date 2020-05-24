@@ -126,7 +126,7 @@ void complex_initLongMpz(Complex *complexOutput, const long real,
  *
  * ## Return Value
  *
- * CRYPTID_EQUAL if the two Complex instances are equal, CRYPTID_NOT_EQUAL otherwise.
+ * CRYPTID_EQUAL if the two Complex instances are equal, CRYPTID_UNEQUAL otherwise.
  */
 CryptidEqualityResult complex_isEquals(const Complex complex1, const Complex complex2);
 
@@ -163,17 +163,17 @@ void complex_destroyMany(const size_t argumentCount, ...);
  *
  * ## Parameters
  *
- *   * result
+ *   * sum
  *     * The result of the addition.
- *   * complex1
- *     * A value to add.
- *   * complex2
- *     * A value to add.
+ *   * augend
+ *     * The complex number to which the addend is added.
+ *   * addend
+ *     * The complex number that is added to the augend.
  *   * modulus
  *     * The modulus.
  */
-void complex_modAdd(Complex *result, const Complex complex1,
-                    const Complex complex2, const mpz_t modulus);
+void complex_modAdd(Complex *sum, const Complex augend,
+                    const Complex addend, const mpz_t modulus);
 
 /**
  * ## Description
@@ -183,14 +183,14 @@ void complex_modAdd(Complex *result, const Complex complex1,
  *
  * ## Parameters
  *
- *   * result
+ *   * inverse
  *     * The additive inverse.
- *   * complex
+ *   * operand
  *     * The Complex to invert.
  *   * modulus
  *     * The modulus.
  */
-void complex_additiveInverse(Complex *result, const Complex complex,
+void complex_additiveInverse(Complex *inverse, const Complex operand,
                              const mpz_t modulus);
 
 /**
@@ -200,16 +200,16 @@ void complex_additiveInverse(Complex *result, const Complex complex,
  *
  * ## Parameters
  *
- *   * result
+ *   * sum
  *     * The result of the addition.
- *   * complex
- *     * A Complex.
- *   * scalar
- *     * A scalar.
+ *   * augend
+ *     * The complex number to which the addend is added.
+ *   * addend
+ *     * The integer number that is added to the augend.
  *   * modulus
  *     * The modulus.
  */
-void complex_modAddInteger(Complex *result, const Complex complex, const mpz_t scalar,
+void complex_modAddInteger(Complex *sum, const Complex augend, const mpz_t addend,
                           const mpz_t modulus);
 
 /**
@@ -219,17 +219,17 @@ void complex_modAddInteger(Complex *result, const Complex complex, const mpz_t s
  *
  * ## Parameters
  *
- *   * result
+ *   * product
  *     * The result of the multiplication.
- *   * complex1
- *     * A Complex to multiply.
- *   * complex2
- *     * A Complex to multiply.
- *   * p
+ *   * multiplier
+ *     * The complex number to multiply with.
+ *   * multiplicand
+ *     * The complex number to be multiplied by the multiplier.
+ *   * modulus
  *     * The modulus.
  */
-void complex_modMul(Complex *result, const Complex complex1,
-                    const Complex complex2, const mpz_t p);
+void complex_modMul(Complex *product, const Complex multiplier,
+                    const Complex multiplicand, const mpz_t modulus);
 
 /**
  * ## Description
@@ -238,17 +238,17 @@ void complex_modMul(Complex *result, const Complex complex1,
  *
  * ## Parameters
  *
- *   * result
+ *   * power
  *     * The result of the exponentiation.
- *   * complex
- *     * The base.
- *   * exp
- *     * The exponent.
- *   * p
+ *   * base
+ *     * The base of the exponentiation.
+ *   * exponent
+ *     * The exponent of the exponentiation.
+ *   * modulus
  *     * The modulus.
  */
-void complex_modPow(Complex *result, const Complex complex, const mpz_t exp,
-                    const mpz_t p);
+void complex_modPow(Complex *power, const Complex base, const mpz_t exponent,
+                    const mpz_t modulus);
 
 /**
  * ## Description
@@ -257,31 +257,31 @@ void complex_modPow(Complex *result, const Complex complex, const mpz_t exp,
  *
  * ## Parameters
  *
- *   * result
+ *   * product
  *     * The result of the multiplication.
- *   * complex
- *     * A Complex.
- *   * s
- *     * The scalar.
- *   * p
+ *   * multiplier
+ *     * The integer number to multiply with.
+ *   * multiplicand
+ *     * The complex number to be multiplied by the multiplier.
+ *   * modulus
  *     * The modulus.
  */
-void complex_modMulScalar(Complex *result, const Complex complex, const mpz_t s,
-                          const mpz_t p);
+void complex_modMulInteger(Complex *product, const mpz_t multiplier, const Complex multiplicand, 
+                          const mpz_t modulus);
 
 /**
  * ## Description
  *
- * Calculates the multiplicate inverse of a Complex with respect to p.
+ * Calculates the multiplicate inverse of a Complex with respect to the modulus.
  *
  * ## Parameters
  *
- *   * result
+ *   * inverse
  *     * Out parameter to the multiplicative inverse. On CRYPTID_SUCCESS, this
  * should be destroyed by the caller.
- *   * complex
- *     * A Complex.
- *   * p
+ *   * operand
+ *     * The Complex to invert.
+ *   * modulus
  *     * The modulus.
  *
  * ## Return Value
@@ -289,8 +289,8 @@ void complex_modMulScalar(Complex *result, const Complex complex, const mpz_t s,
  * CRYPTID_SUCCESS if complex has a multiplicative inverse, HAS_NO_MUL_INV error
  * otherwise.
  */
-CryptidStatus complex_multiplicativeInverse(Complex *result,
-                                            const Complex complex,
-                                            const mpz_t p);
+CryptidStatus complex_multiplicativeInverse(Complex *inverse,
+                                            const Complex operand,
+                                            const mpz_t modulus);
 
 #endif
