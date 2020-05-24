@@ -10,21 +10,21 @@
 /**
  * ## Description
  *
- * Arbitrary precision complex number with integer-only real and imaginary
+ * Arbitrary precision complex number ($`a + bi`$) with integer-only real and imaginary
  * parts.
  */
 typedef struct Complex {
   /**
    * ## Description
    *
-   * The real part of the complex number.
+   * The real part $`a`$ of the complex number $`a + bi`$.
    */
   mpz_t real;
 
   /**
    * ## Description
    *
-   * The imaginary part of the complex number.
+   * The imaginary part $`b`$ of the complex number $`a + bi`$.
    */
   mpz_t imaginary;
 } Complex;
@@ -32,12 +32,12 @@ typedef struct Complex {
 /**
  * ## Description
  *
- * Initializes a new Complex number to (0, 0).
+ * Initializes a new complex number to $`0 + 0i`$.
  *
  * ## Parameters
  *
  *   * complexOutput
- *     * The Complex number to be initialized.
+ *     * The pointer to the complex number to be initialized.
  */
 void complex_init(Complex *complexOutput);
 
