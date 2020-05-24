@@ -25,7 +25,7 @@ void divisor_evaluateVertical(Complex *result, const AffinePoint a,
   mpz_neg(axAddInv, a.x);
   mpz_mod(axAddInv, axAddInv, ec.fieldOrder);
 
-  complex_modAddScalar(result, b.x, axAddInv, ec.fieldOrder);
+  complex_modAddInteger(result, b.x, axAddInv, ec.fieldOrder);
 
   mpz_clear(axAddInv);
 }
@@ -84,10 +84,10 @@ CryptidStatus divisor_evaluateTangent(Complex *result, const AffinePoint a,
   // Evaluation at \f$B\f$
   // Let \f$r\f$ denote the result:
   // \f$r = a^{\prime} \cdot x_B + b^{\prime} \cdot y_B + c\f$
-  complex_modMulScalar(&axB, b.x, aprime, ec.fieldOrder);
-  complex_modMulScalar(&byB, b.y, bprime, ec.fieldOrder);
+  complex_modMulInteger(&axB, aprime, b.x, ec.fieldOrder);
+  complex_modMulInteger(&byB, bprime, b.y, ec.fieldOrder);
   complex_modAdd(&resultPart, axB, byB, ec.fieldOrder);
-  complex_modAddScalar(result, resultPart, c, ec.fieldOrder);
+  complex_modAddInteger(result, resultPart, c, ec.fieldOrder);
 
   complex_destroyMany(3, axB, byB, resultPart);
   mpz_clears(threeAddInv, minusThree, xasquared, aprime, bprime, bAddInv,
@@ -157,9 +157,9 @@ CryptidStatus divisor_evaluateLine(Complex *result, const AffinePoint a,
   // Evaluation at B
   // Let \f$r\f$ denote the result:
   // \f$r = a \cdot x_B + b \cdot y_B + c\f$
-  complex_modMulScalar(&axb, b.x, linea, ec.fieldOrder);
-  complex_modMulScalar(&byb, b.y, lineb, ec.fieldOrder);
-  complex_modAddScalar(&resultPart, byb, linec, ec.fieldOrder);
+  complex_modMulInteger(&axb, linea, b.x, ec.fieldOrder);
+  complex_modMulInteger(&byb, lineb, b.y, ec.fieldOrder);
+  complex_modAddInteger(&resultPart, byb, linec, ec.fieldOrder);
   complex_modAdd(result, axb, resultPart, ec.fieldOrder);
 
   mpz_clears(linea, lineb, linebaddinv, q, t, taddinv, linec, NULL);
