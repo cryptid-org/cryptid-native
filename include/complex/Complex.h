@@ -126,7 +126,7 @@ void complex_initLongMpz(Complex *complexOutput, const long real,
  *
  * ## Return Value
  *
- * 1 if the two Complex instances are equal, 0 otherwise.
+ * CRYPTID_EQUAL if the two Complex instances are equal, CRYPTID_NOT_EQUAL otherwise.
  */
 CryptidEqualityResult complex_isEquals(const Complex complex1, const Complex complex2);
 
@@ -169,11 +169,11 @@ void complex_destroyMany(const size_t argumentCount, ...);
  *     * A value to add.
  *   * complex2
  *     * A value to add.
- *   * p
+ *   * modulus
  *     * The modulus.
  */
 void complex_modAdd(Complex *result, const Complex complex1,
-                    const Complex complex2, const mpz_t p);
+                    const Complex complex2, const mpz_t modulus);
 
 /**
  * ## Description
@@ -187,11 +187,11 @@ void complex_modAdd(Complex *result, const Complex complex1,
  *     * The additive inverse.
  *   * complex
  *     * The Complex to invert.
- *   * p
+ *   * modulus
  *     * The modulus.
  */
 void complex_additiveInverse(Complex *result, const Complex complex,
-                             const mpz_t p);
+                             const mpz_t modulus);
 
 /**
  * ## Description
@@ -204,13 +204,13 @@ void complex_additiveInverse(Complex *result, const Complex complex,
  *     * The result of the addition.
  *   * complex
  *     * A Complex.
- *   * s
+ *   * scalar
  *     * A scalar.
- *   * p
+ *   * modulus
  *     * The modulus.
  */
-void complex_modAddScalar(Complex *result, const Complex complex, const mpz_t s,
-                          const mpz_t p);
+void complex_modAddInteger(Complex *result, const Complex complex, const mpz_t scalar,
+                          const mpz_t modulus);
 
 /**
  * ## Description

@@ -64,48 +64,48 @@ void complex_destroyMany(const size_t argumentCount, ...) {
 }
 
 void complex_modAdd(Complex *result, const Complex complex1,
-                    const Complex complex2, const mpz_t p) {
+                    const Complex complex2, const mpz_t modulus) {
   // Calculated as
-  // \f$(r_1 + r_2 \mod p, c_1 + c_2 \mod p)\f$.
+  // \f$(r_1 + r_2 \mod m, c_1 + c_2 \mod m)\f$.
   mpz_t newReal, newImaginary;
   mpz_inits(newReal, newImaginary, NULL);
 
   mpz_add(newReal, complex1.real, complex2.real);
-  mpz_mod(newReal, newReal, p);
+  mpz_mod(newReal, newReal, modulus);
 
   mpz_add(newImaginary, complex1.imaginary, complex2.imaginary);
-  mpz_mod(newImaginary, newImaginary, p);
+  mpz_mod(newImaginary, newImaginary, modulus);
 
   complex_initMpz(result, newReal, newImaginary);
   mpz_clears(newReal, newImaginary, NULL);
 }
 
 void complex_additiveInverse(Complex *result, const Complex complex,
-                             const mpz_t p) {
+                             const mpz_t modulus) {
   // Calculated as
-  // \f$(-r \mod p, -i \mod p)\f$.
+  // \f$(-r \mod m, -i \mod m)\f$.
   mpz_t newReal, newImaginary;
   mpz_inits(newReal, newImaginary, NULL);
 
   mpz_neg(newReal, complex.real);
-  mpz_mod(newReal, newReal, p);
+  mpz_mod(newReal, newReal, modulus);
 
   mpz_neg(newImaginary, complex.imaginary);
-  mpz_mod(newImaginary, newImaginary, p);
+  mpz_mod(newImaginary, newImaginary, modulus);
 
   complex_initMpz(result, newReal, newImaginary);
   mpz_clears(newReal, newImaginary, NULL);
 }
 
-void complex_modAddScalar(Complex *result, const Complex complex, const mpz_t s,
-                          const mpz_t p) {
+void complex_modAddInteger(Complex *result, const Complex complex, const mpz_t scalar,
+                          const mpz_t modulus) {
   // Calculated as
-  // \f$(r + s \mod p, i)\f$.
+  // \f$(r + s \mod m, i)\f$.
   mpz_t newReal;
   mpz_init(newReal);
 
-  mpz_add(newReal, complex.real, s);
-  mpz_mod(newReal, newReal, p);
+  mpz_add(newReal, complex.real, scalar);
+  mpz_mod(newReal, newReal, modulus);
 
   complex_initMpz(result, newReal, complex.imaginary);
   mpz_clear(newReal);

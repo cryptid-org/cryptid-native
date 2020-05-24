@@ -106,7 +106,7 @@ CryptidStatus complexAffine_double(ComplexAffinePoint *result,
   complex_modMulScalar(&threeTimesAp1xSquared, ap1xSquared, tmp,
                        ellipticCurve.fieldOrder);
   Complex num;
-  complex_modAddScalar(&num, threeTimesAp1xSquared, ellipticCurve.a,
+  complex_modAddInteger(&num, threeTimesAp1xSquared, ellipticCurve.a,
                        ellipticCurve.fieldOrder);
 
   Complex m;
