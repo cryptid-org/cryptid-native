@@ -38,13 +38,13 @@ void complex_initLongMpz(Complex *complexOutput, const long real,
   mpz_set(complexOutput->imaginary, imaginary);
 }
 
-int complex_isEquals(const Complex complex1, const Complex complex2) {
+CryptidEqualityResult complex_isEquals(const Complex complex1, const Complex complex2) {
   if (!mpz_cmp(complex1.real, complex2.real) &&
       !mpz_cmp(complex1.imaginary, complex2.imaginary)) {
-    return 1;
+    return CRYPTID_EQUAL;
   }
 
-  return 0;
+  return CRYPTID_NOT_EQUAL;
 }
 
 void complex_destroy(Complex complex) {

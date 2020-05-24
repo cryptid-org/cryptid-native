@@ -6,6 +6,7 @@
 #include "gmp.h"
 
 #include "util/Status.h"
+#include "util/Equality.h"
 
 /**
  * ## Description
@@ -127,7 +128,7 @@ void complex_initLongMpz(Complex *complexOutput, const long real,
  *
  * 1 if the two Complex instances are equal, 0 otherwise.
  */
-int complex_isEquals(const Complex complex1, const Complex complex2);
+CryptidEqualityResult complex_isEquals(const Complex complex1, const Complex complex2);
 
 /**
  * ## Description
