@@ -76,7 +76,7 @@ void complex_modAdd(Complex *sum, const Complex augend,
   mpz_add(sumImaginary, augend.imaginary, addend.imaginary);
   mpz_mod(sumImaginary, sumImaginary, modulus);
 
-  complex_initMpz(sum, sumReal, newImaginary);
+  complex_initMpz(sum, sumReal, sumImaginary);
   mpz_clears(sumReal, sumImaginary, NULL);
 }
 
