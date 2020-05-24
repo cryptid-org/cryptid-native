@@ -57,8 +57,7 @@ void complex_destroyMany(const size_t argumentCount, ...) {
 
   for (size_t i = 0; i < argumentCount; ++i) {
     Complex complex = (va_arg(args, Complex));
-
-    mpz_clears(complex.real, complex.imaginary, NULL);
+    complex_destroy(complex);
   }
 
   va_end(args);
