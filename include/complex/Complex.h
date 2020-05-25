@@ -14,8 +14,8 @@
 /**
  * ## Description
  *
- * Arbitrary precision complex number ($`a + bi`$) with integer-only real and imaginary
- * parts.
+ * Arbitrary precision complex number ($`a + bi`$) with integer-only real and
+ * imaginary parts.
  */
 typedef struct Complex {
   /**
@@ -37,19 +37,24 @@ typedef struct Complex {
  * ## Parameters
  *
  *   * complexOutput
- *     * The pointer to the complex number to be initialized. No memory allocation required before the function call. Should be destroyed by the caller if not needed anymore.
+ *     * The pointer to the complex number to be initialized. No memory
+ * allocation required before the function call. Should be destroyed by the
+ * caller if not needed anymore.
  */
 void complex_init(Complex *complexOutput);
 
 /**
  * ## Description
  *
- * Initializes a new complex number and sets it's value to the specified arbitrary precision integers ($`real + imaginary \cdot i`$).
+ * Initializes a new complex number and sets it's value to the specified
+ * arbitrary precision integers ($`real + imaginary \cdot i`$).
  *
  * ## Parameters
  *
  *   * complexOutput
- *     * The pointer to the complex number to be initialized. No memory allocation required before the function call. Should be destroyed by the caller if not needed anymore.
+ *     * The pointer to the complex number to be initialized. No memory
+ * allocation required before the function call. Should be destroyed by the
+ * caller if not needed anymore.
  *   * real
  *     * The real part $`a`$ of the complex number $`a + bi`$.
  *   * imaginary
@@ -61,12 +66,15 @@ void complex_initMpz(Complex *complexOutput, const mpz_t real,
 /**
  * ## Description
  *
- * Initializes a new complex number and sets it's value to the specified `long` values ($`real + imaginary \cdot i`$).
+ * Initializes a new complex number and sets it's value to the specified `long`
+ * values ($`real + imaginary \cdot i`$).
  *
  * ## Parameters
  *
  *   * complexOutput
- *     * The pointer to the complex number to be initialized. No memory allocation required before the function call. Should be destroyed by the caller if not needed anymore.
+ *     * The pointer to the complex number to be initialized. No memory
+ * allocation required before the function call. Should be destroyed by the
+ * caller if not needed anymore.
  *   * real
  *     * The real part $`a`$ of the complex number $`a + bi`$.
  *   * imaginary
@@ -78,13 +86,16 @@ void complex_initLong(Complex *complexOutput, const long real,
 /**
  * ## Description
  *
- * Initializes a new complex number and sets it's value to the specified arbitrary precision real part and `long`
- * imaginary part ($`real + imaginary \cdot i`$).
+ * Initializes a new complex number and sets it's value to the specified
+ * arbitrary precision real part and `long` imaginary part ($`real + imaginary
+ * \cdot i`$).
  *
  * ## Parameters
  *
  *   * complexOutput
- *     * The pointer to the complex number to be initialized. No memory allocation required before the function call. Should be destroyed by the caller if not needed anymore.
+ *     * The pointer to the complex number to be initialized. No memory
+ * allocation required before the function call. Should be destroyed by the
+ * caller if not needed anymore.
  *   * real
  *     * The real part $`a`$ of the complex number $`a + bi`$.
  *   * imaginary
@@ -96,13 +107,16 @@ void complex_initMpzLong(Complex *complexOutput, const mpz_t real,
 /**
  * ## Description
  *
- * Initializes a new complex number and sets it's value to the specified `long` real part and arbitrary precision
- * imaginary part ($`real + imaginary \cdot i`$).
+ * Initializes a new complex number and sets it's value to the specified `long`
+ * real part and arbitrary precision imaginary part ($`real + imaginary \cdot
+ * i`$).
  *
  * ## Parameters
  *
  *   * complexOutput
- *     * The pointer to the complex number to be initialized. No memory allocation required before the function call. Should be destroyed by the caller if not needed anymore.
+ *     * The pointer to the complex number to be initialized. No memory
+ * allocation required before the function call. Should be destroyed by the
+ * caller if not needed anymore.
  *   * real
  *     * The real part $`a`$ of the complex number $`a + bi`$.
  *   * imaginary
@@ -136,8 +150,9 @@ CryptidEqualityResult complex_isEquals(const Complex complex1,
 /**
  * ## Description
  *
- * Frees a [Complex](codebase://complex/Complex.h#Complex) instance. After calling this function on the instance,
- * that instance should not be used before reinitialization.
+ * Frees a [Complex](codebase://complex/Complex.h#Complex) instance. After
+ * calling this function on the instance, that instance should not be used
+ * before reinitialization.
  *
  * ## Parameters
  *
@@ -149,8 +164,9 @@ void complex_destroy(const Complex complex);
 /**
  * ## Description
  *
- * Frees multiple [Complex](codebase://complex/Complex.h#Complex) instances. After calling this function on the
- * instances, those should not be used before reinitialization.
+ * Frees multiple [Complex](codebase://complex/Complex.h#Complex) instances.
+ * After calling this function on the instances, those should not be used before
+ * reinitialization.
  *
  * ## Parameters
  *
@@ -162,12 +178,14 @@ void complex_destroyMany(const size_t argumentCount, ...);
 /**
  * ## Description
  *
- * Adds two complex numbers with respect to the specified modulus. Calculated as $`(r_1 + r_2 \mod m, i_1 + i_2 \mod m)`$.
+ * Adds two complex numbers with respect to the specified modulus. Calculated as
+ * $`(r_1 + r_2 \mod m, i_1 + i_2 \mod m)`$.
  *
  * ## Parameters
  *
  *   * sum
- *     * Out parameter to the addition. No memory allocation required before the function call. Should be destroyed by the caller if not needed anymore.
+ *     * Out parameter to the addition. No memory allocation required before the
+ * function call. Should be destroyed by the caller if not needed anymore.
  *   * augend
  *     * The complex number to which the addend is added.
  *   * addend
@@ -181,13 +199,15 @@ void complex_modAdd(Complex *sum, const Complex augend, const Complex addend,
 /**
  * ## Description
  *
- * Calculates the additive inverse of the specified complex number with respect to the
- * specified modulus. Calculated as $`(-r \mod m, -i \mod m)`$.
+ * Calculates the additive inverse of the specified complex number with respect
+ * to the specified modulus. Calculated as $`(-r \mod m, -i \mod m)`$.
  *
  * ## Parameters
  *
  *   * inverse
- *     * Out parameter to the additive inverse. No memory allocation required before the function call. Should be destroyed by the caller if not needed anymore.
+ *     * Out parameter to the additive inverse. No memory allocation required
+ * before the function call. Should be destroyed by the caller if not needed
+ * anymore.
  *   * operand
  *     * The complex number to invert.
  *   * modulus
@@ -199,12 +219,14 @@ void complex_additiveInverse(Complex *inverse, const Complex operand,
 /**
  * ## Description
  *
- * Adds a complex number and an arbitrary precision integer with respect to the specified modulus. Calculated as $`(r + a \mod m, i)`$.
+ * Adds a complex number and an arbitrary precision integer with respect to the
+ * specified modulus. Calculated as $`(r + a \mod m, i)`$.
  *
  * ## Parameters
  *
  *   * sum
- *     * Out parameter to the addition. No memory allocation required before the function call. Should be destroyed by the caller if not needed anymore.
+ *     * Out parameter to the addition. No memory allocation required before the
+ * function call. Should be destroyed by the caller if not needed anymore.
  *   * augend
  *     * The complex number to which the addend is added.
  *   * addend
@@ -218,12 +240,16 @@ void complex_modAddInteger(Complex *sum, const Complex augend,
 /**
  * ## Description
  *
- * Multiplies two complex numbers with respect to the specified modulus. Calculated as $`((r_1 \cdot r_2 - i_1 \cdot i_2) \mod m, (i_1 \cdot r_2 + r_1 \cdot i_2) \mod m)`$.
+ * Multiplies two complex numbers with respect to the specified modulus.
+ * Calculated as $`((r_1 \cdot r_2 - i_1 \cdot i_2) \mod m, (i_1 \cdot r_2 + r_1
+ * \cdot i_2) \mod m)`$.
  *
  * ## Parameters
  *
  *   * product
- *     * Out parameter to the multiplication. No memory allocation required before the function call. Should be destroyed by the caller if not needed anymore.
+ *     * Out parameter to the multiplication. No memory allocation required
+ * before the function call. Should be destroyed by the caller if not needed
+ * anymore.
  *   * multiplier
  *     * The complex number to multiply with.
  *   * multiplicand
@@ -237,12 +263,15 @@ void complex_modMul(Complex *product, const Complex multiplier,
 /**
  * ## Description
  *
- * Raises a complex number to the specified power with respect to the specified modulus. Calculated with the square-and-multiply method.
+ * Raises a complex number to the specified power with respect to the specified
+ * modulus. Calculated with the square-and-multiply method.
  *
  * ## Parameters
  *
  *   * power
- *     * Out parameter to the exponentiation. No memory allocation required before the function call. Should be destroyed by the caller if not needed anymore.
+ *     * Out parameter to the exponentiation. No memory allocation required
+ * before the function call. Should be destroyed by the caller if not needed
+ * anymore.
  *   * base
  *     * The base of the exponentiation.
  *   * exponent
@@ -256,13 +285,16 @@ void complex_modPow(Complex *power, const Complex base, const mpz_t exponent,
 /**
  * ## Description
  *
- * Multiplies a complex number with an arbitrary precision integer with respect to the specified modulus. Calculated as $`(n \cdot r \mod m, n \cdot i \mod m)`$.
+ * Multiplies a complex number with an arbitrary precision integer with respect
+ to the specified modulus. Calculated as $`(n \cdot r \mod m, n \cdot i \mod
+ m)`$.
  *
  * ## Parameters
  *
  *   * product
- *     * Out parameter to the multiplication. No memory allocation required before the function call. 
- Should be destroyed by the caller if not needed anymore.
+ *     * Out parameter to the multiplication. No memory allocation required
+ before the function call. Should be destroyed by the caller if not needed
+ anymore.
  *   * multiplier
  *     * The integer number to multiply with.
  *   * multiplicand
@@ -276,13 +308,16 @@ void complex_modMulInteger(Complex *product, const mpz_t multiplier,
 /**
  * ## Description
  *
- * Calculates the multiplicate inverse of a complex number with respect to the modulus. The inverse of $`c`$ is $`c^{-1} = \frac{1}{c}`$. Calculated as $`(frac{r}{r^2+i^2}, -\frac{i}{r^2+i^2})`$.
+ * Calculates the multiplicate inverse of a complex number with respect to the
+ * modulus. The inverse of $`c`$ is $`c^{-1} = \frac{1}{c}`$. Calculated as
+ * $`(frac{r}{r^2+i^2}, -\frac{i}{r^2+i^2})`$.
  *
  * ## Parameters
  *
  *   * inverse
- *     * Out parameter to the multiplicative inverse. No memory allocation required before the function call. On CRYPTID_SUCCESS, this
- * should be destroyed by the caller.
+ *     * Out parameter to the multiplicative inverse. No memory allocation
+ * required before the function call. On CRYPTID_SUCCESS, this should be
+ * destroyed by the caller.
  *   * operand
  *     * The complex number to invert.
  *   * modulus
