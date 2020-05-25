@@ -8,22 +8,22 @@
  *
  * ## Groups
  *
- * ### Initialization Functions
+ * ### Initialization
  *
  * Functions supporting the initialization of a
  * [Complex](codebase://complex/Complex.h#Complex).
  *
- * ### Memory Release Functions
+ * ### Deinitialization
  *
  * Functions supporting the memory release of a
  * [Complex](codebase://complex/Complex.h#Complex).
  *
- * ### Comparison Functions
+ * ### Comparison
  *
  * Functions supporting the comparison of
  * [Complexes](codebase://complex/Complex.h#Complex).
  *
- * ### Arithmetic Functions
+ * ### Arithmetic
  *
  * Functions implementing arithmetic operations over complex numbers.
  */
@@ -61,7 +61,7 @@ typedef struct Complex {
 
 /**
  * ---
- * group: Initialization Functions
+ * group: Initialization
  * ---
  *
  * ## Description
@@ -88,7 +88,7 @@ void complex_init(Complex *complexOutput);
 
 /**
  * ---
- * group: Initialization Functions
+ * group: Initialization
  * ---
  *
  * ## Description
@@ -121,7 +121,7 @@ void complex_initMpz(Complex *complexOutput, const mpz_t real,
 
 /**
  * ---
- * group: Initialization Functions
+ * group: Initialization
  * ---
  *
  * ## Description
@@ -154,7 +154,7 @@ void complex_initLong(Complex *complexOutput, const long real,
 
 /**
  * ---
- * group: Initialization Functions
+ * group: Initialization
  * ---
  *
  * ## Description
@@ -188,7 +188,7 @@ void complex_initMpzLong(Complex *complexOutput, const mpz_t real,
 
 /**
  * ---
- * group: Initialization Functions
+ * group: Initialization
  * ---
  *
  * ## Description
@@ -222,7 +222,7 @@ void complex_initLongMpz(Complex *complexOutput, const long real,
 
 /**
  * ---
- * group: Comparison Functions
+ * group: Comparison
  * ---
  *
  * ## Description
@@ -248,7 +248,7 @@ CryptidEqualityResult complex_isEquals(const Complex complex1,
 
 /**
  * ---
- * group: Memory Release Functions
+ * group: Deinitialization
  * ---
  *
  * ## Description
@@ -275,7 +275,7 @@ void complex_destroy(const Complex complex);
 
 /**
  * ---
- * group: Memory Release Functions
+ * group: Deinitialization
  * ---
  *
  * ## Description
@@ -302,7 +302,7 @@ void complex_destroyMany(const size_t argumentCount, ...);
 
 /**
  * ---
- * group: Arithmetic Functions
+ * group: Arithmetic
  * ---
  *
  * ## Description
@@ -332,7 +332,7 @@ void complex_modAdd(Complex *sum, const Complex augend, const Complex addend,
 
 /**
  * ---
- * group: Arithmetic Functions
+ * group: Arithmetic
  * ---
  *
  * ## Description
@@ -361,7 +361,7 @@ void complex_additiveInverse(Complex *inverse, const Complex operand,
 
 /**
  * ---
- * group: Arithmetic Functions
+ * group: Arithmetic
  * ---
  *
  * ## Description
@@ -390,7 +390,7 @@ void complex_modAddInteger(Complex *sum, const Complex augend,
 
 /**
  * ---
- * group: Arithmetic Functions
+ * group: Arithmetic
  * ---
  *
  * ## Description
@@ -422,7 +422,7 @@ void complex_modMul(Complex *product, const Complex multiplier,
 
 /**
  * ---
- * group: Arithmetic Functions
+ * group: Arithmetic
  * ---
  *
  * ## Description
@@ -448,7 +448,7 @@ void complex_modPow(Complex *power, const Complex base, const mpz_t exponent,
 
 /**
  * ---
- * group: Arithmetic Functions
+ * group: Arithmetic
  * ---
  *
  * ## Description
@@ -479,7 +479,7 @@ void complex_modMulInteger(Complex *product, const mpz_t multiplier,
 
 /**
  * ---
- * group: Arithmetic Functions
+ * group: Arithmetic
  * ---
  *
  * ## Description
