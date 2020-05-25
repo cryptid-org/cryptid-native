@@ -3,21 +3,25 @@
  *
  * ## Description
  *
- * Arbitrary precision complex number arithmetic to support the required functions for CryptID.
+ * Arbitrary precision complex number arithmetic to support the required
+ * functions for CryptID.
  *
  * ## Groups
  *
  * ### Initialization Functions
  *
- * Functions supporting the initialization of a [Complex](codebase://complex/Complex.h#Complex).
+ * Functions supporting the initialization of a
+ * [Complex](codebase://complex/Complex.h#Complex).
  *
  * ### Memory Release Functions
  *
- * Functions supporting the memory release of a [Complex](codebase://complex/Complex.h#Complex).
+ * Functions supporting the memory release of a
+ * [Complex](codebase://complex/Complex.h#Complex).
  *
  * ### Comparison Functions
  *
- * Functions supporting the comparison of [Complexes](codebase://complex/Complex.h#Complex).
+ * Functions supporting the comparison of
+ * [Complexes](codebase://complex/Complex.h#Complex).
  *
  * ### Arithmetic Functions
  *
@@ -320,7 +324,8 @@ void complex_destroyMany(const size_t argumentCount, ...);
  *
  * ## See Also
  *
- *   * [complex_modAddInteger](codebase://complex/Complex.h#complex_modAddInteger)
+ *   *
+ * [complex_modAddInteger](codebase://complex/Complex.h#complex_modAddInteger)
  */
 void complex_modAdd(Complex *sum, const Complex augend, const Complex addend,
                     const mpz_t modulus);
@@ -348,7 +353,8 @@ void complex_modAdd(Complex *sum, const Complex augend, const Complex addend,
  *
  * ## See Also
  *
- *   * [complex_multiplicativeInverse](codebase://complex/Complex.h#complex_multiplicativeInverse)
+ *   *
+ * [complex_multiplicativeInverse](codebase://complex/Complex.h#complex_multiplicativeInverse)
  */
 void complex_additiveInverse(Complex *inverse, const Complex operand,
                              const mpz_t modulus);
@@ -408,7 +414,8 @@ void complex_modAddInteger(Complex *sum, const Complex augend,
  *
  * ## See Also
  *
- *   * [complex_modMulInteger](codebase://complex/Complex.h#complex_modMulInteger)
+ *   *
+ * [complex_modMulInteger](codebase://complex/Complex.h#complex_modMulInteger)
  */
 void complex_modMul(Complex *product, const Complex multiplier,
                     const Complex multiplicand, const mpz_t modulus);
@@ -501,7 +508,8 @@ void complex_modMulInteger(Complex *product, const mpz_t multiplier,
  *
  * ## See Also
  *
- *   * [complex_modAddInteger](codebase://complex/Complex.h#complex_modAddInteger)
+ *   *
+ * [complex_modAddInteger](codebase://complex/Complex.h#complex_modAddInteger)
  */
 CryptidStatus complex_multiplicativeInverse(Complex *inverse,
                                             const Complex operand,
