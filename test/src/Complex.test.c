@@ -272,7 +272,7 @@ TEST GF_5_modMul_should_just_work(const long scalar, const long expectedReal,
 
   // When
   Complex result;
-  complex_modMulScalar(&result, c, s, p);
+  complex_modMulInteger(&result, s, c, p);
 
   // Then
   ASSERT(complex_isEquals(result, expected));
