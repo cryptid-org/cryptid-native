@@ -93,7 +93,7 @@ void complex_init(Complex *complexOutput);
  *
  * ## Description
  *
- * Initializes a new complex number and sets it's value to the specified
+ * Initializes a new complex number and sets its value to the specified
  * arbitrary precision integers ($`real + imaginary \cdot i`$).
  *
  * ## Parameters
@@ -126,7 +126,7 @@ void complex_initMpz(Complex *complexOutput, const mpz_t real,
  *
  * ## Description
  *
- * Initializes a new complex number and sets it's value to the specified `long`
+ * Initializes a new complex number and sets its value to the specified `long`
  * values ($`real + imaginary \cdot i`$).
  *
  * ## Parameters
@@ -159,7 +159,7 @@ void complex_initLong(Complex *complexOutput, const long real,
  *
  * ## Description
  *
- * Initializes a new complex number and sets it's value to the specified
+ * Initializes a new complex number and sets its value to the specified
  * arbitrary precision real part and `long` imaginary part ($`real + imaginary
  * \cdot i`$).
  *
@@ -193,7 +193,7 @@ void complex_initMpzLong(Complex *complexOutput, const mpz_t real,
  *
  * ## Description
  *
- * Initializes a new complex number and sets it's value to the specified `long`
+ * Initializes a new complex number and sets its value to the specified `long`
  * real part and arbitrary precision imaginary part ($`real + imaginary \cdot
  * i`$).
  *
