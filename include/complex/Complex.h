@@ -45,7 +45,7 @@
  *
  * ## See Also
  *
- *   * [ComplexAsBinary](codebase://complex/ComplexAsBinary.h#ComplexAsBinary)
+ *   * codebase://complex/ComplexAsBinary.h#ComplexAsBinary
  */
 typedef struct Complex {
   /**
@@ -77,12 +77,12 @@ typedef struct Complex {
  *
  * ## See Also
  *
- *   * [complex_initMpz](codebase://complex/Complex.h#complex_initMpz)
- *   * [complex_initLong](codebase://complex/Complex.h#complex_initLong)
- *   * [complex_initMpzLong](codebase://complex/Complex.h#complex_initMpzLong)
- *   * [complex_initLongMpz](codebase://complex/Complex.h#complex_initLongMpz)
- *   * [complex_destroy](codebase://complex/Complex.h#complex_destroy)
- *   * [complex_destroyMany](codebase://complex/Complex.h#complex_destroyMany)
+ *   * codebase://complex/Complex.h#complex_initMpz
+ *   * codebase://complex/Complex.h#complex_initLong
+ *   * codebase://complex/Complex.h#complex_initMpzLong
+ *   * codebase://complex/Complex.h#complex_initLongMpz
+ *   * codebase://complex/Complex.h#complex_destroy
+ *   * codebase://complex/Complex.h#complex_destroyMany
  */
 void complex_init(Complex *complexOutput);
 
@@ -109,12 +109,12 @@ void complex_init(Complex *complexOutput);
  *
  * ## See Also
  *
- *   * [complex_init](codebase://complex/Complex.h#complex_init)
- *   * [complex_initLong](codebase://complex/Complex.h#complex_initLong)
- *   * [complex_initMpzLong](codebase://complex/Complex.h#complex_initMpzLong)
- *   * [complex_initLongMpz](codebase://complex/Complex.h#complex_initLongMpz)
- *   * [complex_destroy](codebase://complex/Complex.h#complex_destroy)
- *   * [complex_destroyMany](codebase://complex/Complex.h#complex_destroyMany)
+ *   * codebase://complex/Complex.h#complex_init
+ *   * codebase://complex/Complex.h#complex_initLong
+ *   * codebase://complex/Complex.h#complex_initMpzLong
+ *   * codebase://complex/Complex.h#complex_initLongMpz
+ *   * codebase://complex/Complex.h#complex_destroy
+ *   * codebase://complex/Complex.h#complex_destroyMany
  */
 void complex_initMpz(Complex *complexOutput, const mpz_t real,
                      const mpz_t imaginary);
@@ -142,12 +142,12 @@ void complex_initMpz(Complex *complexOutput, const mpz_t real,
  *
  * ## See Also
  *
- *   * [complex_init](codebase://complex/Complex.h#complex_init)
- *   * [complex_initMpz](codebase://complex/Complex.h#complex_initMpz)
- *   * [complex_initMpzLong](codebase://complex/Complex.h#complex_initMpzLong)
- *   * [complex_initLongMpz](codebase://complex/Complex.h#complex_initLongMpz)
- *   * [complex_destroy](codebase://complex/Complex.h#complex_destroy)
- *   * [complex_destroyMany](codebase://complex/Complex.h#complex_destroyMany)
+ *   * codebase://complex/Complex.h#complex_init
+ *   * codebase://complex/Complex.h#complex_initMpz
+ *   * codebase://complex/Complex.h#complex_initMpzLong
+ *   * codebase://complex/Complex.h#complex_initLongMpz
+ *   * codebase://complex/Complex.h#complex_destroy
+ *   * codebase://complex/Complex.h#complex_destroyMany
  */
 void complex_initLong(Complex *complexOutput, const long real,
                       const long imaginary);
@@ -176,12 +176,12 @@ void complex_initLong(Complex *complexOutput, const long real,
  *
  * ## See Also
  *
- *   * [complex_init](codebase://complex/Complex.h#complex_init)
- *   * [complex_initMpz](codebase://complex/Complex.h#complex_initMpz)
- *   * [complex_initLong](codebase://complex/Complex.h#complex_initLong)
- *   * [complex_initLongMpz](codebase://complex/Complex.h#complex_initLongMpz)
- *   * [complex_destroy](codebase://complex/Complex.h#complex_destroy)
- *   * [complex_destroyMany](codebase://complex/Complex.h#complex_destroyMany)
+ *   * codebase://complex/Complex.h#complex_init
+ *   * codebase://complex/Complex.h#complex_initMpz
+ *   * codebase://complex/Complex.h#complex_initLong
+ *   * codebase://complex/Complex.h#complex_initLongMpz
+ *   * codebase://complex/Complex.h#complex_destroy
+ *   * codebase://complex/Complex.h#complex_destroyMany
  */
 void complex_initMpzLong(Complex *complexOutput, const mpz_t real,
                          const long imaginary);
@@ -210,12 +210,12 @@ void complex_initMpzLong(Complex *complexOutput, const mpz_t real,
  *
  * ## See Also
  *
- *   * [complex_init](codebase://complex/Complex.h#complex_init)
- *   * [complex_initMpz](codebase://complex/Complex.h#complex_initMpz)
- *   * [complex_initLong](codebase://complex/Complex.h#complex_initLong)
- *   * [complex_initMpzLong](codebase://complex/Complex.h#complex_initMpzLong)
- *   * [complex_destroy](codebase://complex/Complex.h#complex_destroy)
- *   * [complex_destroyMany](codebase://complex/Complex.h#complex_destroyMany)
+ *   * codebase://complex/Complex.h#complex_init
+ *   * codebase://complex/Complex.h#complex_initMpz
+ *   * codebase://complex/Complex.h#complex_initLong
+ *   * codebase://complex/Complex.h#complex_initMpzLong
+ *   * codebase://complex/Complex.h#complex_destroy
+ *   * codebase://complex/Complex.h#complex_destroyMany
  */
 void complex_initLongMpz(Complex *complexOutput, const long real,
                          const mpz_t imaginary);
@@ -264,12 +264,12 @@ CryptidEqualityResult complex_isEquals(const Complex complex1,
  *
  * ## See Also
  *
- *   * [complex_destroyMany](codebase://complex/Complex.h#complex_destroyMany)
- *   * [complex_init](codebase://complex/Complex.h#complex_init)
- *   * [complex_initMpz](codebase://complex/Complex.h#complex_initMpz)
- *   * [complex_initLong](codebase://complex/Complex.h#complex_initLong)
- *   * [complex_initMpzLong](codebase://complex/Complex.h#complex_initMpzLong)
- *   * [complex_initLongMpz](codebase://complex/Complex.h#complex_initLongMpz)
+ *   * codebase://complex/Complex.h#complex_destroyMany
+ *   * codebase://complex/Complex.h#complex_init
+ *   * codebase://complex/Complex.h#complex_initMpz
+ *   * codebase://complex/Complex.h#complex_initLong
+ *   * codebase://complex/Complex.h#complex_initMpzLong
+ *   * codebase://complex/Complex.h#complex_initLongMpz
  */
 void complex_destroy(const Complex complex);
 
@@ -291,12 +291,12 @@ void complex_destroy(const Complex complex);
  *
  * ## See Also
  *
- *   * [complex_destroy](codebase://complex/Complex.h#complex_destroy)
- *   * [complex_init](codebase://complex/Complex.h#complex_init)
- *   * [complex_initMpz](codebase://complex/Complex.h#complex_initMpz)
- *   * [complex_initLong](codebase://complex/Complex.h#complex_initLong)
- *   * [complex_initMpzLong](codebase://complex/Complex.h#complex_initMpzLong)
- *   * [complex_initLongMpz](codebase://complex/Complex.h#complex_initLongMpz)
+ *   * codebase://complex/Complex.h#complex_destroy
+ *   * codebase://complex/Complex.h#complex_init
+ *   * codebase://complex/Complex.h#complex_initMpz
+ *   * codebase://complex/Complex.h#complex_initLong
+ *   * codebase://complex/Complex.h#complex_initMpzLong
+ *   * codebase://complex/Complex.h#complex_initLongMpz
  */
 void complex_destroyMany(const size_t argumentCount, ...);
 
@@ -324,8 +324,7 @@ void complex_destroyMany(const size_t argumentCount, ...);
  *
  * ## See Also
  *
- *   *
- * [complex_modAddInteger](codebase://complex/Complex.h#complex_modAddInteger)
+ *   * codebase://complex/Complex.h#complex_modAddInteger
  */
 void complex_modAdd(Complex *sum, const Complex augend, const Complex addend,
                     const mpz_t modulus);
@@ -353,8 +352,7 @@ void complex_modAdd(Complex *sum, const Complex augend, const Complex addend,
  *
  * ## See Also
  *
- *   *
- * [complex_multiplicativeInverse](codebase://complex/Complex.h#complex_multiplicativeInverse)
+ *   * codebase://complex/Complex.h#complex_multiplicativeInverse
  */
 void complex_additiveInverse(Complex *inverse, const Complex operand,
                              const mpz_t modulus);
@@ -383,7 +381,7 @@ void complex_additiveInverse(Complex *inverse, const Complex operand,
  *
  * ## See Also
  *
- *   * [complex_modAdd](codebase://complex/Complex.h#complex_modAdd)
+ *   * codebase://complex/Complex.h#complex_modAdd
  */
 void complex_modAddInteger(Complex *sum, const Complex augend,
                            const mpz_t addend, const mpz_t modulus);
@@ -414,8 +412,7 @@ void complex_modAddInteger(Complex *sum, const Complex augend,
  *
  * ## See Also
  *
- *   *
- * [complex_modMulInteger](codebase://complex/Complex.h#complex_modMulInteger)
+ *   * codebase://complex/Complex.h#complex_modMulInteger
  */
 void complex_modMul(Complex *product, const Complex multiplier,
                     const Complex multiplicand, const mpz_t modulus);
@@ -472,7 +469,7 @@ void complex_modPow(Complex *power, const Complex base, const mpz_t exponent,
  *
  * ## See Also
  *
- *   * [complex_modMul](codebase://complex/Complex.h#complex_modMul)
+ *   * codebase://complex/Complex.h#complex_modMul
  */
 void complex_modMulInteger(Complex *product, const mpz_t multiplier,
                            const Complex multiplicand, const mpz_t modulus);
@@ -508,8 +505,7 @@ void complex_modMulInteger(Complex *product, const mpz_t multiplier,
  *
  * ## See Also
  *
- *   *
- * [complex_modAddInteger](codebase://complex/Complex.h#complex_modAddInteger)
+ *   * codebase://complex/Complex.h#complex_modAddInteger
  */
 CryptidStatus complex_multiplicativeInverse(Complex *inverse,
                                             const Complex operand,
