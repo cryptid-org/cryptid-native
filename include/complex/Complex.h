@@ -1,5 +1,27 @@
 /**
- * TODO
+ * # Arbitrary Precision Complex Arithmetic
+ *
+ * ## Description
+ *
+ * Arbitrary precision complex number arithmetic to support the required functions for CryptID.
+ *
+ * ## Groups
+ *
+ * ### Initialization Functions
+ *
+ * Functions supporting the initialization of a [Complex](codebase://complex/Complex.h#Complex).
+ *
+ * ### Memory Release Functions
+ *
+ * Functions supporting the memory release of a [Complex](codebase://complex/Complex.h#Complex).
+ *
+ * ### Comparison Functions
+ *
+ * Functions supporting the comparison of [Complexes](codebase://complex/Complex.h#Complex).
+ *
+ * ### Arithmetic Functions
+ *
+ * Functions implementing arithmetic operations over complex numbers.
  */
 #ifndef __CRYPTID_COMPLEX_H
 #define __CRYPTID_COMPLEX_H
@@ -34,6 +56,10 @@ typedef struct Complex {
 } Complex;
 
 /**
+ * ---
+ * group: Initialization Functions
+ * ---
+ *
  * ## Description
  *
  * Initializes a new complex number to $`0 + 0i`$.
@@ -57,6 +83,10 @@ typedef struct Complex {
 void complex_init(Complex *complexOutput);
 
 /**
+ * ---
+ * group: Initialization Functions
+ * ---
+ *
  * ## Description
  *
  * Initializes a new complex number and sets it's value to the specified
@@ -86,6 +116,10 @@ void complex_initMpz(Complex *complexOutput, const mpz_t real,
                      const mpz_t imaginary);
 
 /**
+ * ---
+ * group: Initialization Functions
+ * ---
+ *
  * ## Description
  *
  * Initializes a new complex number and sets it's value to the specified `long`
@@ -115,6 +149,10 @@ void complex_initLong(Complex *complexOutput, const long real,
                       const long imaginary);
 
 /**
+ * ---
+ * group: Initialization Functions
+ * ---
+ *
  * ## Description
  *
  * Initializes a new complex number and sets it's value to the specified
@@ -145,6 +183,10 @@ void complex_initMpzLong(Complex *complexOutput, const mpz_t real,
                          const long imaginary);
 
 /**
+ * ---
+ * group: Initialization Functions
+ * ---
+ *
  * ## Description
  *
  * Initializes a new complex number and sets it's value to the specified `long`
@@ -175,6 +217,10 @@ void complex_initLongMpz(Complex *complexOutput, const long real,
                          const mpz_t imaginary);
 
 /**
+ * ---
+ * group: Comparison Functions
+ * ---
+ *
  * ## Description
  *
  * Checks if two complex numbers hold the same values.
@@ -197,6 +243,10 @@ CryptidEqualityResult complex_isEquals(const Complex complex1,
                                        const Complex complex2);
 
 /**
+ * ---
+ * group: Memory Release Functions
+ * ---
+ *
  * ## Description
  *
  * Frees a [Complex](codebase://complex/Complex.h#Complex) instance. After
@@ -220,6 +270,10 @@ CryptidEqualityResult complex_isEquals(const Complex complex1,
 void complex_destroy(const Complex complex);
 
 /**
+ * ---
+ * group: Memory Release Functions
+ * ---
+ *
  * ## Description
  *
  * Frees multiple [Complex](codebase://complex/Complex.h#Complex) instances.
@@ -243,6 +297,10 @@ void complex_destroy(const Complex complex);
 void complex_destroyMany(const size_t argumentCount, ...);
 
 /**
+ * ---
+ * group: Arithmetic Functions
+ * ---
+ *
  * ## Description
  *
  * Adds two complex numbers with respect to the specified modulus. Calculated as
@@ -268,6 +326,10 @@ void complex_modAdd(Complex *sum, const Complex augend, const Complex addend,
                     const mpz_t modulus);
 
 /**
+ * ---
+ * group: Arithmetic Functions
+ * ---
+ *
  * ## Description
  *
  * Calculates the additive inverse of the specified complex number with respect
@@ -292,6 +354,10 @@ void complex_additiveInverse(Complex *inverse, const Complex operand,
                              const mpz_t modulus);
 
 /**
+ * ---
+ * group: Arithmetic Functions
+ * ---
+ *
  * ## Description
  *
  * Adds a complex number and an arbitrary precision integer with respect to the
@@ -317,6 +383,10 @@ void complex_modAddInteger(Complex *sum, const Complex augend,
                            const mpz_t addend, const mpz_t modulus);
 
 /**
+ * ---
+ * group: Arithmetic Functions
+ * ---
+ *
  * ## Description
  *
  * Multiplies two complex numbers with respect to the specified modulus.
@@ -344,6 +414,10 @@ void complex_modMul(Complex *product, const Complex multiplier,
                     const Complex multiplicand, const mpz_t modulus);
 
 /**
+ * ---
+ * group: Arithmetic Functions
+ * ---
+ *
  * ## Description
  *
  * Raises a complex number to the specified power with respect to the specified
@@ -366,6 +440,10 @@ void complex_modPow(Complex *power, const Complex base, const mpz_t exponent,
                     const mpz_t modulus);
 
 /**
+ * ---
+ * group: Arithmetic Functions
+ * ---
+ *
  * ## Description
  *
  * Multiplies a complex number with an arbitrary precision integer with respect
@@ -393,6 +471,10 @@ void complex_modMulInteger(Complex *product, const mpz_t multiplier,
                            const Complex multiplicand, const mpz_t modulus);
 
 /**
+ * ---
+ * group: Arithmetic Functions
+ * ---
+ *
  * ## Description
  *
  * Calculates the multiplicate inverse of a complex number with respect to the
