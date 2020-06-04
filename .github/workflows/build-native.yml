@@ -1,0 +1,99 @@
+name: Build Native
+
+on: push
+
+jobs:
+  test:
+    name: Native Test
+
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - name: Install Additional Tools
+        run: |
+          sudo apt install -y \
+            lcov \
+            libgmp-dev \
+            gawk
+
+      - name: Run Tests
+        run: |
+          ./task.sh test --coverage
+        
+      - name: Publish Test Results
+        if: ${{ success() || failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: test-results/*.xml
+     
+      - name: Report Test Coverage
+        if: ${{ success() || failure() }}
+        uses: coverallsapp/github-action@v1.1.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./coverage/lcov/cryptid.info
+
+  memcheck:
+    name: Native Memcheck
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - name: Set up JDK
+        uses: battila7/jdk-via-jabba@v1
+        with:
+          jdk: openjdk@1.11.0
+
+      - name: Install Additional Tools
+        run: |
+          sudo apt install -y \
+            lcov \
+            valgrind \
+            libgmp-dev \
+            gawk
+
+      - name: Check for Memory Leaks
+        run: |
+          ./task.sh memcheck --xmlOutput
+    
+      - name: Publish Memcheck Report
+        if: ${{ success() || failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: memcheck-result
+          path: memcheck
+    
+      - name: Run parsegrind
+        if: ${{ success() || failure() }}
+        run: |
+          cd .task
+          java -jar parsegrind.jar \
+            --base-directory=../ \
+            --source-glob=**/*.c \
+            --valgrind-glob=**/*.memcheck.xml \
+            --output=../memcheck.html
+          cd ..
+    
+      - name: Publish Memcheck Report
+        if: ${{ success() || failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: memcheck-html
+          path: memcheck.html

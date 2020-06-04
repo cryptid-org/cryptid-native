@@ -6,7 +6,8 @@
 
 <div align="center">
 
-[![Build Status](https://dev.azure.com/cryptid-org/cryptid-native/_apis/build/status/cryptid-org.cryptid-native?branchName=master)](https://dev.azure.com/cryptid-org/cryptid-native/_build/latest?definitionId=3&branchName=master)
+[![Build Native](https://github.com/cryptid-org/cryptid-native/workflows/Build%20Native/badge.svg)](https://github.com/cryptid-org/cryptid-native/actions?query=workflow%3A%22Build+Native%22)
+[![Build WASI](https://github.com/cryptid-org/cryptid-native/workflows/Build%20WASI/badge.svg)](https://github.com/cryptid-org/cryptid-native/actions?query=workflow%3A%22Build+WASI%22)
 [![Coverage Status](https://coveralls.io/repos/github/cryptid-org/cryptid-native/badge.svg?branch=master)](https://coveralls.io/github/cryptid-org/cryptid-native?branch=master)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/cryptid-org/cryptid-native.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cryptid-org/cryptid-native/alerts/)
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/cryptid-org/cryptid-native.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cryptid-org/cryptid-native/context:cpp)
