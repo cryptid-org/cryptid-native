@@ -96,4 +96,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: memcheck-html
-          path: memcheck-html
+          path: memcheck.html
