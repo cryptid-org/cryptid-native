@@ -16,11 +16,6 @@
  *
  * Functions supporting the memory release of a
  * [ComplexAsBinary](codebase://complex/ComplexAsBinary.h#ComplexAsBinary).
- *
- * ### Conversion
- *
- * Functions supporting the conversion of
- * [ComplexAsBinary](codebase://complex/ComplexAsBinary.h#ComplexAsBinary) and [Complex](codebase://complex/Complex.h#Complex) back and forth.
  */
 #ifndef __CRYPTID_COMPLEX_AS_BINARY_H
 #define __CRYPTID_COMPLEX_AS_BINARY_H
@@ -67,23 +62,32 @@ typedef struct ComplexAsBinary {
 } ComplexAsBinary;
 
 /**
+ * ---
+ * group: Initialization
+ * ---
+ *
  * ## Description
  *
- * Initializes a new ComplexAsBinary with the binary representation of specified
- * real and imaginary parts.
+ * Initializes a new complex number represented with binary values ($`real + imaginary \cdot i`$).
  *
  * ## Parameters
  *
  *   * complexAsBinaryOutput
- *     * The ComplexAsBinary to be initialized.
+ *     * The pointer to the binary represented complex number to be initialized. No memory allocation required before the function call. Should be destroyed by the called if not needed anymore.
  *   * real
- *     * The binary representation of the real part.
+ *     * The binary representation of the real part $`a`$ of the complex number $`a + bi`$.
  *   * realLength
  *     * The lenght of the real part's binary representation.
  *   * imaginary
- *     * The binary representation of the imaginary part.
+ *     * The binary representation of the imaginary part $`b`$ of the complex number $`a + bi`$.
  *   * imaginaryLength
  *     * The length of the imaginary part's binary representation.
+ *
+ * ## See Also
+ *
+ *   * codebase://complex/ComplexAsBinary.h#complexAsBinary_toComplex
+ *   * codebase://complex/ComplexAsBinary.h#complexAsBinary_fromComplex
+ *   * codebase://complex/ComplexAsBinary.h#complexAsBinary_destroy
  */
 void complexAsBinary_init(ComplexAsBinary *complexAsBinaryOutput,
                           const void *const real, const size_t realLength,
@@ -91,44 +95,73 @@ void complexAsBinary_init(ComplexAsBinary *complexAsBinaryOutput,
                           const size_t imaginaryLength);
 
 /**
+ * ---
+ * group: Deinitialization
+ * ---
+ *
  * ## Description
  *
- * Frees a ComplexAsBinary. After calling this function on a ComplexAsBinary
- * instance, that instance should not be used anymore.
+ * Frees a [ComplexAsBinary](codebase://complex/ComplexAsBinary.h#ComplexAsBinary) instance. After calling this function on the instance, that instance should not be used before reinitialization.
  *
  * ## Parameters
  *
  *   * complexAsBinary
- *     * The ComplexAsBinary to be destroyed.
+ *     * The instance to be destroyed.
+ *
+ * ## See Also
+ *
+ *   * codebase://complex/ComplexAsBinary.h#complexAsBinary_init
+ *   * codebase://complex/ComplexAsBinary.h#complexAsBinary_toComplex
+ *   * codebase://complex/ComplexAsBinary.h#complexAsBinary_fromComplex
  */
 void complexAsBinary_destroy(ComplexAsBinary complexAsBinary);
 
 /**
+ * ---
+ * group: Initialization
+ * ---
+ *
  * ## Description
  *
- * Converts a ComplexAsBinary to Complex.
+ * Initializes a [Complex](codebase://complex/ComplexAsBinary.h#ComplexAsBinary) instance based on the given [ComplexAsBinary](codebase://complex/ComplexAsBinary.h#ComplexAsBinary).
  *
  * ## Parameters
  *
  *   * complexOutput
- *     * The Complex to be initialized based on a ComplexAsBinary.
+ *     * The complex number to be initialized based on the given binary representation. No memory allocation required before the function call. Should be destroyed by the caller if not needed anymore.
  *   * complexAsBinary
- *     * The ComplexAsBinary, which needs to be converted to Complex.
+ *     * The binary representation, which the initialization based on.
+ *
+ * ## See Also
+ *
+ *   * codebase://complex/ComplexAsBinary.h#complexAsBinary_init
+ *   * codebase://complex/ComplexAsBinary.h#complexAsBinary_fromComplex
+ *   * codebase://complex/ComplexAsBinary.h#complexAsBinary_destroy
  */
 void complexAsBinary_toComplex(Complex *complexOutput,
                                const ComplexAsBinary complexAsBinary);
 
 /**
+ * ---
+ * group: Initialization
+ * ---
+ *
  * ## Description
  *
- * Converts a Complex to ComplexAsBinary.
+ * Initializes a [ComplexAsBinary](codebase://complex/ComplexAsBinary.h#ComplexAsBinary) instance based on the given [Complex](codebase://complex/ComplexAsBinary.h#ComplexAsBinary).
  *
  * ## Parameters
  *
  *   * complexAsBinaryOutput
- *     * The ComplexAsBinary to be initialized based on a Complex.
+ *     * The binary representation to be initialized based on a given complex number.
  *   * complex
- *     * The Complex, which needs to be converted to ComplexAsBinary.
+ *     * The complex number, which the initialization based on.
+ *
+ * ## See Also
+ *
+ *   * codebase://complex/ComplexAsBinary.h#complexAsBinary_init
+ *   * codebase://complex/ComplexAsBinary.h#complexAsBinary_toComplex
+ *   * codebase://complex/ComplexAsBinary.h#complexAsBinary_destroy
  */
 void complexAsBinary_fromComplex(ComplexAsBinary *complexAsBinaryOutput,
                                  const Complex complex);
