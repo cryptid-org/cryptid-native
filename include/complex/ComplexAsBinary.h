@@ -1,3 +1,27 @@
+/**
+ * # Binary Representation of Arbitrary Precision Complex Number
+ *
+ * ## Description
+ *
+ * Binary representation of [Complex](codebase://complex/Complex.h#Complex) for easier serialization and deserialization. Also includes the necessary conversion functions.
+ *
+ * ## Groups
+ *
+ * ### Initialization
+ *
+ * Functions supporting the initialization of a
+ * [ComplexAsBinary](codebase://complex/ComplexAsBinary.h#ComplexAsBinary).
+ *
+ * ### Deinitialization
+ *
+ * Functions supporting the memory release of a
+ * [ComplexAsBinary](codebase://complex/ComplexAsBinary.h#ComplexAsBinary).
+ *
+ * ### Conversion
+ *
+ * Functions supporting the conversion of
+ * [ComplexAsBinary](codebase://complex/ComplexAsBinary.h#ComplexAsBinary) and [Complex](codebase://complex/Complex.h#Complex) back and forth.
+ */
 #ifndef __CRYPTID_COMPLEX_AS_BINARY_H
 #define __CRYPTID_COMPLEX_AS_BINARY_H
 
@@ -6,34 +30,38 @@
 /**
  * ## Description
  *
- * Represents a Complex numbe with binaries of real and imaginary.
+ * Binary representation of a [Complex](codebase://complex/Complex.h#Complex).
+ *
+ * ## See Also
+ *
+ *   * codebase://complex/Complex.h#Complex
  */
 typedef struct ComplexAsBinary {
   /**
    * ## Description
    *
-   * The binary representation of the real part.
+   * The binary representation of [Complex.real](codebase://complex/Complex.h#Complex.real).
    */
   void *real;
 
   /**
    * ## Description
    *
-   * The length of the real part's binary representation.
+   * The length of [real](codebase://complex/ComplexAsBinary.h#ComplexAsBinary.real).
    */
   size_t realLength;
 
   /**
    * ## Description
    *
-   * The binary representation of the imaginary part.
+   * The binary representation of [Complex.imaginary](codebase://complex/Complex.h#Complex.imaginary).
    */
   void *imaginary;
 
   /**
    * ## Description
    *
-   * The length of the imaginary part's binary representation.
+   * The length of [imaginary](codebase://complex/ComplexAsBinary.h#ComplexAsBinary.imaginary).
    */
   size_t imaginaryLength;
 } ComplexAsBinary;
