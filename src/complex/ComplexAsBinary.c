@@ -20,7 +20,7 @@ void complexAsBinary_init(ComplexAsBinary *complexAsBinaryOutput,
   complexAsBinaryOutput->imaginaryLength = imaginaryLength;
 }
 
-void complexAsBinary_destroy(ComplexAsBinary complexAsBinary) {
+void complexAsBinary_destroy(const ComplexAsBinary complexAsBinary) {
   free(complexAsBinary.real);
   free(complexAsBinary.imaginary);
 }

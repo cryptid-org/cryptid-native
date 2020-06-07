@@ -73,7 +73,7 @@ void complexAsBinary_init(ComplexAsBinary *complexAsBinaryOutput,
  *   * complexAsBinary
  *     * The ComplexAsBinary to be destroyed.
  */
-void complexAsBinary_destroy(ComplexAsBinary complexAsBinary);
+void complexAsBinary_destroy(const ComplexAsBinary complexAsBinary);
 
 /**
  * ## Description
