@@ -128,7 +128,7 @@ void complexAsBinary_init(ComplexAsBinary *complexAsBinaryOutput,
  *   * codebase://complex/ComplexAsBinary.h#complexAsBinary_toComplex
  *   * codebase://complex/ComplexAsBinary.h#complexAsBinary_fromComplex
  */
-void complexAsBinary_destroy(ComplexAsBinary complexAsBinary);
+void complexAsBinary_destroy(const ComplexAsBinary complexAsBinary);
 
 /**
  * ---
