@@ -3,7 +3,13 @@ name: "CryptID Default CodeQL Configuration"
 queries:
   - uses: security-and-quality
 
+paths-ignore: 
+  - .task
+  - dependencies
+  - docs
+
 paths:
+  - examples
   - include
   - src
   - test
