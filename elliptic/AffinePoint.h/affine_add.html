@@ -1,9 +1,19 @@
-<!DOCTYPE html><html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" crossorigin="anonymous"><link rel="stylesheet" href="../../_static/main.css"><link rel="stylesheet" href="../../_static/code.css"></head><body><main><div class="breadcrumb"><span class="breadcrumb-segment"><a href="../../index.html">include</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../index.html">elliptic</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../AffinePoint.h.html">AffinePoint.h</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment">affine_add</span></div><div><div class="content-heading"><div class="content-heading-title"><h1>affine_add</h1><div class="content-heading-remote-link"><a href="https://github.com/cryptid-org/cryptid-native/tree/master/include/elliptic/AffinePoint.h#L89"><img src="../../_static/file-link-icon.svg"></a></div></div></div><section class="representation"><pre><code class="language-c">CryptidStatus affine_add(
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" crossorigin="anonymous"><link rel="stylesheet" href="../../_static/main.css"><link rel="stylesheet" href="../../_static/code.css"></head><body><script>(function () {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.body.classList.add('dark');
+  }
+})();</script><main><div class="breadcrumb"><span class="breadcrumb-segment"><a href="../../index.html">include</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../index.html">elliptic</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../AffinePoint.h.html">AffinePoint.h</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment">affine_add</span></div><div><div class="content-heading"><div class="content-heading-title"><h1>affine_add</h1><div class="content-heading-remote-link"><a href="https://github.com/cryptid-org/cryptid-native/tree/master/include/elliptic/AffinePoint.h#L168"><img src="../../_static/file-link-icon.svg"></a></div></div></div><section class="representation"><pre><code class="language-c">CryptidStatus affine_add(
   AffinePoint *result,
   const AffinePoint affinePoint1,
   const AffinePoint affinePoint2,
   const EllipticCurve ellipticCurve
-)</code></pre></section><section class="parameters"><h2>Parameters</h2><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">*result</h3><span class="parameter-type">AffinePoint</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">affinePoint1</h3><span class="parameter-type">const AffinePoint</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">affinePoint2</h3><span class="parameter-type">const AffinePoint</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">ellipticCurve</h3><span class="parameter-type">const EllipticCurve</span></div></div></section></div></main><div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" crossorigin="anonymous"></script><script>(function () {
+)</code></pre></section><div class="description"><p>Adds two AffinePoints.
+Implementation of Algorithm 3.1 in [Intro-to-IBE].</p>
+</div><section class="parameters"><h2>Parameters</h2><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">*result</h3><span class="parameter-type">AffinePoint</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">affinePoint1</h3><span class="parameter-type">const AffinePoint</span></div><div class="parameter-description"><p>An AffinePoint.</p>
+</div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">affinePoint2</h3><span class="parameter-type">const AffinePoint</span></div><div class="parameter-description"><p>An AffinePoint.</p>
+</div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">ellipticCurve</h3><span class="parameter-type">const EllipticCurve</span></div><div class="parameter-description"><p>The curve to operate over.</p>
+</div></div></section><section class="return-value"><h2>Return Value</h2><p class="return-type"><code> CryptidStatus</code></p><p>CRYPTID_SUCCESS if everything went right, error otherwise.</p>
+</section></div></main><div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" crossorigin="anonymous"></script><script>(function () {
       document.addEventListener('DOMContentLoaded', function () {
         const mathElements = Array.from(document.getElementsByClassName('katex-inline'))
             .concat(Array.from(document.getElementsByClassName('katex-block')));
@@ -17,4 +27,14 @@
             });
         });
        })
+})();</script><script>(function () {
+  let checkbox = document.querySelector("#switch");
+
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    checkbox.checked = true;
+  }
+  
+  checkbox.addEventListener('change', function () {
+    document.body.classList.toggle('dark');
+  })
 })();</script></div></body></html>

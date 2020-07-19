@@ -1,9 +1,18 @@
-<!DOCTYPE html><html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" crossorigin="anonymous"><link rel="stylesheet" href="../../_static/main.css"><link rel="stylesheet" href="../../_static/code.css"></head><body><main><div class="breadcrumb"><span class="breadcrumb-segment"><a href="../../index.html">include</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../index.html">elliptic</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../Divisor.h.html">Divisor.h</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment">divisor_evaluateTangent</span></div><div><div class="content-heading"><div class="content-heading-title"><h1>divisor_evaluateTangent</h1><div class="content-heading-remote-link"><a href="https://github.com/cryptid-org/cryptid-native/tree/master/include/elliptic/Divisor.h#L29"><img src="../../_static/file-link-icon.svg"></a></div></div></div><section class="representation"><pre><code class="language-c">CryptidStatus divisor_evaluateTangent(
-  Complex * result,
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" crossorigin="anonymous"><link rel="stylesheet" href="../../_static/main.css"><link rel="stylesheet" href="../../_static/code.css"></head><body><script>(function () {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.body.classList.add('dark');
+  }
+})();</script><main><div class="breadcrumb"><span class="breadcrumb-segment"><a href="../../index.html">include</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../index.html">elliptic</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../Divisor.h.html">Divisor.h</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment">divisor_evaluateTangent</span></div><div><div class="content-heading"><div class="content-heading-title"><h1>divisor_evaluateTangent</h1><div class="content-heading-remote-link"><a href="https://github.com/cryptid-org/cryptid-native/tree/master/include/elliptic/Divisor.h#L53"><img src="../../_static/file-link-icon.svg"></a></div></div></div><section class="representation"><pre><code class="language-c">CryptidStatus divisor_evaluateTangent(
+  Complex *result,
   const AffinePoint a,
   const ComplexAffinePoint b,
   const EllipticCurve ec
-)</code></pre></section><section class="parameters"><h2>Parameters</h2><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">* result</h3><span class="parameter-type">Complex</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">a</h3><span class="parameter-type">const AffinePoint</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">b</h3><span class="parameter-type">const ComplexAffinePoint</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">ec</h3><span class="parameter-type">const EllipticCurve</span></div></div></section></div></main><div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" crossorigin="anonymous"></script><script>(function () {
+)</code></pre></section><div class="description"><p>Evaluates the divisor of a tangent on a Type-1 elliptic curve.</p>
+</div><section class="parameters"><h2>Parameters</h2><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">*result</h3><span class="parameter-type">Complex</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">a</h3><span class="parameter-type">const AffinePoint</span></div><div class="parameter-description"><p>A point in \f$E(F_p)\f$.</p>
+</div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">b</h3><span class="parameter-type">const ComplexAffinePoint</span></div><div class="parameter-description"><p>A point \f$E(F_p^2)\f$.</p>
+</div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">ec</h3><span class="parameter-type">const EllipticCurve</span></div><div class="parameter-description"><p>The elliptic curve to operate on.</p>
+</div></div></section><section class="return-value"><h2>Return Value</h2><p class="return-type"><code> CryptidStatus</code></p><p>CRYPTID_SUCCESS if everything went right.</p>
+</section></div></main><div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" crossorigin="anonymous"></script><script>(function () {
       document.addEventListener('DOMContentLoaded', function () {
         const mathElements = Array.from(document.getElementsByClassName('katex-inline'))
             .concat(Array.from(document.getElementsByClassName('katex-block')));
@@ -17,4 +26,14 @@
             });
         });
        })
+})();</script><script>(function () {
+  let checkbox = document.querySelector("#switch");
+
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    checkbox.checked = true;
+  }
+  
+  checkbox.addEventListener('change', function () {
+    document.body.classList.toggle('dark');
+  })
 })();</script></div></body></html>

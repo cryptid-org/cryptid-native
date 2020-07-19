@@ -1,4 +1,8 @@
-<!DOCTYPE html><html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" crossorigin="anonymous"><link rel="stylesheet" href="../../_static/main.css"><link rel="stylesheet" href="../../_static/code.css"></head><body><main><div class="breadcrumb"><span class="breadcrumb-segment"><a href="../../index.html">include</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../index.html">elliptic</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../EllipticCurveAsBinary.h.html">EllipticCurveAsBinary.h</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment">ellipticCurveAsBinary_init</span></div><div><div class="content-heading"><div class="content-heading-title"><h1>ellipticCurveAsBinary_init</h1><div class="content-heading-remote-link"><a href="https://github.com/cryptid-org/cryptid-native/tree/master/include/elliptic/EllipticCurveAsBinary.h#L34"><img src="../../_static/file-link-icon.svg"></a></div></div></div><section class="representation"><pre><code class="language-c">void ellipticCurveAsBinary_init(
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" crossorigin="anonymous"><link rel="stylesheet" href="../../_static/main.css"><link rel="stylesheet" href="../../_static/code.css"></head><body><script>(function () {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.body.classList.add('dark');
+  }
+})();</script><main><div class="breadcrumb"><span class="breadcrumb-segment"><a href="../../index.html">include</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../index.html">elliptic</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../EllipticCurveAsBinary.h.html">EllipticCurveAsBinary.h</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment">ellipticCurveAsBinary_init</span></div><div><div class="content-heading"><div class="content-heading-title"><h1>ellipticCurveAsBinary_init</h1><div class="content-heading-remote-link"><a href="https://github.com/cryptid-org/cryptid-native/tree/master/include/elliptic/EllipticCurveAsBinary.h#L81"><img src="../../_static/file-link-icon.svg"></a></div></div></div><section class="representation"><pre><code class="language-c">void ellipticCurveAsBinary_init(
   EllipticCurveAsBinary *ellipticCurveAsBinaryOutput,
   const void *const a,
   const size_t aLength,
@@ -6,7 +10,12 @@
   const size_t bLength,
   const void *const fieldOrder,
   const size_t fieldOrderLength
-)</code></pre></section><section class="parameters"><h2>Parameters</h2><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">*ellipticCurveAsBinaryOutput</h3><span class="parameter-type">EllipticCurveAsBinary</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">*const a</h3><span class="parameter-type">const void</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">aLength</h3><span class="parameter-type">const size_t</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">*const b</h3><span class="parameter-type">const void</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">bLength</h3><span class="parameter-type">const size_t</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">*const fieldOrder</h3><span class="parameter-type">const void</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">fieldOrderLength</h3><span class="parameter-type">const size_t</span></div></div></section></div></main><div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" crossorigin="anonymous"></script><script>(function () {
+)</code></pre></section><div class="description"><p>Initializes a new EllipticCurve instance with the binary representation of
+arbitrary precision integers.</p>
+</div><section class="parameters"><h2>Parameters</h2><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">*ellipticCurveAsBinaryOutput</h3><span class="parameter-type">EllipticCurveAsBinary</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">*const a</h3><span class="parameter-type">const void</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">aLength</h3><span class="parameter-type">const size_t</span></div><div class="parameter-description"><p>The length of the a coefficient's binary representation.</p>
+</div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">*const b</h3><span class="parameter-type">const void</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">bLength</h3><span class="parameter-type">const size_t</span></div><div class="parameter-description"><p>The length of the b coefficient's binary representation.</p>
+</div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">*const fieldOrder</h3><span class="parameter-type">const void</span></div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">fieldOrderLength</h3><span class="parameter-type">const size_t</span></div><div class="parameter-description"><p>The length of the finite field order's binary representation.</p>
+</div></div></section></div></main><div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" crossorigin="anonymous"></script><script>(function () {
       document.addEventListener('DOMContentLoaded', function () {
         const mathElements = Array.from(document.getElementsByClassName('katex-inline'))
             .concat(Array.from(document.getElementsByClassName('katex-block')));
@@ -20,4 +29,14 @@
             });
         });
        })
+})();</script><script>(function () {
+  let checkbox = document.querySelector("#switch");
+
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    checkbox.checked = true;
+  }
+  
+  checkbox.addEventListener('change', function () {
+    document.body.classList.toggle('dark');
+  })
 })();</script></div></body></html>

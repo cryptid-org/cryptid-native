@@ -31,48 +31,48 @@ pre[class*="language-"].line-numbers > code {
 
 }
 
-	.line-numbers-rows > span {
-		pointer-events: none;
-		display: block;
-		counter-increment: linenumber;
-	}
+.line-numbers-rows > span {
+    pointer-events: none;
+    display: block;
+    counter-increment: linenumber;
+}
 
-		.line-numbers-rows > span:before {
-			content: counter(linenumber);
-			color: #999;
-			display: block;
-			padding-right: 0.8em;
-			text-align: right;
-		}
+.line-numbers-rows > span:before {
+    content: counter(linenumber);
+    color: #999;
+    display: block;
+    padding-right: 0.8em;
+    text-align: right;
+}
 
  code[class*="language-"],
  pre[class*="language-"] {
-     color: #393A34;
-     font-family: 'Overpass Mono', monospace;
-     direction: ltr;
-     text-align: left;
-     white-space: pre;
-     word-spacing: normal;
-     word-break: normal;
-     
-     line-height: 1.33em;
-     font-size: 0.8rem;
- 
-     -moz-tab-size: 4;
-     -o-tab-size: 4;
-     tab-size: 4;
- 
-     -webkit-hyphens: none;
-     -moz-hyphens: none;
-     -ms-hyphens: none;
-     hyphens: none;
+    color: var(--code-color);
+    font-family: 'Overpass Mono', monospace;
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    
+    line-height: 1.33em;
+    font-size: 0.8rem;
+
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
  }
  
  pre[class*="language-"] {
-     padding: 0.777em 0.324em;
-     
-     margin: 0;
-     overflow: auto;
+    padding: 0.777em 0.324em;
+    
+    margin: 0;
+    overflow: auto;
  }
  
  .representation > pre > code[class*="language-c"] {
@@ -81,22 +81,22 @@ pre[class*="language-"].line-numbers > code {
 
  pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
  code[class*="language-"]::selection, code[class*="language-"] ::selection {
-     background: #C1DEF1;
+    background: #C1DEF1;
  }
   
  /*
   * Inline code.
   */
  :not(pre) > code {
-     padding: .2em;
-     color: #393A34;
-     font-family: 'Overpass Mono', monospace;
-     white-space: pre;
-     word-spacing: normal;
-     word-break: normal;
-     
-     line-height: 1.33em;
-     font-size: 0.9rem;
+    padding: .2em;
+    color: var(--code-color);
+    font-family: 'Overpass Mono', monospace;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    
+    line-height: 1.33em;
+    font-size: 0.9rem;
  }
  
  /*
@@ -106,20 +106,21 @@ pre[class*="language-"].line-numbers > code {
  .token.prolog,
  .token.doctype,
  .token.cdata {
-     color: #008000; font-style: italic;
+    color: #008000;
+    font-style: italic;
  }
   
  .token.namespace {
-     opacity: .7;
+    opacity: .7;
  }
   
  .token.string {
-     color: #A31515;
+    color: var(--token-string-color);
  }
   
  .token.punctuation,
  .token.operator {
-     color: #393A34; /* no highlight */
+    color: var(--code-color); /* no highlight */
  }
   
  .token.url,
@@ -129,7 +130,7 @@ pre[class*="language-"].line-numbers > code {
  .token.variable,
  .token.constant,
  .token.inserted {
-     color: #36acaa;
+    color: var(--token-symbol-color);
  }
   
  .token.atrule,
@@ -139,51 +140,51 @@ pre[class*="language-"].line-numbers > code {
  .language-json .token.boolean, 
  .language-json .token.number, 
  code[class*="language-css"]{
-     color: #0000ff;
+    color: var(--token-keyword-color);
  }
   
  .token.function {
-     color: #393A34;
+    color: var(--code-color);
  }
  
  .token.deleted,
  .language-autohotkey .token.tag {
-     color: #9a050f;
+    color: var(--token-deleted-color);
  }
   
  .token.selector,
  .language-autohotkey .token.keyword {
-     color: #00009f;
+    color: #00009f;
  }
   
  .token.important,
  .token.bold {
-     font-weight: bold;
+    font-weight: bold;
  }
   
  .token.italic {
-     font-style: italic;
+    font-style: italic;
  }
   
  .token.class-name,
  .language-json .token.property {
-     color: #2B91AF;
+    color: var(--token-class-name-color);
  }
   
  .token.tag,
  .token.selector {
-     color: #800000;
+    color: #800000;
  }
   
  .token.attr-name,
  .token.property,
  .token.regex,
  .token.entity {
-     color: #393A34;
+    color: var(--code-color);
  }
   
  .token.directive.tag  .tag {
-     background: #ffff00;
-     color: #393A34;
+    background: #ffff00;
+    color: var(--code-color);
  }
  
