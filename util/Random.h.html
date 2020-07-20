@@ -1,8 +1,10 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" crossorigin="anonymous"><link rel="stylesheet" href="../_static/main.css"><link rel="stylesheet" href="../_static/code.css"></head><body><script>(function () {
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.body.classList.add('dark');
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" crossorigin="anonymous"><link rel="stylesheet" href="../_static/main.css"><link rel="stylesheet" href="../_static/code.css"></head><body><script>const isNightModePreferred = () => window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+
+(function setPreferredTheme() {
+  if (isNightModePreferred()) {
+    document.body.classList.add('night');
   }
-})();</script><main><div class="header-container"><div class="breadcrumb"><span class="breadcrumb-segment"><a href="../index.html">include</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="index.html">util</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment">Random.h</span></div><div class="dark-mode-container"><span>Dark Mode</span><input type="checkbox" id="switch"><label for="switch">Toggle</label></div></div><div><div class="content-heading"><div class="content-heading-title"><h1>Random.h</h1><div class="content-heading-remote-link"><a href="https://github.com/cryptid-org/cryptid-native/tree/master/include/util/Random.h#L"><img src="../_static/file-link-icon.svg"></a></div></div></div><section class="elements"><div class="element-group"><div><div class="element-type-group"><h3>Functions</h3><table class="elements-table"><tbody><tr><td class="element-name-cell"><a href="Random.h/random_affinePoint.html">random_affinePoint</a></td><td class="element-excerpt-cell"><div class="element-excerpt-text"><p>Generates a cryptographically secure random AffinePoint on the specified
+})();</script><main><div class="header-container"><div class="breadcrumb"><span class="breadcrumb-segment"><a href="../index.html">include</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="index.html">util</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment">Random.h</span></div><div class="night-mode-container"><span>Night Mode</span><input type="checkbox" id="night-mode-button"><label for="night-mode-button">Toggle</label></div></div><div><div class="content-heading"><div class="content-heading-title"><h1>Random.h</h1><div class="content-heading-remote-link"><a href="https://github.com/cryptid-org/cryptid-native/tree/master/include/util/Random.h#L"><img src="../_static/file-link-icon.svg"></a></div></div></div><section class="elements"><div class="element-group"><div><div class="element-type-group"><h3>Functions</h3><table class="elements-table"><tbody><tr><td class="element-name-cell"><a href="Random.h/random_affinePoint.html">random_affinePoint</a></td><td class="element-excerpt-cell"><div class="element-excerpt-text"><p>Generates a cryptographically secure random AffinePoint on the specified
 EllipticCurve.</p>
 </div><div class="element-excerpt-type">(function)</div></td></tr><tr><td class="element-name-cell"><a href="Random.h/random_mpzInRange.html">random_mpzInRange</a></td><td class="element-excerpt-cell"><div class="element-excerpt-text"><p>Generates a cryptographically secure random arbitrary precision integer
 between zero and {@code range} inclusive.</p>
@@ -14,7 +16,7 @@ specified bitlength</p>
 {@code range} inclusive.</p>
 </div><div class="element-excerpt-type">(function)</div></td></tr><tr><td class="element-name-cell"><a href="Random.h/random_unsignedIntOfLength.html">random_unsignedIntOfLength</a></td><td class="element-excerpt-cell"><div class="element-excerpt-text"><p>Generates a cryptographically secure random unsigned integer of the specified
 bitlength.</p>
-</div><div class="element-excerpt-type">(function)</div></td></tr></tbody></table></div></div></div></section></div></main><div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" crossorigin="anonymous"></script><script>(function () {
+</div><div class="element-excerpt-type">(function)</div></td></tr></tbody></table></div></div></div></section></div></main><div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" crossorigin="anonymous"></script><script>(function renderMathElements() {
       document.addEventListener('DOMContentLoaded', function () {
         const mathElements = Array.from(document.getElementsByClassName('katex-inline'))
             .concat(Array.from(document.getElementsByClassName('katex-block')));
@@ -28,14 +30,14 @@ bitlength.</p>
             });
         });
        })
-})();</script><script>(function () {
-  let checkbox = document.querySelector("#switch");
+})();</script><script>(function setNightModeButton() {
+  const nightModeButton = document.querySelector("#night-mode-button");
 
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    checkbox.checked = true;
+  if (isNightModePreferred()) {
+    nightModeButton.checked = true;
   }
   
-  checkbox.addEventListener('change', function () {
-    document.body.classList.toggle('dark');
+  nightModeButton.addEventListener('change', function () {
+    document.body.classList.toggle('night');
   })
 })();</script></div></body></html>

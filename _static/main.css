@@ -51,10 +51,10 @@ body {
     transition: var(--transition-time);
 }
 
-body.dark {
+body.night {
     --background-color: #1E1E1E;
 
-    --text-color: #FAFAFA;
+    --text-color: #E5E5E5;
 
     --code-color: #E2E2E2;
 
@@ -226,24 +226,24 @@ h2 {
     padding-right: 0.5em;
 }
 
-.dark-mode-container {
+.night-mode-container {
     display: flex;
     align-items: center;
 }
   
-.dark-mode-container span {
+.night-mode-container span {
     font-size: 1rem;
     padding-right: 0.25rem;
 }
   
-.dark-mode-container input[type=checkbox]{
+.night-mode-container input[type=checkbox]{
     height: 0;
     width: 0;
     visibility: hidden;
     margin: 0;
 }
   
-.dark-mode-container label {
+.night-mode-container label {
     cursor: pointer;
     text-indent: -9999px;
     width: 40px;
@@ -254,7 +254,7 @@ h2 {
     position: relative;
 }
   
-.dark-mode-container label:after {
+.night-mode-container label:after {
     content: '';
     position: absolute;
     top: 1px;
@@ -266,16 +266,16 @@ h2 {
     transition: 0.5s;
 }
   
-.dark-mode-container input:checked + label {
+.night-mode-container input:checked + label {
     background: var(--breadcrumb-link-color);
 }
   
-.dark-mode-container input:checked + label:after {
+.night-mode-container input:checked + label:after {
     left: calc(100% - 1px);
     transform: translateX(-100%);
 }
   
-.dark-mode-container label:active:after {
+.night-mode-container label:active:after {
     width: 26px;
 }
 

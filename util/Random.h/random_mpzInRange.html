@@ -1,15 +1,17 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" crossorigin="anonymous"><link rel="stylesheet" href="../../_static/main.css"><link rel="stylesheet" href="../../_static/code.css"></head><body><script>(function () {
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.body.classList.add('dark');
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" crossorigin="anonymous"><link rel="stylesheet" href="../../_static/main.css"><link rel="stylesheet" href="../../_static/code.css"></head><body><script>const isNightModePreferred = () => window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+
+(function setPreferredTheme() {
+  if (isNightModePreferred()) {
+    document.body.classList.add('night');
   }
-})();</script><main><div class="header-container"><div class="breadcrumb"><span class="breadcrumb-segment"><a href="../../index.html">include</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../index.html">util</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../Random.h.html">Random.h</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment">random_mpzInRange</span></div><div class="dark-mode-container"><span>Dark Mode</span><input type="checkbox" id="switch"><label for="switch">Toggle</label></div></div><div><div class="content-heading"><div class="content-heading-title"><h1>random_mpzInRange</h1><div class="content-heading-remote-link"><a href="https://github.com/cryptid-org/cryptid-native/tree/master/include/util/Random.h#L70"><img src="../../_static/file-link-icon.svg"></a></div></div></div><section class="representation"><pre><code class="language-c">void random_mpzInRange(
+})();</script><main><div class="header-container"><div class="breadcrumb"><span class="breadcrumb-segment"><a href="../../index.html">include</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../index.html">util</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../Random.h.html">Random.h</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment">random_mpzInRange</span></div><div class="night-mode-container"><span>Night Mode</span><input type="checkbox" id="night-mode-button"><label for="night-mode-button">Toggle</label></div></div><div><div class="content-heading"><div class="content-heading-title"><h1>random_mpzInRange</h1><div class="content-heading-remote-link"><a href="https://github.com/cryptid-org/cryptid-native/tree/master/include/util/Random.h#L70"><img src="../../_static/file-link-icon.svg"></a></div></div></div><section class="representation"><pre><code class="language-c">void random_mpzInRange(
   mpz_t result,
   const mpz_t range
 )</code></pre></section><div class="description"><p>Generates a cryptographically secure random arbitrary precision integer
 between zero and {@code range} inclusive.</p>
 </div><section class="parameters"><h2>Parameters</h2><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">result</h3><span class="parameter-type">mpz_t</span></div><div class="parameter-description"><p>Out parameter for the generated value.</p>
 </div></div><div class="parameter"><div class="parameter-heading"><h3 class="parameter-title">range</h3><span class="parameter-type">const mpz_t</span></div><div class="parameter-description"><p>The upper limit of the generation.</p>
-</div></div></section></div></main><div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" crossorigin="anonymous"></script><script>(function () {
+</div></div></section></div></main><div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" crossorigin="anonymous"></script><script>(function renderMathElements() {
       document.addEventListener('DOMContentLoaded', function () {
         const mathElements = Array.from(document.getElementsByClassName('katex-inline'))
             .concat(Array.from(document.getElementsByClassName('katex-block')));
@@ -23,14 +25,14 @@ between zero and {@code range} inclusive.</p>
             });
         });
        })
-})();</script><script>(function () {
-  let checkbox = document.querySelector("#switch");
+})();</script><script>(function setNightModeButton() {
+  const nightModeButton = document.querySelector("#night-mode-button");
 
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    checkbox.checked = true;
+  if (isNightModePreferred()) {
+    nightModeButton.checked = true;
   }
   
-  checkbox.addEventListener('change', function () {
-    document.body.classList.toggle('dark');
+  nightModeButton.addEventListener('change', function () {
+    document.body.classList.toggle('night');
   })
 })();</script></div></body></html>

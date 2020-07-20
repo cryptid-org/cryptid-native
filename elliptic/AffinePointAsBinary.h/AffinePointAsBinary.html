@@ -1,8 +1,10 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" crossorigin="anonymous"><link rel="stylesheet" href="../../_static/main.css"><link rel="stylesheet" href="../../_static/code.css"></head><body><script>(function () {
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.body.classList.add('dark');
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" crossorigin="anonymous"><link rel="stylesheet" href="../../_static/main.css"><link rel="stylesheet" href="../../_static/code.css"></head><body><script>const isNightModePreferred = () => window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+
+(function setPreferredTheme() {
+  if (isNightModePreferred()) {
+    document.body.classList.add('night');
   }
-})();</script><main><div class="header-container"><div class="breadcrumb"><span class="breadcrumb-segment"><a href="../../index.html">include</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../index.html">elliptic</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../AffinePointAsBinary.h.html">AffinePointAsBinary.h</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment">AffinePointAsBinary</span></div><div class="dark-mode-container"><span>Dark Mode</span><input type="checkbox" id="switch"><label for="switch">Toggle</label></div></div><div><div class="content-heading"><div class="content-heading-title"><h1>AffinePointAsBinary</h1><div class="content-heading-remote-link"><a href="https://github.com/cryptid-org/cryptid-native/tree/master/include/elliptic/AffinePointAsBinary.h#L11"><img src="../../_static/file-link-icon.svg"></a></div></div></div><section class="representation"><pre><code class="language-c">typedef struct {
+})();</script><main><div class="header-container"><div class="breadcrumb"><span class="breadcrumb-segment"><a href="../../index.html">include</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../index.html">elliptic</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment"><a href="../AffinePointAsBinary.h.html">AffinePointAsBinary.h</a></span><span class="breadcrumb-separator">/</span><span class="breadcrumb-segment">AffinePointAsBinary</span></div><div class="night-mode-container"><span>Night Mode</span><input type="checkbox" id="night-mode-button"><label for="night-mode-button">Toggle</label></div></div><div><div class="content-heading"><div class="content-heading-title"><h1>AffinePointAsBinary</h1><div class="content-heading-remote-link"><a href="https://github.com/cryptid-org/cryptid-native/tree/master/include/elliptic/AffinePointAsBinary.h#L11"><img src="../../_static/file-link-icon.svg"></a></div></div></div><section class="representation"><pre><code class="language-c">typedef struct {
   void x;
   size_t xLength;
   void y;
@@ -16,7 +18,7 @@
 <p>The binary representation of the \f$y\f$ coordinate.</p>
 </div></div><div class="member"><div class="member-heading"><h3 class="member-title">yLength</h3><span class="member-type">size_t</span></div><div class="member-description"><h2>Description</h2>
 <p>The length of the y coordinate's binary representation.</p>
-</div></div></section></div></main><div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" crossorigin="anonymous"></script><script>(function () {
+</div></div></section></div></main><div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" crossorigin="anonymous"></script><script>(function renderMathElements() {
       document.addEventListener('DOMContentLoaded', function () {
         const mathElements = Array.from(document.getElementsByClassName('katex-inline'))
             .concat(Array.from(document.getElementsByClassName('katex-block')));
@@ -30,14 +32,14 @@
             });
         });
        })
-})();</script><script>(function () {
-  let checkbox = document.querySelector("#switch");
+})();</script><script>(function setNightModeButton() {
+  const nightModeButton = document.querySelector("#night-mode-button");
 
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    checkbox.checked = true;
+  if (isNightModePreferred()) {
+    nightModeButton.checked = true;
   }
   
-  checkbox.addEventListener('change', function () {
-    document.body.classList.toggle('dark');
+  nightModeButton.addEventListener('change', function () {
+    document.body.classList.toggle('night');
   })
 })();</script></div></body></html>
