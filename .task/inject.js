@@ -21,6 +21,10 @@ const paths = (function setupPaths() {
         sha: {
             includeDir: path.join(dependenciesRoot, 'sha', 'include'),
             sourceDir: path.join(dependenciesRoot, 'sha', 'src')
+        },
+        tinyregexc: {
+            includeDir: path.join(dependenciesRoot, 'tiny-regex-c', 'include'),
+            sourceDir: path.join(dependenciesRoot, 'tiny-regex-c', 'src')
         }
     };
     const testResultsDirectory = path.join(root, 'test-results');
