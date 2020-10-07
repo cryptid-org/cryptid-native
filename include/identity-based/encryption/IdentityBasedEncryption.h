@@ -5,9 +5,12 @@
 #ifdef __CRYPTID_IDENTITY_BASED_ENCRYPTION
 
 #define __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION
+#define __CRYPTID_FORMAL_LANGUAGE_IDENTITY_BASED_ENCRYPTION
 
 #endif
 
 #include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryption.h"
+
+#include "identity-based/encryption/formal-language/FormalLanguageIdentityBasedEncryption.h"
 
 #endif
