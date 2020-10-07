@@ -3,7 +3,19 @@
 
 #ifdef __CRYPTID_FORMAL_LANGUAGE_IDENTITY_BASED_ENCRYPTION
 
+CryptidStatus cryptid_ibe_formalLanguage_setup();
 
+CryptidStatus cryptid_ibe_formalLanguage_evaluate();
+
+CryptidStatus cryptid_ibe_formalLanguage_extract();
+
+CryptidStatus cryptid_ibe_formalLanguage_signFormula();
+
+CryptidStatus cryptid_ibe_formalLanguage_generateEncryptionKey();
+
+CryptidStatus cryptid_ibe_formalLanguage_encrypt();
+
+CryptidStatus cryptid_ibe_formalLanguage_decrypt();
 
 #endif
 
