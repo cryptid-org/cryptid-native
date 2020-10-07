@@ -3,7 +3,23 @@
 
 #ifdef __CRYPTID_FORMAL_LANGUAGE_IDENTITY_BASED_ENCRYPTION
 
-CryptidStatus cryptid_ibe_formalLanguage_setup();
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary.h"
+#include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary.h"
+#include "identity-based/signature/hess/HessIdentityBasedSignatureMasterSecretAsBinary.h"
+#include "identity-based/signature/hess/HessIdentityBasedSignaturePublicParametersAsBinary.h"
+#include "util/SecurityLevel.h"
+#include "util/Status.h"
+
+CryptidStatus cryptid_ibe_formalLanguage_setup(
+    BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary
+        *masterSecretAsBinary,
+    BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary
+        *publicParametersAsBinary,
+    HessIdentityBasedSignatureMasterSecretAsBinary
+        *masterSecretAsBinary,
+    HessIdentityBasedSignaturePublicParametersAsBinary
+        *publicParametersAsBinary
+    const SecurityLevel securityLevel);
 
 CryptidStatus cryptid_ibe_formalLanguage_evaluate();
 
