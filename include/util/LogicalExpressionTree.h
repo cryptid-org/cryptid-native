@@ -1,19 +1,21 @@
 #ifndef __CRYPTID_EXPRESSION_TREE_H
 #define __CRYPTID_EXPRESSION_TREE_H
 
-typedef struct CryptidLogicalExpressionTree {
+typedef struct CryptidLogicalExpressionTree CryptidLogicalExpressionTree;
+
+struct CryptidLogicalExpressionTree {
   void* value;
 
   CryptidLogicalExpressionTree* leftChild;
 
   CryptidLogicalExpressionTree* rightChild;
 
-} CryptidLogicalExpressionTree;
+  CryptidLogicalExpressionTree* parent;
 
-void buildLogicalExpressionTreeFromString(CryptidLogicalExpressionTree* result, char* input, size_t inputLength);
+};
 
-boolean isLeaf(CryptidLogicalExpressionTree node);
+int isLeaf(CryptidLogicalExpressionTree* node);
 
-boolean solveLogicalExpressionTree(CryptidExpressionTree* expressionTree);
+int solveLogicalExpressionTree(CryptidLogicalExpressionTree* expressionTree);
 
 #endif
