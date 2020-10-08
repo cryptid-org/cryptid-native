@@ -21,7 +21,7 @@ CryptidStatus cryptid_ibe_formalLanguage_setup(
         *publicParametersAsBinary
     const SecurityLevel securityLevel);
 
-CryptidStatus cryptid_ibe_formalLanguage_evaluate();
+CryptidStatus cryptid_ibe_formalLanguage_evaluate(boolean *result, char* authorizationFormula, stuff tokenizedAuthorizationFormula, const char *const identity, const size_t identityLength);
 
 CryptidStatus cryptid_ibe_formalLanguage_extract();
 
