@@ -1,6 +1,8 @@
 #ifndef __CRYPTID_HESS_IDENTITY_BASED_SIGNATURE_PUBLICPARAMETERS_AS_BINARY_H
 #define __CRYPTID_HESS_IDENTITY_BASED_SIGNATURE_PUBLICPARAMETERS_AS_BINARY_H
 
+#include <stddef.h>
+
 #include "elliptic/AffinePointAsBinary.h"
 #include "elliptic/EllipticCurveAsBinary.h"
 #include "identity-based/signature/hess/HessIdentityBasedSignaturePublicParameters.h"

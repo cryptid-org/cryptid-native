@@ -1,6 +1,8 @@
 #ifndef __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION_PUBLICPARAMETERS_AS_BINARY_H
 #define __CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION_PUBLICPARAMETERS_AS_BINARY_H
 
+#include <stddef.h>
+
 #include "elliptic/AffinePointAsBinary.h"
 #include "elliptic/EllipticCurveAsBinary.h"
 #include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryptionPublicParameters.h"
