@@ -14,7 +14,7 @@ struct CryptidLogicalExpressionTree {
 
 };
 
-int isLeaf(CryptidLogicalExpressionTree* node);
+int isLeaf(const CryptidLogicalExpressionTree* node);
 
 int solveLogicalExpressionTree(CryptidLogicalExpressionTree* expressionTree);
 

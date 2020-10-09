@@ -3,7 +3,7 @@
 #include "util/LogicalExpressionTree.h"
 #include "util/LogicalExpressionTreeOperators.h"
 
-int isLeaf(CryptidLogicalExpressionTree* node) {
+int isLeaf(const CryptidLogicalExpressionTree* node) {
     return !node->leftChild && !node->rightChild;
 }
 

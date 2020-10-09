@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "re.h"
+
 #include "identity-based/encryption/formal-language/FormalLanguageIdentityBasedEncryption.h"
 #include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryption.h"
 #include "identity-based/signature/hess/HessIdentityBasedSignature.h"
+#include "util/LogicalExpressionTreeOperators.h"
 
 CryptidStatus cryptid_ibe_formalLanguage_setup(
     BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary
@@ -27,8 +30,45 @@ CryptidStatus cryptid_ibe_formalLanguage_setup(
         return status;
     }
 
+    CryptidStatus cryptid_ibe_formalLanguage_evaluate_attribute_constraints(CryptidLogicalExpressionTree *result, const CryptidLogicalExpressionTree* authorizationFormula, const char *const identity, const size_t identityLength) {
+
+        result = malloc(sizeof(CryptidLogicalExpressionTree));
+
+        if(!isLeaf(authorizationFormula)) {
+            result->value = malloc(sizeof(CryptidLogicalExpressionTreeOperators));
+            *(CryptidLogicalExpressionTreeOperators*)result->value = *(CryptidLogicalExpressionTreeOperators*)authorizationFormula->value;
+
+            /*result->leftChild = calloc(sizeof(CryptidLogicalExpressionTree));
+            *result->leftChild = *authorizationFormula->leftChild;
+
+            result->rightChild = calloc(sizeof(CryptidLogicalExpressionTree));
+            result->rightChild = *authorizationFormula->rightChild;*/
+
+            cryptid_ibe_formalLanguage_evaluate_attribute_constraints(result->leftChild, authorizationFormula->leftChild, identity, identityLength);
+
+            cryptid_ibe_formalLanguage_evaluate_attribute_constraints(result->rightChild, authorizationFormula->rightChild, identity, identityLength);
+        } else {
+            result->value = malloc(sizeof(int));
+
+            int matchLength;
+
+            if(re_match((char*)authorizationFormula->value, identity, &matchLength) == -1) {
+                *(int*)result->value = 0;
+            } else {
+                *(int*)result->value = 1;
+            }
+        }
+
+        return CRYPTID_SUCCESS;
+    }
+
     CryptidStatus cryptid_ibe_formalLanguage_evaluate(int *result, const CryptidLogicalExpressionTree* authorizationFormula, const char *const identity, const size_t identityLength) {
-        *result = 1;
+
+        CryptidLogicalExpressionTree booleanTree;
+
+        cryptid_ibe_formalLanguage_evaluate_attribute_constraints(&booleanTree, authorizationFormula, identity, identityLength);
+
+        *result = solveLogicalExpressionTree(&booleanTree);
         return CRYPTID_SUCCESS;
     }
 
@@ -69,7 +109,7 @@ CryptidStatus cryptid_ibe_formalLanguage_generateEncryptionKey(char** result, co
     char* currentTimeString = ctime(&currentTime);
 
     //this concat probably fails if the identity contains strange stuff
-    *result = (unsigned char *)calloc(identityLength + strlen(currentTimeString) + 1, sizeof(unsigned char));
+    *result = (char *)calloc(identityLength + strlen(currentTimeString) + 1, sizeof(char));
     strcpy(*result, currentTimeString);
     strcat(*result, identity);
 
