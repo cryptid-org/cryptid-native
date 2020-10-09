@@ -24,10 +24,32 @@ CryptidStatus cryptid_ibe_formalLanguage_setup(
     }
 
     CryptidStatus cryptid_ibe_formalLanguage_evaluate(int *result, const CryptidLogicalExpressionTree* authorizationFormula, const char *const identity, const size_t identityLength) {
+        *result = 1;
         return CRYPTID_SUCCESS;
     }
 
-CryptidStatus cryptid_ibe_formalLanguage_extract(AffinePointAsBinary *result, const CryptidLogicalExpressionTree* authorizationFormula, const HessIdentityBasedSignatureSignatureAsBinary *authorizationFormulaSignature, const char *const identityAlpha, const size_t identityAlphaLength, const char *const identityBeta, const size_t identityBetaLength, const char *const encryptionKey, const size_t encryptionKeyLength, const BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary masterSecretAsBinary, const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary publicParametersAsBinary) {
+CryptidStatus cryptid_ibe_formalLanguage_extract(AffinePointAsBinary *result, const CryptidLogicalExpressionTree* authorizationFormula, const char *const authorizationFormulaString, const size_t authorizationFormulaStringLength, const HessIdentityBasedSignatureSignatureAsBinary *authorizationFormulaSignature, const char *const identityAlpha, const size_t identityAlphaLength, const char *const identityBeta, const size_t identityBetaLength, const char *const encryptionKey, const size_t encryptionKeyLength, const BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary masterSecretBFAsBinary, const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary publicParametersBFAsBinary, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersHessAsBinary) {
+
+    CryptidStatus status = cryptid_ibs_hess_verify(authorizationFormulaString, authorizationFormulaStringLength, *authorizationFormulaSignature, identityAlpha, identityAlphaLength, publicParametersHessAsBinary);
+
+    if(status)
+        return status;
+
+    int isBetaAuthozized;
+
+    status = cryptid_ibe_formalLanguage_evaluate(&isBetaAuthozized, authorizationFormula, identityBeta, identityBetaLength);
+
+    if(status)
+        return status;
+
+    if(!isBetaAuthozized)
+        return CRYPTID_NOT_AUTHORIZED_IDENTITY;
+
+    status = cryptid_ibe_bonehFranklin_extract(result, encryptionKey, encryptionKeyLength, masterSecretBFAsBinary, publicParametersBFAsBinary);
+
+    if(status)
+        return status;
+
     return CRYPTID_SUCCESS;
 }
 

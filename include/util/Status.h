@@ -139,7 +139,14 @@ typedef enum {
    *
    * The given hash type is invalid.
    */
-  CRPYTID_UNKNOWN_HASH_TYPE_ERROR
+  CRPYTID_UNKNOWN_HASH_TYPE_ERROR,
+
+  /*
+   * ## Description
+   *
+   * The given identity doesn't satisfy the given authorization formula.
+   */
+  CRYPTID_NOT_AUTHORIZED_IDENTITY
 } CryptidStatus;
 
 #endif
