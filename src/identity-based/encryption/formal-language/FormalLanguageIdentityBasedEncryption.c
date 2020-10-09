@@ -1,3 +1,7 @@
+#include <time.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "identity-based/encryption/formal-language/FormalLanguageIdentityBasedEncryption.h"
 #include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryption.h"
 #include "identity-based/signature/hess/HessIdentityBasedSignature.h"
@@ -59,6 +63,16 @@ CryptidStatus cryptid_ibe_formalLanguage_signFormula(HessIdentityBasedSignatureS
 }
 
 CryptidStatus cryptid_ibe_formalLanguage_generateEncryptionKey(char** result, const char *const identity, const size_t identityLength) {
+
+    //TODO this is just PoC, probably not secure...
+    time_t currentTime = time(0);
+    char* currentTimeString = ctime(&currentTime);
+
+    //this concat probably fails if the identity contains strange stuff
+    *result = (unsigned char *)calloc(identityLength + strlen(currentTimeString) + 1, sizeof(unsigned char));
+    strcpy(*result, currentTimeString);
+    strcat(*result, identity);
+
     return CRYPTID_SUCCESS;
 }
 
