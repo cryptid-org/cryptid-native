@@ -19,9 +19,9 @@ function compileAllSources({ klawSync, paths, spawnSync }, extraArguments = []) 
         '-D__CRYPTID_HESS_IDENTITY_BASED_SIGNATURE',
         '-D__CRYPTID_FORMAL_LANGUAGE_IDENTITY_BASED_ENCRYPTION',
         '-std=c99',
-        //'-Wall',
-        //'-Wextra',
-        //'-Werror',
+        '-Wall',
+        '-Wextra',
+        '-Werror',
         '-c'
     ];
 

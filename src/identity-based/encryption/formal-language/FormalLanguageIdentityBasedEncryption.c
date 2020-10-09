@@ -1,6 +1,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "re.h"
 
@@ -32,43 +33,37 @@ CryptidStatus cryptid_ibe_formalLanguage_setup(
 
     CryptidStatus cryptid_ibe_formalLanguage_evaluate_attribute_constraints(CryptidLogicalExpressionTree *result, const CryptidLogicalExpressionTree* authorizationFormula, const char *const identity, const size_t identityLength) {
 
-        result = malloc(sizeof(CryptidLogicalExpressionTree));
+        CryptidLogicalExpressionTree booleanTree = *(CryptidLogicalExpressionTree*)calloc(1, sizeof(CryptidLogicalExpressionTree));
 
         if(!isLeaf(authorizationFormula)) {
-            result->value = malloc(sizeof(CryptidLogicalExpressionTreeOperators));
-            *(CryptidLogicalExpressionTreeOperators*)result->value = *(CryptidLogicalExpressionTreeOperators*)authorizationFormula->value;
+            booleanTree.value = malloc(sizeof(CryptidLogicalExpressionTreeOperators));
+            *(CryptidLogicalExpressionTreeOperators*)booleanTree.value = *(CryptidLogicalExpressionTreeOperators*)authorizationFormula->value;
 
-            /*result->leftChild = calloc(sizeof(CryptidLogicalExpressionTree));
-            *result->leftChild = *authorizationFormula->leftChild;
+            booleanTree.leftChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
+            cryptid_ibe_formalLanguage_evaluate_attribute_constraints(booleanTree.leftChild, authorizationFormula->leftChild, identity, identityLength);
 
-            result->rightChild = calloc(sizeof(CryptidLogicalExpressionTree));
-            result->rightChild = *authorizationFormula->rightChild;*/
-
-            cryptid_ibe_formalLanguage_evaluate_attribute_constraints(result->leftChild, authorizationFormula->leftChild, identity, identityLength);
-
-            cryptid_ibe_formalLanguage_evaluate_attribute_constraints(result->rightChild, authorizationFormula->rightChild, identity, identityLength);
+            booleanTree.rightChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
+            cryptid_ibe_formalLanguage_evaluate_attribute_constraints(booleanTree.rightChild, authorizationFormula->rightChild, identity, identityLength);
         } else {
-            result->value = malloc(sizeof(int));
+            booleanTree.value = malloc(sizeof(int));
 
             int matchLength;
 
-            if(re_match((char*)authorizationFormula->value, identity, &matchLength) == -1) {
-                *(int*)result->value = 0;
-            } else {
-                *(int*)result->value = 1;
-            }
+            *(int*)booleanTree.value = re_match((char*)authorizationFormula->value, identity, &matchLength) != -1;
         }
+
+        *result = booleanTree;
 
         return CRYPTID_SUCCESS;
     }
 
     CryptidStatus cryptid_ibe_formalLanguage_evaluate(int *result, const CryptidLogicalExpressionTree* authorizationFormula, const char *const identity, const size_t identityLength) {
 
-        CryptidLogicalExpressionTree booleanTree;
+        CryptidLogicalExpressionTree *booleanTree = calloc(1, sizeof(CryptidLogicalExpressionTree));
 
-        cryptid_ibe_formalLanguage_evaluate_attribute_constraints(&booleanTree, authorizationFormula, identity, identityLength);
+        cryptid_ibe_formalLanguage_evaluate_attribute_constraints(booleanTree, authorizationFormula, identity, identityLength);
 
-        *result = solveLogicalExpressionTree(&booleanTree);
+        *result = solveLogicalExpressionTree(booleanTree);
         return CRYPTID_SUCCESS;
     }
 
