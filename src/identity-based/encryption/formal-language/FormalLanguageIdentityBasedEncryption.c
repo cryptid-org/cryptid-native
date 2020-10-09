@@ -53,8 +53,9 @@ CryptidStatus cryptid_ibe_formalLanguage_extract(AffinePointAsBinary *result, co
     return CRYPTID_SUCCESS;
 }
 
-CryptidStatus cryptid_ibe_formalLanguage_signFormula(HessIdentityBasedSignatureSignatureAsBinary *result, const CryptidLogicalExpressionTree* authorizationFormula, const char *const identity, const size_t identityLength, const AffinePointAsBinary privateKeyAsBinary, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary) {
-    return CRYPTID_SUCCESS;
+CryptidStatus cryptid_ibe_formalLanguage_signFormula(HessIdentityBasedSignatureSignatureAsBinary *result, const char *const authorizationFormulaString, const size_t authorizationFormulaStringLength, const char *const identity, const size_t identityLength, const AffinePointAsBinary privateKeyAsBinary, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary) {
+
+    return cryptid_ibs_hess_sign(result, authorizationFormulaString, authorizationFormulaStringLength, identity, identityLength, privateKeyAsBinary, publicParametersAsBinary);
 }
 
 CryptidStatus cryptid_ibe_formalLanguage_generateEncryptionKey(char** result, const char *const identity, const size_t identityLength) {

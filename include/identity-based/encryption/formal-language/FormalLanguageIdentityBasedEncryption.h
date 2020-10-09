@@ -30,7 +30,7 @@ CryptidStatus cryptid_ibe_formalLanguage_evaluate(int *result, const CryptidLogi
 
 CryptidStatus cryptid_ibe_formalLanguage_extract(AffinePointAsBinary *result, const CryptidLogicalExpressionTree* authorizationFormula, const char *const authorizationFormulaString, const size_t authorizationFormulaStringLength, const HessIdentityBasedSignatureSignatureAsBinary *authorizationFormulaSignature, const char *const identityAlpha, const size_t identityAlphaLength, const char *const identityBeta, const size_t identityBetaLength, const char *const encryptionKey, const size_t encryptionKeyLength, const BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary masterSecretBFAsBinary, const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary publicParametersBFAsBinary, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersHessAsBinary);
 
-CryptidStatus cryptid_ibe_formalLanguage_signFormula(HessIdentityBasedSignatureSignatureAsBinary *result, const CryptidLogicalExpressionTree* authorizationFormula, const char *const identity, const size_t identityLength, const AffinePointAsBinary privateKeyAsBinary, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary);
+CryptidStatus cryptid_ibe_formalLanguage_signFormula(HessIdentityBasedSignatureSignatureAsBinary *result, const char *const authorizationFormulaString, const size_t authorizationFormulaStringLength, const char *const identity, const size_t identityLength, const AffinePointAsBinary privateKeyAsBinary, const HessIdentityBasedSignaturePublicParametersAsBinary publicParametersAsBinary);
 
 CryptidStatus cryptid_ibe_formalLanguage_generateEncryptionKey(char** result, const char *const identity, const size_t identityLength);
 
