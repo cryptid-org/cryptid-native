@@ -1,5 +1,6 @@
 #include "identity-based/encryption/formal-language/FormalLanguageIdentityBasedEncryption.h"
 #include "identity-based/encryption/boneh-franklin/BonehFranklinIdentityBasedEncryption.h"
+#include "identity-based/signature/hess/HessIdentityBasedSignature.h"
 
 CryptidStatus cryptid_ibe_formalLanguage_setup(
     BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary
@@ -11,7 +12,15 @@ CryptidStatus cryptid_ibe_formalLanguage_setup(
     HessIdentityBasedSignaturePublicParametersAsBinary
         *publicParametersHessAsBinary,
     const SecurityLevel securityLevel) {
-        return CRYPTID_SUCCESS;
+
+        CryptidStatus status = cryptid_ibe_bonehFranklin_setup(masterSecretBFAsBinary, publicParametersBFAsBinary, securityLevel);
+
+        if(status)
+            return status;
+
+        status = cryptid_ibs_hess_setup(masterSecretHessAsBinary, publicParametersHessAsBinary, securityLevel);
+
+        return status;
     }
 
     CryptidStatus cryptid_ibe_formalLanguage_evaluate(int *result, const CryptidLogicalExpressionTree* authorizationFormula, const char *const identity, const size_t identityLength) {
