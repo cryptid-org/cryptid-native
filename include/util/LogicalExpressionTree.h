@@ -4,18 +4,17 @@
 typedef struct CryptidLogicalExpressionTree CryptidLogicalExpressionTree;
 
 struct CryptidLogicalExpressionTree {
-  void* value;
+  void *value;
 
-  CryptidLogicalExpressionTree* leftChild;
+  CryptidLogicalExpressionTree *leftChild;
 
-  CryptidLogicalExpressionTree* rightChild;
+  CryptidLogicalExpressionTree *rightChild;
 
-  CryptidLogicalExpressionTree* parent;
-
+  CryptidLogicalExpressionTree *parent;
 };
 
-int isLeaf(const CryptidLogicalExpressionTree* node);
+int isLeaf(const CryptidLogicalExpressionTree *node);
 
-int solveLogicalExpressionTree(CryptidLogicalExpressionTree* expressionTree);
+int solveLogicalExpressionTree(CryptidLogicalExpressionTree *expressionTree);
 
 #endif
