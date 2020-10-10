@@ -18,13 +18,11 @@ const char *LOWEST_QUICK_CHECK_ARGUMENT = "--lowest-quick-check";
 int isLowestQuickCheck = 0;
 int isVerbose = 0;
 
-typedef enum {
-  ONLY_AND,
-  ONLY_OR,
-  RANDOM
-} FLIBETestType;
+typedef enum { ONLY_AND, ONLY_OR, RANDOM } FLIBETestType;
 
-char* buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFormula, int depth, FLIBETestType testType) {
+char *
+buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFormula,
+                             int depth, FLIBETestType testType) {
 
   CryptidLogicalExpressionTree booleanTree =
       *(CryptidLogicalExpressionTree *)calloc(
@@ -32,52 +30,53 @@ char* buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFo
 
   char *authorizationFormulaString;
 
-  if(depth == 0) {
-    char* value = ".*\".*\": \".*\".*";
+  if (depth == 0) {
+    char *value = ".*\".*\": \".*\".*";
     booleanTree.value = malloc(strlen(value) + 1 * sizeof(int));
     strcpy(booleanTree.value, value);
 
-    authorizationFormulaString = (char *)calloc(strlen(value) + 1,
-                           sizeof(char));
+    authorizationFormulaString =
+        (char *)calloc(strlen(value) + 1, sizeof(char));
     strcpy(authorizationFormulaString, value);
   } else {
 
-    booleanTree.value =
-      malloc(sizeof(CryptidLogicalExpressionTreeOperators));
+    booleanTree.value = malloc(sizeof(CryptidLogicalExpressionTreeOperators));
 
     char *operatorString;
     int random = 0;
 
     switch (testType) {
-      case ONLY_AND:
-        *(CryptidLogicalExpressionTreeOperators *)booleanTree.value = AND;
-        operatorString = " AND ";
-        break;
-      case ONLY_OR:
-        *(CryptidLogicalExpressionTreeOperators *)booleanTree.value = OR;
-        operatorString = " OR ";
-        break;
-      case RANDOM:
-        random = rand() % 4;
-        *(CryptidLogicalExpressionTreeOperators *)booleanTree.value = random;
-        operatorString = " RND ";
-        break;
+    case ONLY_AND:
+      *(CryptidLogicalExpressionTreeOperators *)booleanTree.value = AND;
+      operatorString = " AND ";
+      break;
+    case ONLY_OR:
+      *(CryptidLogicalExpressionTreeOperators *)booleanTree.value = OR;
+      operatorString = " OR ";
+      break;
+    case RANDOM:
+      random = rand() % 4;
+      *(CryptidLogicalExpressionTreeOperators *)booleanTree.value = random;
+      operatorString = " RND ";
+      break;
     }
 
     char *leftAuthorizationFormulaString;
 
-    if(random != 2) {
+    if (random != 2) {
       booleanTree.leftChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
       leftAuthorizationFormulaString = buildRandomAuthorizationTree(
-        booleanTree.leftChild, depth - 1, testType);
+          booleanTree.leftChild, depth - 1, testType);
     }
 
     booleanTree.rightChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
     char *rightAuthorizationFormulaString = buildRandomAuthorizationTree(
         booleanTree.rightChild, depth - 1, testType);
 
-    authorizationFormulaString = (char *)calloc(strlen(leftAuthorizationFormulaString) + strlen(operatorString) + strlen(rightAuthorizationFormulaString) + 1,
-                           sizeof(char));
+    authorizationFormulaString = (char *)calloc(
+        strlen(leftAuthorizationFormulaString) + strlen(operatorString) +
+            strlen(rightAuthorizationFormulaString) + 1,
+        sizeof(char));
 
     strcpy(authorizationFormulaString, leftAuthorizationFormulaString);
     strcat(authorizationFormulaString, operatorString);
@@ -123,9 +122,12 @@ TEST fresh_formal_language_ibe_setup_verified_identity(
 
   authorizationFormula->rightChild =
       calloc(1, sizeof(CryptidLogicalExpressionTree));
-  char *authorizationFormulaRightString = buildRandomAuthorizationTree(authorizationFormula->rightChild, 3, RANDOM);
+  char *authorizationFormulaRightString =
+      buildRandomAuthorizationTree(authorizationFormula->rightChild, 3, RANDOM);
 
-  char *authorizationFormulaString = malloc(strlen(authorizationFormulaLeftString) + strlen(authorizationFormulaRightString) + 1 * sizeof(char));
+  char *authorizationFormulaString =
+      malloc(strlen(authorizationFormulaLeftString) +
+             strlen(authorizationFormulaRightString) + 1 * sizeof(char));
   strcpy(authorizationFormulaString, authorizationFormulaLeftString);
   strcat(authorizationFormulaString, authorizationFormulaRightString);
 
@@ -179,11 +181,11 @@ TEST fresh_formal_language_ibe_setup_verified_identity(
 
 SUITE(cryptid_formal_language_ibe_suite) {
   {
-    for(int i = 0; i < 20; i++)
-    RUN_TESTp(fresh_formal_language_ibe_setup_verified_identity, 1,
-              "Online Games Studios", "{\"name\": \"OGS\"}",
-              "{\"video title\": \"Probalj meg nem megelégedni\", "
-              "\"megelegedesek\": \"3\"}");
+    for (int i = 0; i < 20; i++)
+      RUN_TESTp(fresh_formal_language_ibe_setup_verified_identity, 1,
+                "Online Games Studios", "{\"name\": \"OGS\"}",
+                "{\"video title\": \"Probalj meg nem megelégedni\", "
+                "\"megelegedesek\": \"3\"}");
   }
 }
 

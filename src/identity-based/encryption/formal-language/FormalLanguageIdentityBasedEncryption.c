@@ -45,11 +45,12 @@ CryptidStatus cryptid_ibe_formalLanguage_evaluate_attribute_constraints(
     *(CryptidLogicalExpressionTreeOperators *)booleanTree.value =
         *(CryptidLogicalExpressionTreeOperators *)authorizationFormula->value;
 
-    if(*(CryptidLogicalExpressionTreeOperators *)authorizationFormula->value != NEG) {
-        booleanTree.leftChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
-        cryptid_ibe_formalLanguage_evaluate_attribute_constraints(
-        booleanTree.leftChild, authorizationFormula->leftChild, identity,
-        identityLength);
+    if (*(CryptidLogicalExpressionTreeOperators *)authorizationFormula->value !=
+        NEG) {
+      booleanTree.leftChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
+      cryptid_ibe_formalLanguage_evaluate_attribute_constraints(
+          booleanTree.leftChild, authorizationFormula->leftChild, identity,
+          identityLength);
     }
 
     booleanTree.rightChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
