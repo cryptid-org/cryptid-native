@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "greatest.h"
 
@@ -17,7 +18,13 @@ const char *LOWEST_QUICK_CHECK_ARGUMENT = "--lowest-quick-check";
 int isLowestQuickCheck = 0;
 int isVerbose = 0;
 
-char* buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFormula, int depth) {
+typedef enum {
+  ONLY_AND,
+  ONLY_OR,
+  RANDOM
+} FLIBETestType;
+
+char* buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFormula, int depth, FLIBETestType testType) {
 
   CryptidLogicalExpressionTree booleanTree =
       *(CryptidLogicalExpressionTree *)calloc(
@@ -34,23 +41,46 @@ char* buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFo
                            sizeof(char));
     strcpy(authorizationFormulaString, value);
   } else {
+
     booleanTree.value =
       malloc(sizeof(CryptidLogicalExpressionTreeOperators));
-      *(CryptidLogicalExpressionTreeOperators *)booleanTree.value = AND;
 
-    booleanTree.leftChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
-    char *leftAuthorizationFormulaString = buildRandomAuthorizationTree(
-        booleanTree.leftChild, depth - 1);
+    char *operatorString;
+    int random = 0;
+
+    switch (testType) {
+      case ONLY_AND:
+        *(CryptidLogicalExpressionTreeOperators *)booleanTree.value = AND;
+        operatorString = " AND ";
+        break;
+      case ONLY_OR:
+        *(CryptidLogicalExpressionTreeOperators *)booleanTree.value = OR;
+        operatorString = " OR ";
+        break;
+      case RANDOM:
+        random = rand() % 4;
+        *(CryptidLogicalExpressionTreeOperators *)booleanTree.value = random;
+        operatorString = " RND ";
+        break;
+    }
+
+    char *leftAuthorizationFormulaString;
+
+    if(random != 2) {
+      booleanTree.leftChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
+      leftAuthorizationFormulaString = buildRandomAuthorizationTree(
+        booleanTree.leftChild, depth - 1, testType);
+    }
 
     booleanTree.rightChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
     char *rightAuthorizationFormulaString = buildRandomAuthorizationTree(
-        booleanTree.rightChild, depth - 1);
+        booleanTree.rightChild, depth - 1, testType);
 
-    authorizationFormulaString = (char *)calloc(strlen(leftAuthorizationFormulaString) + 5 + strlen(rightAuthorizationFormulaString) + 1,
+    authorizationFormulaString = (char *)calloc(strlen(leftAuthorizationFormulaString) + strlen(operatorString) + strlen(rightAuthorizationFormulaString) + 1,
                            sizeof(char));
 
     strcpy(authorizationFormulaString, leftAuthorizationFormulaString);
-    strcat(authorizationFormulaString, " AND ");
+    strcat(authorizationFormulaString, operatorString);
     strcat(authorizationFormulaString, rightAuthorizationFormulaString);
   }
 
@@ -59,7 +89,7 @@ char* buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFo
   return authorizationFormulaString;
 }
 
-TEST fresh_formal_language_ibe_setup_matching_identities(
+TEST fresh_formal_language_ibe_setup_verified_identity(
     const SecurityLevel securityLevel, const char *const message,
     const char *const identityAlpha, const char *const identityBeta) {
   BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary
@@ -75,31 +105,29 @@ TEST fresh_formal_language_ibe_setup_matching_identities(
 
   ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-  /*char *authorizationFormulaString =
-      ".*\"video title\": \"Probalj meg nem megelégedni\".* AND "
-      ".*\"megelegedesek\": \"3\".*";*/
-
   CryptidLogicalExpressionTree *authorizationFormula =
       calloc(1, sizeof(CryptidLogicalExpressionTree));
 
-  char *authorizationFormulaString = buildRandomAuthorizationTree(authorizationFormula, 3);
-  /*authorizationFormula->value =
+  authorizationFormula->value =
       malloc(sizeof(CryptidLogicalExpressionTreeOperators));
-  *(CryptidLogicalExpressionTreeOperators *)authorizationFormula->value = AND;
+  *(CryptidLogicalExpressionTreeOperators *)authorizationFormula->value = OR;
 
   authorizationFormula->leftChild =
       calloc(1, sizeof(CryptidLogicalExpressionTree));
-  char *leftChild = ".*\"video title\": \"Probalj meg nem megelégedni\".*";
+  char *leftChild = ".*\".*\": \".*\".*";
   authorizationFormula->leftChild->value =
       malloc(strlen(leftChild) + 1 * sizeof(char));
   strcpy(authorizationFormula->leftChild->value, leftChild);
 
+  char *authorizationFormulaLeftString = ".*\".*\": \".*\".* OR ";
+
   authorizationFormula->rightChild =
       calloc(1, sizeof(CryptidLogicalExpressionTree));
-  char *rightChild = ".*\"megelegedesek\": \"3\".*";
-  authorizationFormula->rightChild->value =
-      malloc(strlen(rightChild) + 1 * sizeof(char));
-  strcpy(authorizationFormula->rightChild->value, rightChild);*/
+  char *authorizationFormulaRightString = buildRandomAuthorizationTree(authorizationFormula->rightChild, 3, RANDOM);
+
+  char *authorizationFormulaString = malloc(strlen(authorizationFormulaLeftString) + strlen(authorizationFormulaRightString) + 1 * sizeof(char));
+  strcpy(authorizationFormulaString, authorizationFormulaLeftString);
+  strcat(authorizationFormulaString, authorizationFormulaRightString);
 
   AffinePointAsBinary signatureKey;
   status = cryptid_ibs_hess_extract(&signatureKey, identityAlpha,
@@ -151,7 +179,8 @@ TEST fresh_formal_language_ibe_setup_matching_identities(
 
 SUITE(cryptid_formal_language_ibe_suite) {
   {
-    RUN_TESTp(fresh_formal_language_ibe_setup_matching_identities, 1,
+    for(int i = 0; i < 20; i++)
+    RUN_TESTp(fresh_formal_language_ibe_setup_verified_identity, 1,
               "Online Games Studios", "{\"name\": \"OGS\"}",
               "{\"video title\": \"Probalj meg nem megelégedni\", "
               "\"megelegedesek\": \"3\"}");
@@ -162,6 +191,8 @@ GREATEST_MAIN_DEFS();
 
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
+
+  srand(time(0));
 
   RUN_SUITE(cryptid_formal_language_ibe_suite);
 
