@@ -17,6 +17,48 @@ const char *LOWEST_QUICK_CHECK_ARGUMENT = "--lowest-quick-check";
 int isLowestQuickCheck = 0;
 int isVerbose = 0;
 
+char* buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFormula, int depth) {
+
+  CryptidLogicalExpressionTree booleanTree =
+      *(CryptidLogicalExpressionTree *)calloc(
+          1, sizeof(CryptidLogicalExpressionTree));
+
+  char *authorizationFormulaString;
+
+  if(depth == 0) {
+    char* value = ".*\".*\": \".*\".*";
+    booleanTree.value = malloc(strlen(value) + 1 * sizeof(int));
+    strcpy(booleanTree.value, value);
+
+    authorizationFormulaString = (char *)calloc(strlen(value) + 1,
+                           sizeof(char));
+    strcpy(authorizationFormulaString, value);
+  } else {
+    authorizationFormula->value =
+      malloc(sizeof(CryptidLogicalExpressionTreeOperators));
+      *(CryptidLogicalExpressionTreeOperators *)authorizationFormula->value = AND;
+
+    booleanTree.leftChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
+    char *leftAuthorizationFormulaString = buildRandomAuthorizationTree(
+        booleanTree.leftChild, depth - 1);
+
+    booleanTree.rightChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
+    char *rightAuthorizationFormulaString = buildRandomAuthorizationTree(
+        booleanTree.rightChild, depth - 1);
+
+    authorizationFormulaString = (char *)calloc(strlen(leftAuthorizationFormulaString) + 5 + strlen(rightAuthorizationFormulaString) + 1,
+                           sizeof(char));
+
+    strcpy(authorizationFormulaString, leftAuthorizationFormulaString);
+    strcat(authorizationFormulaString, " AND ");
+    strcat(authorizationFormulaString, rightAuthorizationFormulaString);
+  }
+
+  *authorizationFormula = booleanTree;
+
+  return authorizationFormulaString;
+}
+
 TEST fresh_formal_language_ibe_setup_matching_identities(
     const SecurityLevel securityLevel, const char *const message,
     const char *const identityAlpha, const char *const identityBeta) {
