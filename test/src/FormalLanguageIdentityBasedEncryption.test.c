@@ -34,9 +34,9 @@ char* buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFo
                            sizeof(char));
     strcpy(authorizationFormulaString, value);
   } else {
-    authorizationFormula->value =
+    booleanTree.value =
       malloc(sizeof(CryptidLogicalExpressionTreeOperators));
-      *(CryptidLogicalExpressionTreeOperators *)authorizationFormula->value = AND;
+      *(CryptidLogicalExpressionTreeOperators *)booleanTree.value = AND;
 
     booleanTree.leftChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
     char *leftAuthorizationFormulaString = buildRandomAuthorizationTree(
@@ -75,13 +75,15 @@ TEST fresh_formal_language_ibe_setup_matching_identities(
 
   ASSERT_EQ(status, CRYPTID_SUCCESS);
 
-  char *authorizationFormulaString =
+  /*char *authorizationFormulaString =
       ".*\"video title\": \"Probalj meg nem megelégedni\".* AND "
-      ".*\"megelegedesek\": \"3\".*";
+      ".*\"megelegedesek\": \"3\".*";*/
 
   CryptidLogicalExpressionTree *authorizationFormula =
       calloc(1, sizeof(CryptidLogicalExpressionTree));
-  authorizationFormula->value =
+
+  char *authorizationFormulaString = buildRandomAuthorizationTree(authorizationFormula, 3);
+  /*authorizationFormula->value =
       malloc(sizeof(CryptidLogicalExpressionTreeOperators));
   *(CryptidLogicalExpressionTreeOperators *)authorizationFormula->value = AND;
 
@@ -97,7 +99,7 @@ TEST fresh_formal_language_ibe_setup_matching_identities(
   char *rightChild = ".*\"megelegedesek\": \"3\".*";
   authorizationFormula->rightChild->value =
       malloc(strlen(rightChild) + 1 * sizeof(char));
-  strcpy(authorizationFormula->rightChild->value, rightChild);
+  strcpy(authorizationFormula->rightChild->value, rightChild);*/
 
   AffinePointAsBinary signatureKey;
   status = cryptid_ibs_hess_extract(&signatureKey, identityAlpha,
