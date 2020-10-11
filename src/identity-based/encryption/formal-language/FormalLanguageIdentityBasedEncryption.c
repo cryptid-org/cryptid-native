@@ -47,13 +47,13 @@ CryptidStatus cryptid_ibe_formalLanguage_evaluate_attribute_constraints(
 
     if (*(CryptidLogicalExpressionTreeOperators *)authorizationFormula->value !=
         NEG) {
-      booleanTree.leftChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
+      booleanTree.leftChild = (CryptidLogicalExpressionTree *)calloc(1, sizeof(CryptidLogicalExpressionTree));
       cryptid_ibe_formalLanguage_evaluate_attribute_constraints(
           booleanTree.leftChild, authorizationFormula->leftChild, identity,
           identityLength);
     }
 
-    booleanTree.rightChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
+    booleanTree.rightChild = (CryptidLogicalExpressionTree *)calloc(1, sizeof(CryptidLogicalExpressionTree));
     cryptid_ibe_formalLanguage_evaluate_attribute_constraints(
         booleanTree.rightChild, authorizationFormula->rightChild, identity,
         identityLength);
@@ -76,7 +76,7 @@ CryptidStatus cryptid_ibe_formalLanguage_evaluate(
     const char *const identity, const size_t identityLength) {
 
   CryptidLogicalExpressionTree *booleanTree =
-      calloc(1, sizeof(CryptidLogicalExpressionTree));
+      (CryptidLogicalExpressionTree *)calloc(1, sizeof(CryptidLogicalExpressionTree));
 
   cryptid_ibe_formalLanguage_evaluate_attribute_constraints(
       booleanTree, authorizationFormula, identity, identityLength);

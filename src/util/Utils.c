@@ -34,7 +34,7 @@ void hashToRange(mpz_t result, const unsigned char *const s, const int sLength,
       (unsigned char *)calloc(hashLen + sLength + 1, sizeof(unsigned char));
   unsigned char *hexString =
       (unsigned char *)calloc(hashLen * 2 + 1, sizeof(unsigned char));
-  unsigned char hex[3] = "\0\0\0";
+  unsigned char hex[3] = {0};
 
   // {@code For i = 1 to 2, do:}
   for (int i = 1; i < 3; i++) {

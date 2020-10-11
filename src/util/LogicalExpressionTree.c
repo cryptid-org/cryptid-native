@@ -10,9 +10,7 @@ int isLeaf(const CryptidLogicalExpressionTree *node) {
 int solveLogicalExpressionTree(CryptidLogicalExpressionTree *expressionTree) {
   if (!isLeaf(expressionTree)) {
     int branchValue;
-    CryptidLogicalExpressionTreeOperators operator= *(
-        CryptidLogicalExpressionTreeOperators *) expressionTree->value;
-    switch (operator) {
+    switch (*(CryptidLogicalExpressionTreeOperators *) expressionTree->value) {
     case AND:
       free(expressionTree->value);
       branchValue = (solveLogicalExpressionTree(expressionTree->leftChild) &&
