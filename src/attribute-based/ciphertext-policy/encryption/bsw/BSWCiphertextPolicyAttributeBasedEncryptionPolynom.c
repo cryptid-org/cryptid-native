@@ -7,18 +7,18 @@ bswCiphertextPolicyAttributeBasedEncryptionPolynom_init(
     const int degree, const mpz_t zeroValue,
     const bswCiphertextPolicyAttributeBasedEncryptionPublicKey *publickey) {
   bswCiphertextPolicyAttributeBasedEncryptionPolynom *polynom =
-      malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionPolynom));
-  polynom->children = malloc(
-      sizeof(bswCiphertextPolicyAttributeBasedEncryptionPolynomExpression) *
+      (bswCiphertextPolicyAttributeBasedEncryptionPolynom *)malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionPolynom));
+  polynom->children = (bswCiphertextPolicyAttributeBasedEncryptionPolynomExpression **)malloc(
+      sizeof(bswCiphertextPolicyAttributeBasedEncryptionPolynomExpression *) *
       (degree + 1));
-  polynom->children[0] = malloc(
+  polynom->children[0] = (bswCiphertextPolicyAttributeBasedEncryptionPolynomExpression *)malloc(
       sizeof(bswCiphertextPolicyAttributeBasedEncryptionPolynomExpression));
   polynom->children[0]->degree = 0;
   polynom->degree = degree;
   mpz_init_set(polynom->children[0]->coeff, zeroValue);
   int i;
   for (i = 1; i <= degree; i++) {
-    polynom->children[i] = malloc(
+    polynom->children[i] = (bswCiphertextPolicyAttributeBasedEncryptionPolynomExpression *)malloc(
         sizeof(bswCiphertextPolicyAttributeBasedEncryptionPolynomExpression));
     polynom->children[i]->degree = i;
     mpz_init(polynom->children[i]->coeff);

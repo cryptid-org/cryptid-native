@@ -18,7 +18,7 @@ void bswChiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary_toBswChiphert
              masterKeyAsBinary->beta);
   affineAsBinary_toAffine(&(masterKey->g_alpha), masterKeyAsBinary->g_alpha);
   masterKey->publickey =
-      malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionPublicKey));
+      (bswCiphertextPolicyAttributeBasedEncryptionPublicKey *)malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionPublicKey));
   bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionPublicKey(
       masterKey->publickey, masterKeyAsBinary->publickey);
 }
@@ -30,7 +30,7 @@ void bswChiphertextPolicyAttributeBasedEncryptionMasterKeyAsBinary_fromBswChiphe
   masterKeyAsBinary->beta = mpz_export(NULL, &masterKeyAsBinary->betaLength, 1,
                                        1, 0, 0, masterKey->beta);
   affineAsBinary_fromAffine(&(masterKeyAsBinary->g_alpha), masterKey->g_alpha);
-  masterKeyAsBinary->publickey = malloc(
+  masterKeyAsBinary->publickey = (bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary *)malloc(
       sizeof(bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary));
   bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionPublicKey(
       masterKeyAsBinary->publickey, masterKey->publickey);
