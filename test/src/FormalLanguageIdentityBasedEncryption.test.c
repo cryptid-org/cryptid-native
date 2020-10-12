@@ -6,17 +6,9 @@
 
 #include "greatest.h"
 
-#include "complex/Complex.h"
-#include "elliptic/AffinePoint.h"
-#include "elliptic/EllipticCurve.h"
 #include "identity-based/encryption/formal-language/FormalLanguageIdentityBasedEncryption.h"
 #include "identity-based/signature/hess/HessIdentityBasedSignature.h"
 #include "util/LogicalExpressionTreeOperators.h"
-
-const char *LOWEST_QUICK_CHECK_ARGUMENT = "--lowest-quick-check";
-
-int isLowestQuickCheck = 0;
-int isVerbose = 0;
 
 typedef enum { ONLY_AND, ONLY_OR, RANDOM } FLIBETestType;
 
