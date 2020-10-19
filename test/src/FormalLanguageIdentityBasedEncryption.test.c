@@ -24,7 +24,7 @@ buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFormula,
 
   if (depth == 0) {
     char *value = ".*\".*\": \".*\".*";
-    booleanTree.value = malloc(strlen(value) + 1 * sizeof(int));
+    booleanTree.value = malloc(strlen(value) + 1 * sizeof(char));
     strcpy(booleanTree.value, value);
 
     authorizationFormulaString =
@@ -53,26 +53,37 @@ buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFormula,
       break;
     }
 
+    booleanTree.rightChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
+    char *rightAuthorizationFormulaString = buildRandomAuthorizationTree(
+        booleanTree.rightChild, depth - 1, testType);
+
     char *leftAuthorizationFormulaString = "";
 
     if (random != 2) {
       booleanTree.leftChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
       leftAuthorizationFormulaString = buildRandomAuthorizationTree(
           booleanTree.leftChild, depth - 1, testType);
-    }
 
-    booleanTree.rightChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
-    char *rightAuthorizationFormulaString = buildRandomAuthorizationTree(
-        booleanTree.rightChild, depth - 1, testType);
-
-    authorizationFormulaString = (char *)calloc(
+      authorizationFormulaString = (char *)calloc(
         strlen(leftAuthorizationFormulaString) + strlen(operatorString) +
             strlen(rightAuthorizationFormulaString) + 1,
         sizeof(char));
 
-    strcpy(authorizationFormulaString, leftAuthorizationFormulaString);
-    strcat(authorizationFormulaString, operatorString);
-    strcat(authorizationFormulaString, rightAuthorizationFormulaString);
+      strcpy(authorizationFormulaString, leftAuthorizationFormulaString);
+      strcat(authorizationFormulaString, operatorString);
+      strcat(authorizationFormulaString, rightAuthorizationFormulaString);
+
+      free(leftAuthorizationFormulaString);
+    } else {
+      authorizationFormulaString = (char *)calloc(strlen(operatorString) +
+            strlen(rightAuthorizationFormulaString) + 1,
+        sizeof(char));
+
+      strcpy(authorizationFormulaString, operatorString);
+      strcat(authorizationFormulaString, rightAuthorizationFormulaString);
+    }
+
+    free(rightAuthorizationFormulaString);
   }
 
   *authorizationFormula = booleanTree;
@@ -175,6 +186,7 @@ TEST fresh_formal_language_ibe_setup_verified_identity(
   hessIdentityBasedSignatureSignatureAsBinary_destroy(authorizationFormulaSignature);
   affineAsBinary_destroy(privateKey);
   affineAsBinary_destroy(signatureKey);
+  free(authorizationFormulaRightString);
   free(authorizationFormulaString);
   free(plaintext);
   free(encryptionKey);

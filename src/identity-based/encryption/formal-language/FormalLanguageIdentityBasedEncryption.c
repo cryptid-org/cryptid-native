@@ -42,8 +42,9 @@ CryptidStatus cryptid_ibe_formalLanguage_evaluate_attribute_constraints(
 
   if (!isLeaf(authorizationFormula)) {
     booleanTree.value = malloc(sizeof(CryptidLogicalExpressionTreeOperators));
-    *(CryptidLogicalExpressionTreeOperators *)booleanTree.value =
-        *(CryptidLogicalExpressionTreeOperators *)authorizationFormula->value;
+    memcpy(booleanTree.value, authorizationFormula->value, sizeof(CryptidLogicalExpressionTreeOperators));
+    //*(CryptidLogicalExpressionTreeOperators *)booleanTree.value =
+    //    *(CryptidLogicalExpressionTreeOperators *)authorizationFormula->value;
 
     if (*(CryptidLogicalExpressionTreeOperators *)authorizationFormula->value !=
         NEG) {
@@ -82,6 +83,8 @@ CryptidStatus cryptid_ibe_formalLanguage_evaluate(
       booleanTree, authorizationFormula, identity, identityLength);
 
   *result = solveLogicalExpressionTree(booleanTree);
+
+  LogicalExpressionTree_destroy(booleanTree);
   return CRYPTID_SUCCESS;
 }
 
