@@ -4,7 +4,7 @@
 #include "util/LogicalExpressionTreeOperators.h"
 
 int isLeaf(const CryptidLogicalExpressionTree *node) {
-  return node && node->value && !node->leftChild && !node->rightChild;
+  return !node->leftChild && !node->rightChild;
 }
 
 int solveLogicalExpressionTree(const CryptidLogicalExpressionTree *expressionTree) {
