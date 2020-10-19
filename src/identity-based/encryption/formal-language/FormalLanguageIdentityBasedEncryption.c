@@ -36,15 +36,11 @@ CryptidStatus cryptid_ibe_formalLanguage_evaluate_attribute_constraints(
     const CryptidLogicalExpressionTree *authorizationFormula,
     const char *const identity, const size_t identityLength) {
 
-  CryptidLogicalExpressionTree booleanTree =
-      *(CryptidLogicalExpressionTree *)calloc(
-          1, sizeof(CryptidLogicalExpressionTree));
+  CryptidLogicalExpressionTree booleanTree = {};
 
   if (!isLeaf(authorizationFormula)) {
     booleanTree.value = malloc(sizeof(CryptidLogicalExpressionTreeOperators));
     memcpy(booleanTree.value, authorizationFormula->value, sizeof(CryptidLogicalExpressionTreeOperators));
-    //*(CryptidLogicalExpressionTreeOperators *)booleanTree.value =
-    //    *(CryptidLogicalExpressionTreeOperators *)authorizationFormula->value;
 
     if (*(CryptidLogicalExpressionTreeOperators *)authorizationFormula->value !=
         NEG) {

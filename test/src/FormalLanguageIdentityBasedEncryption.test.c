@@ -16,9 +16,7 @@ char *
 buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFormula,
                              int depth, FLIBETestType testType) {
 
-  CryptidLogicalExpressionTree booleanTree =
-      *(CryptidLogicalExpressionTree *)calloc(
-          1, sizeof(CryptidLogicalExpressionTree));
+  CryptidLogicalExpressionTree booleanTree = {};
 
   char *authorizationFormulaString;
 
