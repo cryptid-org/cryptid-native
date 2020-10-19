@@ -53,7 +53,7 @@ buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFormula,
       break;
     }
 
-    char *leftAuthorizationFormulaString;
+    char *leftAuthorizationFormulaString = "";
 
     if (random != 2) {
       booleanTree.leftChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
@@ -168,12 +168,25 @@ TEST fresh_formal_language_ibe_setup_verified_identity(
   ASSERT_EQ(status, CRYPTID_SUCCESS);
   ASSERT_EQ(strcmp(message, plaintext), 0);
 
+  bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_destroy(publicParametersBF);
+  hessIdentityBasedSignaturePublicParametersAsBinary_destroy(publicParametersHess);
+  free(masterSecretBF.masterSecret);
+  free(masterSecretHess.masterSecret);
+  hessIdentityBasedSignatureSignatureAsBinary_destroy(authorizationFormulaSignature);
+  affineAsBinary_destroy(privateKey);
+  affineAsBinary_destroy(signatureKey);
+  free(authorizationFormulaString);
+  free(plaintext);
+  free(encryptionKey);
+  LogicalExpressionTree_destroy(authorizationFormula);
+  bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_destroy(ciphertext);
+
   PASS();
 }
 
 SUITE(cryptid_formal_language_ibe_suite) {
   {
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 1; i++)
       RUN_TESTp(fresh_formal_language_ibe_setup_verified_identity, 1,
                 "Online Games Studios", "{\"name\": \"OGS\"}",
                 "{\"video title\": \"Probalj meg nem megelégedni\", "
