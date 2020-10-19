@@ -41,3 +41,16 @@ int solveLogicalExpressionTree(CryptidLogicalExpressionTree *expressionTree) {
 
   return *(int *)expressionTree->value;
 }
+
+void LogicalExpressionTree_destroy(CryptidLogicalExpressionTree *node) {
+  if(node->leftChild) {
+    LogicalExpressionTree_destroy(node->leftChild);
+  }
+
+  if(node->rightChild) {
+    LogicalExpressionTree_destroy(node->rightChild);
+  }
+
+  free(node->value);
+  free(node);
+}

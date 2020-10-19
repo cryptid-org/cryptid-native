@@ -39,6 +39,8 @@ TEST logical_expression_tree_should_just_work() {
   // Then
   ASSERT(result == 1);
 
+  LogicalExpressionTree_destroy(root);
+
   PASS();
 }
 

@@ -9,12 +9,12 @@ struct CryptidLogicalExpressionTree {
   CryptidLogicalExpressionTree *leftChild;
 
   CryptidLogicalExpressionTree *rightChild;
-
-  CryptidLogicalExpressionTree *parent;
 };
 
 int isLeaf(const CryptidLogicalExpressionTree *node);
 
 int solveLogicalExpressionTree(CryptidLogicalExpressionTree *expressionTree);
+
+void LogicalExpressionTree_destroy(CryptidLogicalExpressionTree *node);
 
 #endif
