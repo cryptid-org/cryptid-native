@@ -4,8 +4,10 @@ bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary *
 bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_init(
     const int value, char *attribute, const size_t attributeLength,
     const int numChildren) {
-  bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary *tree = (bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary *)malloc(
-      sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary));
+  bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary *tree =
+      (bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary *)malloc(
+          sizeof(
+              bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary));
 
   tree->value = value;
 
@@ -13,8 +15,10 @@ bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_init(
 
   if (numChildren > 0) {
     tree->children =
-        (bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary **)malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary *) *
-               numChildren);
+        (bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary **)malloc(
+            sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary
+                       *) *
+            numChildren);
   }
 
   tree->numChildren = numChildren;
@@ -79,13 +83,15 @@ void bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_toBswChipher
 
   if (accessTree->numChildren > 0) {
     accessTree->children =
-        (bswCiphertextPolicyAttributeBasedEncryptionAccessTree **)malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTree *) *
-               accessTree->numChildren);
+        (bswCiphertextPolicyAttributeBasedEncryptionAccessTree **)malloc(
+            sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTree *) *
+            accessTree->numChildren);
   }
 
   for (int i = 0; i < accessTree->numChildren; i++) {
     accessTree->children[i] =
-        (bswCiphertextPolicyAttributeBasedEncryptionAccessTree *)malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTree));
+        (bswCiphertextPolicyAttributeBasedEncryptionAccessTree *)malloc(
+            sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTree));
     bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionAccessTree(
         accessTree->children[i], accessTreeAsBinary->children[i]);
   }
@@ -115,15 +121,19 @@ void bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_fromBswChiph
   }
 
   if (accessTree->numChildren > 0) {
-    accessTreeAsBinary->children = (bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary **)malloc(
-        sizeof(
-            bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary *) *
-        accessTree->numChildren);
+    accessTreeAsBinary->children =
+        (bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary **)malloc(
+            sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary
+                       *) *
+            accessTree->numChildren);
   }
 
   for (int i = 0; i < accessTree->numChildren; i++) {
-    accessTreeAsBinary->children[i] = (bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary *)malloc(
-        sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary));
-    bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionAccessTree(accessTreeAsBinary->children[i], accessTree->children[i]);
+    accessTreeAsBinary->children[i] =
+        (bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary *)malloc(
+            sizeof(
+                bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary));
+    bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionAccessTree(
+        accessTreeAsBinary->children[i], accessTree->children[i]);
   }
 }

@@ -27,7 +27,8 @@ TEST logical_expression_tree_should_just_work() {
   root->rightChild->leftChild->value = malloc(sizeof(int));
   *(int *)root->rightChild->leftChild->value = 1;
 
-  root->rightChild->rightChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
+  root->rightChild->rightChild =
+      calloc(1, sizeof(CryptidLogicalExpressionTree));
   root->rightChild->rightChild->value = malloc(sizeof(int));
   *(int *)root->rightChild->rightChild->value = 1;
 

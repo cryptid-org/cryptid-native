@@ -7,10 +7,11 @@ int isLeaf(const CryptidLogicalExpressionTree *node) {
   return !node->leftChild && !node->rightChild;
 }
 
-int solveLogicalExpressionTree(const CryptidLogicalExpressionTree *expressionTree) {
+int solveLogicalExpressionTree(
+    const CryptidLogicalExpressionTree *expressionTree) {
   if (!isLeaf(expressionTree)) {
     int branchValue;
-    switch (*(CryptidLogicalExpressionTreeOperators *) expressionTree->value) {
+    switch (*(CryptidLogicalExpressionTreeOperators *)expressionTree->value) {
     case AND:
       branchValue = (solveLogicalExpressionTree(expressionTree->leftChild) &&
                      solveLogicalExpressionTree(expressionTree->rightChild));
@@ -35,11 +36,11 @@ int solveLogicalExpressionTree(const CryptidLogicalExpressionTree *expressionTre
 }
 
 void LogicalExpressionTree_destroy(CryptidLogicalExpressionTree *node) {
-  if(node->leftChild) {
+  if (node->leftChild) {
     LogicalExpressionTree_destroy(node->leftChild);
   }
 
-  if(node->rightChild) {
+  if (node->rightChild) {
     LogicalExpressionTree_destroy(node->rightChild);
   }
 

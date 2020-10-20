@@ -13,7 +13,8 @@ struct CryptidLogicalExpressionTree {
 
 int isLeaf(const CryptidLogicalExpressionTree *node);
 
-int solveLogicalExpressionTree(const CryptidLogicalExpressionTree *expressionTree);
+int solveLogicalExpressionTree(
+    const CryptidLogicalExpressionTree *expressionTree);
 
 void LogicalExpressionTree_destroy(CryptidLogicalExpressionTree *node);
 

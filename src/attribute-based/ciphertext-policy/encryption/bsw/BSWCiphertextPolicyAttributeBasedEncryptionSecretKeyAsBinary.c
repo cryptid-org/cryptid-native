@@ -23,9 +23,12 @@ void bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_toBswChiphert
         *secretKeyAsBinary) {
   affineAsBinary_toAffine(&(secretKey->d), secretKeyAsBinary->d);
   secretKey->numAttributes = secretKeyAsBinary->numAttributes;
-  secretKey->attributes = (char **)malloc(sizeof(char *) * secretKey->numAttributes);
-  secretKey->dJ = (AffinePoint *)malloc(sizeof(AffinePoint) * secretKey->numAttributes);
-  secretKey->dJa = (AffinePoint *)malloc(sizeof(AffinePoint) * secretKey->numAttributes);
+  secretKey->attributes =
+      (char **)malloc(sizeof(char *) * secretKey->numAttributes);
+  secretKey->dJ =
+      (AffinePoint *)malloc(sizeof(AffinePoint) * secretKey->numAttributes);
+  secretKey->dJa =
+      (AffinePoint *)malloc(sizeof(AffinePoint) * secretKey->numAttributes);
   for (int i = 0; i < secretKey->numAttributes; i++) {
     affineAsBinary_toAffine(&(secretKey->dJ[i]), secretKeyAsBinary->dJ[i]);
     affineAsBinary_toAffine(&(secretKey->dJa[i]), secretKeyAsBinary->dJa[i]);
@@ -34,7 +37,8 @@ void bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_toBswChiphert
     strcpy(secretKey->attributes[i], (char *)secretKeyAsBinary->attributes[i]);
   }
   secretKey->publickey =
-      (bswCiphertextPolicyAttributeBasedEncryptionPublicKey *)malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionPublicKey));
+      (bswCiphertextPolicyAttributeBasedEncryptionPublicKey *)malloc(
+          sizeof(bswCiphertextPolicyAttributeBasedEncryptionPublicKey));
   bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionPublicKey(
       secretKey->publickey, secretKeyAsBinary->publickey);
 }
@@ -49,10 +53,10 @@ void bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_fromBswChiphe
       (void **)malloc(sizeof(char *) * secretKeyAsBinary->numAttributes);
   secretKeyAsBinary->attributeLengths =
       (int *)malloc(sizeof(int) * secretKeyAsBinary->numAttributes);
-  secretKeyAsBinary->dJ =
-      (AffinePointAsBinary *)malloc(sizeof(AffinePointAsBinary) * secretKeyAsBinary->numAttributes);
-  secretKeyAsBinary->dJa =
-      (AffinePointAsBinary *)malloc(sizeof(AffinePointAsBinary) * secretKeyAsBinary->numAttributes);
+  secretKeyAsBinary->dJ = (AffinePointAsBinary *)malloc(
+      sizeof(AffinePointAsBinary) * secretKeyAsBinary->numAttributes);
+  secretKeyAsBinary->dJa = (AffinePointAsBinary *)malloc(
+      sizeof(AffinePointAsBinary) * secretKeyAsBinary->numAttributes);
   for (int i = 0; i < secretKey->numAttributes; i++) {
     affineAsBinary_fromAffine(&(secretKeyAsBinary->dJ[i]), secretKey->dJ[i]);
     affineAsBinary_fromAffine(&(secretKeyAsBinary->dJa[i]), secretKey->dJa[i]);
@@ -61,8 +65,9 @@ void bswChiphertextPolicyAttributeBasedEncryptionSecretKeyAsBinary_fromBswChiphe
         malloc(strlen(secretKey->attributes[i]) + 1);
     strcpy((char *)secretKeyAsBinary->attributes[i], secretKey->attributes[i]);
   }
-  secretKeyAsBinary->publickey = (bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary *)malloc(
-      sizeof(bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary));
+  secretKeyAsBinary->publickey =
+      (bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary *)malloc(
+          sizeof(bswCiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary));
   bswChiphertextPolicyAttributeBasedEncryptionPublicKeyAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionPublicKey(
       secretKeyAsBinary->publickey, secretKey->publickey);
 }

@@ -63,9 +63,9 @@ buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFormula,
           booleanTree.leftChild, depth - 1, testType);
 
       authorizationFormulaString = (char *)calloc(
-        strlen(leftAuthorizationFormulaString) + strlen(operatorString) +
-            strlen(rightAuthorizationFormulaString) + 1,
-        sizeof(char));
+          strlen(leftAuthorizationFormulaString) + strlen(operatorString) +
+              strlen(rightAuthorizationFormulaString) + 1,
+          sizeof(char));
 
       strcpy(authorizationFormulaString, leftAuthorizationFormulaString);
       strcat(authorizationFormulaString, operatorString);
@@ -73,9 +73,9 @@ buildRandomAuthorizationTree(CryptidLogicalExpressionTree *authorizationFormula,
 
       free(leftAuthorizationFormulaString);
     } else {
-      authorizationFormulaString = (char *)calloc(strlen(operatorString) +
-            strlen(rightAuthorizationFormulaString) + 1,
-        sizeof(char));
+      authorizationFormulaString = (char *)calloc(
+          strlen(operatorString) + strlen(rightAuthorizationFormulaString) + 1,
+          sizeof(char));
 
       strcpy(authorizationFormulaString, operatorString);
       strcat(authorizationFormulaString, rightAuthorizationFormulaString);
@@ -177,11 +177,14 @@ TEST fresh_formal_language_ibe_setup_verified_identity(
   ASSERT_EQ(status, CRYPTID_SUCCESS);
   ASSERT_EQ(strcmp(message, plaintext), 0);
 
-  bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_destroy(publicParametersBF);
-  hessIdentityBasedSignaturePublicParametersAsBinary_destroy(publicParametersHess);
+  bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_destroy(
+      publicParametersBF);
+  hessIdentityBasedSignaturePublicParametersAsBinary_destroy(
+      publicParametersHess);
   free(masterSecretBF.masterSecret);
   free(masterSecretHess.masterSecret);
-  hessIdentityBasedSignatureSignatureAsBinary_destroy(authorizationFormulaSignature);
+  hessIdentityBasedSignatureSignatureAsBinary_destroy(
+      authorizationFormulaSignature);
   affineAsBinary_destroy(privateKey);
   affineAsBinary_destroy(signatureKey);
   free(authorizationFormulaRightString);

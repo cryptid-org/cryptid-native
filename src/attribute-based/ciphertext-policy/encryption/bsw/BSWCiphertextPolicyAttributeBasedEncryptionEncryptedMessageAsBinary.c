@@ -68,7 +68,8 @@ void bswChiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary_toBswC
     const bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary
         *encryptedMessageAsBinary) {
   encryptedMessage->tree =
-      (bswCiphertextPolicyAttributeBasedEncryptionAccessTree *)malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTree));
+      (bswCiphertextPolicyAttributeBasedEncryptionAccessTree *)malloc(
+          sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTree));
   bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_toBswChiphertextPolicyAttributeBasedEncryptionAccessTree(
       encryptedMessage->tree, encryptedMessageAsBinary->tree);
   encryptedMessage->cTildeSet =
@@ -84,8 +85,10 @@ void bswChiphertextPolicyAttributeBasedEncryptionEncryptedMessageAsBinary_fromBs
         *encryptedMessageAsBinary,
     const bswCiphertextPolicyAttributeBasedEncryptionEncryptedMessage
         *encryptedMessage) {
-  encryptedMessageAsBinary->tree = (bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary *)malloc(
-      sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary));
+  encryptedMessageAsBinary->tree =
+      (bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary *)malloc(
+          sizeof(
+              bswCiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary));
   bswChiphertextPolicyAttributeBasedEncryptionAccessTreeAsBinary_fromBswChiphertextPolicyAttributeBasedEncryptionAccessTree(
       encryptedMessageAsBinary->tree, encryptedMessage->tree);
   encryptedMessageAsBinary->cTildeSet =
