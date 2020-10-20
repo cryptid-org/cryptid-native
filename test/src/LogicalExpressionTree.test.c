@@ -10,24 +10,24 @@
 TEST logical_expression_tree_should_just_work() {
   // Given
   CryptidLogicalExpressionTree *root =
-      malloc(sizeof(CryptidLogicalExpressionTree));
+      calloc(1, sizeof(CryptidLogicalExpressionTree));
   root->value = malloc(sizeof(CryptidLogicalExpressionTreeOperators));
   *(CryptidLogicalExpressionTreeOperators *)root->value = AND;
 
-  root->leftChild = malloc(sizeof(CryptidLogicalExpressionTree));
+  root->leftChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
   root->leftChild->value = malloc(sizeof(int));
   *(int *)root->leftChild->value = 1;
 
-  root->rightChild = malloc(sizeof(CryptidLogicalExpressionTree));
+  root->rightChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
   root->rightChild->value =
       malloc(sizeof(CryptidLogicalExpressionTreeOperators));
   *(CryptidLogicalExpressionTreeOperators *)root->rightChild->value = OR;
 
-  root->rightChild->leftChild = malloc(sizeof(CryptidLogicalExpressionTree));
+  root->rightChild->leftChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
   root->rightChild->leftChild->value = malloc(sizeof(int));
   *(int *)root->rightChild->leftChild->value = 1;
 
-  root->rightChild->rightChild = malloc(sizeof(CryptidLogicalExpressionTree));
+  root->rightChild->rightChild = calloc(1, sizeof(CryptidLogicalExpressionTree));
   root->rightChild->rightChild->value = malloc(sizeof(int));
   *(int *)root->rightChild->rightChild->value = 1;
 
