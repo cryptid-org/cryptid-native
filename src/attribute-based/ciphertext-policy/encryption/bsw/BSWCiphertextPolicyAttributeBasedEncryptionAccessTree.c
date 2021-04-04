@@ -9,13 +9,15 @@ bswCiphertextPolicyAttributeBasedEncryptionAccessTree_init(
     const int value, char *attribute, const size_t attributeLength,
     const int numChildren) {
   bswCiphertextPolicyAttributeBasedEncryptionAccessTree *tree =
-      malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTree));
+      (bswCiphertextPolicyAttributeBasedEncryptionAccessTree *)malloc(
+          sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTree));
   tree->value = value;
   tree->computed = 0;
   if (numChildren > 0) {
     tree->children =
-        malloc(sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTree *) *
-               numChildren);
+        (bswCiphertextPolicyAttributeBasedEncryptionAccessTree **)malloc(
+            sizeof(bswCiphertextPolicyAttributeBasedEncryptionAccessTree *) *
+            numChildren);
   }
   tree->numChildren = numChildren;
 
