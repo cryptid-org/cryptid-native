@@ -169,6 +169,13 @@ CryptidStatus affine_add(AffinePoint *result, const AffinePoint affinePoint1,
                          const AffinePoint affinePoint2,
                          const EllipticCurve ellipticCurve);
 
+CryptidStatus affine_precomp(AffinePoint **result, const AffinePoint affinePoint, const int rounds, const EllipticCurve ellipticCurve);
+
+CryptidStatus affine_multiply_with_precomp(AffinePoint *result,
+                                     const mpz_t s,
+                                     const EllipticCurve ellipticCurve,
+                                     const AffinePoint *const precomps);
+
 /**
  * ## Description
  *

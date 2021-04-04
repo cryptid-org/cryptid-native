@@ -184,6 +184,69 @@ CryptidStatus affine_add(AffinePoint *result, const AffinePoint affinePoint1,
   return CRYPTID_SUCCESS;
 }
 
+CryptidStatus affine_precomp(AffinePoint **result, const AffinePoint affinePoint, const int rounds, const EllipticCurve ellipticCurve) {
+  CryptidStatus status;
+  
+  AffinePoint base;
+  affine_init(&base, affinePoint.x, affinePoint.y);
+
+  for(int i = 0; i < rounds; i++) {
+    affine_init((*result + i), base.x, base.y);
+    AffinePoint tmp;
+    status = affine_double(&tmp, base, ellipticCurve);
+    if (status) {
+      affine_destroy(base);
+      return status;
+    }
+    affine_destroy(base);
+    base = tmp;
+  }
+
+  return CRYPTID_SUCCESS;
+}
+
+CryptidStatus affine_multiply_with_precomp(AffinePoint *result,
+                                     const mpz_t s,
+                                     const EllipticCurve ellipticCurve,
+                                     const AffinePoint *const precomps) {
+  // Implementation of Algorithm 3.26 in [Guide-to-ECC].
+
+  // Multiplication by zero yields infinity.
+  if (!mpz_cmp_ui(s, 0)) {
+    *result = affine_infinity();
+    return CRYPTID_SUCCESS;
+  }
+
+  // \f$Q = \infty\f$
+  AffinePoint pointQ = affine_infinity();
+
+  // Binary expansion of the multiplier.
+  char *d = mpz_get_str(NULL, 2, s);
+
+  // Right-to-left iteration
+  for (int i = strlen(d) - 1; i >= 0; i--) {
+    CryptidStatus status;
+
+    // If \f$k_i = 1\f$ then \f$Q = Q + P\f$.
+    if (d[i] == '1') {
+      AffinePoint tmp;
+      status = affine_add(&tmp, pointQ, *(precomps + ((strlen(d) - 1) - i)), ellipticCurve);
+      if (status) {
+        affine_destroy(pointQ);
+        free(d);
+        return status;
+      }
+      affine_destroy(pointQ);
+      pointQ = tmp;
+    }
+  }
+
+  free(d);
+
+  *result = pointQ;
+  return CRYPTID_SUCCESS;
+}
+
 static CryptidStatus affine_multiply(AffinePoint *result,
                                      const AffinePoint affinePoint,
                                      const mpz_t s,
