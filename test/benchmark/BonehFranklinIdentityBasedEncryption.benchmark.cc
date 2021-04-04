@@ -14,22 +14,30 @@ void boneh_franklin_ibe_benchmark_encrypt(benchmark::State &state) {
     const char *message = "abcdefghijklmnop"; //16 bytes
     const char *identity = "darth.plagueis@sith.com";
 
-    BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary publicParameters;
+    BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary publicParametersAsBinary;
     BonehFranklinIdentityBasedEncryptionMasterSecretAsBinary masterSecret;
 
     CryptidStatus status = cryptid_ibe_bonehFranklin_setup(
-      &masterSecret, &publicParameters, securityLevel);
+      &masterSecret, &publicParametersAsBinary, securityLevel);
+
+    BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters;
+    bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_toBonehFranklinIdentityBasedEncryptionPublicParameters(&publicParameters, publicParametersAsBinary);
 
     AffinePointAsBinary privateKey;
     status = cryptid_ibe_bonehFranklin_extract(
-        &privateKey, identity, strlen(identity), masterSecret, publicParameters);
+        &privateKey, identity, strlen(identity), masterSecret, publicParametersAsBinary);
 
     BonehFranklinIdentityBasedEncryptionCiphertextAsBinary ciphertext;
+
+    AffinePoint precomputedPoints[256];
+    AffinePoint *precomputedPointsPointer = precomputedPoints;
+
+    status = affine_precompute(&precomputedPointsPointer, publicParameters.pointP, 256, publicParameters.ellipticCurve);
 
     for (auto _ : state) {
         status = cryptid_ibe_bonehFranklin_encrypt(
             &ciphertext, message, strlen(message), identity, strlen(identity),
-            publicParameters);
+            publicParametersAsBinary, precomputedPointsPointer);
     }
 
     //char *plaintext;
@@ -41,6 +49,8 @@ void boneh_franklin_ibe_benchmark_encrypt(benchmark::State &state) {
     affineAsBinary_destroy(privateKey);
     free(masterSecret.masterSecret);
     bonehFranklinIdentityBasedEncryptionPublicParametersAsBinary_destroy(
+        publicParametersAsBinary);
+    bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(
         publicParameters);
 }
 
