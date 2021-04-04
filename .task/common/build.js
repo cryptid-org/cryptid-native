@@ -1,9 +1,9 @@
 const { compileAllSources } = require('./compile');
 const { removeFiles, run, version } = require('./util');
 
-function buildStaticLibrary(dependencies, args = []) {
+function buildStaticLibrary(dependencies, compiler = 'gcc', args = []) {
     try {
-        compileAllSources(dependencies, args);
+        compileAllSources(dependencies, compiler, args);
 
         if (!dependencies.fs.existsSync(dependencies.paths.build.outputDirectory)) {
             dependencies.fs.mkdirSync(dependencies.paths.build.outputDirectory);

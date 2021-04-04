@@ -39,7 +39,7 @@ function testComponents(dependencies, components, additionalCompilationArguments
     for (const component of components) {
         console.log(`Testing ${component}`);
 
-        const executable = compileExecutableForComponent(component, dependencies, additionalCompilationArguments);
+        const executable = compileExecutableForComponent(component, dependencies, 'gcc', additionalCompilationArguments);
 
         try {
             const { stdout } = run(dependencies, executable, ['-v'], {

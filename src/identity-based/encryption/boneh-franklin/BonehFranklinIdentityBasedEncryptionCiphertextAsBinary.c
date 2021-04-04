@@ -39,13 +39,15 @@ void bonehFranklinIdentityBasedEncryptionCiphertextAsBinary_toBonehFranklinIdent
   affineAsBinary_toAffine(&ciphertextOutput->cipherU,
                           ciphertextAsBinary.cipherU);
 
-  ciphertextOutput->cipherV = malloc(ciphertextAsBinary.cipherVLength + 1);
+  ciphertextOutput->cipherV =
+        (unsigned char *)malloc(ciphertextAsBinary.cipherVLength + 1);
   memcpy(ciphertextOutput->cipherV, ciphertextAsBinary.cipherV,
          ciphertextAsBinary.cipherVLength + 1);
 
   ciphertextOutput->cipherVLength = ciphertextAsBinary.cipherVLength;
 
-  ciphertextOutput->cipherW = malloc(ciphertextAsBinary.cipherWLength + 1);
+  ciphertextOutput->cipherW =
+        (unsigned char *)malloc(ciphertextAsBinary.cipherWLength + 1);
   memcpy(ciphertextOutput->cipherW, ciphertextAsBinary.cipherW,
          ciphertextAsBinary.cipherWLength + 1);
 
