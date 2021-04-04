@@ -113,7 +113,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(
     const char *const message, const size_t messageLength,
     const char *const identity, const size_t identityLength,
     const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary
-        publicParametersAsBinary);
+        publicParametersAsBinary, const AffinePoint *const precomputedPoints);
 
 /**
  * ## Description
@@ -143,7 +143,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(
         ciphertextAsBinary,
     const AffinePointAsBinary privateKeyAsBinary,
     const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary
-        publicParametersAsBinary);
+        publicParametersAsBinary, const AffinePoint *const precomputedPoints);
 
 #endif
 

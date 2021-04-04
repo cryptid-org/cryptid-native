@@ -216,7 +216,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(
     const char *const message, const size_t messageLength,
     const char *const identity, const size_t identityLength,
     const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary
-        publicParametersAsBinary) {
+        publicParametersAsBinary, const AffinePoint *const precomputedPoints) {
   // Implementation of Algorithm 5.4.1 (BFencrypt) in [RFC-5091].
 
   if (!message) {
@@ -299,8 +299,8 @@ CryptidStatus cryptid_ibe_bonehFranklin_encrypt(
 
   // Let \f$U = [l]P\f$, which is a point of order \f$q\f$ in \f$E(F_p)\f$.
   AffinePoint cipherPointU;
-  status = affine_wNAFMultiply(&cipherPointU, publicParameters.pointP, l,
-                               publicParameters.ellipticCurve);
+  status = affine_multiply_with_precomputedPoints(&cipherPointU, l,
+                               publicParameters.ellipticCurve, precomputedPoints);
   if (status) {
     bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(
         publicParameters);
@@ -404,7 +404,7 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(
         ciphertextAsBinary,
     const AffinePointAsBinary privateKeyAsBinary,
     const BonehFranklinIdentityBasedEncryptionPublicParametersAsBinary
-        publicParametersAsBinary) {
+        publicParametersAsBinary, const AffinePoint *const precomputedPoints) {
   // Implementation of Algorithm 5.5.1 (BFdecrypt) in [RFC-5091].
 
   BonehFranklinIdentityBasedEncryptionPublicParameters publicParameters;
@@ -526,8 +526,8 @@ CryptidStatus cryptid_ibe_bonehFranklin_decrypt(
 
   // Verify that \f$U = [l]P\f$.
   AffinePoint testPoint;
-  status = affine_wNAFMultiply(&testPoint, publicParameters.pointP, l,
-                               publicParameters.ellipticCurve);
+  status = affine_multiply_with_precomputedPoints(&testPoint, l,
+                               publicParameters.ellipticCurve, precomputedPoints);
   if (status) {
     bonehFranklinIdentityBasedEncryptionPublicParameters_destroy(
         publicParameters);

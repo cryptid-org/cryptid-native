@@ -184,7 +184,7 @@ CryptidStatus affine_add(AffinePoint *result, const AffinePoint affinePoint1,
   return CRYPTID_SUCCESS;
 }
 
-CryptidStatus affine_precomp(AffinePoint **result, const AffinePoint affinePoint, const int rounds, const EllipticCurve ellipticCurve) {
+CryptidStatus affine_precompute(AffinePoint **result, const AffinePoint affinePoint, const int rounds, const EllipticCurve ellipticCurve) {
   CryptidStatus status;
   
   AffinePoint base;
@@ -205,10 +205,10 @@ CryptidStatus affine_precomp(AffinePoint **result, const AffinePoint affinePoint
   return CRYPTID_SUCCESS;
 }
 
-CryptidStatus affine_multiply_with_precomp(AffinePoint *result,
+CryptidStatus affine_multiply_with_precomputedPoints(AffinePoint *result,
                                      const mpz_t s,
                                      const EllipticCurve ellipticCurve,
-                                     const AffinePoint *const precomps) {
+                                     const AffinePoint *const precomputedPoints) {
   // Implementation of Algorithm 3.26 in [Guide-to-ECC].
 
   // Multiplication by zero yields infinity.
@@ -230,7 +230,7 @@ CryptidStatus affine_multiply_with_precomp(AffinePoint *result,
     // If \f$k_i = 1\f$ then \f$Q = Q + P\f$.
     if (d[i] == '1') {
       AffinePoint tmp;
-      status = affine_add(&tmp, pointQ, *(precomps + ((strlen(d) - 1) - i)), ellipticCurve);
+      status = affine_add(&tmp, pointQ, *(precomputedPoints + ((strlen(d) - 1) - i)), ellipticCurve);
       if (status) {
         affine_destroy(pointQ);
         free(d);
