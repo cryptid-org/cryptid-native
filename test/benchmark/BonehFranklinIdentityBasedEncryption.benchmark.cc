@@ -1,5 +1,7 @@
 #include <benchmark/benchmark.h>
 
+#include <string.h>
+
 #include "util/SecurityLevel.h"
 #include "complex/Complex.h"
 #include "elliptic/AffinePoint.h"
@@ -8,7 +10,7 @@
 
 void boneh_franklin_ibe_benchmark_encrypt(benchmark::State &state) {
 
-    const SecurityLevel securityLevel = state.range(0);
+    const SecurityLevel securityLevel = (SecurityLevel)state.range(0);
     const char *message = "abcdefghijklmnop"; //16 bytes
     const char *identity = "darth.plagueis@sith.com";
 
@@ -42,6 +44,6 @@ void boneh_franklin_ibe_benchmark_encrypt(benchmark::State &state) {
         publicParameters);
 }
 
-BENCHMARK(boneh_franklin_ibe_benchmark_encrypt)->Arg(LOWEST)->Iterations(20);
+BENCHMARK(boneh_franklin_ibe_benchmark_encrypt)->Arg(MEDIUM)->Iterations(20);
 
 BENCHMARK_MAIN();
