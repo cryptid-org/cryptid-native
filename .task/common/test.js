@@ -34,7 +34,7 @@ function testComponents(dependencies, components, additionalCompilationArguments
     const errors = [];
     const output = [];
 
-    compileAllSources(dependencies, ['-g'].concat(additionalCompilationArguments));
+    compileAllSources(dependencies, 'gcc', ['-g'].concat(additionalCompilationArguments));
 
     for (const component of components) {
         console.log(`Testing ${component}`);
