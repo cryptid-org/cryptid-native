@@ -7,16 +7,17 @@ module.exports = {
     handlerFactory(dependencies) {
         return function handler({ args }) {
             var compiler;
-            
-            args = args.filter(arg => {
-                if(arg.includes('compiler=')) {
-                    compiler = arg.split("=")[1];
-                    console.log(compiler);
-                    return false;
-                }
 
-                return true;
-            });
+            if(args) {
+                args = args.filter(arg => {
+                    if(arg.includes('compiler=')) {
+                        compiler = arg.split("=")[1];
+                        return false;
+                    }
+
+                    return true;
+                });
+            }
 
             buildStaticLibrary(dependencies, compiler, args);
         };

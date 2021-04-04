@@ -14,7 +14,7 @@ function compileAllSources({ klawSync, paths, spawnSync }, compiler = 'gcc', ext
         '-D__CRYPTID_GMP',
         '-D__CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION',
         '-D__CRYPTID_HESS_IDENTITY_BASED_SIGNATURE',
-        '-std=c99',
+        //'-std=c99',
         '-Wall',
         '-Wextra',
         '-Werror',
@@ -48,7 +48,7 @@ function compileExecutableForComponent(componentName, { klawSync, fs, paths, spa
         '-D__CRYPTID_BONEH_FRANKLIN_IDENTITY_BASED_ENCRYPTION',
         '-D__CRYPTID_HESS_IDENTITY_BASED_SIGNATURE',
         '-g',
-        '-std=c99',
+        //'-std=c99',
         '-o', testExecutable,
         '-lm',
         '-lgmp'
