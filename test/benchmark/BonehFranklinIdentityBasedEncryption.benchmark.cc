@@ -44,6 +44,6 @@ void boneh_franklin_ibe_benchmark_encrypt(benchmark::State &state) {
         publicParameters);
 }
 
-BENCHMARK(boneh_franklin_ibe_benchmark_encrypt)->Arg(MEDIUM)->Iterations(20);
+BENCHMARK(boneh_franklin_ibe_benchmark_encrypt)->Arg(MEDIUM)->Iterations(200);
 
 BENCHMARK_MAIN();
