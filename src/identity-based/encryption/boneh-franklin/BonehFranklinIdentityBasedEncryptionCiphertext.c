@@ -12,13 +12,15 @@ void bonehFranklinIdentityBasedEncryptionCiphertext_init(
 
   ciphertextOutput->cipherV =
       (unsigned char *)malloc(cipherVLength * sizeof(unsigned char) + 1);
-  memcpy(ciphertextOutput->cipherV, cipherV, cipherVLength + 1);
+  memcpy(ciphertextOutput->cipherV, cipherV, cipherVLength);
+  ciphertextOutput->cipherV[cipherVLength] = '\0';
 
   ciphertextOutput->cipherVLength = cipherVLength;
 
   ciphertextOutput->cipherW =
       (unsigned char *)malloc(cipherWLength * sizeof(unsigned char) + 1);
-  memcpy(ciphertextOutput->cipherW, cipherW, cipherWLength + 1);
+  memcpy(ciphertextOutput->cipherW, cipherW, cipherWLength);
+  ciphertextOutput->cipherW[cipherWLength] = '\0';
 
   ciphertextOutput->cipherWLength = cipherWLength;
 }
